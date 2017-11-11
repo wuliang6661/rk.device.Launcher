@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/topbar"/>
+
+
+    <LinearLayout
+        android:background="@color/blue_31598a"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp">
+
+            <LinearLayout
+                android:id="@+id/ll_set_time"
+                android:layout_marginBottom="1dp"
+                android:background="@drawable/item_background_normal"
+                android:layout_marginRight="1dp"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/iv_set_time"
+                    android:layout_marginTop="60dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/set_time_normal"
+                    android:layout_width="130dp"
+                    android:layout_height="130dp"/>
+
+                <TextView
+                    android:id="@+id/tv_set_time"
+                    android:text="时间设置"
+                    style="@style/tv_setting_item"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_set_net"
+                android:layout_marginBottom="1dp"
+                android:background="@drawable/item_background_normal"
+                android:layout_marginLeft="1dp"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/iv_set_network"
+                    android:layout_marginTop="60dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/set_network_normal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:id="@+id/tv_set_network"
+                    android:text="网络设置"
+                    style="@style/tv_setting_item"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp">
+
+            <LinearLayout
+                android:id="@+id/ll_set_door"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp"
+                android:background="@drawable/item_background_normal"
+                android:layout_marginRight="1dp"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/iv_set_door"
+                    android:layout_marginTop="60dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/set_door_normal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:id="@+id/tv_set_door"
+                    android:text="门禁设置"
+                    style="@style/tv_setting_item"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_set_sys"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp"
+                android:background="@drawable/item_background_normal"
+                android:layout_marginLeft="1dp"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/iv_set_system"
+                    android:layout_marginTop="60dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/set_system_normal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:id="@+id/tv_set_sys"
+                    android:text="参数设置"
+                    style="@style/tv_setting_item"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp">
+
+            <LinearLayout
+                android:id="@+id/ll_sys_info"
+                android:layout_marginTop="1dp"
+                android:background="@drawable/item_background_normal"
+                android:layout_marginRight="1dp"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/iv_sys_info"
+                    android:layout_marginTop="60dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/system_info_normal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:id="@+id/tv_sys_info"
+                    android:text="系统信息"
+                    style="@style/tv_setting_item"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_recovery"
+                android:layout_marginTop="1dp"
+                android:background="@drawable/item_background_normal"
+                android:layout_marginLeft="1dp"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/iv_recovery"
+                    android:layout_marginTop="60dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/recovery_normal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:id="@+id/tv_recovery"
+                    android:text="恢复出厂"
+                    style="@style/tv_setting_item"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

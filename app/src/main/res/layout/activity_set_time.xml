@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="rk.device.launcher.ui.activity.SetTimeActivity">
+
+    <include layout="@layout/topbar"/>
+
+    <LinearLayout
+        android:background="@drawable/shape_normal_bg"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/ll_set_date"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="75dp">
+
+            <TextView
+                android:textColor="@color/white"
+                android:layout_marginLeft="20dp"
+                android:textSize="20dp"
+                android:layout_gravity="center_vertical"
+                android:text="日期"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <Space
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"/>
+
+            <TextView
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:layout_gravity="center_vertical"
+                android:text="2017-08-09"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <ImageView
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="15dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/arrow_right"
+                android:layout_width="12dp"
+                android:layout_height="22dp"/>
+
+        </LinearLayout>
+
+        <View
+            android:background="@color/blue_31598a"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="75dp">
+
+            <TextView
+                android:textColor="@color/white"
+                android:layout_marginLeft="20dp"
+                android:textSize="20dp"
+                android:layout_gravity="center_vertical"
+                android:text="时间"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <Space
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"/>
+
+            <TextView
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:layout_gravity="center_vertical"
+                android:text="14:30"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <ImageView
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="15dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/arrow_right"
+                android:layout_width="12dp"
+                android:layout_height="22dp"/>
+
+        </LinearLayout>
+
+        <View
+            android:background="@color/blue_31598a"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+
+        <Button
+            android:textSize="21dp"
+            android:text="完成设置"
+            android:textColor="@color/white"
+            android:id="@+id/btn_finish_setting"
+
+            android:background="@drawable/shape_btn_finish_setting"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="100dp"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"/>
+
+
+    </LinearLayout>
+
+</LinearLayout>
