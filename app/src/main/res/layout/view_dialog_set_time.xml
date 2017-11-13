@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:paddingRight="16dp"
+        android:paddingLeft="16dp"
+        android:background="@color/color_335c91">
+
+        <TextView
+            android:id="@+id/tv_cancel"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:minWidth="48dp"
+            android:layout_alignParentLeft="true"
+            android:textSize="16sp"
+            android:text="取消"
+            />
+
+        <TextView
+            android:layout_centerInParent="true"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:minWidth="48dp"
+            android:textSize="16sp"
+            android:text="设置时间"
+            />
+
+        <TextView
+            android:id="@+id/tv_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:minWidth="48dp"
+            android:gravity="center"
+            android:layout_alignParentRight="true"
+            android:textSize="16sp"
+            android:text="确定"
+            android:textColor="@color/white" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:background="@drawable/shape_settime_bg"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+
+            <TextView
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:text="时"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"/>
+
+            <TextView
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:text="分"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"/>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="200dp">
+            <rk.device.launcher.widget.EasyPickView
+                android:id="@+id/pickview_hour"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                />
+
+            <rk.device.launcher.widget.EasyPickView
+                android:id="@+id/pickview_min"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+    
+
+
+
+</LinearLayout>

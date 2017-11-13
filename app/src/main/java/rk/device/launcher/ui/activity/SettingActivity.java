@@ -114,7 +114,8 @@ public class SettingActivity extends AppCompatActivity {
 
 	private void processOnTouchListener(final LinearLayout ll, final ImageView iv, final TextView tv, final int normalResource, final int pressedResource) {
 		ll.setOnTouchListener(new View.OnTouchListener() {
-			@Override public boolean onTouch(View v, MotionEvent event) {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
 				switch (event.getAction()) {
 					case MotionEvent.ACTION_DOWN:
 						tv.setTextColor(getResources().getColor(R.color.white));

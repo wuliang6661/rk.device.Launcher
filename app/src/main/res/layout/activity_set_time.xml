@@ -37,6 +37,7 @@
                 android:layout_height="match_parent"/>
 
             <TextView
+                android:id="@+id/tv_date"
                 android:textColor="@color/white"
                 android:textSize="20dp"
                 android:layout_gravity="center_vertical"
@@ -59,6 +60,7 @@
             android:layout_height="1dp"/>
 
         <LinearLayout
+            android:id="@+id/ll_set_time"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="75dp">
@@ -78,6 +80,7 @@
                 android:layout_height="match_parent"/>
 
             <TextView
+                android:id="@+id/tv_time"
                 android:textColor="@color/white"
                 android:textSize="20dp"
                 android:layout_gravity="center_vertical"
@@ -100,6 +103,7 @@
             android:layout_height="1dp"/>
 
         <Button
+
             android:textSize="21dp"
             android:text="完成设置"
             android:textColor="@color/white"
