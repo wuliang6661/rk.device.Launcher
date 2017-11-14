@@ -27,6 +27,10 @@
         </activity>
         <activity android:name=".ui.activity.SetSysActivity">
         </activity>
+        <activity android:name=".ui.activity.SystemInfoActivity">
+        </activity>
+        <activity android:name=".ui.activity.RecoveryActivity">
+        </activity>
     </application>
 
 </manifest>

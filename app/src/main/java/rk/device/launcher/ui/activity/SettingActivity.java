@@ -10,11 +10,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import rk.device.launcher.R;
+import rk.device.launcher.ui.fragment.RecoveryDialogFragment;
 
 /**
  * Created by mundane on 2017/11/9 上午10:56
@@ -79,41 +79,64 @@ public class SettingActivity extends AppCompatActivity {
 		processOnTouchListener(mLlSysInfo, mIvSysInfo, mTvSysInfo, R.drawable.system_info_normal, R.drawable.set_system_pressed);
 		processOnTouchListener(mLlRecovery, mIvRecovery, mTvRecovery, R.drawable.recovery_normal, R.drawable.recovery_pressed);
 		mLlSetTime.setOnClickListener(new View.OnClickListener() {
-			@Override public void onClick(View v) {
+			@Override
+			public void onClick(View v) {
 //				Toast.makeText(SettingActivity.this, "时间设置", Toast.LENGTH_SHORT).show();
 				Intent intent = new Intent(SettingActivity.this, SetTimeActivity.class);
 				startActivity(intent);
 			}
 		});
 		mLlSetNet.setOnClickListener(new View.OnClickListener() {
-			@Override public void onClick(View v) {
+			@Override
+			public void onClick(View v) {
 //				Toast.makeText(SettingActivity.this, "网络设置", Toast.LENGTH_SHORT).show();
 				Intent intent = new Intent(SettingActivity.this, SetNetWorkActivity.class);
 				startActivity(intent);
 			}
 		});
 		mLlSetDoor.setOnClickListener(new View.OnClickListener() {
-			@Override public void onClick(View v) {
+			@Override
+			public void onClick(View v) {
 //				Toast.makeText(SettingActivity.this, "门禁设置", Toast.LENGTH_SHORT).show();
 				Intent intent = new Intent(SettingActivity.this, SetDoorGuardActivity.class);
 				startActivity(intent);
 			}
 		});
 		mLlSetSys.setOnClickListener(new View.OnClickListener() {
-			@Override public void onClick(View v) {
+			@Override
+			public void onClick(View v) {
 //				Toast.makeText(SettingActivity.this, "参数设置", Toast.LENGTH_SHORT).show();
 				Intent intent = new Intent(SettingActivity.this, SetSysActivity.class);
 				startActivity(intent);
 			}
 		});
 		mLlSysInfo.setOnClickListener(new View.OnClickListener() {
-			@Override public void onClick(View v) {
-				Toast.makeText(SettingActivity.this, "系统信息", Toast.LENGTH_SHORT).show();
+			@Override
+			public void onClick(View v) {
+//				Toast.makeText(SettingActivity.this, "系统信息", Toast.LENGTH_SHORT).show();
+				Intent intent = new Intent(SettingActivity.this, SystemInfoActivity.class);
+				startActivity(intent);
 			}
 		});
 		mLlRecovery.setOnClickListener(new View.OnClickListener() {
-			@Override public void onClick(View v) {
-				Toast.makeText(SettingActivity.this, "恢复出厂", Toast.LENGTH_SHORT).show();
+			@Override
+			public void onClick(View v) {
+//				Toast.makeText(SettingActivity.this, "恢复出厂", Toast.LENGTH_SHORT).show()
+				final RecoveryDialogFragment recoveryDialogFragment = RecoveryDialogFragment.newInstance();
+				recoveryDialogFragment.setOnCancelClickListener(new RecoveryDialogFragment.onCancelClickListener() {
+					@Override
+					public void onCancelClick() {
+						recoveryDialogFragment.dismiss();
+					}
+				})
+                .setOnConfirmClickListener(new RecoveryDialogFragment.OnConfirmClickListener() {
+					@Override
+					public void onConfirmClick() {
+						Intent intent = new Intent(SettingActivity.this, RecoveryActivity.class);
+						startActivity(intent);
+					}
+				});
+				recoveryDialogFragment.show(getSupportFragmentManager(), "");
 			}
 		});
 	}
