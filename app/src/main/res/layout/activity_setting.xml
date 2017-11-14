@@ -26,7 +26,7 @@
                 android:id="@+id/ll_set_time"
                 android:layout_marginBottom="1dp"
                 android:background="@drawable/item_background_normal"
-                android:layout_marginRight="1dp"
+                android:layout_marginRight="0.25dp"
                 android:orientation="vertical"
                 android:layout_weight="1"
                 android:layout_width="0dp"
@@ -51,7 +51,7 @@
                 android:id="@+id/ll_set_net"
                 android:layout_marginBottom="1dp"
                 android:background="@drawable/item_background_normal"
-                android:layout_marginLeft="1dp"
+                android:layout_marginLeft="0.25dp"
                 android:orientation="vertical"
                 android:layout_weight="1"
                 android:layout_width="0dp"
@@ -82,8 +82,8 @@
 
             <LinearLayout
                 android:id="@+id/ll_set_door"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"
+                android:layout_marginTop="0.25dp"
+                android:layout_marginBottom="0.25dp"
                 android:background="@drawable/item_background_normal"
                 android:layout_marginRight="1dp"
                 android:orientation="vertical"
@@ -108,8 +108,8 @@
 
             <LinearLayout
                 android:id="@+id/ll_set_sys"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"
+                android:layout_marginTop="0.25dp"
+                android:layout_marginBottom="0.25dp"
                 android:background="@drawable/item_background_normal"
                 android:layout_marginLeft="1dp"
                 android:orientation="vertical"
@@ -143,7 +143,7 @@
 
             <LinearLayout
                 android:id="@+id/ll_sys_info"
-                android:layout_marginTop="1dp"
+                android:layout_marginTop="0.25dp"
                 android:background="@drawable/item_background_normal"
                 android:layout_marginRight="1dp"
                 android:orientation="vertical"
@@ -168,7 +168,7 @@
 
             <LinearLayout
                 android:id="@+id/ll_recovery"
-                android:layout_marginTop="1dp"
+                android:layout_marginTop="0.25dp"
                 android:background="@drawable/item_background_normal"
                 android:layout_marginLeft="1dp"
                 android:orientation="vertical"

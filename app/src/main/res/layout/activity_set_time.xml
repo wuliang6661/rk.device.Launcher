@@ -103,18 +103,10 @@
             android:layout_height="1dp"/>
 
         <Button
-
-            android:textSize="21dp"
             android:text="完成设置"
-            android:textColor="@color/white"
             android:id="@+id/btn_finish_setting"
-
-            android:background="@drawable/shape_btn_finish_setting"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
             android:layout_marginTop="100dp"
-            android:layout_width="match_parent"
-            android:layout_height="70dp"/>
+            style="@style/btn_finish"/>
 
 
     </LinearLayout>

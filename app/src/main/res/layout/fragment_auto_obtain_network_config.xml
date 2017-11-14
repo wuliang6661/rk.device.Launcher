@@ -1,0 +1,148 @@
+<LinearLayout
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="rk.device.launcher.ui.fragment.AutoObtainNetworkConfigFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="75dp">
+
+        <TextView
+            android:layout_marginLeft="15dp"
+            android:background="@drawable/network_config_bg"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:text="自动获取网络配置"
+            android:layout_width="180dp"
+            android:layout_height="40dp"/>
+
+    </RelativeLayout>
+
+    <View
+        android:background="@color/blue_31598a"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="75dp">
+        <TextView
+            android:layout_marginLeft="15dp"
+            android:text="IP地址"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/tv_network_conf_item"/>
+
+        <Space
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"/>
+
+        <TextView
+            style="@style/tv_network_conf_item"
+            android:layout_marginRight="15dp"
+            android:text="116.118.119.115"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <View
+        android:background="@color/blue_31598a"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"/>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="75dp">
+        <TextView
+            android:layout_marginLeft="15dp"
+            android:text="子网掩码"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/tv_network_conf_item"/>
+
+        <Space
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"/>
+
+        <TextView
+            style="@style/tv_network_conf_item"
+            android:layout_marginRight="15dp"
+            android:text="116.118.119.115"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <View
+        android:background="@color/blue_31598a"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"/>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="75dp">
+        <TextView
+            android:layout_marginLeft="15dp"
+            android:text="网关"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/tv_network_conf_item"/>
+
+        <Space
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"/>
+
+        <TextView
+            style="@style/tv_network_conf_item"
+            android:layout_marginRight="15dp"
+            android:text="116.118.119.115"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <View
+        android:background="@color/blue_31598a"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"/>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="75dp">
+        <TextView
+            android:layout_marginLeft="15dp"
+            android:text="DNS"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/tv_network_conf_item"/>
+
+        <Space
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"/>
+
+        <TextView
+            style="@style/tv_network_conf_item"
+            android:layout_marginRight="15dp"
+            android:text="116.118.119.115"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <View
+        android:background="@color/blue_31598a"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"/>
+
+</LinearLayout>

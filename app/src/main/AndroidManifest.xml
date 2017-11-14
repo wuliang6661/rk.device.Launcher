@@ -19,6 +19,8 @@
         </activity>
         <activity android:name=".ui.activity.SetTimeActivity">
         </activity>
+        <activity android:name=".ui.activity.SetNetWorkActivity">
+        </activity>
     </application>
 
 </manifest>
