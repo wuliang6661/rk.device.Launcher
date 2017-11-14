@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="rk.device.launcher.ui.activity.SetSysActivity">
+
+    <include layout="@layout/topbar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/shape_normal_bg"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_height">
+
+            <TextView
+                android:textColor="@color/white"
+                android:layout_marginLeft="20dp"
+                android:textSize="20dp"
+                android:layout_gravity="center_vertical"
+                android:text="设备ID"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <Space
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"/>
+
+            <TextView
+                android:layout_marginRight="15dp"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:layout_gravity="center_vertical"
+                android:text="113f34jadjiofoj908948248728f28349yfq8742894f23487"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <View
+            android:background="@color/blue_31598a"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_height"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_height">
+
+            <TextView
+                android:textColor="@color/white"
+                android:layout_marginLeft="20dp"
+                android:textSize="20dp"
+                android:layout_gravity="center_vertical"
+                android:text="识别参数"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <Space
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"/>
+
+            <CheckBox
+                android:button="@null"
+                android:background="@drawable/selector_switch_button"
+                android:layout_marginRight="15dp"
+                android:layout_gravity="center_vertical"
+                android:layout_width="50dp"
+                android:layout_height="33dp"/>
+
+        </LinearLayout>
+
+        <View
+            android:background="@color/blue_31598a"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_height"/>
+
+        <LinearLayout
+            android:id="@+id/ll_sleep_time"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_height">
+
+            <TextView
+                android:textColor="@color/white"
+                android:layout_marginLeft="20dp"
+                android:textSize="20dp"
+                android:layout_gravity="center_vertical"
+                android:text="待机时间 (s)"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <Space
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"/>
+
+            <TextView
+                android:id="@+id/tv_sleep_time"
+                android:layout_marginRight="15dp"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:layout_gravity="center_vertical"
+                android:text="60"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <View
+            android:background="@color/blue_31598a"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_height"/>
+
+        <LinearLayout
+            android:id="@+id/ll_light_value"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_height">
+
+            <TextView
+                android:textColor="@color/white"
+                android:layout_marginLeft="20dp"
+                android:textSize="20dp"
+                android:layout_gravity="center_vertical"
+                android:text="补光灯阀值"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <Space
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"/>
+
+            <TextView
+                android:id="@+id/tv_light_value"
+                android:layout_marginRight="15dp"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:layout_gravity="center_vertical"
+                android:text="80"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <View
+            android:background="@color/blue_31598a"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_height"/>
+
+        <LinearLayout
+            android:focusableInTouchMode="true"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_height">
+
+            <TextView
+                android:textColor="@color/white"
+                android:layout_marginLeft="20dp"
+                android:textSize="20dp"
+                android:layout_gravity="center_vertical"
+                android:text="服务器IP"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <Space
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"/>
+
+            <EditText
+                android:gravity="center_vertical|right"
+                android:background="@null"
+                android:textColorHint="@color/color_ccccc"
+                android:hint="录入服务器地址"
+                android:layout_marginRight="15dp"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:layout_gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="65dp"/>
+
+        </LinearLayout>
+
+        <View
+            android:background="@color/blue_31598a"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_height"/>
+
+        <!--
+        在edittext的第一个父布局中加上focusableInTouchMode
+        防止刚进入activity时editText抢占焦点弹出软键盘
+        -->
+        <LinearLayout
+            android:focusableInTouchMode="true"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_height">
+
+            <TextView
+                android:textColor="@color/white"
+                android:layout_marginLeft="20dp"
+                android:textSize="20dp"
+                android:layout_gravity="center_vertical"
+                android:text="端口号"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <Space
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"/>
+
+            <EditText
+                android:gravity="center_vertical|right"
+                android:background="@null"
+                android:textColorHint="@color/color_ccccc"
+                android:hint="录入端口号, 如3000"
+                android:layout_marginRight="15dp"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:layout_gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="65dp"/>
+
+        </LinearLayout>
+
+        <View
+            android:background="@color/blue_31598a"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_height"/>
+        <Space
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"/>
+
+        <Button
+            android:id="@+id/btn_finish_setting"
+            android:layout_marginBottom="340dp"
+            android:text="完成设置"
+            style="@style/btn_finish"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

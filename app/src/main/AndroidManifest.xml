@@ -25,6 +25,8 @@
         </activity>
         <activity android:name=".ui.activity.SelectItemListActivity">
         </activity>
+        <activity android:name=".ui.activity.SetSysActivity">
+        </activity>
     </application>
 
 </manifest>

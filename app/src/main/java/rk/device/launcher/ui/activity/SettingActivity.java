@@ -101,7 +101,9 @@ public class SettingActivity extends AppCompatActivity {
 		});
 		mLlSetSys.setOnClickListener(new View.OnClickListener() {
 			@Override public void onClick(View v) {
-				Toast.makeText(SettingActivity.this, "参数设置", Toast.LENGTH_SHORT).show();
+//				Toast.makeText(SettingActivity.this, "参数设置", Toast.LENGTH_SHORT).show();
+				Intent intent = new Intent(SettingActivity.this, SetSysActivity.class);
+				startActivity(intent);
 			}
 		});
 		mLlSysInfo.setOnClickListener(new View.OnClickListener() {

@@ -16,6 +16,7 @@ import butterknife.ButterKnife;
 import rk.device.launcher.R;
 import rk.device.launcher.adapter.SetDoorSelectListRvAdapter;
 import rk.device.launcher.bean.SetDoorRvBean;
+import rk.device.launcher.global.Constant;
 import rk.device.launcher.widget.itemdecoration.WifiListRvItemDecoration;
 
 public class SelectItemListActivity extends AppCompatActivity {
@@ -33,9 +34,9 @@ public class SelectItemListActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Bundle bundle = getIntent().getBundleExtra(SetDoorGuardActivity.INTENT_KEY);
-		String title = bundle.getString(SetDoorGuardActivity.KEY_TITLE);
-		mDataList = bundle.getParcelableArrayList(SetDoorGuardActivity.BUNDLE_KEY);
+		Bundle bundle = getIntent().getBundleExtra(Constant.KEY_INTENT);
+		String title = bundle.getString(Constant.KEY_TITLE);
+		mDataList = bundle.getParcelableArrayList(Constant.KEY_BUNDLE);
 		setContentView(R.layout.activity_select_item);
 		ButterKnife.bind(this);
 		if (!TextUtils.isEmpty(title)) {

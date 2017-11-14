@@ -127,7 +127,7 @@
 
                 <TextView
                     android:id="@+id/tv_set_sys"
-                    android:text="参数设置"
+                    android:text="系统设置"
                     style="@style/tv_setting_item"/>
 
             </LinearLayout>

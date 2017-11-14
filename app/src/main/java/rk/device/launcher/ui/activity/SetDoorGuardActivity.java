@@ -18,6 +18,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rk.device.launcher.R;
 import rk.device.launcher.bean.SetDoorRvBean;
+import rk.device.launcher.global.Constant;
 
 public class SetDoorGuardActivity extends AppCompatActivity {
 
@@ -146,9 +147,6 @@ public class SetDoorGuardActivity extends AppCompatActivity {
 		});
 	}
 
-	public static final String INTENT_KEY = "select_data_bundle";
-	public static final String BUNDLE_KEY = "bundle_key";
-	public static final String KEY_TITLE = "key_title";
 
 	@OnClick({R.id.ll_connected_device, R.id.ll_turn_on_switch, R.id.ll_switch_time, R.id.ll_door_input, R.id.ll_alert_overtime, R.id.ll_opendoor_input, R.id.ll_red_ray_sensor_input})
 	public void onViewClicked(View view) {
@@ -163,40 +161,40 @@ public class SetDoorGuardActivity extends AppCompatActivity {
 				title = ((TextView) firstChild).getText().toString();
 			}
 		}
-		bundle.putString(KEY_TITLE, title);
+		bundle.putString(Constant.KEY_TITLE, title);
 		int requestcode = -1;
 		int viewId = view.getId();
 		switch (viewId) {
 			case R.id.ll_connected_device:
 				requestcode = 0;
-				bundle.putParcelableArrayList(BUNDLE_KEY, mConnectedDeviceDataList);
+				bundle.putParcelableArrayList(Constant.KEY_BUNDLE, mConnectedDeviceDataList);
 				break;
 			case R.id.ll_turn_on_switch:
 				requestcode = 1;
-				bundle.putParcelableArrayList(BUNDLE_KEY, mLockQuantityDataList);
+				bundle.putParcelableArrayList(Constant.KEY_BUNDLE, mLockQuantityDataList);
 				break;
 			case R.id.ll_switch_time:
 				requestcode = 2;
-				bundle.putParcelableArrayList(BUNDLE_KEY, mLockTimeDataList);
+				bundle.putParcelableArrayList(Constant.KEY_BUNDLE, mLockTimeDataList);
 				break;
 			case R.id.ll_door_input:
 				requestcode = 3;
-				bundle.putParcelableArrayList(BUNDLE_KEY, mAlertInputDataList);
+				bundle.putParcelableArrayList(Constant.KEY_BUNDLE, mAlertInputDataList);
 				break;
 			case R.id.ll_alert_overtime:
 				requestcode = 4;
-				bundle.putParcelableArrayList(BUNDLE_KEY, mAlertOverTimeDataList);
+				bundle.putParcelableArrayList(Constant.KEY_BUNDLE, mAlertOverTimeDataList);
 				break;
 			case R.id.ll_opendoor_input:
 				requestcode = 5;
-				bundle.putParcelableArrayList(BUNDLE_KEY, mOpenDoorInputDataList);
+				bundle.putParcelableArrayList(Constant.KEY_BUNDLE, mOpenDoorInputDataList);
 				break;
 			case R.id.ll_red_ray_sensor_input:
 				requestcode = 6;
-				bundle.putParcelableArrayList(BUNDLE_KEY, mRedRaySensorDataList);
+				bundle.putParcelableArrayList(Constant.KEY_BUNDLE, mRedRaySensorDataList);
 				break;
 		}
-		intent.putExtra(INTENT_KEY, bundle);
+		intent.putExtra(Constant.KEY_INTENT, bundle);
 		startActivityForResult(intent, requestcode);
 	}
 
