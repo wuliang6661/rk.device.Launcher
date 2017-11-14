@@ -1,0 +1,476 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:showIn="@layout/activity_set_door_guard">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height">
+
+        <TextView
+            android:textColor="@color/white"
+            android:layout_marginLeft="20dp"
+            android:textSize="20dp"
+            android:layout_gravity="center_vertical"
+            android:text="单元名称"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Space
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"/>
+
+        <TextView
+            android:layout_marginRight="15dp"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:layout_gravity="center_vertical"
+            android:text="远洋国际中心A座"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <View
+        android:background="@color/blue_31598a"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_height"/>
+
+    <LinearLayout
+        android:id="@+id/ll_connected_device"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height">
+
+        <TextView
+            android:textColor="@color/white"
+            android:layout_marginLeft="20dp"
+            android:textSize="20dp"
+            android:layout_gravity="center_vertical"
+            android:text="关联设备"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Space
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"/>
+
+        <TextView
+            android:id="@+id/tv_connected_device"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:layout_gravity="center_vertical"
+            tools:text="一体机"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <ImageView
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="15dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/arrow_right"
+            android:layout_width="12dp"
+            android:layout_height="22dp"/>
+
+    </LinearLayout>
+
+    <View
+        android:background="@color/blue_31598a"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_height"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height">
+
+        <TextView
+            android:textColor="@color/white"
+            android:layout_marginLeft="20dp"
+            android:textSize="20dp"
+            android:layout_gravity="center_vertical"
+            android:text="语音提示"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Space
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"/>
+
+        <CheckBox
+            android:button="@null"
+            android:background="@drawable/selector_switch_button"
+            android:layout_marginRight="15dp"
+            android:layout_gravity="center_vertical"
+            android:layout_width="50dp"
+            android:layout_height="33dp"/>
+
+    </LinearLayout>
+
+    <View
+        android:background="@color/blue_31598a"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_height"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height">
+
+        <TextView
+            android:gravity="center"
+            android:background="@drawable/smart_lock_bg"
+            android:textColor="@color/white"
+            android:layout_marginLeft="20dp"
+            android:textSize="20dp"
+            android:layout_gravity="center_vertical"
+            android:text="智能锁"
+            android:layout_width="80dp"
+            android:layout_height="@dimen/colorful_btn_height"/>
+
+
+    </LinearLayout>
+
+    <View
+        android:background="@color/blue_31598a"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_height"/>
+
+    <LinearLayout
+        android:id="@+id/ll_turn_on_switch"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height">
+
+        <TextView
+            android:textColor="@color/white"
+            android:layout_marginLeft="20dp"
+            android:textSize="20dp"
+            android:layout_gravity="center_vertical"
+            android:text="启用开关量"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Space
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"/>
+
+        <TextView
+            android:id="@+id/tv_lock_quantity"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:layout_gravity="center_vertical"
+            tools:text="开关量3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <ImageView
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="15dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/arrow_right"
+            android:layout_width="12dp"
+            android:layout_height="22dp"/>
+
+    </LinearLayout>
+
+    <View
+        android:background="@color/blue_31598a"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_height"/>
+
+    <LinearLayout
+        android:id="@+id/ll_switch_time"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height">
+
+        <TextView
+            android:textColor="@color/white"
+            android:layout_marginLeft="20dp"
+            android:textSize="20dp"
+            android:layout_gravity="center_vertical"
+            android:text="开关时长"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Space
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"/>
+
+        <TextView
+            android:id="@+id/tv_lock_time"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:layout_gravity="center_vertical"
+            android:text="30s"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <ImageView
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="15dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/arrow_right"
+            android:layout_width="12dp"
+            android:layout_height="22dp"/>
+
+    </LinearLayout>
+
+    <View
+        android:background="@color/blue_31598a"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_height"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height">
+
+        <TextView
+            android:gravity="center"
+            android:background="@drawable/door_call_police_bg"
+            android:textColor="@color/white"
+            android:layout_marginLeft="20dp"
+            android:textSize="20dp"
+            android:layout_gravity="center_vertical"
+            android:text="门磁报警"
+            android:layout_width="100dp"
+            android:layout_height="@dimen/colorful_btn_height"/>
+
+
+    </LinearLayout>
+
+    <View
+        android:background="@color/blue_31598a"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_height"/>
+
+    <LinearLayout
+        android:id="@+id/ll_door_input"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height">
+
+        <TextView
+            android:textColor="@color/white"
+            android:layout_marginLeft="20dp"
+            android:textSize="20dp"
+            android:layout_gravity="center_vertical"
+            android:text="输入"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Space
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"/>
+
+        <TextView
+            android:id="@+id/tv_alert_input"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:layout_gravity="center_vertical"
+            android:text="DI1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <ImageView
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="15dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/arrow_right"
+            android:layout_width="12dp"
+            android:layout_height="22dp"/>
+
+    </LinearLayout>
+
+    <View
+        android:background="@color/blue_31598a"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_height"/>
+
+    <LinearLayout
+        android:id="@+id/ll_alert_overtime"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height">
+
+        <TextView
+            android:textColor="@color/white"
+            android:layout_marginLeft="20dp"
+            android:textSize="20dp"
+            android:layout_gravity="center_vertical"
+            android:text="超时警报 (s)"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Space
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"/>
+
+        <TextView
+            android:id="@+id/tv_alert_overtime"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:layout_gravity="center_vertical"
+            android:text="30s"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <ImageView
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="15dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/arrow_right"
+            android:layout_width="12dp"
+            android:layout_height="22dp"/>
+
+    </LinearLayout>
+
+    <View
+        android:background="@color/blue_31598a"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_height"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height">
+
+        <TextView
+            android:gravity="center"
+            android:background="@drawable/door_call_police_bg"
+            android:textColor="@color/white"
+            android:layout_marginLeft="20dp"
+            android:textSize="20dp"
+            android:layout_gravity="center_vertical"
+            android:text="出门按钮"
+            android:layout_width="100dp"
+            android:layout_height="@dimen/colorful_btn_height"/>
+
+
+    </LinearLayout>
+
+    <View
+        android:background="@color/blue_31598a"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_height"/>
+
+    <LinearLayout
+        android:id="@+id/ll_opendoor_input"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height">
+
+        <TextView
+            android:textColor="@color/white"
+            android:layout_marginLeft="20dp"
+            android:textSize="20dp"
+            android:layout_gravity="center_vertical"
+            android:text="输入"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Space
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"/>
+
+        <TextView
+            android:id="@+id/tv_open_door_input"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:layout_gravity="center_vertical"
+            android:text="DI1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <ImageView
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="15dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/arrow_right"
+            android:layout_width="12dp"
+            android:layout_height="22dp"/>
+
+    </LinearLayout>
+
+    <View
+        android:background="@color/blue_31598a"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_height"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height">
+
+        <TextView
+            android:gravity="center"
+            android:background="@drawable/red_ray_sensor_bg"
+            android:textColor="@color/white"
+            android:layout_marginLeft="20dp"
+            android:textSize="20dp"
+            android:layout_gravity="center_vertical"
+            android:text="红外感应 (里门)"
+            android:layout_width="170dp"
+            android:layout_height="@dimen/colorful_btn_height"/>
+
+
+    </LinearLayout>
+
+    <View
+        android:background="@color/blue_31598a"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_height"/>
+
+    <LinearLayout
+        android:id="@+id/ll_red_ray_sensor_input"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height">
+
+        <TextView
+            android:textColor="@color/white"
+            android:layout_marginLeft="20dp"
+            android:textSize="20dp"
+            android:layout_gravity="center_vertical"
+            android:text="输入"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Space
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"/>
+
+        <TextView
+            android:id="@+id/tv_red_ray_input"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:layout_gravity="center_vertical"
+            android:text="DI1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <ImageView
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="15dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/arrow_right"
+            android:layout_width="12dp"
+            android:layout_height="22dp"/>
+
+    </LinearLayout>
+
+    <View
+        android:background="@color/blue_31598a"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_height"/>
+
+</LinearLayout>

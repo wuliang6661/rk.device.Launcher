@@ -94,7 +94,9 @@ public class SettingActivity extends AppCompatActivity {
 		});
 		mLlSetDoor.setOnClickListener(new View.OnClickListener() {
 			@Override public void onClick(View v) {
-				Toast.makeText(SettingActivity.this, "门禁设置", Toast.LENGTH_SHORT).show();
+//				Toast.makeText(SettingActivity.this, "门禁设置", Toast.LENGTH_SHORT).show();
+				Intent intent = new Intent(SettingActivity.this, SetDoorGuardActivity.class);
+				startActivity(intent);
 			}
 		});
 		mLlSetSys.setOnClickListener(new View.OnClickListener() {
@@ -128,13 +130,13 @@ public class SettingActivity extends AppCompatActivity {
 						break;
 					case MotionEvent.ACTION_UP:
 					case MotionEvent.ACTION_OUTSIDE:
-						tv.setTextColor(getColor(R.color.blue_338eff));
+						tv.setTextColor(getResources().getColor(R.color.blue_338eff));
 						iv.setImageResource(normalResource);
 						ll.getBackground().clearColorFilter();
 						ll.setBackgroundResource(R.drawable.item_background_normal);
 						break;
 					case MotionEvent.ACTION_CANCEL:
-						tv.setTextColor(getColor(R.color.blue_338eff));
+						tv.setTextColor(getResources().getColor(R.color.blue_338eff));
 						iv.setBackgroundResource(normalResource);
 						ll.getBackground().clearColorFilter();
 						ll.setBackgroundResource(R.drawable.item_background_normal);

@@ -21,6 +21,10 @@
         </activity>
         <activity android:name=".ui.activity.SetNetWorkActivity">
         </activity>
+        <activity android:name=".ui.activity.SetDoorGuardActivity">
+        </activity>
+        <activity android:name=".ui.activity.SelectItemListActivity">
+        </activity>
     </application>
 
 </manifest>
