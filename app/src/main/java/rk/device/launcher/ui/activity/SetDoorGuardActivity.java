@@ -19,6 +19,7 @@ import butterknife.OnClick;
 import rk.device.launcher.R;
 import rk.device.launcher.bean.SetDoorRvBean;
 import rk.device.launcher.global.Constant;
+import rk.device.launcher.utils.DrawableUtil;
 
 public class SetDoorGuardActivity extends AppCompatActivity {
 
@@ -139,6 +140,7 @@ public class SetDoorGuardActivity extends AppCompatActivity {
 			}
 		});
 		mTvTitle.setText("门禁设置");
+		DrawableUtil.addPressedDrawable(this, R.drawable.shape_btn_finish_setting, mBtnFinishSetting);
 		mBtnFinishSetting.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {

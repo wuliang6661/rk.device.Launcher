@@ -72,6 +72,12 @@ public class SettingActivity extends AppCompatActivity {
 
 
 		mTvTitle.setText("设置");
+		mIvBack.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				finish();
+			}
+		});
 		processOnTouchListener(mLlSetTime, mIvSetTime, mTvSetTime, R.drawable.set_time_normal, R.drawable.set_time_pressed);
 		processOnTouchListener(mLlSetNet, mIvSetNetwork, mTvSetNetwork, R.drawable.set_network_normal, R.drawable.set_network_pressed);
 		processOnTouchListener(mLlSetDoor, mIvSetDoor, mTvSetDoor, R.drawable.set_door_normal, R.drawable.set_door_pressed);
@@ -81,7 +87,6 @@ public class SettingActivity extends AppCompatActivity {
 		mLlSetTime.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-//				Toast.makeText(SettingActivity.this, "时间设置", Toast.LENGTH_SHORT).show();
 				Intent intent = new Intent(SettingActivity.this, SetTimeActivity.class);
 				startActivity(intent);
 			}
@@ -89,7 +94,6 @@ public class SettingActivity extends AppCompatActivity {
 		mLlSetNet.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-//				Toast.makeText(SettingActivity.this, "网络设置", Toast.LENGTH_SHORT).show();
 				Intent intent = new Intent(SettingActivity.this, SetNetWorkActivity.class);
 				startActivity(intent);
 			}
@@ -97,7 +101,6 @@ public class SettingActivity extends AppCompatActivity {
 		mLlSetDoor.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-//				Toast.makeText(SettingActivity.this, "门禁设置", Toast.LENGTH_SHORT).show();
 				Intent intent = new Intent(SettingActivity.this, SetDoorGuardActivity.class);
 				startActivity(intent);
 			}
@@ -105,7 +108,6 @@ public class SettingActivity extends AppCompatActivity {
 		mLlSetSys.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-//				Toast.makeText(SettingActivity.this, "参数设置", Toast.LENGTH_SHORT).show();
 				Intent intent = new Intent(SettingActivity.this, SetSysActivity.class);
 				startActivity(intent);
 			}
@@ -113,7 +115,6 @@ public class SettingActivity extends AppCompatActivity {
 		mLlSysInfo.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-//				Toast.makeText(SettingActivity.this, "系统信息", Toast.LENGTH_SHORT).show();
 				Intent intent = new Intent(SettingActivity.this, SystemInfoActivity.class);
 				startActivity(intent);
 			}
@@ -121,7 +122,6 @@ public class SettingActivity extends AppCompatActivity {
 		mLlRecovery.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-//				Toast.makeText(SettingActivity.this, "恢复出厂", Toast.LENGTH_SHORT).show()
 				final RecoveryDialogFragment recoveryDialogFragment = RecoveryDialogFragment.newInstance();
 				recoveryDialogFragment.setOnCancelClickListener(new RecoveryDialogFragment.onCancelClickListener() {
 					@Override

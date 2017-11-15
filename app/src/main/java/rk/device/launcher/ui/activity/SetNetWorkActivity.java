@@ -17,6 +17,7 @@ import rk.device.launcher.R;
 import rk.device.launcher.ui.fragment.AutoObtainNetworkConfigFragment;
 import rk.device.launcher.ui.fragment.ManualConfigFragment;
 import rk.device.launcher.ui.fragment.WifiListFragment;
+import rk.device.launcher.utils.DrawableUtil;
 
 public class SetNetWorkActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -58,6 +59,7 @@ public class SetNetWorkActivity extends AppCompatActivity implements View.OnClic
 		mLlManul.setOnClickListener(this);
 		mLlWifi.setOnClickListener(this);
 
+		DrawableUtil.addPressedDrawable(this, R.drawable.shape_btn_finish_setting, mBtnFinishSetting);
 		mBtnFinishSetting.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {

@@ -18,6 +18,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import rk.device.launcher.R;
+import rk.device.launcher.utils.DrawableUtil;
 import rk.device.launcher.utils.ScreenUtil;
 
 
@@ -114,6 +115,8 @@ public class InputWifiPasswordDialogFragment extends DialogFragment {
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		mTvTitle.setText(mTitle);
+		DrawableUtil.addPressedDrawable(getContext(), R.drawable.shape_dialog_btn_cancel, mBtnCancel);
+		DrawableUtil.addPressedDrawable(getContext(), R.drawable.shape_dialog_btn_confirm, mBtnConfirm);
 		mBtnCancel.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {

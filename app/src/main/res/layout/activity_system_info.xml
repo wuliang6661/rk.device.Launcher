@@ -44,7 +44,7 @@
         <Button
             android:layout_marginTop="50dp"
             android:background="@drawable/shape_btn_round_corner"
-            android:id="@+id/btn_finish_setting"
+            android:id="@+id/btn_check_update"
             android:text="检查更新"
             style="@style/btn_finish"/>
 

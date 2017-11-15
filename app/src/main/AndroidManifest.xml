@@ -11,11 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".ui.activity.SettingActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
         </activity>
         <activity android:name=".ui.activity.SetTimeActivity">
         </activity>
@@ -25,13 +21,22 @@
         </activity>
         <activity android:name=".ui.activity.SelectItemListActivity">
         </activity>
-        <activity android:name=".ui.activity.SetSysActivity"
-                  android:windowSoftInputMode="adjustPan"
-            >
+        <activity
+            android:name=".ui.activity.SetSysActivity"
+            android:windowSoftInputMode="adjustPan">
         </activity>
         <activity android:name=".ui.activity.SystemInfoActivity">
         </activity>
         <activity android:name=".ui.activity.RecoveryActivity">
+        </activity>
+        <activity
+            android:name=".ui.activity.MainActivity"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
     </application>
 

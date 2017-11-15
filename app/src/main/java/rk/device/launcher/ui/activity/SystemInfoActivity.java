@@ -11,6 +11,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import rk.device.launcher.R;
+import rk.device.launcher.utils.DrawableUtil;
 import rk.device.launcher.utils.QRCodeUtils;
 
 public class SystemInfoActivity extends AppCompatActivity {
@@ -21,8 +22,8 @@ public class SystemInfoActivity extends AppCompatActivity {
 	TextView mTvTitle;
 	@BindView(R.id.iv_qrcode)
 	ImageView mIvQrcode;
-	@BindView(R.id.btn_finish_setting)
-	Button mBtnFinishSetting;
+	@BindView(R.id.btn_check_update)
+	Button mBtnCheckUpdate;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +38,8 @@ public class SystemInfoActivity extends AppCompatActivity {
 			}
 		});
 		mTvTitle.setText("系统信息");
+
+		DrawableUtil.addPressedDrawable(this, R.drawable.shape_btn_round_corner, mBtnCheckUpdate);
 		mIvBack.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {

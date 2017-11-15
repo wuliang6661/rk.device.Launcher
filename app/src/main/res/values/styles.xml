@@ -6,6 +6,12 @@
         <!--<item name="colorPrimary">@color/colorPrimary</item>-->
         <!--<item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
         <!--<item name="colorAccent">@color/colorAccent</item>-->
+        <item name="android:windowAnimationStyle">@style/slide</item>
+    </style>
+
+    <style name="slide" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/enter</item>
+        <item name="android:activityCloseExitAnimation">@anim/exit</item>
     </style>
 
     <style name="tv_setting_item">
@@ -26,6 +32,11 @@
     <style name="dialog.animation">
         <item name="android:windowEnterAnimation">@anim/slide_in_from_bottom</item>
         <item name="android:windowExitAnimation">@anim/slide_out_to_bottom</item>
+    </style>
+
+    <style name="selectItemDialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_in_from_right</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_to_right</item>
     </style>
 
     <style name="BottomDialog" parent="@style/AppTheme">

@@ -18,6 +18,7 @@ import butterknife.OnClick;
 import rk.device.launcher.R;
 import rk.device.launcher.bean.SetDoorRvBean;
 import rk.device.launcher.global.Constant;
+import rk.device.launcher.utils.DrawableUtil;
 
 public class SetSysActivity extends AppCompatActivity {
 
@@ -71,6 +72,7 @@ public class SetSysActivity extends AppCompatActivity {
 		mTvTitle.setText("系统设置");
 		mTvSleepTime.setText(mSleepTimeDataList.get(0).text);
 		mTvLightValue.setText(mLightValueDataList.get(0).text);
+		DrawableUtil.addPressedDrawable(this, R.drawable.shape_btn_finish_setting, mBtnFinishSetting);
 		mBtnFinishSetting.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
