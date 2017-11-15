@@ -70,7 +70,6 @@ public class WifiListFragment extends Fragment {
 						.setOnConfirmClickListener(new ConfirmDialogFragment.OnConfirmClickListener() {
 							@Override
 							public void onConfirmClick() {
-
 								confirmDialogFragment.dismiss();
 								final InputWifiPasswordDialogFragment inputWifiPasswordDialogFragment = InputWifiPasswordDialogFragment.newInstance();
 								inputWifiPasswordDialogFragment.setTitle("请输入“RUANKU”的密码")
@@ -86,6 +85,7 @@ public class WifiListFragment extends Fragment {
 											public void onConfirmClick() {
 												inputWifiPasswordDialogFragment.dismiss();
 												mDataList.get(position).isChecked = true;
+												mWifiRvAdapter.setNewCheckedPosition(position);
 												mWifiRvAdapter.notifyDataSetChanged();
 											}
 										});

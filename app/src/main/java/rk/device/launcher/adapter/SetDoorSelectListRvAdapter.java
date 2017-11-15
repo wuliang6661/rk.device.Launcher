@@ -30,6 +30,12 @@ public class SetDoorSelectListRvAdapter extends RecyclerView.Adapter<SetDoorSele
 
 	public SetDoorSelectListRvAdapter(List<SetDoorRvBean> dataList) {
 		mDataList = dataList;
+		for (int i = 0; i < dataList.size(); i++) {
+			SetDoorRvBean setDoorRvBean = dataList.get(i);
+			if (setDoorRvBean.isChecked) {
+				mLastCheckedPosition = new Integer(i);
+			}
+		}
 	}
 
 	private @LayoutRes int provideItemLayout() {
@@ -55,9 +61,9 @@ public class SetDoorSelectListRvAdapter extends RecyclerView.Adapter<SetDoorSele
 	@Override
 	public void onBindViewHolder(ViewHolder holder, final int position) {
 		SetDoorRvBean setDoorRvBean = mDataList.get(position);
-		if (setDoorRvBean.isChecked) {
-			mLastCheckedPosition = position;
-		}
+//		if (setDoorRvBean.isChecked) {
+//			mLastCheckedPosition = position;
+//		}
 		holder.bind(setDoorRvBean);
 		holder.itemView.setOnClickListener(new View.OnClickListener() {
 			@Override

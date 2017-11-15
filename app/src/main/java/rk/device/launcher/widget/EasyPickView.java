@@ -2,6 +2,7 @@ package rk.device.launcher.widget;
 
 import android.animation.ArgbEvaluator;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -17,6 +18,8 @@ import android.widget.OverScroller;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import rk.device.launcher.R;
 
 /**
  * Created by mundane on 2017/11/10 下午8:05
@@ -70,7 +73,7 @@ public class EasyPickView extends View {
 	private int mDividerColor = 0XFFFFFFFF;
 	// 分隔线的高度
 	private int mDividerHeight = 2;
-	// 是否是循环模式, 默认不是
+	// 是否是循环模式, 默认是
 	private boolean mIsRecycleMode;
 
 
@@ -104,7 +107,7 @@ public class EasyPickView extends View {
 
 	public EasyPickView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
-		initAttrs(context, attrs);
+		initAttrs(context, attrs,defStyleAttr);
 		initData(context);
 	}
 
@@ -134,8 +137,12 @@ public class EasyPickView extends View {
 		mScaledTouchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
 	}
 
-	private void initAttrs(Context context, AttributeSet attrs) {
-
+	private void initAttrs(Context context, AttributeSet attrs, int defStyleAttr) {
+		TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.EasyPickView, defStyleAttr, 0);
+		mIsRecycleMode = a.getBoolean(R.styleable.EasyPickView_recycleMode, true);
+		mShowRowCount = a.getInteger(R.styleable.EasyPickView_showRowCount, 5);
+		mDividerColor = a.getColor(R.styleable.EasyPickView_dividerColor, Color.GRAY);
+		a.recycle();
 	}
 
 	@Override
@@ -236,7 +243,7 @@ public class EasyPickView extends View {
 	private void reDraw() {
 		// mCurrentIndex需要偏移的量
 		int i = (int) (mOffsetY / (mTextHeight + mTextPadding));
-		if (mCurrentIndex - i >= 0 && mCurrentIndex - i < mDataList.size()) {
+		if (mIsRecycleMode || mCurrentIndex - i >= 0 && mCurrentIndex - i < mDataList.size()) {
 			if (mOffsetIndex != i) {
 				mOffsetIndex = i;
 				if (mOnScrollChangedListener != null) {
@@ -291,7 +298,7 @@ public class EasyPickView extends View {
 		int index = mCurrentIndex + offsetIndex;
 		if (mIsRecycleMode) {
 			if (index < 0) {
-				index = (index + 1) % mDataList.size() + mDataList.size() - 1;
+				index = index % mDataList.size() + mDataList.size();
 			} else if (index > mDataList.size() - 1) {
 				index = index % mDataList.size();
 			}
@@ -341,21 +348,22 @@ public class EasyPickView extends View {
 		if (!mIsRecycleMode) {
 			dy = (mCurrentIndex - index) * mCenterPadding;
 		} else {
-//			int offsetIndex = curIndex - index;
-//			int d1 = Math.abs(offsetIndex) * centerPadding;
-//			int d2 = (dataList.size() - Math.abs(offsetIndex)) * centerPadding;
-//
-//			if (offsetIndex > 0) {
-//				if (d1 < d2)
-//					dy = d1; // ascent
-//				else
-//					dy = -d2; // descent
-//			} else {
-//				if (d1 < d2)
-//					dy = -d1; // descent
-//				else
-//					dy = d2; // ascent
-//			}
+			int offsetIndex = mCurrentIndex - index;
+			// 看看从哪个方向滚动距离最短
+			int d1 = Math.abs(offsetIndex) * mCenterPadding;
+			int d2 = (mDataList.size() - Math.abs(offsetIndex)) * mCenterPadding;
+
+			if (offsetIndex > 0) {
+				if (d1 < d2)
+					dy = d1; // ascent
+				else
+					dy = -d2; // descent
+			} else {
+				if (d1 < d2)
+					dy = -d1; // descent
+				else
+					dy = d2; // ascent
+			}
 		}
 		mScroller.startScroll(0, 0, 0, dy, 500);
 		invalidate();
@@ -389,14 +397,16 @@ public class EasyPickView extends View {
 	 * @param dataList 要显示的数据
 	 */
 	public void setDataList(List<String> dataList) {
-		if (!mScroller.isFinished()) {
-			mScroller.forceFinished(true);
-		}
-		finishScroll();
+
 		if (!dataList.isEmpty() && dataList != null) {
 
 			mDataList.clear();
 			mDataList.addAll(dataList);
+
+			if (!mScroller.isFinished()) {
+				mScroller.forceFinished(true);
+			}
+			finishScroll();
 
 			// 更新maxTextWidth
 			mMaxTextWidth = 0;
@@ -417,14 +427,17 @@ public class EasyPickView extends View {
 	}
 
 	public void updateDataList(List<String> dataList) {
-		if (!mScroller.isFinished()) {
-			mScroller.forceFinished(true);
-		}
-		finishScroll();
+
 		if (!dataList.isEmpty() && dataList != null) {
 
 			mDataList.clear();
 			mDataList.addAll(dataList);
+
+			// forcefinished和finishScroll这两句代码很重要, 不加的话会有bug
+			if (!mScroller.isFinished()) {
+				mScroller.forceFinished(true);
+			}
+			finishScroll();
 
 			// 更新maxTextWidth
 			mMaxTextWidth = 0;
@@ -478,11 +491,19 @@ public class EasyPickView extends View {
 
 		int centerPadding = mTextHeight + mTextPadding;
 		// 绘制文字，从当前中间项往前、后一共绘制maxShowNum个字
-		int half = mShowRowCount / 2 + 1;
+		int half = (mShowRowCount + 1) / 2;
 		for (int i = -half; i <= half; i++) {
-			int index = mCurrentIndex - mOffsetIndex + i;
+			int textIndex = mCurrentIndex - mOffsetIndex + i;
 
-			if (index >= 0 && index < mDataList.size()) {
+			if (mIsRecycleMode) {
+				if (textIndex < 0) {
+					textIndex = textIndex % mDataList.size() + mDataList.size();
+				} else if (textIndex > mDataList.size() - 1) {
+					textIndex = textIndex % mDataList.size();
+				}
+			}
+
+			if (textIndex >= 0 && textIndex < mDataList.size()) {
 				// 计算每一行字的中间Y坐标
 				int tempY = mHalfHeight + i * mCenterPadding;
 				tempY += mOffsetY % centerPadding;
@@ -493,7 +514,7 @@ public class EasyPickView extends View {
 
 				Paint.FontMetrics fontMetrics = mTextPaint.getFontMetrics();
 
-				String text = mDataList.get(index);
+				String text = mDataList.get(textIndex);
 				float textWidth = mTextPaint.measureText(text);
 				canvas.drawText(text, mHalfWidth - textWidth / 2, tempY - (fontMetrics.ascent + fontMetrics.descent) / 2, mTextPaint);
 			}

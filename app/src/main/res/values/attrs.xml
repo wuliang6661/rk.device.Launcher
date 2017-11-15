@@ -37,4 +37,10 @@
         <!--the max length of hint content-->
         <attr name="npv_AlternativeHint" format="reference|string" />
     </declare-styleable>
+
+    <declare-styleable name="EasyPickView">
+        <attr name="recycleMode" format="boolean"/>
+        <attr name="showRowCount" format="integer"/>
+        <attr name="dividerColor" format="color|reference"/>
+    </declare-styleable>
 </resources>

@@ -29,7 +29,8 @@ public class RecoveryActivity extends AppCompatActivity {
 		mHandler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				mIv.setImageResource(R.drawable.icon_recovery_success);
+				((AnimationDrawable) mIv.getBackground()).stop();
+				mIv.setBackgroundResource(R.drawable.icon_recovery_success);
                 mTv.setText("恢复成功, 正在重启");
 			}
 		}, 3000);

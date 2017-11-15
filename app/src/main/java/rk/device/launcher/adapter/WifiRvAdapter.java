@@ -36,6 +36,18 @@ public class WifiRvAdapter extends RecyclerView.Adapter<WifiRvAdapter.ViewHolder
 		mOnItemClickedListener = listener;
 	}
 
+	public void setNewCheckedPosition(int position) {
+		if (mLastCheckedPosition != null) {
+			if (mLastCheckedPosition == position) {
+				return;
+			} else {
+				mDataList.get(mLastCheckedPosition).isChecked = false;
+			}
+		}
+		mDataList.get(position).isChecked = true;
+		mLastCheckedPosition = position;
+	}
+
 	private @LayoutRes int provideItemLayout() {
 		return R.layout.item_wifi_list;
 	}
@@ -54,12 +66,12 @@ public class WifiRvAdapter extends RecyclerView.Adapter<WifiRvAdapter.ViewHolder
 			public void onClick(View v) {
 				if (mOnItemClickedListener != null) {
 					// 存在上一个被选中的条目, 并且上一个被选中的条目不是当前点击的这个条目, 将上一个条目置空
-					if (mLastCheckedPosition != null && mLastCheckedPosition.intValue() != position) {
-						mDataList.get(mLastCheckedPosition).isChecked = false;
-					} else if (mLastCheckedPosition!=null && mLastCheckedPosition == position) {
-						return;
-					}
-					mLastCheckedPosition = position;
+//					if (mLastCheckedPosition != null && mLastCheckedPosition.intValue() != position) {
+//						mDataList.get(mLastCheckedPosition).isChecked = false;
+//					} else if (mLastCheckedPosition!=null && mLastCheckedPosition == position) {
+//						return;
+//					}
+//					mLastCheckedPosition = position;
 					mOnItemClickedListener.onItemClicked(position);
 				}
 			}
