@@ -2,7 +2,6 @@ package rk.device.launcher.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
@@ -13,13 +12,14 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.R;
 import rk.device.launcher.adapter.SetDoorSelectListRvAdapter;
 import rk.device.launcher.bean.SetDoorRvBean;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.widget.itemdecoration.WifiListRvItemDecoration;
 
-public class SelectItemListActivity extends AppCompatActivity {
+public class SelectItemListActivity extends BaseActivity {
 
 	@BindView(R.id.iv_back)
 	ImageView mIvBack;
@@ -39,6 +39,7 @@ public class SelectItemListActivity extends AppCompatActivity {
 		mDataList = bundle.getParcelableArrayList(Constant.KEY_BUNDLE);
 		setContentView(R.layout.activity_select_item);
 		ButterKnife.bind(this);
+		hideNavigationBar();
 		if (!TextUtils.isEmpty(title)) {
 			mTvTitle.setText(title);
 		}

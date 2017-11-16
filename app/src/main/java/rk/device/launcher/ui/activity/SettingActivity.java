@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -13,6 +12,7 @@ import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.R;
 import rk.device.launcher.ui.fragment.RecoveryDialogFragment;
 
@@ -20,7 +20,7 @@ import rk.device.launcher.ui.fragment.RecoveryDialogFragment;
  * Created by mundane on 2017/11/9 上午10:56
  */
 
-public class SettingActivity extends AppCompatActivity {
+public class SettingActivity extends BaseActivity {
 
 
 	@BindView(R.id.ll_set_time)
@@ -69,6 +69,7 @@ public class SettingActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_setting);
 		ButterKnife.bind(this);
+		hideNavigationBar();
 
 
 		mTvTitle.setText("设置");

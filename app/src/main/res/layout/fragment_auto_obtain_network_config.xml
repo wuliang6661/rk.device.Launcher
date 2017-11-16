@@ -47,7 +47,7 @@
         <TextView
             style="@style/tv_network_conf_item"
             android:layout_marginRight="15dp"
-            android:text="116.118.119.115"
+            android:text="192.168.0.1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
@@ -76,7 +76,7 @@
         <TextView
             style="@style/tv_network_conf_item"
             android:layout_marginRight="15dp"
-            android:text="116.118.119.115"
+            android:text="255.255.255.0"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
@@ -105,7 +105,7 @@
         <TextView
             style="@style/tv_network_conf_item"
             android:layout_marginRight="15dp"
-            android:text="116.118.119.115"
+            android:text="192.168.0.1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
@@ -134,7 +134,7 @@
         <TextView
             style="@style/tv_network_conf_item"
             android:layout_marginRight="15dp"
-            android:text="116.118.119.115"
+            android:text="192.168.0.1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 

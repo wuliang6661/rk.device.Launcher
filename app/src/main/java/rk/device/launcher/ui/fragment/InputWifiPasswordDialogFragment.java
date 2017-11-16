@@ -12,6 +12,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import butterknife.BindView;
@@ -40,6 +41,8 @@ public class InputWifiPasswordDialogFragment extends DialogFragment {
 	@BindView(R.id.btn_confirm)
 	Button mBtnConfirm;
 	Unbinder unbinder;
+	@BindView(R.id.ll_error)
+	LinearLayout mLlError;
 	private OnConfirmClickListener mOnConfirmClickListener;
 	private onCancelClickListener mOnCancelClickListener;
 	private CharSequence mTitle;
@@ -67,9 +70,17 @@ public class InputWifiPasswordDialogFragment extends DialogFragment {
 		unbinder.unbind();
 	}
 
+	public void showError() {
+		mLlError.setVisibility(View.VISIBLE);
+	}
+
+	public void hideError() {
+		mLlError.setVisibility(View.INVISIBLE);
+	}
+
 
 	public interface OnConfirmClickListener {
-		void onConfirmClick();
+		void onConfirmClick(String content);
 	}
 
 	public interface onCancelClickListener {
@@ -130,7 +141,7 @@ public class InputWifiPasswordDialogFragment extends DialogFragment {
 			@Override
 			public void onClick(View v) {
 				if (mOnConfirmClickListener != null) {
-					mOnConfirmClickListener.onConfirmClick();
+					mOnConfirmClickListener.onConfirmClick(mEtPassword.getText().toString());
 				}
 			}
 		});

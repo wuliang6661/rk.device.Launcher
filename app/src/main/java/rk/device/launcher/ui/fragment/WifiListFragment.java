@@ -82,7 +82,7 @@ public class WifiListFragment extends Fragment {
 										})
 										.setOnConfirmClickListener(new InputWifiPasswordDialogFragment.OnConfirmClickListener() {
 											@Override
-											public void onConfirmClick() {
+											public void onConfirmClick(String content) {
 												inputWifiPasswordDialogFragment.dismiss();
 												mDataList.get(position).isChecked = true;
 												mWifiRvAdapter.setNewCheckedPosition(position);

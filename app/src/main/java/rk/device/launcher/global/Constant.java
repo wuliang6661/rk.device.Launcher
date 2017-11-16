@@ -8,4 +8,5 @@ public interface Constant {
 	String KEY_INTENT = "KEY_INTENT";
 	String KEY_BUNDLE = "KEY_BUNDLE";
 	String KEY_TITLE = "KEY_TITLE";
+	String KEY_PASSWORD = "KEY_PASSWORD";
 }

@@ -4,7 +4,7 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 
-import rk.device.launcher.global.AppApplication;
+import rk.device.launcher.global.LauncherApplication;
 
 
 /**
@@ -22,7 +22,7 @@ public class ResUtil {
      * @return Returns a Resources instance for your application's Package.
      */
     public static Resources getResources() {
-        return AppApplication.getContext().getResources();
+        return LauncherApplication.getContext().getResources();
     }
 
     /**
@@ -31,7 +31,7 @@ public class ResUtil {
      * @return
      */
     public static Drawable getDrawable(int resId) {
-        return ContextCompat.getDrawable(AppApplication.getContext(), resId);
+        return ContextCompat.getDrawable(LauncherApplication.getContext(), resId);
     }
 
     /**
@@ -49,7 +49,7 @@ public class ResUtil {
      * @return
      */
     public static int getColor(int resId) {
-        return ContextCompat.getColor(AppApplication.getContext(), resId);
+        return ContextCompat.getColor(LauncherApplication.getContext(), resId);
     }
 
     /**

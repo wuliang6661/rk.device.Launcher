@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.util.SparseArrayCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -16,12 +15,13 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.R;
 import rk.device.launcher.bean.SetDoorRvBean;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.utils.DrawableUtil;
 
-public class SetDoorGuardActivity extends AppCompatActivity {
+public class SetDoorGuardActivity extends BaseActivity {
 
 	@BindView(R.id.iv_back)
 	ImageView mIvBack;
@@ -72,6 +72,7 @@ public class SetDoorGuardActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_set_door_guard);
 		ButterKnife.bind(this);
+		hideNavigationBar();
 		mIntegerSparseArray = new SparseArrayCompat<>();
 		mIntegerSparseArray.put(0, R.id.ll_connected_device);
 		mIntegerSparseArray.put(1, R.id.ll_turn_on_switch);

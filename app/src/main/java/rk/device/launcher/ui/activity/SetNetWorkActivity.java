@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -13,13 +12,14 @@ import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.R;
 import rk.device.launcher.ui.fragment.AutoObtainNetworkConfigFragment;
 import rk.device.launcher.ui.fragment.ManualConfigFragment;
 import rk.device.launcher.ui.fragment.WifiListFragment;
 import rk.device.launcher.utils.DrawableUtil;
 
-public class SetNetWorkActivity extends AppCompatActivity implements View.OnClickListener {
+public class SetNetWorkActivity extends BaseActivity implements View.OnClickListener {
 
 	@BindView(R.id.iv_back)
 	ImageView mIvBack;
@@ -47,6 +47,7 @@ public class SetNetWorkActivity extends AppCompatActivity implements View.OnClic
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_set_net_work);
 		ButterKnife.bind(this);
+		hideNavigationBar();
 		mFragmentManager = getSupportFragmentManager();
 		mTvTitle.setText("网络设置");
 		mIvBack.setOnClickListener(new View.OnClickListener() {

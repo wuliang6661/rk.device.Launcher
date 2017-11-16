@@ -2,7 +2,6 @@ package rk.device.launcher.ui.activity;
 
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -15,12 +14,13 @@ import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.R;
 import rk.device.launcher.ui.fragment.SetDateDialogFragment;
 import rk.device.launcher.ui.fragment.SetTimeDialogFragment;
 import rk.device.launcher.utils.DateUtil;
 
-public class SetTimeActivity extends AppCompatActivity {
+public class SetTimeActivity extends BaseActivity {
 
 	@BindView(R.id.iv_back)
 	ImageView mIvBack;
@@ -47,6 +47,7 @@ public class SetTimeActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_set_time);
 		ButterKnife.bind(this);
+		hideNavigationBar();
 		mTvTitle.setText("时间设置");
 		Calendar calendar = Calendar.getInstance();
 		Date date = new Date();

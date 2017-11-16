@@ -3,15 +3,15 @@ package rk.device.launcher.ui.activity;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.R;
 
-public class RecoveryActivity extends AppCompatActivity {
+public class RecoveryActivity extends BaseActivity {
 
 	@BindView(R.id.iv)
 	ImageView mIv;
@@ -24,6 +24,7 @@ public class RecoveryActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_recovery);
 		ButterKnife.bind(this);
+		hideNavigationBar();
 		((AnimationDrawable) mIv.getBackground()).start();
 		mHandler = new Handler();
 		mHandler.postDelayed(new Runnable() {

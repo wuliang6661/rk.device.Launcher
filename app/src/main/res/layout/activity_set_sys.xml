@@ -96,7 +96,7 @@
                 android:layout_marginLeft="20dp"
                 android:textSize="20dp"
                 android:layout_gravity="center_vertical"
-                android:text="待机时间 (s)"
+                android:text="待机时间"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -123,6 +123,7 @@
             android:layout_height="@dimen/divider_height"/>
 
         <LinearLayout
+            android:focusableInTouchMode="true"
             android:id="@+id/ll_light_value"
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -142,15 +143,31 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"/>
 
-            <TextView
+            <!--<TextView-->
+                <!--android:id="@+id/tv_light_value"-->
+                <!--android:layout_marginRight="15dp"-->
+                <!--android:textColor="@color/white"-->
+                <!--android:textSize="20dp"-->
+                <!--android:layout_gravity="center_vertical"-->
+                <!--android:text="80"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"/>-->
+
+            <!--阀值的范围是0到100-->
+            <EditText
+                android:singleLine="true"
+                android:inputType="number"
                 android:id="@+id/tv_light_value"
+                android:gravity="center_vertical|right"
+                android:background="@null"
+                android:textColorHint="@color/color_ccccc"
+                android:hint="请输入阀值"
                 android:layout_marginRight="15dp"
                 android:textColor="@color/white"
                 android:textSize="20dp"
                 android:layout_gravity="center_vertical"
-                android:text="80"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="65dp"/>
 
         </LinearLayout>
 
@@ -180,6 +197,7 @@
                 android:layout_height="match_parent"/>
 
             <EditText
+                android:singleLine="true"
                 android:gravity="center_vertical|right"
                 android:background="@null"
                 android:textColorHint="@color/color_ccccc"
@@ -223,6 +241,7 @@
                 android:layout_height="match_parent"/>
 
             <EditText
+                android:singleLine="true"
                 android:gravity="center_vertical|right"
                 android:background="@null"
                 android:textColorHint="@color/color_ccccc"

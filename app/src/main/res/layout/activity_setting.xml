@@ -34,11 +34,8 @@
 
                 <ImageView
                     android:id="@+id/iv_set_time"
-                    android:layout_marginTop="60dp"
-                    android:layout_gravity="center_horizontal"
                     android:src="@drawable/set_time_normal"
-                    android:layout_width="130dp"
-                    android:layout_height="130dp"/>
+                    style="@style/iv_setting_item"/>
 
                 <TextView
                     android:id="@+id/tv_set_time"
@@ -59,11 +56,9 @@
 
                 <ImageView
                     android:id="@+id/iv_set_network"
-                    android:layout_marginTop="60dp"
-                    android:layout_gravity="center_horizontal"
                     android:src="@drawable/set_network_normal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    style="@style/iv_setting_item"
+                    />
 
                 <TextView
                     android:id="@+id/tv_set_network"
@@ -93,11 +88,9 @@
 
                 <ImageView
                     android:id="@+id/iv_set_door"
-                    android:layout_marginTop="60dp"
-                    android:layout_gravity="center_horizontal"
                     android:src="@drawable/set_door_normal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    style="@style/iv_setting_item"
+                    />
 
                 <TextView
                     android:id="@+id/tv_set_door"
@@ -119,11 +112,9 @@
 
                 <ImageView
                     android:id="@+id/iv_set_system"
-                    android:layout_marginTop="60dp"
-                    android:layout_gravity="center_horizontal"
                     android:src="@drawable/set_system_normal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    style="@style/iv_setting_item"
+                    />
 
                 <TextView
                     android:id="@+id/tv_set_sys"
@@ -153,11 +144,9 @@
 
                 <ImageView
                     android:id="@+id/iv_sys_info"
-                    android:layout_marginTop="60dp"
-                    android:layout_gravity="center_horizontal"
                     android:src="@drawable/system_info_normal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    style="@style/iv_setting_item"
+                    />
 
                 <TextView
                     android:id="@+id/tv_sys_info"
@@ -178,11 +167,9 @@
 
                 <ImageView
                     android:id="@+id/iv_recovery"
-                    android:layout_marginTop="60dp"
-                    android:layout_gravity="center_horizontal"
                     android:src="@drawable/recovery_normal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    style="@style/iv_setting_item"
+                    />
 
                 <TextView
                     android:id="@+id/tv_recovery"

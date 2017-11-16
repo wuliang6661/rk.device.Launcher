@@ -6,7 +6,9 @@
         <!--<item name="colorPrimary">@color/colorPrimary</item>-->
         <!--<item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
         <!--<item name="colorAccent">@color/colorAccent</item>-->
+        <item name="android:windowFullscreen">true</item>
         <item name="android:windowAnimationStyle">@style/slide</item>
+        <item name="android:windowTranslucentNavigation">true</item>
     </style>
 
     <style name="slide" parent="@android:style/Animation.Activity">
@@ -15,12 +17,12 @@
     </style>
 
     <style name="tv_setting_item">
-        <item name="android:textSize">20dp</item>
+        <item name="android:textSize">27dp</item>
         <item name="android:textColor">@color/blue_338eff</item>
         <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">28dp</item>
+        <item name="android:layout_marginTop">37dp</item>
     </style>
 
     <!--对话框弹出window背景变暗-->
@@ -73,6 +75,13 @@
         <item name="android:layout_marginRight">15dp</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="iv_setting_item">
+        <item name="android:layout_marginTop">80dp</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:layout_width">167dp</item>
+        <item name="android:layout_height">167dp</item>
     </style>
 
 

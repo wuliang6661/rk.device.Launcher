@@ -7,20 +7,20 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="340dp"
         android:orientation="vertical">
 
 
         <TextView
             android:id="@+id/tv_message"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="253dp"
             android:background="@drawable/shape_dialog_top"
             android:gravity="center"
             android:padding="10dp"
             android:text="执行操作会造成设备断网, 是否继续?"
             android:textColor="@color/white"
-            android:textSize="25dp"/>
+            android:textSize="33dp"/>
 
         <View
             android:layout_width="match_parent"
@@ -30,7 +30,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="match_parent"
             android:orientation="horizontal">
 
             <Button
@@ -41,7 +41,7 @@
                 android:gravity="center"
                 android:text="取消"
                 android:textColor="@color/white"
-                android:textSize="22dp"
+                android:textSize="29dp"
                 />
 
             <View
@@ -57,7 +57,7 @@
                 android:gravity="center"
                 android:text="确定"
                 android:textColor="@color/white"
-                android:textSize="22dp"/>
+                android:textSize="29dp"/>
 
 
         </LinearLayout>

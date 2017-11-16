@@ -2,7 +2,6 @@ package rk.device.launcher.ui.activity;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -10,11 +9,12 @@ import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.R;
 import rk.device.launcher.utils.DrawableUtil;
 import rk.device.launcher.utils.QRCodeUtils;
 
-public class SystemInfoActivity extends AppCompatActivity {
+public class SystemInfoActivity extends BaseActivity {
 
 	@BindView(R.id.iv_back)
 	ImageView mIvBack;
@@ -30,6 +30,7 @@ public class SystemInfoActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_system_info);
 		ButterKnife.bind(this);
+		hideNavigationBar();
 		mIvQrcode.post(new Runnable() {
 			@Override
 			public void run() {
