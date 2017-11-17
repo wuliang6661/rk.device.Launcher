@@ -10,22 +10,22 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.R;
 import rk.device.launcher.adapter.SetDoorSelectListRvAdapter;
+import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.bean.SetDoorRvBean;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.widget.itemdecoration.WifiListRvItemDecoration;
 
 public class SelectItemListActivity extends BaseActivity {
 
-	@BindView(R.id.iv_back)
+	@Bind(R.id.iv_back)
 	ImageView mIvBack;
-	@BindView(R.id.tv_title)
+	@Bind(R.id.tv_title)
 	TextView mTvTitle;
-	@BindView(R.id.rv)
+	@Bind(R.id.rv)
 	RecyclerView mRv;
 	private ArrayList<SetDoorRvBean> mDataList;
 	private SetDoorSelectListRvAdapter mSetDoorSelectListRvAdapter;

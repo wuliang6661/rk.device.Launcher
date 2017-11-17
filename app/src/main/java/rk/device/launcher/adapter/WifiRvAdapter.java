@@ -1,5 +1,6 @@
 package rk.device.launcher.adapter;
 
+import android.net.wifi.ScanResult;
 import android.support.annotation.LayoutRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,25 +11,27 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import rk.device.launcher.R;
-import rk.device.launcher.bean.ScanResultWrappedBean;
+import rk.device.launcher.utils.WifiHelper;
 
 /**
  * Created by mundane on 2017/11/13 下午3:57
  */
 public class WifiRvAdapter extends RecyclerView.Adapter<WifiRvAdapter.ViewHolder> {
 
-	private List<ScanResultWrappedBean> mDataList;
+	private List<ScanResult> mDataList;
 	private Integer mLastCheckedPosition;
+	private WifiHelper mWifiHelper;
 
-	public WifiRvAdapter(List<ScanResultWrappedBean> list) {
+	public WifiRvAdapter(List<ScanResult> list, WifiHelper WifiHelper) {
 		mDataList = list;
+		mWifiHelper = WifiHelper;
 	}
 
 	public interface OnItemClickedListener{
-		void onItemClicked(int position);
+		void onItemClicked(int position, ScanResult scanResult);
 	}
 
 	private OnItemClickedListener mOnItemClickedListener;
@@ -37,17 +40,17 @@ public class WifiRvAdapter extends RecyclerView.Adapter<WifiRvAdapter.ViewHolder
 		mOnItemClickedListener = listener;
 	}
 
-	public void setNewCheckedPosition(int position) {
-		if (mLastCheckedPosition != null) {
-			if (mLastCheckedPosition == position) {
-				return;
-			} else {
-				mDataList.get(mLastCheckedPosition).isConnected = false;
-			}
-		}
-		mDataList.get(position).isConnected = true;
-		mLastCheckedPosition = position;
-	}
+//	public void setNewCheckedPosition(int position) {
+//		if (mLastCheckedPosition != null) {
+//			if (mLastCheckedPosition == position) {
+//				return;
+//			} else {
+//				mDataList.get(mLastCheckedPosition).isConnected = false;
+//			}
+//		}
+//		mDataList.get(position).isConnected = true;
+//		mLastCheckedPosition = position;
+//	}
 
 	private @LayoutRes int provideItemLayout() {
 		return R.layout.item_wifi_list;
@@ -61,7 +64,8 @@ public class WifiRvAdapter extends RecyclerView.Adapter<WifiRvAdapter.ViewHolder
 
 	@Override
 	public void onBindViewHolder(ViewHolder holder, final int position) {
-		holder.bind(mDataList.get(position));
+		final ScanResult scanResult = mDataList.get(position);
+		holder.bind(scanResult, mWifiHelper);
 		holder.itemView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -73,7 +77,7 @@ public class WifiRvAdapter extends RecyclerView.Adapter<WifiRvAdapter.ViewHolder
 //						return;
 //					}
 //					mLastCheckedPosition = position;
-					mOnItemClickedListener.onItemClicked(position);
+					mOnItemClickedListener.onItemClicked(position, scanResult);
 				}
 			}
 		});
@@ -86,22 +90,26 @@ public class WifiRvAdapter extends RecyclerView.Adapter<WifiRvAdapter.ViewHolder
 
 	static class ViewHolder extends RecyclerView.ViewHolder {
 
-		@BindView(R.id.iv_check)
+		@Bind(R.id.iv_check)
 		ImageView ivCheck;
-		@BindView(R.id.tv_wifi_name)
+		@Bind(R.id.tv_wifi_name)
 		TextView tvWifiName;
-		@BindView(R.id.iv_lock)
+		@Bind(R.id.iv_lock)
 		ImageView ivLock;
-		@BindView(R.id.iv_signal_strength)
+		@Bind(R.id.iv_signal_strength)
 		ImageView ivSignalStrength;
 		public ViewHolder(View itemView) {
 			super(itemView);
 			ButterKnife.bind(this, itemView);
 		}
 
-		public void bind(ScanResultWrappedBean bean) {
-			ivCheck.setVisibility(bean.isConnected ? View.VISIBLE : View.INVISIBLE);
-			tvWifiName.setText(bean.scanResult.SSID);
+		public void bind(ScanResult scanResult, WifiHelper wifiHelper) {
+			tvWifiName.setText(scanResult.SSID);
+			// 已连接
+			ivCheck.setVisibility(wifiHelper.isConnected(scanResult) ? View.VISIBLE : View.INVISIBLE);
+			boolean isLocked = wifiHelper.isLocked(scanResult);
+			ivLock.setVisibility(isLocked ? View.VISIBLE : View.INVISIBLE);
+
 		}
 	}
 }

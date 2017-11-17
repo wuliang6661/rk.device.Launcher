@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-import butterknife.internal.Utils;
 
 import static android.content.Context.LOCATION_SERVICE;
 

@@ -1,0 +1,337 @@
+package rk.device.launcher.utils;
+
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.ScanResult;
+import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+import android.text.TextUtils;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+
+/**
+ * Created by mundane on 2017/11/17 下午1:36
+ */
+
+public class WifiHelper {
+	// 上下文Context对象
+	private Context mApplicationContext;
+	// WifiManager对象
+	private WifiManager mWifiManager;
+
+	public WifiHelper(Context context) {
+		mApplicationContext = context.getApplicationContext();
+		mWifiManager = (WifiManager) mApplicationContext.getSystemService(Context.WIFI_SERVICE);
+	}
+
+	/**
+	 * 判断手机是否连接在Wifi上
+	 */
+	public boolean isConnectWifi() {
+		// 获取ConnectivityManager对象
+		ConnectivityManager conMgr = (ConnectivityManager) mApplicationContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+		// 获取NetworkInfo对象
+		NetworkInfo info = conMgr.getActiveNetworkInfo();
+		// 获取连接的方式为wifi
+		NetworkInfo.State wifi = conMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
+
+		if (info != null && info.isAvailable() && wifi == NetworkInfo.State.CONNECTED) {
+			return true;
+		} else {
+			return false;
+		}
+
+	}
+
+	/**
+	 * 获取当前手机所连接的wifi信息
+	 */
+	public WifiInfo getCurrentWifiInfo() {
+		return mWifiManager.getConnectionInfo();
+	}
+
+	/**
+	 * 添加一个网络并连接
+	 * 传入参数：WIFI发生配置类WifiConfiguration
+	 */
+	public boolean addNetwork(WifiConfiguration wcg) {
+		int wcgID = mWifiManager.addNetwork(wcg);
+		return mWifiManager.enableNetwork(wcgID, true);
+	}
+
+	/**
+	 * 搜索附近的热点信息，并返回所有热点为信息的SSID集合数据
+	 */
+	public List<String> getScanSSIDsResult() {
+		// 扫描的热点数据
+		List<ScanResult> resultList;
+		// 开始扫描热点
+		mWifiManager.startScan();
+		resultList = mWifiManager.getScanResults();
+		ArrayList<String> ssids = new ArrayList<String>();
+		if (resultList != null) {
+			for (ScanResult scan : resultList) {
+				ssids.add(scan.SSID);// 遍历数据，取得ssid数据集
+			}
+		}
+		return ssids;
+	}
+
+	/**
+	 * 判断该wifi是否加密
+	 * @param scanResult
+	 */
+	public boolean isLocked(ScanResult scanResult) {
+		// 该wifi是否加密
+		boolean isLocked = true;
+		if (scanResult.capabilities.contains("WPA2-PSK")) {
+			// WPA-PSK加密
+		} else if (scanResult.capabilities.contains("WPA-PSK")) {
+			// WPA-PSK加密
+		} else if (scanResult.capabilities.contains("WPA-EAP")) {
+			// WPA-EAP加密
+		} else if (scanResult.capabilities.contains("WEP")) {
+			// WEP加密
+		} else {
+			// 无密码
+			isLocked = false;
+		}
+		return isLocked;
+	}
+
+	/**
+	 * 判断以前是否配置过这个网络
+	 * @param scanResult
+	 * @return
+	 */
+	public WifiConfiguration isExist(ScanResult scanResult) {
+		// 获取所有已经配置过的网络
+		List<WifiConfiguration> configuredNetworks = mWifiManager.getConfiguredNetworks();
+		for (WifiConfiguration existedWifiConfig : configuredNetworks) {
+			if (TextUtils.equals(existedWifiConfig.SSID, "\"" + scanResult.SSID + "\"")) {
+				return existedWifiConfig;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * 忘记密码
+	 * 4.4以下使用
+	 * @param scanResult
+	 */
+	public void removeNetWork(ScanResult scanResult) {
+		WifiConfiguration existWifiConfig = isExist(scanResult);
+		if (existWifiConfig != null) {
+			// 由于系统限制, 忘记密码失败
+			mWifiManager.removeNetwork(existWifiConfig.networkId);
+			mWifiManager.saveConfiguration();
+		}
+	}
+
+	/**
+	 * 忘记密码
+	 * 4.4以下使用
+	 * @param wifiConfiguration
+	 */
+	public void removeNetWork(WifiConfiguration wifiConfiguration) {
+		// 由于系统限制, 忘记密码失败
+		mWifiManager.removeNetwork(wifiConfiguration.networkId);
+		mWifiManager.saveConfiguration();
+	}
+
+	public void forgetNetWork(WifiConfiguration wifiConfiguration) {
+
+	}
+
+
+
+	/**
+	 * 判断是否已经连接到这个wifi上面
+	 * @param scanResult
+	 * @return
+	 */
+	public boolean isConnected(ScanResult scanResult) {
+		boolean isConnected = false;
+		WifiConfiguration existedWifiConfiguration = isExist(scanResult);
+		if (existedWifiConfiguration != null && existedWifiConfiguration.networkId == mWifiManager.getConnectionInfo().getNetworkId()) {
+			isConnected = true;
+		}
+		return isConnected;
+	}
+
+	public List<ScanResult> getFilteredScanResult() {
+		mWifiManager.startScan();
+		List<ScanResult> list = mWifiManager.getScanResults();
+		HashMap<String, ScanResult> scanResultMap = new HashMap<>();
+		for (ScanResult scanResult : list) {
+			if (!TextUtils.isEmpty(scanResult.SSID)) { // 如果wifi名字不为空
+				String key = scanResult.SSID + " " + scanResult.capabilities;
+				if (!scanResultMap.containsKey(key)) { // 没有跟它重复的, 直接添加进去
+					scanResultMap.put(key, scanResult);
+				} else { // 出现重复的SSID了
+					ScanResult oldScanResult = scanResultMap.get(key);
+					// 将当前遍历到的scanResult的信号强度和之前已经存在的scanResult的信号强度进行比较, 如果信号更强, 就替换掉以前的
+					// 信号越强, 绝对值越小
+					if (Math.abs(scanResult.level) < Math.abs(oldScanResult.level)) {
+						scanResultMap.put(key, scanResult);
+					}
+				}
+			}
+		}
+
+		List<ScanResult> filteredList = new ArrayList<>();
+		for (String key : scanResultMap.keySet()) {
+			filteredList.add(scanResultMap.get(key));
+		}
+		// 按信号强度从强到弱排列
+		Collections.sort(filteredList, new Comparator<ScanResult>() {
+			@Override
+			public int compare(ScanResult o1, ScanResult o2) {
+				return Math.abs(o1.level) - Math.abs(o2.level);
+			}
+		});
+		return filteredList;
+
+	}
+
+	/**
+	 * 得到手机搜索到的ssid集合，从中判断出设备的ssid（dssid）
+	 */
+	public List<String> accordSsid() {
+		List<String> s = getScanSSIDsResult();
+		List<String> result = new ArrayList<>();
+		for (String str : s) {
+			if (checkDssid(str, "dd")) {
+				result.add(str);
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * 检测指定ssid是不是匹配的ssid，目前支持GBELL，TOP,后续可添加。
+	 *
+	 * @param ssid
+	 * @return
+	 */
+	private boolean checkDssid(String ssid, String condition) {
+		if (!TextUtils.isEmpty(ssid)&&!TextUtils.isEmpty(condition)) {
+			//这里条件根据自己的需求来判断，我这里就是随便写的一个条件
+			if (ssid.length() > 8 && (ssid.substring(0, 8).equals(condition))) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * 连接wifi
+	 * 参数：wifi的ssid及wifi的密码
+	 */
+	public boolean connectWifiTest(final String ssid, final String pwd) {
+		boolean isSuccess = false;
+		boolean flag = false;
+		mWifiManager.disconnect();
+		boolean addSucess = addNetwork(CreateWifiInfo(ssid, pwd, 3));
+		if (addSucess) {
+			while (!flag && !isSuccess) {
+				try {
+					Thread.sleep(10000);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+				String currSSID = getCurrentWifiInfo().getSSID();
+				if (currSSID != null)
+					currSSID = currSSID.replace("\"", "");
+				int currIp = getCurrentWifiInfo().getIpAddress();
+				if (currSSID != null && currSSID.equals(ssid) && currIp != 0) {
+					//这里还需要做优化处理，增强结果判断
+					isSuccess = true;
+				} else {
+					flag = true;
+				}
+			}
+		}
+		return isSuccess;
+
+	}
+
+	/**
+	 * 创建WifiConfiguration对象
+	 * 分为三种情况：1没有密码;2用wep加密;3用wpa加密
+	 * @param SSID
+	 * @param Password
+	 * @param Type
+	 * @return
+	 */
+	public WifiConfiguration CreateWifiInfo(String SSID, String Password, int Type) {
+		WifiConfiguration config = new WifiConfiguration();
+		config.allowedAuthAlgorithms.clear();
+		config.allowedGroupCiphers.clear();
+		config.allowedKeyManagement.clear();
+		config.allowedPairwiseCiphers.clear();
+		config.allowedProtocols.clear();
+		config.SSID = "\"" + SSID + "\"";
+
+		WifiConfiguration tempConfig = this.IsExsits(SSID);
+		if (tempConfig != null) {
+			mWifiManager.removeNetwork(tempConfig.networkId);
+		}
+
+		if (Type == 1) { // WIFICIPHER_NOPASS
+			config.wepKeys[0] = "";
+			config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+			config.wepTxKeyIndex = 0;
+		}
+		if (Type == 2) { // WIFICIPHER_WEP
+			config.hiddenSSID = true;
+			config.wepKeys[0] = "\"" + Password + "\"";
+			config.allowedAuthAlgorithms
+					.set(WifiConfiguration.AuthAlgorithm.SHARED);
+			config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
+			config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
+			config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
+			config.allowedGroupCiphers
+					.set(WifiConfiguration.GroupCipher.WEP104);
+			config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+			config.wepTxKeyIndex = 0;
+		}
+		if (Type == 3) { // WIFICIPHER_WPA
+			config.preSharedKey = "\"" + Password + "\"";
+			config.hiddenSSID = true;
+			config.allowedAuthAlgorithms
+					.set(WifiConfiguration.AuthAlgorithm.OPEN);
+			config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
+			config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
+			config.allowedPairwiseCiphers
+					.set(WifiConfiguration.PairwiseCipher.TKIP);
+			// config.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
+			config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
+			config.allowedPairwiseCiphers
+					.set(WifiConfiguration.PairwiseCipher.CCMP);
+			config.status = WifiConfiguration.Status.ENABLED;
+		}
+		return config;
+	}
+
+	private WifiConfiguration IsExsits(String SSID) {
+		List<WifiConfiguration> existingConfigs = mWifiManager.getConfiguredNetworks();
+		for (WifiConfiguration existingConfig : existingConfigs) {
+			if (existingConfig.SSID.equals("\"" + SSID + "\"")) {
+				return existingConfig;
+			}
+		}
+		return null;
+	}
+}

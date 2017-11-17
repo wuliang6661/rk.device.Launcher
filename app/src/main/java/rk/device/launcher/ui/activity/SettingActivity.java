@@ -10,10 +10,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.R;
+import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.ui.fragment.RecoveryDialogFragment;
 
 /**
@@ -23,45 +23,45 @@ import rk.device.launcher.ui.fragment.RecoveryDialogFragment;
 public class SettingActivity extends BaseActivity {
 
 
-	@BindView(R.id.ll_set_time)
+	@Bind(R.id.ll_set_time)
 	LinearLayout mLlSetTime;
-	@BindView(R.id.iv_set_time)
+	@Bind(R.id.iv_set_time)
 	ImageView mIvSetTime;
-	@BindView(R.id.iv_set_network)
+	@Bind(R.id.iv_set_network)
 	ImageView mIvSetNetwork;
-	@BindView(R.id.iv_set_door)
+	@Bind(R.id.iv_set_door)
 	ImageView mIvSetDoor;
-	@BindView(R.id.iv_set_system)
+	@Bind(R.id.iv_set_system)
 	ImageView mIvSetSystem;
-	@BindView(R.id.iv_sys_info)
+	@Bind(R.id.iv_sys_info)
 	ImageView mIvSysInfo;
-	@BindView(R.id.iv_recovery)
+	@Bind(R.id.iv_recovery)
 	ImageView mIvRecovery;
-	@BindView(R.id.tv_set_time)
+	@Bind(R.id.tv_set_time)
 	TextView mTvSetTime;
-	@BindView(R.id.tv_set_network)
+	@Bind(R.id.tv_set_network)
 	TextView mTvSetNetwork;
-	@BindView(R.id.tv_set_door)
+	@Bind(R.id.tv_set_door)
 	TextView mTvSetDoor;
-	@BindView(R.id.tv_set_sys)
+	@Bind(R.id.tv_set_sys)
 	TextView mTvSetSys;
-	@BindView(R.id.tv_sys_info)
+	@Bind(R.id.tv_sys_info)
 	TextView mTvSysInfo;
-	@BindView(R.id.tv_recovery)
+	@Bind(R.id.tv_recovery)
 	TextView mTvRecovery;
-	@BindView(R.id.iv_back)
+	@Bind(R.id.iv_back)
 	ImageView mIvBack;
-	@BindView(R.id.ll_set_net)
+	@Bind(R.id.ll_set_net)
 	LinearLayout mLlSetNet;
-	@BindView(R.id.ll_set_door)
+	@Bind(R.id.ll_set_door)
 	LinearLayout mLlSetDoor;
-	@BindView(R.id.ll_set_sys)
+	@Bind(R.id.ll_set_sys)
 	LinearLayout mLlSetSys;
-	@BindView(R.id.ll_sys_info)
+	@Bind(R.id.ll_sys_info)
 	LinearLayout mLlSysInfo;
-	@BindView(R.id.ll_recovery)
+	@Bind(R.id.ll_recovery)
 	LinearLayout mLlRecovery;
-	@BindView(R.id.tv_title)
+	@Bind(R.id.tv_title)
 	TextView mTvTitle;
 
 	@Override

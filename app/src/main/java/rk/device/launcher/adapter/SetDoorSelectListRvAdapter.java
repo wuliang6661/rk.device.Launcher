@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import rk.device.launcher.R;
 import rk.device.launcher.bean.SetDoorRvBean;
@@ -88,9 +88,9 @@ public class SetDoorSelectListRvAdapter extends RecyclerView.Adapter<SetDoorSele
 
 	static class ViewHolder extends RecyclerView.ViewHolder {
 
-		@BindView(R.id.tv_name)
+		@Bind(R.id.tv_name)
 		TextView tvName;
-		@BindView(R.id.iv_check)
+		@Bind(R.id.iv_check)
 		ImageView ivCheck;
 		public ViewHolder(View itemView) {
 			super(itemView);

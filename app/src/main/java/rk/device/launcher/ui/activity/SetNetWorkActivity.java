@@ -10,10 +10,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.R;
+import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.ui.fragment.AutoObtainNetworkConfigFragment;
 import rk.device.launcher.ui.fragment.ManualConfigFragment;
 import rk.device.launcher.ui.fragment.WifiListFragment;
@@ -21,23 +21,23 @@ import rk.device.launcher.utils.DrawableUtil;
 
 public class SetNetWorkActivity extends BaseActivity implements View.OnClickListener {
 
-	@BindView(R.id.iv_back)
+	@Bind(R.id.iv_back)
 	ImageView mIvBack;
-	@BindView(R.id.tv_title)
+	@Bind(R.id.tv_title)
 	TextView mTvTitle;
-	@BindView(R.id.ll_auto)
+	@Bind(R.id.ll_auto)
 	LinearLayout mLlAuto;
-	@BindView(R.id.ll_manul)
+	@Bind(R.id.ll_manul)
 	LinearLayout mLlManul;
-	@BindView(R.id.ll_wifi)
+	@Bind(R.id.ll_wifi)
 	LinearLayout mLlWifi;
-	@BindView(R.id.iv_auto)
+	@Bind(R.id.iv_auto)
 	ImageView mIvAuto;
-	@BindView(R.id.iv_manul)
+	@Bind(R.id.iv_manul)
 	ImageView mIvManul;
-	@BindView(R.id.iv_wifi)
+	@Bind(R.id.iv_wifi)
 	ImageView mIvWifi;
-	@BindView(R.id.btn_finish_setting)
+	@Bind(R.id.btn_finish_setting)
 	Button mBtnFinishSetting;
 	private FragmentManager mFragmentManager;
 	private String mFragmentTag = "1";

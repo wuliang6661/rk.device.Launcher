@@ -7,22 +7,22 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.R;
+import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.utils.DrawableUtil;
 import rk.device.launcher.utils.QRCodeUtils;
 
 public class SystemInfoActivity extends BaseActivity {
 
-	@BindView(R.id.iv_back)
+	@Bind(R.id.iv_back)
 	ImageView mIvBack;
-	@BindView(R.id.tv_title)
+	@Bind(R.id.tv_title)
 	TextView mTvTitle;
-	@BindView(R.id.iv_qrcode)
+	@Bind(R.id.iv_qrcode)
 	ImageView mIvQrcode;
-	@BindView(R.id.btn_check_update)
+	@Bind(R.id.btn_check_update)
 	Button mBtnCheckUpdate;
 
 	@Override

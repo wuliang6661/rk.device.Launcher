@@ -12,9 +12,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import rk.device.launcher.R;
 import rk.device.launcher.utils.DrawableUtil;
 import rk.device.launcher.utils.ScreenUtil;
@@ -29,11 +28,11 @@ import rk.device.launcher.utils.ScreenUtil;
 
 public class RecoveryDialogFragment extends DialogFragment {
 
-	@BindView(R.id.btn_cancel)
+	@Bind(R.id.btn_cancel)
 	Button mBtnCancel;
-	@BindView(R.id.btn_confirm)
+	@Bind(R.id.btn_confirm)
 	Button mBtnConfirm;
-	Unbinder unbinder;
+//	Unbinder unbinder;
 	private OnConfirmClickListener mOnConfirmClickListener;
 	private onCancelClickListener mOnCancelClickListener;
 
@@ -51,7 +50,7 @@ public class RecoveryDialogFragment extends DialogFragment {
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
-		unbinder.unbind();
+//		unbinder.unbind();
 	}
 
 
@@ -95,7 +94,7 @@ public class RecoveryDialogFragment extends DialogFragment {
 		// 这句代码十分重要, 否则圆角背景的圆角永远就只有那么大
 		getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 		getDialog().setCanceledOnTouchOutside(true);
-		unbinder = ButterKnife.bind(this, rootView);
+		ButterKnife.bind(this, rootView);
 		return rootView;
 	}
 

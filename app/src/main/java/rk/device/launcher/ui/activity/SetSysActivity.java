@@ -12,30 +12,30 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.R;
+import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.bean.SetDoorRvBean;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.utils.DrawableUtil;
 
 public class SetSysActivity extends BaseActivity {
 
-	@BindView(R.id.iv_back)
+	@Bind(R.id.iv_back)
 	ImageView mIvBack;
-	@BindView(R.id.tv_title)
+	@Bind(R.id.tv_title)
 	TextView mTvTitle;
-	@BindView(R.id.ll_sleep_time)
+	@Bind(R.id.ll_sleep_time)
 	LinearLayout mLlSleepTime;
-	@BindView(R.id.ll_light_value)
+	@Bind(R.id.ll_light_value)
 	LinearLayout mLlLightValue;
-	@BindView(R.id.tv_sleep_time)
+	@Bind(R.id.tv_sleep_time)
 	TextView mTvSleepTime;
-	@BindView(R.id.tv_light_value)
+	@Bind(R.id.tv_light_value)
 	EditText mEtLightValue;
-	@BindView(R.id.btn_finish_setting)
+	@Bind(R.id.btn_finish_setting)
 	Button mBtnFinishSetting;
 
 	private ArrayList<SetDoorRvBean> mSleepTimeDataList;

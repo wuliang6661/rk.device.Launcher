@@ -12,29 +12,29 @@ import android.widget.TextView;
 import java.util.Calendar;
 import java.util.Date;
 
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.R;
+import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.ui.fragment.SetDateDialogFragment;
 import rk.device.launcher.ui.fragment.SetTimeDialogFragment;
 import rk.device.launcher.utils.DateUtil;
 
 public class SetTimeActivity extends BaseActivity {
 
-	@BindView(R.id.iv_back)
+	@Bind(R.id.iv_back)
 	ImageView mIvBack;
-	@BindView(R.id.tv_title)
+	@Bind(R.id.tv_title)
 	TextView mTvTitle;
-	@BindView(R.id.ll_set_date)
+	@Bind(R.id.ll_set_date)
 	LinearLayout mLlSetDate;
-	@BindView(R.id.btn_finish_setting)
+	@Bind(R.id.btn_finish_setting)
 	Button mBtnFinishSetting;
-	@BindView(R.id.tv_date)
+	@Bind(R.id.tv_date)
 	TextView mTvDate;
-	@BindView(R.id.ll_set_time)
+	@Bind(R.id.ll_set_time)
 	LinearLayout mLlSetTime;
-	@BindView(R.id.tv_time)
+	@Bind(R.id.tv_time)
 	TextView mTvTime;
 	private int mSelectedYear;
 	private int mSelectedMonth;

@@ -15,9 +15,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import rk.device.launcher.R;
 import rk.device.launcher.utils.DrawableUtil;
 import rk.device.launcher.utils.ScreenUtil;
@@ -32,16 +31,16 @@ import rk.device.launcher.utils.ScreenUtil;
 
 public class InputWifiPasswordDialogFragment extends DialogFragment {
 
-	@BindView(R.id.tv_title)
+	@Bind(R.id.tv_title)
 	TextView mTvTitle;
-	@BindView(R.id.et_password)
+	@Bind(R.id.et_password)
 	EditText mEtPassword;
-	@BindView(R.id.btn_cancel)
+	@Bind(R.id.btn_cancel)
 	Button mBtnCancel;
-	@BindView(R.id.btn_confirm)
+	@Bind(R.id.btn_confirm)
 	Button mBtnConfirm;
-	Unbinder unbinder;
-	@BindView(R.id.ll_error)
+//	Unbinder unbinder;
+	@Bind(R.id.ll_error)
 	LinearLayout mLlError;
 	private OnConfirmClickListener mOnConfirmClickListener;
 	private onCancelClickListener mOnCancelClickListener;
@@ -67,7 +66,7 @@ public class InputWifiPasswordDialogFragment extends DialogFragment {
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
-		unbinder.unbind();
+//		unbinder.unbind();
 	}
 
 	public void showError() {
@@ -119,7 +118,7 @@ public class InputWifiPasswordDialogFragment extends DialogFragment {
 		// 这句代码十分重要, 否则圆角背景的圆角永远就只有那么大
 		getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 		getDialog().setCanceledOnTouchOutside(true);
-		unbinder = ButterKnife.bind(this, rootView);
+		ButterKnife.bind(this, rootView);
 		return rootView;
 	}
 

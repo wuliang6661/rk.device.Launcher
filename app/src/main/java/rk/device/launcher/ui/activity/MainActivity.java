@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import rk.device.launcher.R;
 import rk.device.launcher.base.BaseActivity;
@@ -43,9 +43,9 @@ import rk.device.launcher.utils.ThreadUtils;
 
 public class MainActivity extends BaseActivity {
 
-	@BindView(R.id.iv_setting)
+	@Bind(R.id.iv_setting)
 	ImageView mIvSetting;
-	@BindView(R.id.iv_arrow)
+	@Bind(R.id.iv_arrow)
 	ImageView mIvArrow;
 	private static final int REFRESH_DELAY = 1000;
 
@@ -61,15 +61,15 @@ public class MainActivity extends BaseActivity {
 			mStaticHandler.postDelayed(this, REFRESH_DELAY);
 		}
 	};
-	@BindView(R.id.tv_time)
+	@Bind(R.id.tv_time)
 	TextView mTvTime;
-	@BindView(R.id.tv_week)
+	@Bind(R.id.tv_week)
 	TextView mTvWeek;
-	@BindView(R.id.tv_date)
+	@Bind(R.id.tv_date)
 	TextView mTvDate;
-	@BindView(R.id.ll_total)
+	@Bind(R.id.ll_total)
 	LinearLayout mLlTotal;
-	@BindView(R.id.iv_signal)
+	@Bind(R.id.iv_signal)
 	ImageView mIvSignal;
 	private Calendar mCalendar;
 	private LocationManager mLocationManager;

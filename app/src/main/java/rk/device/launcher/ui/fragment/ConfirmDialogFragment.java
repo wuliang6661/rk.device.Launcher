@@ -5,6 +5,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +14,8 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import rk.device.launcher.R;
 import rk.device.launcher.utils.DrawableUtil;
 import rk.device.launcher.utils.ScreenUtil;
@@ -30,16 +30,17 @@ import rk.device.launcher.utils.ScreenUtil;
 
 public class ConfirmDialogFragment extends DialogFragment {
 
-	@BindView(R.id.tv_message)
+	@Bind(R.id.tv_message)
 	TextView mTvMessage;
-	@BindView(R.id.btn_cancel)
+	@Bind(R.id.btn_cancel)
 	Button mBtnCancel;
-	@BindView(R.id.btn_confirm)
+	@Bind(R.id.btn_confirm)
 	Button mBtnConfirm;
-	Unbinder unbinder;
+//	Unbinder unbinder;
 	private OnConfirmClickListener mOnConfirmClickListener;
 	private onCancelClickListener mOnCancelClickListener;
 	private CharSequence mMessage;
+	private CharSequence mConfirmBtnText;
 
 	public static ConfirmDialogFragment newInstance() {
 		ConfirmDialogFragment dialogFragment = new ConfirmDialogFragment();
@@ -57,10 +58,15 @@ public class ConfirmDialogFragment extends DialogFragment {
 		return this;
 	}
 
+	public ConfirmDialogFragment setConfirmBtnText(String confirmBtnText) {
+		mConfirmBtnText = confirmBtnText;
+		return this;
+	}
+
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
-		unbinder.unbind();
+//		unbinder.unbind();
 	}
 
 	public interface OnConfirmClickListener {
@@ -103,13 +109,16 @@ public class ConfirmDialogFragment extends DialogFragment {
 		// 这句代码十分重要, 否则圆角背景的圆角永远就只有那么大
 		getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 		getDialog().setCanceledOnTouchOutside(true);
-		unbinder = ButterKnife.bind(this, rootView);
+		ButterKnife.bind(this, rootView);
 		return rootView;
 	}
 
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		mTvMessage.setText(mMessage);
+		if (!TextUtils.isEmpty(mConfirmBtnText)) {
+			mBtnConfirm.setText(mConfirmBtnText);
+		}
 		DrawableUtil.addPressedDrawable(getContext(), R.drawable.shape_dialog_btn_cancel, mBtnCancel);
 		DrawableUtil.addPressedDrawable(getContext(), R.drawable.shape_dialog_btn_confirm, mBtnConfirm);
 		mBtnCancel.setOnClickListener(new View.OnClickListener() {

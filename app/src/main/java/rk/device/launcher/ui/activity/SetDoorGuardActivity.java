@@ -12,50 +12,50 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.R;
+import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.bean.SetDoorRvBean;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.utils.DrawableUtil;
 
 public class SetDoorGuardActivity extends BaseActivity {
 
-	@BindView(R.id.iv_back)
+	@Bind(R.id.iv_back)
 	ImageView mIvBack;
-	@BindView(R.id.tv_title)
+	@Bind(R.id.tv_title)
 	TextView mTvTitle;
-	@BindView(R.id.ll_connected_device)
+	@Bind(R.id.ll_connected_device)
 	LinearLayout mLlConnectedDevice;
-	@BindView(R.id.ll_turn_on_switch)
+	@Bind(R.id.ll_turn_on_switch)
 	LinearLayout mLlTurnOnSwitch;
-	@BindView(R.id.ll_switch_time)
+	@Bind(R.id.ll_switch_time)
 	LinearLayout mLlSwitchTime;
-	@BindView(R.id.ll_door_input)
+	@Bind(R.id.ll_door_input)
 	LinearLayout mLlDoorInput;
-	@BindView(R.id.ll_alert_overtime)
+	@Bind(R.id.ll_alert_overtime)
 	LinearLayout mLlAlertOvertime;
-	@BindView(R.id.ll_opendoor_input)
+	@Bind(R.id.ll_opendoor_input)
 	LinearLayout mLlOpendoorInput;
-	@BindView(R.id.ll_red_ray_sensor_input)
+	@Bind(R.id.ll_red_ray_sensor_input)
 	LinearLayout mLlRedRaySensorInput;
-	@BindView(R.id.tv_connected_device)
+	@Bind(R.id.tv_connected_device)
 	TextView mTvConnectedDevice;
-	@BindView(R.id.tv_lock_quantity)
+	@Bind(R.id.tv_lock_quantity)
 	TextView mTvLockQuantity;
-	@BindView(R.id.tv_lock_time)
+	@Bind(R.id.tv_lock_time)
 	TextView mTvLockTime;
-	@BindView(R.id.tv_alert_input)
+	@Bind(R.id.tv_alert_input)
 	TextView mTvAlertInput;
-	@BindView(R.id.tv_alert_overtime)
+	@Bind(R.id.tv_alert_overtime)
 	TextView mTvAlertOvertime;
-	@BindView(R.id.tv_open_door_input)
+	@Bind(R.id.tv_open_door_input)
 	TextView mTvOpenDoorInput;
-	@BindView(R.id.tv_red_ray_input)
+	@Bind(R.id.tv_red_ray_input)
 	TextView mTvRedRayInput;
-	@BindView(R.id.btn_finish_setting)
+	@Bind(R.id.btn_finish_setting)
 	Button mBtnFinishSetting;
 	// 这只是其中一个选项的选项数据, 还会有很多个
 	private ArrayList<SetDoorRvBean> mConnectedDeviceDataList;

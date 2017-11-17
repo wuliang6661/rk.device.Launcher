@@ -6,16 +6,16 @@ import android.os.Handler;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.R;
+import rk.device.launcher.base.BaseActivity;
 
 public class RecoveryActivity extends BaseActivity {
 
-	@BindView(R.id.iv)
+	@Bind(R.id.iv)
 	ImageView mIv;
-	@BindView(R.id.tv)
+	@Bind(R.id.tv)
 	TextView mTv;
 	private Handler mHandler;
 
