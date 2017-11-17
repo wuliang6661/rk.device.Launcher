@@ -1,6 +1,9 @@
 package rk.device.launcher.ui.fragment;
 
 
+import android.content.Context;
+import android.net.wifi.ScanResult;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -18,7 +21,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import rk.device.launcher.R;
 import rk.device.launcher.adapter.WifiRvAdapter;
-import rk.device.launcher.bean.WifiRvBean;
+import rk.device.launcher.bean.ScanResultWrappedBean;
 import rk.device.launcher.widget.itemdecoration.WifiListRvItemDecoration;
 
 public class WifiListFragment extends Fragment {
@@ -27,8 +30,9 @@ public class WifiListFragment extends Fragment {
 	@BindView(R.id.rv)
 	RecyclerView mRv;
 	Unbinder unbinder;
-	private List<WifiRvBean> mDataList;
+	private List<ScanResultWrappedBean> mScanResultList;
 	private WifiRvAdapter mWifiRvAdapter;
+	private WifiManager mWifiManager;
 
 	public WifiListFragment() {
 		// Required empty public constructor
@@ -50,11 +54,13 @@ public class WifiListFragment extends Fragment {
 
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-		mDataList = new ArrayList<>();
-		for (int i = 0; i < 10; i++) {
-			mDataList.add(new WifiRvBean());
+		mWifiManager = (WifiManager) getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+		List<ScanResult> scanResultList = mWifiManager.getScanResults();
+		mScanResultList = new ArrayList<>();
+		for (ScanResult scanResult : scanResultList) {
+			mScanResultList.add(new ScanResultWrappedBean(scanResult));
 		}
-		mWifiRvAdapter = new WifiRvAdapter(mDataList);
+		mWifiRvAdapter = new WifiRvAdapter(mScanResultList);
 		mWifiRvAdapter.setOnItemClickedListener(new WifiRvAdapter.OnItemClickedListener() {
 			@Override
 			public void onItemClicked(final int position) {
@@ -84,7 +90,7 @@ public class WifiListFragment extends Fragment {
 											@Override
 											public void onConfirmClick(String content) {
 												inputWifiPasswordDialogFragment.dismiss();
-												mDataList.get(position).isChecked = true;
+												mScanResultList.get(position).isConnected = true;
 												mWifiRvAdapter.setNewCheckedPosition(position);
 												mWifiRvAdapter.notifyDataSetChanged();
 											}

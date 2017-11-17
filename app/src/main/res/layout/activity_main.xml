@@ -105,14 +105,14 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:background="@drawable/date_time_bg"
         android:layout_width="match_parent"
-        android:layout_height="226dp">
+        android:layout_height="match_parent">
 
         <LinearLayout
+            android:background="@drawable/date_time_bg"
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="226dp">
 
             <RelativeLayout
                 android:layout_weight="1"
@@ -205,48 +205,58 @@
 
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/iv_arrow"
-            android:layout_marginBottom="5dp"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"
-            android:src="@drawable/arrow_up"
-            android:layout_width="40dp"
-            android:layout_height="40dp"/>
-
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_marginTop="10dp"
-        android:background="@drawable/contact_manager"
-        android:layout_weight="1"
-        android:layout_width="match_parent"
-        android:layout_height="0dp">
-
         <LinearLayout
-            android:layout_centerInParent="true"
             android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
             <ImageView
+                android:layout_marginTop="177dp"
+                android:id="@+id/iv_arrow"
                 android:layout_gravity="center_horizontal"
-                android:src="@drawable/manager"
-                android:layout_width="53dp"
-                android:layout_height="53dp"/>
-            <TextView
-                android:textSize="26dp"
-                android:textColor="@color/white"
-                android:layout_gravity="center_horizontal"
-                android:text="联系物管"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:src="@drawable/arrow_up"
+                android:layout_width="40dp"
+                android:layout_height="40dp"/>
+
+            <RelativeLayout
+                android:layout_marginTop="10dp"
+                android:background="@drawable/contact_manager"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="0dp">
+
+                <LinearLayout
+                    android:layout_centerInParent="true"
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_gravity="center_horizontal"
+                        android:src="@drawable/manager"
+                        android:layout_width="53dp"
+                        android:layout_height="53dp"/>
+                    <TextView
+                        android:textSize="26dp"
+                        android:textColor="@color/white"
+                        android:layout_gravity="center_horizontal"
+                        android:text="联系物管"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+
+            </RelativeLayout>
 
         </LinearLayout>
 
 
+
+
     </RelativeLayout>
+
+
 
 
 

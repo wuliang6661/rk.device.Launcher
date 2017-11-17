@@ -6,23 +6,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import rk.device.launcher.R;
-import rk.device.launcher.bean.WifiRvBean;
+import rk.device.launcher.bean.ScanResultWrappedBean;
 
 /**
  * Created by mundane on 2017/11/13 下午3:57
  */
 public class WifiRvAdapter extends RecyclerView.Adapter<WifiRvAdapter.ViewHolder> {
 
-	private List<WifiRvBean> mDataList;
+	private List<ScanResultWrappedBean> mDataList;
 	private Integer mLastCheckedPosition;
 
-	public WifiRvAdapter(List<WifiRvBean> list) {
+	public WifiRvAdapter(List<ScanResultWrappedBean> list) {
 		mDataList = list;
 	}
 
@@ -41,10 +42,10 @@ public class WifiRvAdapter extends RecyclerView.Adapter<WifiRvAdapter.ViewHolder
 			if (mLastCheckedPosition == position) {
 				return;
 			} else {
-				mDataList.get(mLastCheckedPosition).isChecked = false;
+				mDataList.get(mLastCheckedPosition).isConnected = false;
 			}
 		}
-		mDataList.get(position).isChecked = true;
+		mDataList.get(position).isConnected = true;
 		mLastCheckedPosition = position;
 	}
 
@@ -87,13 +88,20 @@ public class WifiRvAdapter extends RecyclerView.Adapter<WifiRvAdapter.ViewHolder
 
 		@BindView(R.id.iv_check)
 		ImageView ivCheck;
+		@BindView(R.id.tv_wifi_name)
+		TextView tvWifiName;
+		@BindView(R.id.iv_lock)
+		ImageView ivLock;
+		@BindView(R.id.iv_signal_strength)
+		ImageView ivSignalStrength;
 		public ViewHolder(View itemView) {
 			super(itemView);
 			ButterKnife.bind(this, itemView);
 		}
 
-		public void bind(WifiRvBean bean) {
-			ivCheck.setVisibility(bean.isChecked ? View.VISIBLE : View.INVISIBLE);
+		public void bind(ScanResultWrappedBean bean) {
+			ivCheck.setVisibility(bean.isConnected ? View.VISIBLE : View.INVISIBLE);
+			tvWifiName.setText(bean.scanResult.SSID);
 		}
 	}
 }
