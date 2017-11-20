@@ -45,6 +45,16 @@ public class InputWifiPasswordDialogFragment extends DialogFragment {
 	private OnConfirmClickListener mOnConfirmClickListener;
 	private onCancelClickListener mOnCancelClickListener;
 	private CharSequence mTitle;
+	private Integer mInputType;
+
+	public String getEtText() {
+		return mEtPassword.getText().toString();
+	}
+
+	public InputWifiPasswordDialogFragment setInputType(int inputType) {
+		mInputType = inputType;
+		return this;
+	}
 
 	public static InputWifiPasswordDialogFragment newInstance() {
 		InputWifiPasswordDialogFragment dialogFragment = new InputWifiPasswordDialogFragment();
@@ -124,6 +134,9 @@ public class InputWifiPasswordDialogFragment extends DialogFragment {
 
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+		if (mInputType != null) {
+			mEtPassword.setInputType(mInputType);
+		}
 		mTvTitle.setText(mTitle);
 		DrawableUtil.addPressedDrawable(getContext(), R.drawable.shape_dialog_btn_cancel, mBtnCancel);
 		DrawableUtil.addPressedDrawable(getContext(), R.drawable.shape_dialog_btn_confirm, mBtnConfirm);

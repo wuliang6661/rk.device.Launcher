@@ -76,7 +76,7 @@
 
                 <FrameLayout
                     android:layout_marginTop="10dp"
-                    android:background="@drawable/click_me_open_door_bg"
+                    android:background="@drawable/click_me_open_door_new"
                     android:layout_weight="5"
                     android:layout_width="match_parent"
                     android:layout_height="390dp">
