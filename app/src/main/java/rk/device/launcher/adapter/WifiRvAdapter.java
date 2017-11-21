@@ -109,6 +109,20 @@ public class WifiRvAdapter extends RecyclerView.Adapter<WifiRvAdapter.ViewHolder
 			ivCheck.setVisibility(wifiHelper.isConnected(scanResult) ? View.VISIBLE : View.INVISIBLE);
 			boolean isLocked = wifiHelper.isLocked(scanResult);
 			ivLock.setVisibility(isLocked ? View.VISIBLE : View.INVISIBLE);
+			//判断信号强度，显示对应的指示图标
+			if (Math.abs(scanResult.level) > 100) {
+				ivSignalStrength.setImageResource(R.drawable.wifi_signal_1);
+			} else if (Math.abs(scanResult.level) > 80) {
+				ivSignalStrength.setImageResource(R.drawable.wifi_signal_1);
+			} else if (Math.abs(scanResult.level) > 70) {
+				ivSignalStrength.setImageResource(R.drawable.wifi_signal_1);
+			} else if (Math.abs(scanResult.level) > 60) {
+				ivSignalStrength.setImageResource(R.drawable.wifi_signal_2);
+			} else if (Math.abs(scanResult.level) > 50) {
+				ivSignalStrength.setImageResource(R.drawable.wifi_signal_3);
+			} else {
+				ivSignalStrength.setImageResource(R.drawable.wifi_signal_3);
+			}
 
 		}
 	}

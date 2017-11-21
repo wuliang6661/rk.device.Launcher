@@ -1,12 +1,15 @@
 package rk.device.launcher.ui.activity;
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -38,6 +41,7 @@ import rk.device.launcher.global.Constant;
 import rk.device.launcher.ui.fragment.InputWifiPasswordDialogFragment;
 import rk.device.launcher.utils.CommonUtils;
 import rk.device.launcher.utils.DateUtil;
+import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.ThreadUtils;
 
@@ -161,7 +165,39 @@ public class MainActivity extends BaseActivity {
 			}
 		});
 		getLocation();
+		registerBatteryReceiver();
 	}
+
+	private void registerBatteryReceiver() {
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction(Intent.ACTION_BATTERY_CHANGED);
+		registerReceiver(mBatteryReceiver, intentFilter);
+	}
+
+	private final BroadcastReceiver mBatteryReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
+			int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, 0);
+			int levelPercent = (int) (level * 100f / scale);
+			LogUtil.d("电池电量百分比 = " + levelPercent);
+			int status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, BatteryManager.BATTERY_HEALTH_UNKNOWN);
+			switch (status) {
+				case BatteryManager.BATTERY_STATUS_CHARGING:
+					LogUtil.d("充电中");
+					break;
+				case BatteryManager.BATTERY_STATUS_NOT_CHARGING:
+					LogUtil.d("未充电");
+					break;
+				case BatteryManager.BATTERY_STATUS_FULL:
+					LogUtil.d("充电完成");
+					break;
+				case BatteryManager.BATTERY_STATUS_DISCHARGING:
+					LogUtil.d("放电中");
+					break;
+			}
+		}
+	};
 
 	private void getLocation() {
 		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -178,7 +214,7 @@ public class MainActivity extends BaseActivity {
 			public void run() {
 				try {
 					Location location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-					if(location == null){
+					if (location == null) {
 						Log.d(TAG, "gps.location = null");
 						location = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 					}
@@ -192,12 +228,13 @@ public class MainActivity extends BaseActivity {
 						if (addresses.size() > 0) {
 							Address address = addresses.get(0);
 							String city = address.getLocality();
-							Log.d("tag", "city = " + city);
+							LogUtil.d("city = " + city);
+
 						}
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
-				}catch (SecurityException  e){
+				} catch (SecurityException e) {
 					e.printStackTrace();
 				}
 			}
@@ -240,6 +277,7 @@ public class MainActivity extends BaseActivity {
 	@Override
 	protected void onDestroy() {
 		mStaticHandler.removeCallbacksAndMessages(null);
+		unregisterReceiver(mBatteryReceiver);
 		super.onDestroy();
 	}
 

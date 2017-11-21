@@ -49,13 +49,13 @@
     </style>
 
     <style name="btn_finish">
-        <item name="android:textSize">21dp</item>
+        <item name="android:textSize">28dp</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:background">@drawable/shape_btn_finish_setting</item>
         <item name="android:layout_marginLeft">15dp</item>
         <item name="android:layout_marginRight">15dp</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">70dp</item>
+        <item name="android:layout_height">93dp</item>
     </style>
 
     <style name="tv_network_conf_item">
