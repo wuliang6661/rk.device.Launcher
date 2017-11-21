@@ -16,7 +16,6 @@
         android:layout_height="match_parent">
 
         <RelativeLayout
-            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="75dp">
 
@@ -38,7 +37,6 @@
             android:layout_width="match_parent"
             android:layout_height="0.5dp"/>
         <LinearLayout
-            android:visibility="gone"
             android:background="@color/half_transparent_white"
             android:id="@+id/ll_auto"
             android:orientation="horizontal"
@@ -69,7 +67,6 @@
             android:layout_height="0.5dp"/>
 
         <LinearLayout
-            android:visibility="gone"
             android:background="@color/transparent"
             android:id="@+id/ll_manul"
             android:orientation="horizontal"
@@ -138,7 +135,6 @@
         </FrameLayout>
 
         <Button
-            android:visibility="gone"
             android:id="@+id/btn_finish_setting"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="80dp"

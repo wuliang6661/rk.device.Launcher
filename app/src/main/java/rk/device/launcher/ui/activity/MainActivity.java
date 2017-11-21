@@ -16,7 +16,6 @@ import android.os.Message;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -89,7 +88,6 @@ public class MainActivity extends BaseActivity {
 		ButterKnife.bind(this);
 		hideNavigationBar();
 		mCalendar = Calendar.getInstance(TimeZone.getTimeZone("GMT+8"));
-		alpha(mIvArrow);
 		mIvSetting.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -139,31 +137,32 @@ public class MainActivity extends BaseActivity {
 				dialogFragment.show(getSupportFragmentManager(), "");
 			}
 		});
-		mIvArrow.setOnTouchListener(new View.OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				switch (event.getAction()) {
-					case MotionEvent.ACTION_DOWN:
-						mDownY = event.getY();
-						break;
-					case MotionEvent.ACTION_MOVE:
-						float nowY = event.getY();
-						float deltaY = nowY - mDownY;
-						LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mIvArrow.getLayoutParams();
-						if (layoutParams.topMargin + deltaY <= 0) {
-							layoutParams.topMargin = 0;
-						} else {
-							layoutParams.topMargin += deltaY;
-						}
-						mIvArrow.setLayoutParams(layoutParams);
-						break;
-					case MotionEvent.ACTION_CANCEL:
-					case MotionEvent.ACTION_UP:
-						break;
-				}
-				return true;
-			}
-		});
+		//		alpha(mIvArrow);
+//		mIvArrow.setOnTouchListener(new View.OnTouchListener() {
+//			@Override
+//			public boolean onTouch(View v, MotionEvent event) {
+//				switch (event.getAction()) {
+//					case MotionEvent.ACTION_DOWN:
+//						mDownY = event.getY();
+//						break;
+//					case MotionEvent.ACTION_MOVE:
+//						float nowY = event.getY();
+//						float deltaY = nowY - mDownY;
+//						LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mIvArrow.getLayoutParams();
+//						if (layoutParams.topMargin + deltaY <= 0) {
+//							layoutParams.topMargin = 0;
+//						} else {
+//							layoutParams.topMargin += deltaY;
+//						}
+//						mIvArrow.setLayoutParams(layoutParams);
+//						break;
+//					case MotionEvent.ACTION_CANCEL:
+//					case MotionEvent.ACTION_UP:
+//						break;
+//				}
+//				return true;
+//			}
+//		});
 		getLocation();
 		registerBatteryReceiver();
 	}
