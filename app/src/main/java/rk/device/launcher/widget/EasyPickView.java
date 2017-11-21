@@ -28,7 +28,7 @@ import rk.device.launcher.R;
 public class EasyPickView extends View {
 	private Paint mTextPaint;
 	// 默认字体大小18sp
-	private int mTextSize = sp2px(18);
+	private int mTextSize = sp2px(32);
 	private int mNormalColor = getResources().getColor(android.R.color.white);
 	private int mStrokeWidth = dp2px(5);
 	private List<String> mDataList = new ArrayList<>();

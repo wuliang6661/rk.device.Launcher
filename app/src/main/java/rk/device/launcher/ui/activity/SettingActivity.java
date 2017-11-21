@@ -1,7 +1,6 @@
 package rk.device.launcher.ui.activity;
 
 import android.content.Intent;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.MotionEvent;
@@ -149,8 +148,9 @@ public class SettingActivity extends BaseActivity {
 				switch (event.getAction()) {
 					case MotionEvent.ACTION_DOWN:
 						tv.setTextColor(getResources().getColor(R.color.white));
-						ll.getBackground().clearColorFilter();
-						ll.getBackground().setColorFilter(getResources().getColor(R.color.half_transparent_black), PorterDuff.Mode.SRC_ATOP);
+//						ll.getBackground().clearColorFilter();
+//						ll.getBackground().setColorFilter(getResources().getColor(R.color.half_transparent_black), PorterDuff.Mode.SRC_ATOP);
+						ll.setBackgroundResource(R.color.half_transparent_black);
 						iv.setImageResource(pressedResource);
 //						return true;
 						break;
@@ -158,14 +158,16 @@ public class SettingActivity extends BaseActivity {
 					case MotionEvent.ACTION_OUTSIDE:
 						tv.setTextColor(getResources().getColor(R.color.blue_338eff));
 						iv.setImageResource(normalResource);
-						ll.getBackground().clearColorFilter();
-						ll.setBackgroundResource(R.drawable.item_background_normal);
+//						ll.getBackground().clearColorFilter();
+//						ll.setBackgroundResource(R.drawable.item_background_normal);
+						ll.setBackgroundResource(R.color.transparent);
 						break;
 					case MotionEvent.ACTION_CANCEL:
 						tv.setTextColor(getResources().getColor(R.color.blue_338eff));
 						iv.setBackgroundResource(normalResource);
-						ll.getBackground().clearColorFilter();
-						ll.setBackgroundResource(R.drawable.item_background_normal);
+//						ll.getBackground().clearColorFilter();
+//						ll.setBackgroundResource(R.drawable.item_background_normal);
+						ll.setBackgroundResource(R.color.transparent);
 						break;
 				}
 				return false;

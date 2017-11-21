@@ -1,14 +1,15 @@
 package rk.device.launcher.ui.activity;
 
-import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.view.MotionEvent;
+import android.os.SystemClock;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -19,6 +20,7 @@ import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.ui.fragment.SetDateDialogFragment;
 import rk.device.launcher.ui.fragment.SetTimeDialogFragment;
 import rk.device.launcher.utils.DateUtil;
+import rk.device.launcher.utils.DrawableUtil;
 
 public class SetTimeActivity extends BaseActivity {
 
@@ -105,25 +107,57 @@ public class SetTimeActivity extends BaseActivity {
 		mBtnFinishSetting.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				try {
+					Calendar c = Calendar.getInstance();
+					c.set(Calendar.YEAR, mSelectedYear);
+					c.set(Calendar.MONTH, mSelectedMonth);
+					c.set(Calendar.DAY_OF_MONTH, mSelectedDay);
+					c.set(Calendar.HOUR_OF_DAY, mSelectedHour);
+					c.set(Calendar.MINUTE, mSelectedMin);
+					c.set(Calendar.SECOND, 0);
+					c.set(Calendar.MILLISECOND, 0);
+					long when_time = c.getTimeInMillis();
+					if (when_time / 1000 < Integer.MAX_VALUE) {
+						SystemClock.setCurrentTimeMillis(when_time);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				finish();
 			}
 		});
-		mBtnFinishSetting.setOnTouchListener(new View.OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				switch (event.getAction()) {
-					case MotionEvent.ACTION_DOWN:
-						mBtnFinishSetting.getBackground().clearColorFilter();
-						mBtnFinishSetting.getBackground().setColorFilter(getResources().getColor(R.color.half_transparent_black), PorterDuff.Mode.SRC_ATOP);
-						break;
-					case MotionEvent.ACTION_UP:
-						mBtnFinishSetting.getBackground().clearColorFilter();
-						mBtnFinishSetting.setBackgroundResource(R.drawable.shape_btn_finish_setting);
-						break;
-				}
-				return false;
-			}
-		});
+		DrawableUtil.addPressedDrawable(this, R.drawable.shape_btn_finish_setting, mBtnFinishSetting);
+//		mBtnFinishSetting.setOnTouchListener(new View.OnTouchListener() {
+//			@Override
+//			public boolean onTouch(View v, MotionEvent event) {
+//				switch (event.getAction()) {
+//					case MotionEvent.ACTION_DOWN:
+//						mBtnFinishSetting.getBackground().clearColorFilter();
+//						mBtnFinishSetting.getBackground().setColorFilter(getResources().getColor(R.color.half_transparent_black), PorterDuff.Mode.SRC_ATOP);
+//						break;
+//					case MotionEvent.ACTION_UP:
+//						mBtnFinishSetting.getBackground().clearColorFilter();
+//						mBtnFinishSetting.setBackgroundResource(R.drawable.shape_btn_finish_setting);
+//						break;
+//				}
+//				return false;
+//			}
+//		});
+	}
+
+	public void testDate(){
+		try {
+			Process process = Runtime.getRuntime().exec("su");
+			String datetime="20131023.112800"; //测试的设置的时间【时间格式 yyyyMMdd.HHmmss】
+			DataOutputStream os = new DataOutputStream(process.getOutputStream());
+			os.writeBytes("setprop persist.sys.timezone GMT\n");
+			os.writeBytes("/system/bin/date -s "+datetime+"\n");
+			os.writeBytes("clock -w\n");
+			os.writeBytes("exit\n");
+			os.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

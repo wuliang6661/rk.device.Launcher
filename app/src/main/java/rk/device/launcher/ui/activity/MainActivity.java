@@ -13,7 +13,6 @@ import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -204,8 +203,8 @@ public class MainActivity extends BaseActivity {
 		// 既没有打开gps也没有打开网络
 		if (!isGpsOpened() && !isNewWorkOpen()) {
 			Toast.makeText(this, "请打开网络或GPS定位功能!", Toast.LENGTH_SHORT).show();
-			Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-			startActivityForResult(intent, 0);
+//			Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+//			startActivityForResult(intent, 0);
 			return;
 		}
 		ThreadUtils.newThread(new Runnable() {

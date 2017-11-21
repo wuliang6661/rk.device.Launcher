@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import java.util.Arrays;
@@ -21,7 +22,6 @@ import java.util.List;
 
 import rk.device.launcher.R;
 import rk.device.launcher.utils.DateUtil;
-import rk.device.launcher.utils.ScreenUtil;
 import rk.device.launcher.widget.EasyPickView;
 
 
@@ -84,10 +84,15 @@ public class SetTimeDialogFragment extends DialogFragment {
     @Override
     public void onStart() {
         super.onStart();
-        //设置对话框显示在底部
-        getDialog().getWindow().setGravity(Gravity.BOTTOM);
-        //设置让对话框宽度充满屏幕
-        getDialog().getWindow().setLayout(ScreenUtil.getScreenWidth(activity), getDialog().getWindow().getAttributes().height);
+//        //设置对话框显示在底部
+//        getDialog().getWindow().setGravity(Gravity.BOTTOM);
+//        //设置让对话框宽度充满屏幕
+//        getDialog().getWindow().setLayout(ScreenUtil.getScreenWidth(activity), getDialog().getWindow().getAttributes().height);
+		Window window = getDialog().getWindow();
+		WindowManager.LayoutParams attributes = window.getAttributes();
+		attributes.gravity = Gravity.BOTTOM;
+		attributes.width = WindowManager.LayoutParams.MATCH_PARENT;
+		window.setAttributes(attributes);
     }
 
 

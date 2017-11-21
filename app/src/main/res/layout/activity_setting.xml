@@ -11,7 +11,7 @@
 
 
     <LinearLayout
-        android:background="@color/blue_31598a"
+        android:background="@drawable/shape_normal_bg"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -23,10 +23,8 @@
             android:layout_height="0dp">
 
             <LinearLayout
+                android:background="@color/transparent"
                 android:id="@+id/ll_set_time"
-                android:layout_marginBottom="1dp"
-                android:background="@drawable/item_background_normal"
-                android:layout_marginRight="0.25dp"
                 android:orientation="vertical"
                 android:layout_weight="1"
                 android:layout_width="0dp"
@@ -44,11 +42,14 @@
 
             </LinearLayout>
 
+            <View
+                android:background="@color/blue_31598a"
+                android:layout_width="@dimen/dphalf"
+                android:layout_height="match_parent"/>
+
             <LinearLayout
+                android:background="@color/transparent"
                 android:id="@+id/ll_set_net"
-                android:layout_marginBottom="1dp"
-                android:background="@drawable/item_background_normal"
-                android:layout_marginLeft="0.25dp"
                 android:orientation="vertical"
                 android:layout_weight="1"
                 android:layout_width="0dp"
@@ -69,6 +70,11 @@
 
         </LinearLayout>
 
+        <View
+            android:background="@color/blue_31598a"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dphalf"/>
+
         <LinearLayout
             android:orientation="horizontal"
             android:layout_weight="1"
@@ -76,11 +82,8 @@
             android:layout_height="0dp">
 
             <LinearLayout
+                android:background="@color/transparent"
                 android:id="@+id/ll_set_door"
-                android:layout_marginTop="0.25dp"
-                android:layout_marginBottom="0.25dp"
-                android:background="@drawable/item_background_normal"
-                android:layout_marginRight="1dp"
                 android:orientation="vertical"
                 android:layout_weight="1"
                 android:layout_width="0dp"
@@ -99,12 +102,15 @@
 
             </LinearLayout>
 
+            <View
+                android:background="@color/blue_31598a"
+                android:layout_width="@dimen/dphalf"
+                android:layout_height="match_parent"/>
+
+
             <LinearLayout
+                android:background="@color/transparent"
                 android:id="@+id/ll_set_sys"
-                android:layout_marginTop="0.25dp"
-                android:layout_marginBottom="0.25dp"
-                android:background="@drawable/item_background_normal"
-                android:layout_marginLeft="1dp"
                 android:orientation="vertical"
                 android:layout_weight="1"
                 android:layout_width="0dp"
@@ -125,6 +131,11 @@
 
         </LinearLayout>
 
+        <View
+            android:background="@color/blue_31598a"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dphalf"/>
+
 
         <LinearLayout
             android:orientation="horizontal"
@@ -133,10 +144,8 @@
             android:layout_height="0dp">
 
             <LinearLayout
+                android:background="@color/transparent"
                 android:id="@+id/ll_sys_info"
-                android:layout_marginTop="0.25dp"
-                android:background="@drawable/item_background_normal"
-                android:layout_marginRight="1dp"
                 android:orientation="vertical"
                 android:layout_weight="1"
                 android:layout_width="0dp"
@@ -155,11 +164,15 @@
 
             </LinearLayout>
 
+            <View
+                android:background="@color/blue_31598a"
+                android:layout_width="@dimen/dphalf"
+                android:layout_height="match_parent"/>
+
+
             <LinearLayout
+                android:background="@color/transparent"
                 android:id="@+id/ll_recovery"
-                android:layout_marginTop="0.25dp"
-                android:background="@drawable/item_background_normal"
-                android:layout_marginLeft="1dp"
                 android:orientation="vertical"
                 android:layout_weight="1"
                 android:layout_width="0dp"
