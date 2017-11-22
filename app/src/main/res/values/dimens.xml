@@ -3,7 +3,7 @@
     <dimen name="dphalf">0.5dp</dimen>
     <dimen name="radius_corner">8dp</dimen>
     <dimen name="divider_height">0.5dp</dimen>
-    <dimen name="item_height">75dp</dimen>
-    <dimen name="colorful_btn_height">40dp</dimen>
+    <dimen name="item_height">100dp</dimen>
+    <dimen name="colorful_btn_height">53dp</dimen>
     <dimen name="dp30">30dp</dimen>
 </resources>
