@@ -110,7 +110,7 @@ public class SetTimeActivity extends BaseActivity {
 				try {
 					Calendar c = Calendar.getInstance();
 					c.set(Calendar.YEAR, mSelectedYear);
-					c.set(Calendar.MONTH, mSelectedMonth);
+					c.set(Calendar.MONTH, mSelectedMonth - 1);
 					c.set(Calendar.DAY_OF_MONTH, mSelectedDay);
 					c.set(Calendar.HOUR_OF_DAY, mSelectedHour);
 					c.set(Calendar.MINUTE, mSelectedMin);
