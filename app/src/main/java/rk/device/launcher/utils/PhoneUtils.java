@@ -172,34 +172,6 @@ public class PhoneUtils {
         return str;
     }
 
-    /**
-     * 跳至拨号界面
-     *
-     * @param phoneNumber 电话号码
-     */
-    public static void dial(String phoneNumber) {
-        Utils.getContext().startActivity(IntentUtils.getDialIntent(phoneNumber));
-    }
-
-    /**
-     * 拨打电话
-     * <p>需添加权限 {@code <uses-permission android:name="android.permission.CALL_PHONE"/>}</p>
-     *
-     * @param phoneNumber 电话号码
-     */
-    public static void call(String phoneNumber) {
-        Utils.getContext().startActivity(IntentUtils.getCallIntent(phoneNumber));
-    }
-
-    /**
-     * 跳至发送短信界面
-     *
-     * @param phoneNumber 接收号码
-     * @param content     短信内容
-     */
-    public static void sendSms(String phoneNumber, String content) {
-        Utils.getContext().startActivity(IntentUtils.getSendSmsIntent(phoneNumber, content));
-    }
 
     /**
      * 发送短信

@@ -5,18 +5,18 @@ public class Config {
     /**
      * 环境——动态配置项
      */
-    public static ProgramMode   mode                 = ProgramMode.PROGRAM_TEST_MODE;
+    public static ProgramMode mode = ProgramMode.PROGRAM_TEST_MODE;
 
     /**
      * 是否调试
      */
-    public static final boolean DEBUG                = !(mode == ProgramMode.PRGRAM_PRODUCT_MODE);
+    public static final boolean DEBUG = !(mode == ProgramMode.PRGRAM_PRODUCT_MODE);
 
     /** 接口信息 */
     /**
      * 域名
      */
-    public static String        APP_WEATHER          = "";
+    public static String APP_WEATHER = "";
 
 
     static {
