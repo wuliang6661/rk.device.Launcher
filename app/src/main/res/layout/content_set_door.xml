@@ -6,46 +6,6 @@
     android:orientation="vertical"
     tools:showIn="@layout/activity_set_door_guard">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/item_height"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="20dp"
-            android:text="单元名称"
-            android:textColor="@color/white"
-            android:textSize="20dp" />
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
-
-        <EditText
-            android:id="@+id/device_name"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="15dp"
-            android:background="@null"
-            android:maxLength="13"
-            android:maxLines="1"
-            android:text="人脸识别一体机"
-            android:textColor="@color/white"
-            android:textSize="20dp" />
-
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/divider_height"
-        android:background="@color/blue_31598a" />
 
     <LinearLayout
         android:id="@+id/ll_connected_device"
@@ -83,42 +43,6 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="15dp"
             android:src="@drawable/arrow_right" />
-
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/divider_height"
-        android:background="@color/blue_31598a" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/item_height"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="20dp"
-            android:text="语音提示"
-            android:textColor="@color/white"
-            android:textSize="20dp" />
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
-
-        <CheckBox
-            android:id="@+id/checkbox_mp3"
-            android:layout_width="50dp"
-            android:layout_height="33dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="15dp"
-            android:background="@drawable/selector_switch_button"
-            android:button="@null"
-            android:checked="true" />
 
     </LinearLayout>
 
