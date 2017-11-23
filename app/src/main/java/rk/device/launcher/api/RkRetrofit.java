@@ -25,9 +25,12 @@ public class RkRetrofit {
 
     private OkHttpClient apiClient = null;
 
-    Interceptor mInterceptor = chain -> {
-        Request.Builder request = chain.request().newBuilder();
-        return chain.proceed(request.build());
+    Interceptor mInterceptor = new Interceptor() {
+        @Override
+        public Response intercept(Chain chain) throws IOException {
+            Request.Builder request = chain.request().newBuilder();
+            return chain.proceed(request.build());
+        }
     };
 
     /**
