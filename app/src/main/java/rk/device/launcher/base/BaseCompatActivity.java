@@ -33,12 +33,12 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
     /**
      * 初始化界面布局
      */
-    protected abstract void inviView();
+    protected abstract void initView();
 
     /**
      * 处理业务逻辑
      */
-    protected abstract void inviData();
+    protected abstract void initData();
 
 
     @Override
@@ -48,8 +48,8 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
         hideNavigationBar();
         ButterKnife.bind(this);
         AppManager.getAppManager().addActivity(this);
-        inviView();
-        inviData();
+        initView();
+        initData();
     }
 
 
