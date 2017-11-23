@@ -5,4 +5,10 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="linearlayoutmanager">LinearLayoutManager</string>
     <string name="declare">公告: 因为天气原因, 今天大楼关闭, 请各位员工互相转告&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;公告: 因为天气原因, 今天大楼关闭, 请各位员工互相转告</string>
+
+
+
+    <!--提示型-->
+    <string name="network_illegal">网络正在开小差</string>
+    <string name="network_anomaly">当前网络不可用，请检查网络设置！</string>
 </resources>
