@@ -4,18 +4,18 @@
     <!--android:sharedUserId="android.uid.system"-->
 
     <!--联网-->
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET"/>
     <!--定位-->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <!--wifi-->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.SET_TIME" />
-    <uses-permission android:name="android.permission.SET_TIME_ZONE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.SET_TIME"/>
+    <uses-permission android:name="android.permission.SET_TIME_ZONE"/>
 
 
     <application
@@ -29,22 +29,29 @@
         <activity android:name=".ui.activity.SettingActivity">
 
         </activity>
-        <activity android:name=".ui.activity.SetTimeActivity"></activity>
-        <activity android:name=".ui.activity.SetNetWorkActivity"></activity>
-        <activity android:name=".ui.activity.SetDoorGuardActivity"></activity>
-        <activity android:name=".ui.activity.SelectItemListActivity"></activity>
+        <activity android:name=".ui.activity.SetTimeActivity">
+        </activity>
+        <activity android:name=".ui.activity.SetNetWorkActivity">
+        </activity>
+        <activity android:name=".ui.activity.SetDoorGuardActivity">
+        </activity>
+        <activity android:name=".ui.activity.SelectItemListActivity">
+        </activity>
         <activity
             android:name=".ui.activity.SetSysActivity"
-            android:windowSoftInputMode="adjustPan"></activity>
-        <activity android:name=".ui.activity.SystemInfoActivity"></activity>
-        <activity android:name=".ui.activity.RecoveryActivity"></activity>
+            android:windowSoftInputMode="adjustPan">
+        </activity>
+        <activity android:name=".ui.activity.SystemInfoActivity">
+        </activity>
+        <activity android:name=".ui.activity.RecoveryActivity">
+        </activity>
         <activity
             android:name=".ui.activity.MainActivity"
             android:launchMode="singleTask">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
     </application>

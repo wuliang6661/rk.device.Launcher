@@ -42,167 +42,147 @@ import rk.device.launcher.utils.DateUtil;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.ThreadUtils;
+import rk.device.launcher.widget.UpdateManager;
+import rx.Subscriber;
 
 public class MainActivity extends BaseActivity {
 
-	@Bind(R.id.iv_setting)
-	ImageView mIvSetting;
-	@Bind(R.id.iv_arrow)
-	ImageView mIvArrow;
-	private static final int REFRESH_DELAY = 1000;
+    @Bind(R.id.tv_time)
+    TextView mTvTime;
+    @Bind(R.id.tv_week)
+    TextView mTvWeek;
+    @Bind(R.id.tv_date)
+    TextView mTvDate;
+    @Bind(R.id.iv_signal)
+    ImageView mIvSignal;
+    @Bind(R.id.iv_setting)
+    ImageView mIvSetting;
+    @Bind(R.id.iv_arrow)
+    ImageView mIvArrow;
+    private Calendar mCalendar;
+    private LocationManager mLocationManager;
+    private final String TAG = "MainActivity";
+    private static final int REFRESH_DELAY = 1000;
 
-	private StaticHandler mStaticHandler = new StaticHandler();
-	// todo 内存泄漏这里需要处理
-	private final Runnable mRefreshTimeRunnable = new Runnable() {
+    private StaticHandler mStaticHandler = new StaticHandler();
+    // todo 内存泄漏这里需要处理
+    private final Runnable mRefreshTimeRunnable = new Runnable() {
 
-		@Override
-		public void run() {
-			mTvTime.setText(getTime());
-			mTvDate.setText(getDate());
-			mTvWeek.setText(DateUtil.getWeek(mCalendar));
-			mStaticHandler.postDelayed(this, REFRESH_DELAY);
-		}
-	};
-	@Bind(R.id.tv_time)
-	TextView mTvTime;
-	@Bind(R.id.tv_week)
-	TextView mTvWeek;
-	@Bind(R.id.tv_date)
-	TextView mTvDate;
-	@Bind(R.id.ll_total)
-	LinearLayout mLlTotal;
-	@Bind(R.id.iv_signal)
-	ImageView mIvSignal;
-	private Calendar mCalendar;
-	private LocationManager mLocationManager;
-	private final String TAG = "MainActivity";
-	private float mDownY;
-	private int mOriginalTopMargin;
+        @Override
+        public void run() {
+            mTvTime.setText(getTime());
+            mTvDate.setText(getDate());
+            mTvWeek.setText(DateUtil.getWeek(mCalendar));
+            mStaticHandler.postDelayed(this, REFRESH_DELAY);
+        }
+    };
 
-	@SuppressLint("ClickableViewAccessibility")
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-		ButterKnife.bind(this);
-		hideNavigationBar();
-		mCalendar = Calendar.getInstance(TimeZone.getTimeZone("GMT+8"));
-		mIvSetting.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				final InputWifiPasswordDialogFragment dialogFragment = InputWifiPasswordDialogFragment.newInstance();
-				final String password = SPUtils.getString(Constant.KEY_PASSWORD);
-				if (TextUtils.isEmpty(password)) {
-					dialogFragment.setTitle("设置管理员密码");
-					dialogFragment.setOnCancelClickListener(new InputWifiPasswordDialogFragment.onCancelClickListener() {
-						@Override
-						public void onCancelClick() {
-							dialogFragment.dismiss();
-						}
-					})
-							.setOnConfirmClickListener(new InputWifiPasswordDialogFragment.OnConfirmClickListener() {
-								@Override
-								public void onConfirmClick(String content) {
-									dialogFragment.dismiss();
-									if (!TextUtils.isEmpty(content)) {
-										SPUtils.putString(Constant.KEY_PASSWORD, content);
-										Intent intent = new Intent(MainActivity.this, SettingActivity.class);
-										startActivity(intent);
-									}
-								}
-							});
-				} else {
-					dialogFragment.setTitle("请输入管理员密码");
-					dialogFragment.setOnCancelClickListener(new InputWifiPasswordDialogFragment.onCancelClickListener() {
-						@Override
-						public void onCancelClick() {
-							dialogFragment.dismiss();
-						}
-					})
-							.setOnConfirmClickListener(new InputWifiPasswordDialogFragment.OnConfirmClickListener() {
-								@Override
-								public void onConfirmClick(String content) {
-									if (TextUtils.equals(password, content)) {
-										dialogFragment.dismiss();
-										Intent intent = new Intent(MainActivity.this, SettingActivity.class);
-										startActivity(intent);
-									} else {
-										dialogFragment.showError();
-									}
-								}
-							});
 
-				}
-				dialogFragment.show(getSupportFragmentManager(), "");
-			}
-		});
-		//		alpha(mIvArrow);
-//		mIvArrow.setOnTouchListener(new View.OnTouchListener() {
-//			@Override
-//			public boolean onTouch(View v, MotionEvent event) {
-//				switch (event.getAction()) {
-//					case MotionEvent.ACTION_DOWN:
-//						mDownY = event.getY();
-//						break;
-//					case MotionEvent.ACTION_MOVE:
-//						float nowY = event.getY();
-//						float deltaY = nowY - mDownY;
-//						LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mIvArrow.getLayoutParams();
-//						if (layoutParams.topMargin + deltaY <= 0) {
-//							layoutParams.topMargin = 0;
-//						} else {
-//							layoutParams.topMargin += deltaY;
-//						}
-//						mIvArrow.setLayoutParams(layoutParams);
-//						break;
-//					case MotionEvent.ACTION_CANCEL:
-//					case MotionEvent.ACTION_UP:
-//						break;
-//				}
-//				return true;
-//			}
-//		});
-		getLocation();
-		registerBatteryReceiver();
-	}
+    @SuppressLint("ClickableViewAccessibility")
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+        hideNavigationBar();
+        mCalendar = Calendar.getInstance(TimeZone.getTimeZone("GMT+8"));
+        initView();
+        getLocation();
+        registerBatteryReceiver();
+        UpdateManager.getUpdateManager().checkAppUpdate(this, getSupportFragmentManager(), false);
+    }
 
-	private void registerBatteryReceiver() {
-		IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction(Intent.ACTION_BATTERY_CHANGED);
-		registerReceiver(mBatteryReceiver, intentFilter);
-	}
+    private void initView() {
+        if (mIvSetting != null) {
+            mIvSetting.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final String password = SPUtils.getString(Constant.KEY_PASSWORD);
+                    final InputWifiPasswordDialogFragment dialogFragment = InputWifiPasswordDialogFragment.newInstance();
+                    if (TextUtils.isEmpty(password)) {
+                        dialogFragment.setTitle("设置管理员密码");
+                        dialogFragment.setOnCancelClickListener(new InputWifiPasswordDialogFragment.onCancelClickListener() {
+                            @Override
+                            public void onCancelClick() {
+                                dialogFragment.dismiss();
+                            }
+                        })
+                                .setOnConfirmClickListener(new InputWifiPasswordDialogFragment.OnConfirmClickListener() {
+                                    @Override
+                                    public void onConfirmClick(String content) {
+                                        dialogFragment.dismiss();
+                                        if (!TextUtils.isEmpty(content)) {
+                                            SPUtils.putString(Constant.KEY_PASSWORD, content);
+                                            Intent intent = new Intent(MainActivity.this, SettingActivity.class);
+                                            startActivity(intent);
+                                        }
+                                    }
+                                });
+                    } else {
+                        dialogFragment.setTitle("请输入管理员密码");
+                        dialogFragment.setOnCancelClickListener(new InputWifiPasswordDialogFragment.onCancelClickListener() {
+                            @Override
+                            public void onCancelClick() {
+                                dialogFragment.dismiss();
+                            }
+                        })
+                                .setOnConfirmClickListener(new InputWifiPasswordDialogFragment.OnConfirmClickListener() {
+                                    @Override
+                                    public void onConfirmClick(String content) {
+                                        if (TextUtils.equals(password, content)) {
+                                            dialogFragment.dismiss();
+                                            Intent intent = new Intent(MainActivity.this, SettingActivity.class);
+                                            startActivity(intent);
+                                        } else {
+                                            dialogFragment.showError();
+                                        }
+                                    }
+                                });
 
-	private final BroadcastReceiver mBatteryReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
-			int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, 0);
-			int levelPercent = (int) (level * 100f / scale);
-			LogUtil.d("电池电量百分比 = " + levelPercent);
-			int status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, BatteryManager.BATTERY_HEALTH_UNKNOWN);
-			switch (status) {
-				case BatteryManager.BATTERY_STATUS_CHARGING:
-					LogUtil.d("充电中");
-					break;
-				case BatteryManager.BATTERY_STATUS_NOT_CHARGING:
-					LogUtil.d("未充电");
-					break;
-				case BatteryManager.BATTERY_STATUS_FULL:
-					LogUtil.d("充电完成");
-					break;
-				case BatteryManager.BATTERY_STATUS_DISCHARGING:
-					LogUtil.d("放电中");
-					break;
-			}
-		}
-	};
+                    }
+                    dialogFragment.show(getSupportFragmentManager(), "");
+                }
+            });
+        }
+    }
 
-	private void getLocation() {
-		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+    private void registerBatteryReceiver() {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_BATTERY_CHANGED);
+        registerReceiver(mBatteryReceiver, intentFilter);
+    }
 
-		// 既没有打开gps也没有打开网络
-		if (!isGpsOpened() && !isNewWorkOpen()) {
-			Toast.makeText(this, "请打开网络或GPS定位功能!", Toast.LENGTH_SHORT).show();
+    private final BroadcastReceiver mBatteryReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
+            int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, 0);
+            int levelPercent = (int) (level * 100f / scale);
+            LogUtil.d("电池电量百分比 = " + levelPercent);
+            int status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, BatteryManager.BATTERY_HEALTH_UNKNOWN);
+            switch (status) {
+                case BatteryManager.BATTERY_STATUS_CHARGING:
+                    LogUtil.d("充电中");
+                    break;
+                case BatteryManager.BATTERY_STATUS_NOT_CHARGING:
+                    LogUtil.d("未充电");
+                    break;
+                case BatteryManager.BATTERY_STATUS_FULL:
+                    LogUtil.d("充电完成");
+                    break;
+                case BatteryManager.BATTERY_STATUS_DISCHARGING:
+                    LogUtil.d("放电中");
+                    break;
+            }
+        }
+    };
+
+    private void getLocation() {
+        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        // 既没有打开gps也没有打开网络
+        if (!isGpsOpened() && !isNewWorkOpen()) {
+            Toast.makeText(this, "请打开网络或GPS定位功能!", Toast.LENGTH_SHORT).show();
 //			Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
 //			startActivityForResult(intent, 0);
 			return;
