@@ -16,7 +16,6 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -36,12 +35,15 @@ import rk.device.launcher.utils.DateUtil;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.ThreadUtils;
+import rk.device.launcher.utils.carema.CameraInterface;
+import rk.device.launcher.widget.CameraSurfaceView;
 import rk.device.launcher.widget.UpdateManager;
 
 import static rk.device.launcher.utils.DateUtil.getTime;
 
 public class MainActivity extends BaseCompatActivity implements View.OnClickListener {
 
+    private int mCameraId = Camera.CameraInfo.CAMERA_FACING_FRONT;
     @Bind(R.id.tv_time)
     TextView mTvTime;
     @Bind(R.id.tv_week)
@@ -55,13 +57,13 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     @Bind(R.id.iv_arrow)
     ImageView mIvArrow;
     @Bind(R.id.surface_view)
-    SurfaceView mSurfaceView;
+    CameraSurfaceView mSurfaceView;
     private Camera camera;
     private SurfaceHolder surfaceholder;
     Camera.Parameters parameters;
 
-    private int PREVIEW_WIDTH        = 1280;
-    private int                    PREVIEW_HEIGHT       = 720;
+    private int PREVIEW_WIDTH = 1280;
+    private int PREVIEW_HEIGHT = 720;
 
     private LocationManager mLocationManager;
     private final String TAG = "MainActivity";
@@ -90,15 +92,34 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     public void initView() {
         registerBatteryReceiver();
         initLocation();
-        initSerfaceView();
         settingTv.setOnClickListener(this);
+        startGoogleFaceDetect();
     }
 
-    private void initSerfaceView() {
-        surfaceholder = mSurfaceView.getHolder();
-        surfaceholder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-        surfaceholder.addCallback(new SurfaceHolderCallbackBack());
+    private void startGoogleFaceDetect() {
+        Camera mCamera = CameraInterface.getInstance().getCameraDevice();
+        if (mCamera == null) {
+            CameraInterface.getInstance().doOpenCamera(null, mCameraId);
+            mCamera = CameraInterface.getInstance().getCameraDevice();
+        }
+        Camera.Parameters params = mCamera.getParameters();
+        params.setPreviewFormat(ImageFormat.NV21);
+        params.setPreviewSize(PREVIEW_WIDTH, PREVIEW_HEIGHT);
+        mCamera.setParameters(params);
+
+        // 设置显示的偏转角度，大部分机器是顺时针90度，某些机器需要按情况设置
+        mCamera.setDisplayOrientation(90);
+        if (mCamera != null) {
+            mCamera.setPreviewCallback(new Camera.PreviewCallback() {
+
+                @Override
+                public void onPreviewFrame(byte[] data, Camera camera) {
+
+                }
+            });
+        }
     }
+
 
     /**
      * 后置摄像头回调
@@ -174,6 +195,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 
     @Override
     protected void initData() {
+
         UpdateManager.getUpdateManager().checkAppUpdate(this, getSupportFragmentManager(), false);
     }
 
@@ -325,7 +347,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         unregisterReceiver(mBatteryReceiver);
         super.onDestroy();
         if (null != camera) {
-            closeCamera(camera);
+//            closeCamera(camera);
         }
     }
 
