@@ -35,9 +35,12 @@ import java.net.URL;
 import java.text.DecimalFormat;
 
 import rk.device.launcher.R;
-import rk.device.launcher.bean.UpdateModel;
+import rk.device.launcher.api.ApiService;
+import rk.device.launcher.bean.VersionBean;
+import rk.device.launcher.utils.AppUtils;
 import rk.device.launcher.utils.PackageUtils;
 import rk.device.launcher.widget.dialog.BaseDialogFragment;
+import rx.Subscriber;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -96,7 +99,7 @@ public class UpdateManager {
 
     private int curVersionCode;
 
-    private UpdateModel mUpdate;
+    private VersionBean mUpdate;
 
     private Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
@@ -148,50 +151,40 @@ public class UpdateManager {
                 return;
         }
         mCompositeSubscription = new CompositeSubscription();
-        JSONObject params = new JSONObject();
-//		String ver = Config.FIRM + "_" + Config.APP_TYPE + "_" + PackageUtils.getCurrentVersionCode();
-//		params.put("ver",ver);
-//		Subscription subscription = ApiFactory.update().update(ApiFactory.getRequest(params))
-//				.compose(RxSchedulers.io_main())
-//				.subscribe(new BaseSubscriber<UpdateModel>() {
-//					@Override
-//					public void onCompleted() {
-//						mCompositeSubscription.unsubscribe();
-//					}
-//
-//					@Override
-//					public void onError(Throwable e) {
-//
-//					}
-//
-//					@Override
-//					public void get_model(UpdateModel result) {
-//						// 进度条对话框不显示 - 检测结果也不显示
-//						if (mProDialog != null && !mProDialog.isShowing()) {
-//							return;
-//						}
+        ApiService.updateApp(AppUtils.getAppVersionCode(mContext) + "").subscribe(new Subscriber<VersionBean>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNext(VersionBean s) {
+                // 进度条对话框不显示 - 检测结果也不显示
+                if (mProDialog != null && !mProDialog.isShowing()) {
+                    return;
+                }
 //						// 关闭并释放释放进度条对话框
-//						if (isShowMsg && mProDialog != null) {
-//							mProDialog.dismiss();
-//							mProDialog = null;
-//						}
-//
-//						if (result != null) {
-//							mUpdate = result;
-//							apkUrl = result.getFile();
-//							updateMsg = result.getNote();
-//							if(SystemUtils.getVerCode(mContext) < result.getCode()){
-//								showNoticeDialog2(true);
-//							}else{
-//								if(isShowUpdate){
-//									showLatestOrFailDialog(DIALOG_TYPE_LATEST);
-//								}
-//							}
-//						}
-//					}
-//				});
-//		mCompositeSubscription.add(subscription);
-        showNoticeDialog(true);
+                if (isShowMsg && mProDialog != null) {
+                    mProDialog.dismiss();
+                    mProDialog = null;
+                }
+                mUpdate = s;
+                apkUrl = mUpdate.getFile();
+                updateMsg = mUpdate.getNote();
+                if (AppUtils.getAppVersionCode(mContext) < s.getCode()) {
+                    showNoticeDialog(true);
+                } else {
+                    if (isShowMsg) {
+                        showLatestOrFailDialog(DIALOG_TYPE_LATEST);
+                    }
+                }
+            }
+        });
     }
 
     /**

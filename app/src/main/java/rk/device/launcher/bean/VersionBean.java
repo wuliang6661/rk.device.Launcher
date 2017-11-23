@@ -1,16 +1,27 @@
 package rk.device.launcher.bean;
 
+import java.io.Serializable;
+
 /**
- * Created by hanbin on 17/5/5.
+ * Created by wuliang on 2017/11/23.
+ * <p>
+ * 版本更新检测bean
  */
 
-public class UpdateModel {
+public class VersionBean implements Serializable {
+
 
     /**
-     * ver : 1.0.55
-     * code : 55
-     * file :
-     * note : fixed some bug
+     * ver : 1.0.1
+     * code : 2
+     * file : http://clouddevice.oss-cn-hangzhou.aliyuncs.com/package/apk/app-device-release.apk
+     * note : 1.添加新设备：密码打卡锁、智能开合帘
+     * <p>
+     * 2.动态更新设备状态
+     * <p>
+     * 3.优化逻辑，提升体验
+     * <p>
+     * 4.fix bugs
      */
 
     private String ver;

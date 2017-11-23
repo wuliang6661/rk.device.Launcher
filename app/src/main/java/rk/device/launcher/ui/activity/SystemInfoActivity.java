@@ -14,14 +14,14 @@ import butterknife.Bind;
 import rk.device.launcher.R;
 import rk.device.launcher.base.BaseCompatActivity;
 import rk.device.launcher.utils.AppUtils;
-import rk.device.launcher.utils.LogUtil;
+import rk.device.launcher.utils.DeviceUtils;
 import rk.device.launcher.utils.QRCodeUtils;
 import rk.device.launcher.utils.ScreenUtil;
 import rk.device.launcher.widget.UpdateManager;
 
 
 /**
- *
+ * 关于设备页面
  */
 
 public class SystemInfoActivity extends BaseCompatActivity implements View.OnClickListener {
@@ -74,12 +74,11 @@ public class SystemInfoActivity extends BaseCompatActivity implements View.OnCli
         deviceCpu.setText(Build.MODEL);
         Point point = ScreenUtil.getSizeNew(this);
         deviceResolution.setText(point.x + "*" + point.y);
-
     }
 
 
     @Override
     public void onClick(View view) {
-        UpdateManager.getUpdateManager().checkAppUpdate(this, getSupportFragmentManager(), false);
+        UpdateManager.getUpdateManager().checkAppUpdate(this, getSupportFragmentManager(), true);
     }
 }
