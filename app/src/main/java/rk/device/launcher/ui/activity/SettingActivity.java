@@ -1,7 +1,12 @@
 package rk.device.launcher.ui.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.service.persistentdata.PersistentDataBlockManager;
 import android.support.annotation.Nullable;
 import android.view.MotionEvent;
 import android.view.View;
@@ -9,11 +14,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.internal.os.storage.ExternalStorageFormatter;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import rk.device.launcher.R;
 import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.ui.fragment.RecoveryDialogFragment;
+import rk.device.launcher.utils.SettingUtils;
 
 /**
  * Created by mundane on 2017/11/9 上午10:56
@@ -62,6 +70,7 @@ public class SettingActivity extends BaseActivity {
 	LinearLayout mLlRecovery;
 	@Bind(R.id.tv_title)
 	TextView mTvTitle;
+	private boolean mEraseSdCard = true;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -132,13 +141,74 @@ public class SettingActivity extends BaseActivity {
                 .setOnConfirmClickListener(new RecoveryDialogFragment.OnConfirmClickListener() {
 					@Override
 					public void onConfirmClick() {
-						Intent intent = new Intent(SettingActivity.this, RecoveryActivity.class);
-						startActivity(intent);
+//						Intent intent = new Intent(SettingActivity.this, RecoveryActivity.class);
+//						startActivity(intent);
+						if (SettingUtils.isMonkeyRunning()) {
+							return;
+						}
+
+						final PersistentDataBlockManager pdbManager = (PersistentDataBlockManager)
+								SettingActivity.this.getSystemService("persistent_data_block");
+
+						if (pdbManager != null && !pdbManager.getOemUnlockEnabled() &&
+								Settings.Global.getInt(SettingActivity.this.getContentResolver(),
+										Settings.Global.DEVICE_PROVISIONED, 0) != 0) {
+							// if OEM unlock is enabled, this will be wiped during FR process. If disabled, it
+							// will be wiped here, unless the device is still being provisioned, in which case
+							// the persistent data block will be preserved.
+							final ProgressDialog progressDialog = getProgressDialog();
+							progressDialog.show();
+
+							// need to prevent orientation changes as we're about to go into
+							// a long IO request, so we won't be able to access inflate resources on flash
+							final int oldOrientation = SettingActivity.this.getRequestedOrientation();
+							SettingActivity.this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
+							new AsyncTask<Void, Void, Void>() {
+								@Override
+								protected Void doInBackground(Void... params) {
+									pdbManager.wipe();
+									return null;
+								}
+
+								@Override
+								protected void onPostExecute(Void aVoid) {
+									progressDialog.hide();
+									SettingActivity.this.setRequestedOrientation(oldOrientation);
+									doMasterClear();
+								}
+							}.execute();
+						} else {
+							doMasterClear();
+						}
 					}
 				});
 				recoveryDialogFragment.show(getSupportFragmentManager(), "");
 			}
 		});
+	}
+
+	private ProgressDialog getProgressDialog() {
+		final ProgressDialog progressDialog = new ProgressDialog(this);
+		progressDialog.setIndeterminate(true);
+		progressDialog.setCancelable(false);
+		progressDialog.setTitle("清除中");
+		progressDialog.setMessage("请稍后");
+		return progressDialog;
+	}
+
+	private void doMasterClear() {
+		if (mEraseSdCard) {
+			Intent intent = new Intent(ExternalStorageFormatter.FORMAT_AND_FACTORY_RESET);
+			intent.putExtra("android.intent.extra.REASON", "WipeAllFlash");
+			intent.setComponent(ExternalStorageFormatter.COMPONENT_NAME);
+			startService(intent);
+		} else {
+			Intent intent = new Intent("android.intent.action.MASTER_CLEAR");
+			intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
+			intent.putExtra("android.intent.extra.REASON", "MasterClearConfirm");
+			sendBroadcast(intent);
+			// Intent handling is asynchronous -- assume it will happen soon.
+		}
 	}
 
 	private void processOnTouchListener(final LinearLayout ll, final ImageView iv, final TextView tv, final int normalResource, final int pressedResource) {
