@@ -213,6 +213,9 @@ public class NetUtils {
 		return wifiManager;
 	}
 
+	public static void getEthernetManager(Context context) {
+	}
+
 	/**
 	 * 获取wifi时的dhcp
 	 * @param context
