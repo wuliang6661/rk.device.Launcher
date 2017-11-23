@@ -3,8 +3,6 @@ package rk.device.launcher.ui.activity;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.os.Build;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -14,7 +12,6 @@ import butterknife.Bind;
 import rk.device.launcher.R;
 import rk.device.launcher.base.BaseCompatActivity;
 import rk.device.launcher.utils.AppUtils;
-import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.QRCodeUtils;
 import rk.device.launcher.utils.ScreenUtil;
 import rk.device.launcher.widget.UpdateManager;
@@ -47,14 +44,14 @@ public class SystemInfoActivity extends BaseCompatActivity implements View.OnCli
     }
 
     @Override
-    protected void inviView() {
+    protected void initView() {
         goBack();
         setTitle("关于设备");
         invition();
     }
 
     @Override
-    protected void inviData() {
+    protected void initData() {
         mBtnCheckUpdate.setBackgroundResource(R.drawable.shape_btn_round_corner);
 
         mIvQrcode.post(() -> {

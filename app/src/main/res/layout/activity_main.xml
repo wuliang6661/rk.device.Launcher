@@ -53,7 +53,7 @@
             android:layout_height="550dp">
 
             <SurfaceView
-                android:id="@+id/sfv1"
+                android:id="@+id/surface_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="visible" />
@@ -63,6 +63,12 @@
                 android:layout_height="match_parent"
                 android:scaleType="fitXY"
                 android:src="@drawable/camera_background" />
+
+
+            <rk.device.launcher.widget.DetectedFaceView
+                android:id="@+id/face_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -82,11 +88,6 @@
                 android:textColor="@color/white"
                 android:textSize="30dp"
                 android:visibility="gone" />
-
-            <!--<com.dusun.facerecog.widget.DetectedFaceView-->
-            <!--android:id="@+id/face_view"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent" />-->
         </FrameLayout>
 
     </LinearLayout>
