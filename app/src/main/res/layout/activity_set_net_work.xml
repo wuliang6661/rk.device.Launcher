@@ -17,17 +17,17 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="75dp">
+            android:layout_height="@dimen/item_height">
 
             <TextView
-                android:layout_marginLeft="15dp"
+                android:layout_marginLeft="20dp"
                 android:background="@drawable/network_type_bg"
                 android:layout_centerVertical="true"
                 android:gravity="center"
                 android:textColor="@color/white"
-                android:textSize="20dp"
+                android:textSize="27dp"
                 android:text="网络类型"
-                android:layout_width="100dp"
+                android:layout_width="133dp"
                 android:layout_height="@dimen/colorful_btn_height"/>
 
         </RelativeLayout>
@@ -41,18 +41,18 @@
             android:id="@+id/ll_auto"
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="75dp">
+            android:layout_height="@dimen/item_height">
 
             <ImageView
                 android:id="@+id/iv_auto"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="15dp"
+                android:layout_marginLeft="20dp"
                 android:src="@drawable/circle_checked"
-                android:layout_width="25dp"
-                android:layout_height="25dp"/>
+                android:layout_width="33dp"
+                android:layout_height="33dp"/>
 
             <TextView
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="13dp"
                 android:layout_gravity="center_vertical"
                 android:textColor="@color/white"
                 android:textSize="20dp"
@@ -71,18 +71,18 @@
             android:id="@+id/ll_manul"
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="75dp">
+            android:layout_height="@dimen/item_height">
 
             <ImageView
                 android:id="@+id/iv_manul"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="15dp"
+                android:layout_marginLeft="20dp"
                 android:src="@drawable/circle_uncheck"
-                android:layout_width="25dp"
-                android:layout_height="25dp"/>
+                android:layout_width="33dp"
+                android:layout_height="33dp"/>
 
             <TextView
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="13dp"
                 android:layout_gravity="center_vertical"
                 android:textColor="@color/white"
                 android:textSize="20dp"
@@ -101,18 +101,18 @@
             android:id="@+id/ll_wifi"
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="75dp">
+            android:layout_height="@dimen/item_height">
 
             <ImageView
                 android:id="@+id/iv_wifi"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="15dp"
+                android:layout_marginLeft="20dp"
                 android:src="@drawable/circle_uncheck"
-                android:layout_width="25dp"
-                android:layout_height="25dp"/>
+                android:layout_width="33dp"
+                android:layout_height="33dp"/>
 
             <TextView
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="13dp"
                 android:layout_gravity="center_vertical"
                 android:textColor="@color/white"
                 android:textSize="20dp"
