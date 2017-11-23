@@ -47,14 +47,14 @@ public class SystemInfoActivity extends BaseCompatActivity implements View.OnCli
     }
 
     @Override
-    protected void inviView() {
+    protected void initView() {
         goBack();
         setTitle("关于设备");
         invition();
     }
 
     @Override
-    protected void inviData() {
+    protected void initData() {
         mBtnCheckUpdate.setBackgroundResource(R.drawable.shape_btn_round_corner);
 
         mIvQrcode.post(() -> {
@@ -63,6 +63,7 @@ public class SystemInfoActivity extends BaseCompatActivity implements View.OnCli
         });
         mBtnCheckUpdate.setOnClickListener(this);
     }
+
 
     /***
      * 初始化界面
