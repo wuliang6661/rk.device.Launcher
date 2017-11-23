@@ -19,10 +19,9 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.alibaba.fastjson.JSONObject;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -35,9 +34,7 @@ import java.util.TimeZone;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import rk.device.launcher.R;
-import rk.device.launcher.api.ApiService;
 import rk.device.launcher.base.BaseActivity;
-import rk.device.launcher.bean.WeatherModel;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.ui.fragment.InputWifiPasswordDialogFragment;
 import rk.device.launcher.utils.CommonUtils;
@@ -188,141 +185,114 @@ public class MainActivity extends BaseActivity {
             Toast.makeText(this, "请打开网络或GPS定位功能!", Toast.LENGTH_SHORT).show();
 //			Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
 //			startActivityForResult(intent, 0);
-            return;
-        }
-        ThreadUtils.newThread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Location location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                    if (location == null) {
-                        Log.d(TAG, "gps.location = null");
-                        location = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                    }
-                    Log.d(TAG, "network.location = " + location);
-                    Geocoder geocoder = new Geocoder(CommonUtils.getContext(), Locale.getDefault());
-                    if (location == null) {
-                        return;
-                    }
-                    try {
-                        List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-                        if (addresses.size() > 0) {
-                            Address address = addresses.get(0);
-                            String city = address.getLocality();
-                            LogUtil.d("city = " + city);
-                            httpGetWeatherInfo(address.getSubAdminArea());
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } catch (SecurityException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+			return;
+		}
+		ThreadUtils.newThread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					Location location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+					if (location == null) {
+						Log.d(TAG, "gps.location = null");
+						location = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+					}
+					Log.d(TAG, "network.location = " + location);
+					Geocoder geocoder = new Geocoder(CommonUtils.getContext(), Locale.getDefault());
+					if (location == null) {
+						return;
+					}
+					try {
+						List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+						if (addresses.size() > 0) {
+							Address address = addresses.get(0);
+							String city = address.getLocality();
+							LogUtil.d("city = " + city);
+
+						}
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				} catch (SecurityException e) {
+					e.printStackTrace();
+				}
+			}
+		});
 
 
-    }
+	}
 
-    private boolean isGpsOpened() {
-        boolean isOpen = true;
-        // 没有开启GPS
-        if (!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            isOpen = false;
-        }
-        return isOpen;
-    }
+	private boolean isGpsOpened() {
+		boolean isOpen = true;
+		// 没有开启GPS
+		if (!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+			isOpen = false;
+		}
+		return isOpen;
+	}
 
-    private boolean isNewWorkOpen() {
-        boolean isOpen = true;
-        // 没有开启网络定位
-        if (!mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            isOpen = false;
-        }
-        return isOpen;
-    }
+	private boolean isNewWorkOpen() {
+		boolean isOpen = true;
+		// 没有开启网络定位
+		if (!mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+			isOpen = false;
+		}
+		return isOpen;
+	}
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mStaticHandler.post(mRefreshTimeRunnable);
-    }
+	@Override
+	protected void onStart() {
+		super.onStart();
+		mStaticHandler.post(mRefreshTimeRunnable);
+	}
 
-    private static class StaticHandler extends Handler {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-        }
-    }
+	private static class StaticHandler extends Handler {
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+		}
+	}
 
-    @Override
-    protected void onDestroy() {
-        mStaticHandler.removeCallbacksAndMessages(null);
-        unregisterReceiver(mBatteryReceiver);
-        super.onDestroy();
-    }
+	@Override
+	protected void onDestroy() {
+		mStaticHandler.removeCallbacksAndMessages(null);
+		unregisterReceiver(mBatteryReceiver);
+		super.onDestroy();
+	}
 
-    @Override
-    protected void onStop() {
-        mStaticHandler.removeCallbacksAndMessages(null);
-        super.onStop();
-    }
+	@Override
+	protected void onStop() {
+		mStaticHandler.removeCallbacksAndMessages(null);
+		super.onStop();
+	}
 
-    private void start() {
-        mStaticHandler.post(mRefreshTimeRunnable);
-    }
+	private void start() {
+		mStaticHandler.post(mRefreshTimeRunnable);
+	}
 
-    private void stop() {
-        mStaticHandler.removeCallbacksAndMessages(null);
-        mStaticHandler = null;
-    }
+	private void stop() {
+		mStaticHandler.removeCallbacksAndMessages(null);
+		mStaticHandler = null;
+	}
 
-    private String getTime() {
-        final Date date = new Date();
-        mCalendar.setTime(date);
-        SimpleDateFormat sdf = new SimpleDateFormat("HH : mm");
-        return sdf.format(date);
-    }
+	private String getTime() {
+		final Date date = new Date();
+		mCalendar.setTime(date);
+		SimpleDateFormat sdf = new SimpleDateFormat("HH : mm");
+		return sdf.format(date);
+	}
 
-    private String getDate() {
-        final Date date = new Date();
-        mCalendar.setTime(date);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
-        return sdf.format(date);
-    }
+	private String getDate() {
+		final Date date = new Date();
+		mCalendar.setTime(date);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
+		return sdf.format(date);
+	}
 
-    private void alpha(View view) {
+	private void alpha(View view) {
 //		Animator animator = AnimatorInflater.loadAnimator(this, R.animator.anim_set);
 //        animator.setTarget(view);
 //		animator.start();
-        Animation animation = AnimationUtils.loadAnimation(this, R.anim.alpha_translate);
-        view.startAnimation(animation);
-    }
-
-    /**
-     * 请求天气
-     *
-     * @param city
-     */
-    private void httpGetWeatherInfo(String city) {
-        JSONObject params = new JSONObject();
-        params.put("city", city);
-        recoverSub(ApiService.weather(params)
-                .subscribe(new Subscriber<WeatherModel>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(WeatherModel weatherModel) {
-
-                    }
-                }));
-    }
+		Animation animation = AnimationUtils.loadAnimation(this, R.anim.alpha_translate);
+		view.startAnimation(animation);
+	}
 }

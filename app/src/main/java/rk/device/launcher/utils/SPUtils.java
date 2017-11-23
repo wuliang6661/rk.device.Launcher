@@ -10,10 +10,10 @@ public class SPUtils {
 
     private static SharedPreferences sp;
     private static SharedPreferences.Editor sEditor;
-    private static final String FILE_NAME            = "sp_config";
+    private static final String FILE_NAME = "sp_config";
     private static final String DEFAULT_STRING_VALUE = "";
-    private static final int    DEFAULT_INT_VALUE    = 0;
-	private static final long DEFAULT_LONG_VALUE = 0;
+    private static final int DEFAULT_INT_VALUE = 0;
+    private static final long DEFAULT_LONG_VALUE = 0;
 
 
     private static SharedPreferences getSp() {
@@ -46,17 +46,24 @@ public class SPUtils {
     }
 
 
-	public static void putLong(String key, long value) {
-		SharedPreferences.Editor editor = getEditor();
-		editor.putLong(key, value);
-		editor.commit();
-	}
+    public static void putBoolean(String key, boolean value) {
+        SharedPreferences.Editor editor = getEditor();
+        editor.putBoolean(key, value);
+        editor.commit();
+    }
 
 
-	public static long getLong(String key) {
-		SharedPreferences sp = getSp();
-		return sp.getLong(key, DEFAULT_LONG_VALUE);
-	}
+    public static void putLong(String key, long value) {
+        SharedPreferences.Editor editor = getEditor();
+        editor.putLong(key, value);
+        editor.commit();
+    }
+
+
+    public static long getLong(String key) {
+        SharedPreferences sp = getSp();
+        return sp.getLong(key, DEFAULT_LONG_VALUE);
+    }
 
 
     public static String getString(String key) {
@@ -70,10 +77,16 @@ public class SPUtils {
         return sp.getInt(key, DEFAULT_INT_VALUE);
     }
 
-	public static int getInt(String key, int defaultValue) {
-		SharedPreferences sp = getSp();
-		return sp.getInt(key, defaultValue);
-	}
+    public static int getInt(String key, int defaultValue) {
+        SharedPreferences sp = getSp();
+        return sp.getInt(key, defaultValue);
+    }
+
+
+    public static boolean getBoolean(String key, boolean defaultValue) {
+        SharedPreferences sp = getSp();
+        return sp.getBoolean(key, defaultValue);
+    }
 
 
     public static void put(String key, Object object) {
@@ -150,7 +163,7 @@ public class SPUtils {
         /**
          * 反射查找apply的方法
          */
-        @SuppressWarnings({ "unchecked", "rawtypes" })
+        @SuppressWarnings({"unchecked", "rawtypes"})
         private static Method findApplyMethod() {
             try {
                 Class clz = SharedPreferences.Editor.class;

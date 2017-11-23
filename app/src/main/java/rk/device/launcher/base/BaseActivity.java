@@ -4,17 +4,11 @@ import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import rx.Subscription;
-import rx.subscriptions.CompositeSubscription;
-
 /**
  * Created by mundane on 2017/11/16 下午2:40
  */
 
 public class BaseActivity extends AppCompatActivity {
-
-	private CompositeSubscription mCompositeSubscription;
-
 	public void hideNavigationBar() {
 		final  View decorView = getWindow().getDecorView();
 		final int  uiOption = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
@@ -109,20 +103,5 @@ public class BaseActivity extends AppCompatActivity {
 
 		// must be executed in main thread :)
 		getWindow().getDecorView().setSystemUiVisibility(flags);
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		if (this.mCompositeSubscription != null) {
-			this.mCompositeSubscription.unsubscribe();
-		}
-	}
-
-	public void recoverSub(Subscription s) {
-		if (this.mCompositeSubscription == null) {
-			this.mCompositeSubscription = new CompositeSubscription();
-		}
-		this.mCompositeSubscription.add(s);
 	}
 }
