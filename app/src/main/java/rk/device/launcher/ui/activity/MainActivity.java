@@ -45,14 +45,26 @@ import rk.device.launcher.utils.DateUtil;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.ThreadUtils;
+import rk.device.launcher.widget.UpdateManager;
 import rx.Subscriber;
 
 public class MainActivity extends BaseActivity {
 
+    @Bind(R.id.tv_time)
+    TextView mTvTime;
+    @Bind(R.id.tv_week)
+    TextView mTvWeek;
+    @Bind(R.id.tv_date)
+    TextView mTvDate;
+    @Bind(R.id.iv_signal)
+    ImageView mIvSignal;
     @Bind(R.id.iv_setting)
     ImageView mIvSetting;
     @Bind(R.id.iv_arrow)
     ImageView mIvArrow;
+    private Calendar mCalendar;
+    private LocationManager mLocationManager;
+    private final String TAG = "MainActivity";
     private static final int REFRESH_DELAY = 1000;
 
     private StaticHandler mStaticHandler = new StaticHandler();
@@ -67,19 +79,7 @@ public class MainActivity extends BaseActivity {
             mStaticHandler.postDelayed(this, REFRESH_DELAY);
         }
     };
-    @Bind(R.id.tv_time)
-    TextView mTvTime;
-    @Bind(R.id.tv_week)
-    TextView mTvWeek;
-    @Bind(R.id.tv_date)
-    TextView mTvDate;
-    @Bind(R.id.iv_signal)
-    ImageView mIvSignal;
-    private Calendar mCalendar;
-    private LocationManager mLocationManager;
-    private final String TAG = "MainActivity";
-    private float mDownY;
-    private int mOriginalTopMargin;
+
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -89,57 +89,64 @@ public class MainActivity extends BaseActivity {
         ButterKnife.bind(this);
         hideNavigationBar();
         mCalendar = Calendar.getInstance(TimeZone.getTimeZone("GMT+8"));
-        mIvSetting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final InputWifiPasswordDialogFragment dialogFragment = InputWifiPasswordDialogFragment.newInstance();
-                final String password = SPUtils.getString(Constant.KEY_PASSWORD);
-                if (TextUtils.isEmpty(password)) {
-                    dialogFragment.setTitle("设置管理员密码");
-                    dialogFragment.setOnCancelClickListener(new InputWifiPasswordDialogFragment.onCancelClickListener() {
-                        @Override
-                        public void onCancelClick() {
-                            dialogFragment.dismiss();
-                        }
-                    })
-                            .setOnConfirmClickListener(new InputWifiPasswordDialogFragment.OnConfirmClickListener() {
-                                @Override
-                                public void onConfirmClick(String content) {
-                                    dialogFragment.dismiss();
-                                    if (!TextUtils.isEmpty(content)) {
-                                        SPUtils.putString(Constant.KEY_PASSWORD, content);
-                                        Intent intent = new Intent(MainActivity.this, SettingActivity.class);
-                                        startActivity(intent);
-                                    }
-                                }
-                            });
-                } else {
-                    dialogFragment.setTitle("请输入管理员密码");
-                    dialogFragment.setOnCancelClickListener(new InputWifiPasswordDialogFragment.onCancelClickListener() {
-                        @Override
-                        public void onCancelClick() {
-                            dialogFragment.dismiss();
-                        }
-                    })
-                            .setOnConfirmClickListener(new InputWifiPasswordDialogFragment.OnConfirmClickListener() {
-                                @Override
-                                public void onConfirmClick(String content) {
-                                    if (TextUtils.equals(password, content)) {
-                                        dialogFragment.dismiss();
-                                        Intent intent = new Intent(MainActivity.this, SettingActivity.class);
-                                        startActivity(intent);
-                                    } else {
-                                        dialogFragment.showError();
-                                    }
-                                }
-                            });
-
-                }
-                dialogFragment.show(getSupportFragmentManager(), "");
-            }
-        });
+        initView();
         getLocation();
         registerBatteryReceiver();
+        UpdateManager.getUpdateManager().checkAppUpdate(this, getSupportFragmentManager(), false);
+    }
+
+    private void initView() {
+        if (mIvSetting != null) {
+            mIvSetting.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final String password = SPUtils.getString(Constant.KEY_PASSWORD);
+                    final InputWifiPasswordDialogFragment dialogFragment = InputWifiPasswordDialogFragment.newInstance();
+                    if (TextUtils.isEmpty(password)) {
+                        dialogFragment.setTitle("设置管理员密码");
+                        dialogFragment.setOnCancelClickListener(new InputWifiPasswordDialogFragment.onCancelClickListener() {
+                            @Override
+                            public void onCancelClick() {
+                                dialogFragment.dismiss();
+                            }
+                        })
+                                .setOnConfirmClickListener(new InputWifiPasswordDialogFragment.OnConfirmClickListener() {
+                                    @Override
+                                    public void onConfirmClick(String content) {
+                                        dialogFragment.dismiss();
+                                        if (!TextUtils.isEmpty(content)) {
+                                            SPUtils.putString(Constant.KEY_PASSWORD, content);
+                                            Intent intent = new Intent(MainActivity.this, SettingActivity.class);
+                                            startActivity(intent);
+                                        }
+                                    }
+                                });
+                    } else {
+                        dialogFragment.setTitle("请输入管理员密码");
+                        dialogFragment.setOnCancelClickListener(new InputWifiPasswordDialogFragment.onCancelClickListener() {
+                            @Override
+                            public void onCancelClick() {
+                                dialogFragment.dismiss();
+                            }
+                        })
+                                .setOnConfirmClickListener(new InputWifiPasswordDialogFragment.OnConfirmClickListener() {
+                                    @Override
+                                    public void onConfirmClick(String content) {
+                                        if (TextUtils.equals(password, content)) {
+                                            dialogFragment.dismiss();
+                                            Intent intent = new Intent(MainActivity.this, SettingActivity.class);
+                                            startActivity(intent);
+                                        } else {
+                                            dialogFragment.showError();
+                                        }
+                                    }
+                                });
+
+                    }
+                    dialogFragment.show(getSupportFragmentManager(), "");
+                }
+            });
+        }
     }
 
     private void registerBatteryReceiver() {

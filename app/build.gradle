@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-
+apply plugin: 'me.tatarka.retrolambda'
 
 android {
     compileSdkVersion 26
@@ -16,9 +16,9 @@ android {
 //                cppFlags "-frtti -fexceptions"
 //            }
 //        }
-        jackOptions {
-            enabled true
-        }
+//        jackOptions {
+//            enabled true
+//        }
         javaCompileOptions {
             annotationProcessorOptions {
                 includeCompileClasspath = true
