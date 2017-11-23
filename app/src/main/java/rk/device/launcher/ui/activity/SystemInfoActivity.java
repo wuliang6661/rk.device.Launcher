@@ -3,6 +3,8 @@ package rk.device.launcher.ui.activity;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.os.Build;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -56,7 +58,7 @@ public class SystemInfoActivity extends BaseCompatActivity implements View.OnCli
         mBtnCheckUpdate.setBackgroundResource(R.drawable.shape_btn_round_corner);
 
         mIvQrcode.post(() -> {
-            Bitmap qrCodeBitmap = QRCodeUtils.createQRCode("http://mj.roombanker.cn/", mIvQrcode.getWidth(), mIvQrcode.getHeight());
+            Bitmap qrCodeBitmap = QRCodeUtils.createQRCode("mundane", mIvQrcode.getWidth(), mIvQrcode.getHeight());
             mIvQrcode.setImageBitmap(qrCodeBitmap);
         });
         mBtnCheckUpdate.setOnClickListener(this);
@@ -68,7 +70,7 @@ public class SystemInfoActivity extends BaseCompatActivity implements View.OnCli
      */
     private void invition() {
         versionName.setText(String.valueOf("V" + AppUtils.getAppVersionName(this)));
-        versionCode.setText(Build.VERSION.RELEASE);
+        versionCode.setText(String.valueOf((double) AppUtils.getAppVersionCode(this)));
         deviceCpu.setText(Build.MODEL);
         Point point = ScreenUtil.getSizeNew(this);
         deviceResolution.setText(point.x + "*" + point.y);
