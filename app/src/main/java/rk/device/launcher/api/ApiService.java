@@ -22,4 +22,14 @@ public class ApiService {
                 .weather(params)
                 .compose(RxResultHelper.httpRusult());
     }
+
+
+    /**
+     * 检测App是否更新
+     */
+    public static Observable<String> updateApp(String verCode, String from) {
+        return ApiFactory.weatherFactory().updateApp(verCode, from).compose(RxResultHelper.httpRusult());
+    }
+
+
 }

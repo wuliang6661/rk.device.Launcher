@@ -30,14 +30,26 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
     protected abstract int getLayout();
 
 
+    /**
+     * 初始化界面布局
+     */
+    protected abstract void initView();
+
+    /**
+     * 处理业务逻辑
+     */
+    protected abstract void initData();
+
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(getLayout());
         hideNavigationBar();
         ButterKnife.bind(this);
         AppManager.getAppManager().addActivity(this);
+        initView();
+        initData();
     }
 
 
