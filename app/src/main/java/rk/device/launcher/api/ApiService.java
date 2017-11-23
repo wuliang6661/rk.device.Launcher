@@ -2,11 +2,15 @@ package rk.device.launcher.api;
 
 import java.util.Map;
 
+import rk.device.launcher.bean.DeviceInfoBean;
+import rk.device.launcher.bean.VersionBean;
 import rk.device.launcher.bean.WeatherModel;
 import rx.Observable;
 
 /**
  * Created by hanbin on 2017/11/23.
+ * <p>
+ * 所有网络接口的实现类
  */
 
 public class ApiService {
@@ -27,8 +31,16 @@ public class ApiService {
     /**
      * 检测App是否更新
      */
-    public static Observable<String> updateApp(String verCode, String from) {
-        return ApiFactory.weatherFactory().updateApp(verCode, from).compose(RxResultHelper.httpRusult());
+    public static Observable<VersionBean> updateApp(String verCode) {
+        return ApiFactory.weatherFactory().updateApp(verCode).compose(RxResultHelper.httpRusult());
+    }
+
+
+    /**
+     * 获取配置接口
+     */
+    public static Observable<DeviceInfoBean> deviceConfiguration(String verCode, String cid) {
+        return ApiFactory.weatherFactory().deviceConfiguration(verCode, cid).compose(RxResultHelper.httpRusult());
     }
 
 

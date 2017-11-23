@@ -25,10 +25,10 @@ public class Config {
 
                 break;
             case PRGRAM_PREPRODUCT_MODE:
-                APP_WEATHER = "http://api.roombanker.cn:9091/";
+                APP_WEATHER = "https://app.roombanker.cn:9092";
                 break;
             case PROGRAM_TEST_MODE:
-                APP_WEATHER = "http://api.roombanker.cn:9091/";
+                APP_WEATHER = "https://app.roombanker.cn:9092";
                 break;
             case PROGRAM_DEV_MODE:
                 break;

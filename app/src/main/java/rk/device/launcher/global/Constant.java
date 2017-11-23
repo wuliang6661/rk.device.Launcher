@@ -13,21 +13,20 @@ public interface Constant {
     String KEY_PASSWORD = "KEY_PASSWORD";
     String LOG_TAG = "launcher";
     boolean isDebug = BuildConfig.DEBUG;
-
     /**
-     * 设备名称（门禁设置）
+     * 客户ID
+     */
+    String CLIENT_ID = "CLIENT_ID";
+    /**
+     * 设备名称（门禁设置 ）
      * <p>
      * sp取值value为String
      */
     String DEVICE_NAME = "DEVICE_NAME";
     /**
-     * 关联设备编号(如需增加设备类型，只需按编号增加即可)
-     * 0: 智能门锁
-     * 1:智能门禁 (身份证)
-     * 2:智能门禁
-     * 3:电梯
+     * 关联设备(存储方式为  设备ID_name)
      * <p>
-     * sp取值value为DeviceCorrelateBean
+     * sp取值value为int
      */
     String DEVICE_TYPE = "DEVICE_TYPE";
     /**
