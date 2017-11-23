@@ -61,6 +61,7 @@ public class SystemInfoActivity extends BaseCompatActivity implements View.OnCli
         mBtnCheckUpdate.setOnClickListener(this);
     }
 
+
     /***
      * 初始化界面
      */

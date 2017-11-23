@@ -64,6 +64,10 @@ public class SetNetWorkActivity extends BaseActivity implements View.OnClickList
 		mBtnFinishSetting.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				if (mCurrentFragment instanceof ManualConfigFragment) {
+					ManualConfigFragment fragment = (ManualConfigFragment) mCurrentFragment;
+					fragment.saveIpConfig();
+				}
 				finish();
 			}
 		});
