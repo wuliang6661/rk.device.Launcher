@@ -3,6 +3,8 @@ package rk.device.launcher.global;
 import android.app.Application;
 import android.content.Context;
 
+import rk.device.launcher.base.utils.STUtils;
+
 /**
  * Created by mundane on 2017/11/11 下午3:49
  */
@@ -14,6 +16,7 @@ public class LauncherApplication extends Application {
 	public void onCreate() {
 		super.onCreate();
 		sContext = getApplicationContext();
+		STUtils.init(this);
 	}
 
 	/**
