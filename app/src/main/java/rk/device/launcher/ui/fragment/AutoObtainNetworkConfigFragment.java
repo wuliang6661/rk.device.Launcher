@@ -65,19 +65,16 @@ public class AutoObtainNetworkConfigFragment extends Fragment {
 		mTvIp.setText(ip);
 		IpConfiguration.IpAssignment mode = mEthernetManager.getConfiguration().getIpAssignment();
 
-
 		if (mode == IpConfiguration.IpAssignment.DHCP) {
-	   /*
-		* getEth from dhcp
-	   */
+		// getEth from dhcp
 			getEthInfoFromDhcp();
 		} else if (mode == IpConfiguration.IpAssignment.STATIC) {
-	   /*
-	    * TODO: get static IP
-	   */
+	    // TODO: get static IP
 			getEthInfoFromStaticIp();
 		}
 		mTvNetMask.setText(mEthNetmask);
+		mTvDns.setText(mEthdns1);
+		mTvNetGate.setText(mEthGateway);
 
 
 	}
