@@ -8,30 +8,31 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="75dp">
+        android:layout_height="@dimen/item_height">
 
         <TextView
+            android:padding="10dp"
             android:layout_marginLeft="15dp"
             android:background="@drawable/network_config_bg"
             android:layout_centerVertical="true"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="20dp"
+            android:textSize="@dimen/normal_textsize_sp27"
             android:text="手动填写网络配置"
-            android:layout_width="180dp"
-            android:layout_height="40dp"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
     </RelativeLayout>
 
     <View
         android:background="@color/blue_31598a"
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"/>
+        android:layout_height="@dimen/divider_height"/>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="75dp">
+        android:layout_height="@dimen/item_height">
         <TextView
             android:layout_marginLeft="15dp"
             android:text="IP地址"
@@ -56,7 +57,7 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="75dp">
+        android:layout_height="@dimen/item_height">
         <TextView
             android:layout_marginLeft="15dp"
             android:text="子网掩码"
@@ -77,11 +78,11 @@
     <View
         android:background="@color/blue_31598a"
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"/>
+        android:layout_height="@dimen/divider_height"/>
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="75dp">
+        android:layout_height="@dimen/item_height">
         <TextView
             android:layout_marginLeft="15dp"
             android:text="网关"
@@ -102,11 +103,11 @@
     <View
         android:background="@color/blue_31598a"
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"/>
+        android:layout_height="@dimen/divider_height"/>
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="75dp">
+        android:layout_height="@dimen/item_height">
         <TextView
             android:layout_marginLeft="15dp"
             android:text="DNS"
@@ -127,6 +128,6 @@
     <View
         android:background="@color/blue_31598a"
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"/>
+        android:layout_height="@dimen/divider_height"/>
 
 </LinearLayout>

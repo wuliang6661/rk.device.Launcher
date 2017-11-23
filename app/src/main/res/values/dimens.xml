@@ -6,4 +6,5 @@
     <dimen name="item_height">100dp</dimen>
     <dimen name="colorful_btn_height">53dp</dimen>
     <dimen name="dp30">30dp</dimen>
+    <dimen name="normal_textsize_sp27">27sp</dimen>
 </resources>
