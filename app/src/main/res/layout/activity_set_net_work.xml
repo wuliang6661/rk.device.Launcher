@@ -20,6 +20,7 @@
             android:layout_height="@dimen/item_height">
 
             <TextView
+                android:padding="10dp"
                 android:layout_marginLeft="20dp"
                 android:background="@drawable/network_type_bg"
                 android:layout_centerVertical="true"
@@ -27,8 +28,8 @@
                 android:textColor="@color/white"
                 android:textSize="27dp"
                 android:text="网络类型"
-                android:layout_width="133dp"
-                android:layout_height="@dimen/colorful_btn_height"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
         </RelativeLayout>
 
@@ -55,7 +56,7 @@
                 android:layout_marginLeft="13dp"
                 android:layout_gravity="center_vertical"
                 android:textColor="@color/white"
-                android:textSize="20dp"
+                android:textSize="@dimen/normal_textsize_sp27"
                 android:text="有线 (自动)"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -85,7 +86,7 @@
                 android:layout_marginLeft="13dp"
                 android:layout_gravity="center_vertical"
                 android:textColor="@color/white"
-                android:textSize="20dp"
+                android:textSize="@dimen/normal_textsize_sp27"
                 android:text="有线 (手动)"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -115,7 +116,7 @@
                 android:layout_marginLeft="13dp"
                 android:layout_gravity="center_vertical"
                 android:textColor="@color/white"
-                android:textSize="20dp"
+                android:textSize="@dimen/normal_textsize_sp27"
                 android:text="WIFI"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>

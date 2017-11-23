@@ -8,18 +8,19 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="75dp">
+        android:layout_height="@dimen/item_height">
 
         <TextView
+            android:padding="10dp"
             android:layout_marginLeft="15dp"
             android:background="@drawable/network_config_bg"
             android:layout_centerVertical="true"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="20dp"
+            android:textSize="@dimen/normal_textsize_sp27"
             android:text="自动获取网络配置"
-            android:layout_width="180dp"
-            android:layout_height="40dp"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
     </RelativeLayout>
 
@@ -31,7 +32,7 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="75dp">
+        android:layout_height="@dimen/item_height">
         <TextView
             android:layout_marginLeft="15dp"
             android:text="IP地址"
@@ -45,9 +46,10 @@
             android:layout_height="match_parent"/>
 
         <TextView
+            android:id="@+id/tv_ip"
             style="@style/tv_network_conf_item"
             android:layout_marginRight="15dp"
-            android:text="192.168.0.1"
+            tools:text="192.168.0.1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
@@ -60,7 +62,7 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="75dp">
+        android:layout_height="@dimen/item_height">
         <TextView
             android:layout_marginLeft="15dp"
             android:text="子网掩码"
@@ -74,6 +76,7 @@
             android:layout_height="match_parent"/>
 
         <TextView
+            android:id="@+id/tv_sub_code"
             style="@style/tv_network_conf_item"
             android:layout_marginRight="15dp"
             android:text="255.255.255.0"
@@ -89,7 +92,7 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="75dp">
+        android:layout_height="@dimen/item_height">
         <TextView
             android:layout_marginLeft="15dp"
             android:text="网关"
@@ -103,6 +106,7 @@
             android:layout_height="match_parent"/>
 
         <TextView
+            android:id="@+id/tv_net_gate"
             style="@style/tv_network_conf_item"
             android:layout_marginRight="15dp"
             android:text="192.168.0.1"
@@ -118,7 +122,7 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="75dp">
+        android:layout_height="@dimen/item_height">
         <TextView
             android:layout_marginLeft="15dp"
             android:text="DNS"
@@ -132,6 +136,7 @@
             android:layout_height="match_parent"/>
 
         <TextView
+            android:id="@+id/tv_dns"
             style="@style/tv_network_conf_item"
             android:layout_marginRight="15dp"
             android:text="192.168.0.1"

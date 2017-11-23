@@ -8,8 +8,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -145,19 +143,19 @@ public class SetTimeActivity extends BaseActivity {
 //		});
 	}
 
-	public void testDate(){
-		try {
-			Process process = Runtime.getRuntime().exec("su");
-			String datetime="20131023.112800"; //测试的设置的时间【时间格式 yyyyMMdd.HHmmss】
-			DataOutputStream os = new DataOutputStream(process.getOutputStream());
-			os.writeBytes("setprop persist.sys.timezone GMT\n");
-			os.writeBytes("/system/bin/date -s "+datetime+"\n");
-			os.writeBytes("clock -w\n");
-			os.writeBytes("exit\n");
-			os.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+//	public void testDate(){
+//		try {
+//			Process process = Runtime.getRuntime().exec("su");
+//			String datetime="20131023.112800"; //测试的设置的时间【时间格式 yyyyMMdd.HHmmss】
+//			DataOutputStream os = new DataOutputStream(process.getOutputStream());
+//			os.writeBytes("setprop persist.sys.timezone GMT\n");
+//			os.writeBytes("/system/bin/date -s "+datetime+"\n");
+//			os.writeBytes("clock -w\n");
+//			os.writeBytes("exit\n");
+//			os.flush();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 }
