@@ -67,7 +67,7 @@ public class SystemInfoActivity extends BaseCompatActivity implements View.OnCli
      */
     private void invition() {
         versionName.setText(String.valueOf("V" + AppUtils.getAppVersionName(this)));
-        versionCode.setText(String.valueOf((double) AppUtils.getAppVersionCode(this)));
+        versionCode.setText(Build.VERSION.RELEASE);
         deviceCpu.setText(Build.MODEL);
         Point point = ScreenUtil.getSizeNew(this);
         deviceResolution.setText(point.x + "*" + point.y);
