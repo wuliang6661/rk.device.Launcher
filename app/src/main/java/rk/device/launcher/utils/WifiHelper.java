@@ -157,10 +157,10 @@ public class WifiHelper {
 		try {
 			WifiConfiguration wifiConfiguration = isExist(scanResult);
 			Class<? extends WifiManager> clazz = mWifiManager.getClass();
-			Class<?> forgetListenerClazz = Class.forName("android.net.wifi.WifiManager.ActionListener");
+			Class<?> forgetListenerClazz = Class.forName("android.net.wifi.WifiManager$ActionListener");
 			Method methodForget = clazz.getDeclaredMethod("forget", int.class, forgetListenerClazz);
 			methodForget.setAccessible(true);
-			methodForget.invoke(wifiConfiguration.networkId, new Object[]{});
+			methodForget.invoke(mWifiManager, wifiConfiguration.networkId, null);
 //			mWifiManager.forget(wifiConfiguration.networkId, mForgetListener);
 			LogUtil.d("反射方法调用成功");
 		} catch (Exception e) {
