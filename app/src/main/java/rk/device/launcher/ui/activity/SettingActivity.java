@@ -96,7 +96,7 @@ public class SettingActivity extends BaseActivity {
 		mLlSetTime.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(SettingActivity.this, SetTimeActivity.class);
+				Intent intent = new Intent(SettingActivity.this, SetBasicInfoActivity.class);
 				startActivity(intent);
 			}
 		});
@@ -244,17 +244,6 @@ public class SettingActivity extends BaseActivity {
 			}
 		});
 	}
-
-	// Used to load the 'native-lib' library on application startup.
-	static {
-		System.loadLibrary("native-lib");
-	}
-
-	/**
-	 * A native method that is implemented by the 'native-lib' native library,
-	 * which is packaged with this application.
-	 */
-	public native String stringFromJNI();
 
 
 }
