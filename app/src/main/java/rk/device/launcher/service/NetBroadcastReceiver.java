@@ -32,11 +32,11 @@ public class NetBroadcastReceiver extends BroadcastReceiver {
                     if (info.getType() == ConnectivityManager.TYPE_WIFI
                             || info.getType() == ConnectivityManager.TYPE_MOBILE) {
                         RxBus.getDefault().post(new NetDismissBean(true));
-                        Log.i("TAG", "网络" + "连上");
+                        Log.i("TAG", "网络连上");
                     }
                 } else {
                     RxBus.getDefault().post(new NetDismissBean(false));
-                    Log.i("TAG", "网络" + "断开");
+                    Log.i("TAG", "网络断开");
                 }
             }
         }

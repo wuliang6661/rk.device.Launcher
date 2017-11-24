@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -20,6 +21,7 @@ import rk.device.launcher.R;
 import rk.device.launcher.base.BaseCompatActivity;
 import rk.device.launcher.bean.SetDoorRvBean;
 import rk.device.launcher.global.Constant;
+import rk.device.launcher.utils.AppManager;
 import rk.device.launcher.utils.DrawableUtil;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.uuid.DeviceUuidFactory;
@@ -46,19 +48,19 @@ public class SetSysActivity extends BaseCompatActivity {
 	@Bind(R.id.cb_light)
 	CheckBox mCbLight;
 
-	private ArrayList<SetDoorRvBean> mSleepTimeDataList;
+    private ArrayList<SetDoorRvBean> mSleepTimeDataList;
 //	private ArrayList<SetDoorRvBean> mLightValueDataList;
 
-	@Override
-	protected int getLayout() {
-		return R.layout.activity_set_sys;
-	}
+    @Override
+    protected int getLayout() {
+        return R.layout.activity_set_sys;
+    }
 
-	@Override
-	protected void initView() {
-		goBack();
-		setTitle("系统设置");
-	}
+    @Override
+    protected void initView() {
+        goBack();
+        setTitle("系统设置");
+    }
 
 	@Override
 	protected void initData() {
@@ -111,6 +113,15 @@ public class SetSysActivity extends BaseCompatActivity {
 				// 保存补光灯的开关状态
 				SPUtils.putBoolean(Constant.KEY_LIGNT, mCbLight.isChecked());
 
+				boolean isFirstSetting = SPUtils.getBoolean(Constant.IS_FIRST_SETTING, true);    //是否第一次进入设置
+				if (isFirstSetting) {
+					SPUtils.putInt(Constant.SETTING_NUM, -1000);
+					Toast.makeText(SetSysActivity.this, "完成设置", Toast.LENGTH_LONG).show();
+					AppManager.getAppManager().goBackMain();
+				} else {
+					finish();
+				}
+
 				finish();
 			}
 		});
@@ -125,51 +136,51 @@ public class SetSysActivity extends BaseCompatActivity {
 		return 30000;
 	}
 
-	@OnClick({R.id.ll_sleep_time})
-	public void onViewClicked(View view) {
-		Intent intent = new Intent(this, SelectItemListActivity.class);
-		Bundle bundle = new Bundle();
+    @OnClick({R.id.ll_sleep_time})
+    public void onViewClicked(View view) {
+        Intent intent = new Intent(this, SelectItemListActivity.class);
+        Bundle bundle = new Bundle();
 
-		String title = null;
-		if (view instanceof LinearLayout) {
-			LinearLayout ll = (LinearLayout) view;
-			View firstChild = ll.getChildAt(0);
-			if (firstChild instanceof TextView) {
-				title = ((TextView) firstChild).getText().toString();
-			}
-		}
-		bundle.putString(Constant.KEY_TITLE, title);
-		int requestcode = -1;
-		switch (view.getId()) {
-			case R.id.ll_sleep_time:
-				requestcode = 0;
-				bundle.putParcelableArrayList(Constant.KEY_BUNDLE, mSleepTimeDataList);
-				break;
-			default:
-				break;
-		}
-		intent.putExtra(Constant.KEY_INTENT, bundle);
-		startActivityForResult(intent, requestcode);
-	}
+        String title = null;
+        if (view instanceof LinearLayout) {
+            LinearLayout ll = (LinearLayout) view;
+            View firstChild = ll.getChildAt(0);
+            if (firstChild instanceof TextView) {
+                title = ((TextView) firstChild).getText().toString();
+            }
+        }
+        bundle.putString(Constant.KEY_TITLE, title);
+        int requestcode = -1;
+        switch (view.getId()) {
+            case R.id.ll_sleep_time:
+                requestcode = 0;
+                bundle.putParcelableArrayList(Constant.KEY_BUNDLE, mSleepTimeDataList);
+                break;
+            default:
+                break;
+        }
+        intent.putExtra(Constant.KEY_INTENT, bundle);
+        startActivityForResult(intent, requestcode);
+    }
 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode != Activity.RESULT_OK) {
-			return;
-		}
-		int checkIndex = data.getIntExtra(SelectItemListActivity.KEY_CHECKED_INDEX, -1);
-		switch (requestCode) {
-			case 0:
-				if (checkIndex > -1) {
-					for (SetDoorRvBean setDoorRvBean : mSleepTimeDataList) {
-						setDoorRvBean.isChecked = false;
-					}
-					SetDoorRvBean checkedBean = mSleepTimeDataList.get(checkIndex);
-					checkedBean.isChecked = true;
-					mTvSleepTime.setText(checkedBean.text);
-				}
-				break;
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+        int checkIndex = data.getIntExtra(SelectItemListActivity.KEY_CHECKED_INDEX, -1);
+        switch (requestCode) {
+            case 0:
+                if (checkIndex > -1) {
+                    for (SetDoorRvBean setDoorRvBean : mSleepTimeDataList) {
+                        setDoorRvBean.isChecked = false;
+                    }
+                    SetDoorRvBean checkedBean = mSleepTimeDataList.get(checkIndex);
+                    checkedBean.isChecked = true;
+                    mTvSleepTime.setText(checkedBean.text);
+                }
+                break;
 //			case 1:
 //				if (checkIndex > -1) {
 //					for (SetDoorRvBean setDoorRvBean : mLightValueDataList) {
@@ -181,6 +192,7 @@ public class SetSysActivity extends BaseCompatActivity {
 //				}
 //
 //				break;
-		}
-	}
+        }
+    }
+
 }

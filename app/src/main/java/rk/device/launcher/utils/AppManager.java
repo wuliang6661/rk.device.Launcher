@@ -5,6 +5,8 @@ import android.app.Activity;
 
 import java.util.Stack;
 
+import rk.device.launcher.ui.activity.MainActivity;
+
 /**
  * 作者 by wuliang 时间 16/10/31.
  * <p>
@@ -64,6 +66,17 @@ public class AppManager {
             }
         }
         activityStack.clear();
+    }
+
+    /**
+     * 退回首页，除了首页其余页面都关闭
+     */
+    public void goBackMain() {
+        for (int i = 0, size = activityStack.size(); i < size; i++) {
+            if (null != activityStack.get(i) && !(activityStack.get(i) instanceof MainActivity)) {
+                activityStack.get(i).finish();
+            }
+        }
     }
 
 }

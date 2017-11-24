@@ -19,7 +19,15 @@ public interface Constant {
      * <p>
      * sp取值value为int
      */
-    String SETTING_NUM = "SETTING_NUM";
+    String SETTING_NUM = "SETTING_NUM";     //以下为存入值的类型
+
+    int SETTING_TYPE1 = 1;//下次进入跳入基础设置
+
+    int SETTING_TYPE2 = 2;//下次进入跳入网络设置
+
+    int SETTING_TYPE3 = 3;//下次进入跳入门禁设置
+
+    int SETTING_TYPE4 = 4;//下次进入跳入系统设置
     /**
      * 初始设置是否设置完成
      * <p>

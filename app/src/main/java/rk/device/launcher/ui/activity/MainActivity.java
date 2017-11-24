@@ -303,35 +303,36 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_setting:
-                final String password = SPUtils.getString(Constant.KEY_PASSWORD);
-
-                if (TextUtils.isEmpty(password)) {
-                    showDialogFragment("设置管理员密码", new InputWifiPasswordDialogFragment.OnConfirmClickListener() {
-                        @Override
-                        public void onConfirmClick(String content) {
-                            dialogFragment.dismiss();
-                            if (!TextUtils.isEmpty(content)) {
-                                SPUtils.putString(Constant.KEY_PASSWORD, content);
-                                Intent intent = new Intent(MainActivity.this, SettingActivity.class);
-                                startActivity(intent);
-                            }
-                        }
-                    });
-                } else {
-                    showDialogFragment("请输入管理员密码", new InputWifiPasswordDialogFragment.OnConfirmClickListener() {
-                        @Override
-                        public void onConfirmClick(String content) {
-                            if (TextUtils.equals(password, content)) {
-                                dialogFragment.dismiss();
-                                Intent intent = new Intent(MainActivity.this, SettingActivity.class);
-                                startActivity(intent);
-                            } else {
-                                dialogFragment.showError();
-                            }
-                        }
-                    });
-                }
-                dialogFragment.show(getSupportFragmentManager(), "");
+                settingLoad();
+//                final String password = SPUtils.getString(Constant.KEY_PASSWORD);
+//
+//                if (TextUtils.isEmpty(password)) {
+//                    showDialogFragment("设置管理员密码", new InputWifiPasswordDialogFragment.OnConfirmClickListener() {
+//                        @Override
+//                        public void onConfirmClick(String content) {
+//                            dialogFragment.dismiss();
+//                            if (!TextUtils.isEmpty(content)) {
+//                                SPUtils.putString(Constant.KEY_PASSWORD, content);
+//                                Intent intent = new Intent(MainActivity.this, SettingActivity.class);
+//                                startActivity(intent);
+//                            }
+//                        }
+//                    });
+//                } else {
+//                    showDialogFragment("请输入管理员密码", new InputWifiPasswordDialogFragment.OnConfirmClickListener() {
+//                        @Override
+//                        public void onConfirmClick(String content) {
+//                            if (TextUtils.equals(password, content)) {
+//                                dialogFragment.dismiss();
+//                                Intent intent = new Intent(MainActivity.this, SettingActivity.class);
+//                                startActivity(intent);
+//                            } else {
+//                                dialogFragment.showError();
+//                            }
+//                        }
+//                    });
+//                }
+//                dialogFragment.show(getSupportFragmentManager(), "");
                 break;
         }
     }
@@ -356,21 +357,18 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
                 }
             } else {                 //本地存在密码,则按缓存序号，跳入未设置页面
                 if (TextUtils.equals(password, content)) {    //密码输入正确
-                    int type = SPUtils.getInt(Constant.SETTING_NUM, 1);
+                    int type = SPUtils.getInt(Constant.SETTING_NUM, Constant.SETTING_TYPE1);
                     switch (type) {
-                        case 1:         //进入基础设置
-                            gotoActivity(SetBasicInfoActivity.class, false);
+                        case Constant.SETTING_TYPE1:         //进入基础设置
+                            gotoActivity(SetBasicInfoActivity.class, false);   //缓存一个2
                             break;
-                        case 2:           //蓝牙设置
-                            gotoActivity(BlueToothActivity.class, false);
+                        case Constant.SETTING_TYPE2:         //网络设置
+                            gotoActivity(SetNetWorkActivity.class, false);    //缓存个4
                             break;
-                        case 3:         //网络设置
-                            gotoActivity(SetNetWorkActivity.class, false);
+                        case Constant.SETTING_TYPE3:       //门禁设置
+                            gotoActivity(SetDoorGuardActivity.class, false);    //缓存个5
                             break;
-                        case 4:       //门禁设置
-                            gotoActivity(SetDoorGuardActivity.class, false);
-                            break;
-                        case 5:     //系统设置
+                        case Constant.SETTING_TYPE4:     //系统设置
                             gotoActivity(SetSysActivity.class, false);
                             break;
                         default:
