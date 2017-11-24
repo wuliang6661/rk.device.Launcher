@@ -144,12 +144,16 @@ public class WifiListFragment extends Fragment {
 		wifiDetailDialogFragment.setOnClickListener(new WifiDetailDialogFragment.OnClickListener() {
 			@Override
 			public void onLeftClicked() {
-				mWifiHelper.forgetNetWork(scanResult);
+				// 这两种方法都可以
+//				mWifiHelper.forgetNetWork(scanResult);
+				mWifiHelper.removeNetWork(scanResult);
+				wifiDetailDialogFragment.dismiss();
 			}
 
 			@Override
 			public void onRightClicked() {
-
+				mWifiHelper.disconnect();
+				wifiDetailDialogFragment.dismiss();
 			}
 		});
 		wifiDetailDialogFragment.show(getFragmentManager(), "");

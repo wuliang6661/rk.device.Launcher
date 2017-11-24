@@ -127,15 +127,13 @@ public class WifiHelper {
 	}
 
 	/**
-	 * 忘记密码
-	 * 4.4以下使用
+	 * 这种方法也可以
 	 *
 	 * @param scanResult
 	 */
 	public void removeNetWork(ScanResult scanResult) {
 		WifiConfiguration existWifiConfig = isExist(scanResult);
 		if (existWifiConfig != null) {
-			// 由于系统限制, 忘记密码失败
 			mWifiManager.removeNetwork(existWifiConfig.networkId);
 			mWifiManager.saveConfiguration();
 		}
@@ -143,8 +141,6 @@ public class WifiHelper {
 
 	/**
 	 * 忘记密码
-	 * 4.4以下使用
-	 *
 	 * @param wifiConfiguration
 	 */
 	public void removeNetWork(WifiConfiguration wifiConfiguration) {
@@ -153,6 +149,14 @@ public class WifiHelper {
 		mWifiManager.saveConfiguration();
 	}
 
+	public void disconnect() {
+		mWifiManager.disconnect();
+	}
+
+	/**
+	 * 忘记wifi密码
+	 * @param scanResult
+	 */
 	public void forgetNetWork(ScanResult scanResult) {
 		try {
 			WifiConfiguration wifiConfiguration = isExist(scanResult);
