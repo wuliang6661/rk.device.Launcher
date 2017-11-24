@@ -33,12 +33,12 @@
                 <ImageView
                     android:id="@+id/iv_set_time"
                     style="@style/iv_setting_item"
-                    android:src="@drawable/set_time_normal" />
+                    android:src="@drawable/basic_setting_normal" />
 
                 <TextView
                     android:id="@+id/tv_set_time"
                     style="@style/tv_setting_item"
-                    android:text="时间设置" />
+                    android:text="基础设置" />
 
             </LinearLayout>
 
@@ -160,7 +160,7 @@
                 <TextView
                     android:id="@+id/tv_sys_info"
                     style="@style/tv_setting_item"
-                    android:text="系统信息" />
+                    android:text="关于设备" />
 
             </LinearLayout>
 

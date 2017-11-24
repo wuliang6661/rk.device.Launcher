@@ -87,7 +87,7 @@ public class SettingActivity extends BaseActivity {
 				finish();
 			}
 		});
-		processOnTouchListener(mLlSetTime, mIvSetTime, mTvSetTime, R.drawable.set_time_normal, R.drawable.set_time_pressed);
+		processOnTouchListener(mLlSetTime, mIvSetTime, mTvSetTime, R.drawable.basic_setting_normal, R.drawable.basic_setting_pressed);
 		processOnTouchListener(mLlSetNet, mIvSetNetwork, mTvSetNetwork, R.drawable.set_network_normal, R.drawable.set_network_pressed);
 		processOnTouchListener(mLlSetDoor, mIvSetDoor, mTvSetDoor, R.drawable.set_door_normal, R.drawable.set_door_pressed);
 		processOnTouchListener(mLlSetSys, mIvSetSystem, mTvSetSys, R.drawable.set_system_normal, R.drawable.set_system_pressed);
