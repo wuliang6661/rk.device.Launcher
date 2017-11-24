@@ -3,8 +3,11 @@ package rk.device.launcher.ui.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -18,6 +21,8 @@ import rk.device.launcher.base.BaseCompatActivity;
 import rk.device.launcher.bean.SetDoorRvBean;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.utils.DrawableUtil;
+import rk.device.launcher.utils.SPUtils;
+import rk.device.launcher.utils.uuid.DeviceUuidFactory;
 
 /**
  * 系统设置
@@ -36,6 +41,10 @@ public class SetSysActivity extends BaseCompatActivity {
 	Button mBtnFinishSetting;
 	@Bind(R.id.tv_device_id)
 	TextView mTvDeviceId;
+	@Bind(R.id.et_client_code)
+	EditText mEtClientCode;
+	@Bind(R.id.cb_light)
+	CheckBox mCbLight;
 
 	private ArrayList<SetDoorRvBean> mSleepTimeDataList;
 //	private ArrayList<SetDoorRvBean> mLightValueDataList;
@@ -54,14 +63,66 @@ public class SetSysActivity extends BaseCompatActivity {
 	@Override
 	protected void initData() {
 		mSleepTimeDataList = new ArrayList<>();
-		mSleepTimeDataList.add(new SetDoorRvBean(true, "30秒"));
-		mSleepTimeDataList.add(new SetDoorRvBean("1分钟"));
-		mSleepTimeDataList.add(new SetDoorRvBean("2分钟"));
-		mSleepTimeDataList.add(new SetDoorRvBean("5分钟"));
-		mSleepTimeDataList.add(new SetDoorRvBean("10分钟"));
-		mSleepTimeDataList.add(new SetDoorRvBean("不休眠"));
-		mTvSleepTime.setText(mSleepTimeDataList.get(0).text);
+		mSleepTimeDataList.add(new SetDoorRvBean("30秒", 30000));
+		mSleepTimeDataList.add(new SetDoorRvBean("1分钟", 60000));
+		mSleepTimeDataList.add(new SetDoorRvBean("2分钟", 120000));
+		mSleepTimeDataList.add(new SetDoorRvBean("5分钟", 300000));
+		mSleepTimeDataList.add(new SetDoorRvBean("10分钟", 600000));
+		mSleepTimeDataList.add(new SetDoorRvBean("不休眠", -1));
+
+		// 读取保存的待机时间
+		// 没有设置待机时间的话, 默认是30秒
+		long sleepTime = SPUtils.getLong(Constant.KEY_SLEEP_TIME, 30000);
+
+		for (SetDoorRvBean setDoorRvBean : mSleepTimeDataList) {
+			if (setDoorRvBean.sleepTime == sleepTime) {
+				setDoorRvBean.isChecked = true;
+				mTvSleepTime.setText(setDoorRvBean.text);
+				return;
+			}
+		}
+
+		// 读取保存的客户号
+		String clientCode = SPUtils.getString(Constant.KEY_LIGNT);
+		if (!TextUtils.isEmpty(clientCode)) {
+			mEtClientCode.setHint(clientCode);
+		}
+
+		// 读取保存的补光灯的开关状态
+		boolean isLightTurnOn = SPUtils.getBoolean(Constant.KEY_LIGNT, false);
+		mCbLight.setChecked(isLightTurnOn);
+
 		DrawableUtil.addPressedDrawable(this, R.drawable.shape_btn_finish_setting, mBtnFinishSetting);
+		// 设置或者获取uuid
+		DeviceUuidFactory deviceUuidFactory = new DeviceUuidFactory(this);
+		mTvDeviceId.setText(deviceUuidFactory.getUuid().toString());
+		mBtnFinishSetting.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// 保存待机时间
+				SPUtils.putLong(Constant.KEY_SLEEP_TIME, getSleepTime());
+
+				String clientCode = mEtClientCode.getText().toString();
+				if (!TextUtils.isEmpty(clientCode)) {
+					// 保存客户号
+					SPUtils.putString(Constant.KEY_CLIENT_CODE, clientCode);
+				}
+
+				// 保存补光灯的开关状态
+				SPUtils.putBoolean(Constant.KEY_LIGNT, mCbLight.isChecked());
+
+				finish();
+			}
+		});
+	}
+
+	private long getSleepTime() {
+		for (SetDoorRvBean setDoorRvBean : mSleepTimeDataList) {
+			if (setDoorRvBean.isChecked) {
+				return setDoorRvBean.sleepTime;
+			}
+		}
+		return 30000;
 	}
 
 	@OnClick({R.id.ll_sleep_time})

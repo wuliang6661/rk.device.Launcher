@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="sleep_time">
+        <item>No data in clipboard</item>
+        <item>Text clip</item>
+        <item>HTML Text clip</item>
+        <item>Intent clip</item>
+        <item>Uri clip</item>
+        <item>Coerce to text</item>
+        <item>Coerce to styled text</item>
+        <item>Coerce to HTML text</item>
+    </string-array>
+</resources>

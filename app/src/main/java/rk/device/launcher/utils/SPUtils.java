@@ -65,6 +65,11 @@ public class SPUtils {
         return sp.getLong(key, DEFAULT_LONG_VALUE);
     }
 
+	public static long getLong(String key, long defaultValue) {
+		SharedPreferences sp = getSp();
+		return sp.getLong(key, defaultValue);
+	}
+
 
     public static String getString(String key) {
         SharedPreferences sp = getSp();
