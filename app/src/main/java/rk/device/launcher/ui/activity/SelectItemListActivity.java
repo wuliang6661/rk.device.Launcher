@@ -50,6 +50,7 @@ public class SelectItemListActivity extends BaseCompatActivity {
         switch (type) {
             case 1:                       //关联设备
                 infoBean = (DeviceInfoBean) bundle.getSerializable("data");
+                selectPosition = bundle.getInt("position", Integer.MAX_VALUE);
                 setTitle(bundle.getString("title", "设置"));
                 break;
             default:
@@ -68,6 +69,8 @@ public class SelectItemListActivity extends BaseCompatActivity {
     }
 
 
+    int selectPosition = Integer.MAX_VALUE;
+
     /**
      * 设置关联设备数据
      */
@@ -80,15 +83,22 @@ public class SelectItemListActivity extends BaseCompatActivity {
 
             @Override
             public void convert(LGViewHolder holder, DeviceInfoBean.TlistBean tlistBean, int position) {
-                String spDevice = SPUtils.getString(Constant.DEVICE_TYPE);
-                if (StringUtils.isEmpty(spDevice)) {
-                    holder.getView(R.id.iv_check).setVisibility(View.GONE);
-
+                if (selectPosition == position) {
+                    holder.getView(R.id.iv_check).setVisibility(View.VISIBLE);
                 } else {
-                    String[] devices = spDevice.split("_");
-                    int id = Integer.parseInt(devices[0]);
-                    if (tlistBean.getId() == id) {
-                        holder.getView(R.id.iv_check).setVisibility(View.VISIBLE);
+                    if (selectPosition == Integer.MAX_VALUE) {
+                        String spDevice = SPUtils.getString(Constant.DEVICE_TYPE);
+                        if (StringUtils.isEmpty(spDevice)) {
+                            holder.getView(R.id.iv_check).setVisibility(View.GONE);
+                        } else {
+                            String[] devices = spDevice.split("_");
+                            int id = Integer.parseInt(devices[0]);
+                            if (tlistBean.getId() == id) {
+                                holder.getView(R.id.iv_check).setVisibility(View.VISIBLE);
+                            } else {
+                                holder.getView(R.id.iv_check).setVisibility(View.GONE);
+                            }
+                        }
                     } else {
                         holder.getView(R.id.iv_check).setVisibility(View.GONE);
                     }
@@ -99,9 +109,12 @@ public class SelectItemListActivity extends BaseCompatActivity {
         adapter.setOnItemClickListener(R.id.item_layout, new LGRecycleViewAdapter.ItemClickListener() {
             @Override
             public void onItemClicked(View view, int position) {
-                SPUtils.putString(Constant.DEVICE_TYPE, infoBean.getTlist().get(position).getId() + "_" + infoBean.getTlist().get(position).getName());
+                selectPosition = position;
                 adapter.notifyDataSetChanged();
-                setResult(type);
+                Intent intent = new Intent();
+                intent.putExtra("data", infoBean.getTlist().get(position).getId() + "_" + infoBean.getTlist().get(position).getName());
+                intent.putExtra("position", position);
+                setResult(type, intent);
                 finish();
             }
         });
@@ -119,7 +132,7 @@ public class SelectItemListActivity extends BaseCompatActivity {
     private void setDefalt() {
         Bundle bundle = getIntent().getBundleExtra(Constant.KEY_INTENT);
         String title = bundle.getString(Constant.KEY_TITLE);
-		setTitle(title);
+        setTitle(title);
         mDataList = bundle.getParcelableArrayList(Constant.KEY_BUNDLE);
         mSetDoorSelectListRvAdapter = new SetDoorSelectListRvAdapter(mDataList);
         mSetDoorSelectListRvAdapter.setOnItemClickedListener(new SetDoorSelectListRvAdapter.OnItemClickedListener() {

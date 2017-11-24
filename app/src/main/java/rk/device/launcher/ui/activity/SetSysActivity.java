@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -135,6 +136,7 @@ public class SetSysActivity extends BaseCompatActivity implements View.OnClickLi
                 boolean isFirstSetting = SPUtils.getBoolean(Constant.IS_FIRST_SETTING, true);    //是否第一次进入设置
                 if (isFirstSetting) {
                     SPUtils.putInt(Constant.SETTING_NUM, -1000);
+                    Toast.makeText(this, "完成设置", Toast.LENGTH_LONG).show();
                     AppManager.getAppManager().goBackMain();
                 } else {
                     finish();
