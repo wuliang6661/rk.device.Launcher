@@ -207,4 +207,47 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
         this.mCompositeSubscription.add(s);
     }
 
+    /**
+     * 给id设置监听
+     *
+     * @param ids
+     */
+    protected final void setOnClick(int... ids) {
+        if (ids == null) {
+            return;
+        }
+        for (int i : ids) {
+            setOnClick(this.findView(i));
+        }
+    }
+
+    /**
+     * 给view设置监听
+     *
+     * @param params
+     */
+    protected final void setOnClick(View... params) {
+        if (params == null) {
+            return;
+        }
+
+        for (View view : params) {
+            if (view != null && this instanceof View.OnClickListener) {
+                view.setOnClickListener((View.OnClickListener) this);
+            }
+        }
+    }
+
+    /**
+     * 通过控件的Id获取对应的控件
+     *
+     * @param viewId
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    protected final <U extends View> U findView(int viewId) {
+        View view = findViewById(viewId);
+        return (U) view;
+    }
+
 }

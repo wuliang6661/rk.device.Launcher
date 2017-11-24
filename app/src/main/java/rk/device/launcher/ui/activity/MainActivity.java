@@ -93,7 +93,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         registerBatteryReceiver();
         initLocation();
         settingTv.setOnClickListener(this);
-        startGoogleFaceDetect();
+//        startGoogleFaceDetect();
     }
 
     private void startGoogleFaceDetect() {

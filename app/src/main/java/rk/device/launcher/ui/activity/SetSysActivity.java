@@ -21,6 +21,9 @@ import rk.device.launcher.bean.SetDoorRvBean;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.utils.DrawableUtil;
 
+/**
+ * 系统设置
+ */
 public class SetSysActivity extends BaseActivity {
 
 	@Bind(R.id.iv_back)
