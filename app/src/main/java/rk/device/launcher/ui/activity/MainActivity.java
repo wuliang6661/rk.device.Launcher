@@ -175,7 +175,6 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         public void surfaceDestroyed(SurfaceHolder holder) {
 
         }
-
     }
 
     private InputWifiPasswordDialogFragment dialogFragment = null;
