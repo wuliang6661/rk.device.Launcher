@@ -49,7 +49,7 @@ public class NetUtils {
 	}
 
 
-	public boolean isNetworkConnected(Context context) {
+	public static boolean isNetworkConnected(Context context) {
 		if (context != null) {
 			ConnectivityManager mConnectivityManager = (ConnectivityManager) context
 					.getSystemService(Context.CONNECTIVITY_SERVICE);

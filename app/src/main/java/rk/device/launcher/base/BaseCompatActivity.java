@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -13,10 +12,10 @@ import butterknife.ButterKnife;
 import rk.device.launcher.R;
 import rk.device.launcher.base.utils.rxbus.RxBus;
 import rk.device.launcher.bean.NetDismissBean;
-import rk.device.launcher.service.NetBroadcastReceiver;
 import rk.device.launcher.ui.activity.SetNetWorkActivity;
 import rk.device.launcher.ui.fragment.BaseDialogFragment;
 import rk.device.launcher.utils.AppManager;
+import rk.device.launcher.utils.NetUtils;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
@@ -78,6 +77,10 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
         }
         if (!subscription.isUnsubscribed()) {
             subscription.unsubscribe();
+        }
+        if (hintDialog != null && hintDialog.getDialog() != null
+                && hintDialog.getDialog().isShowing()) {
+            hintDialog.dismiss();
         }
     }
 
@@ -141,7 +144,6 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
      */
     private void setNetListener() {
         subscription = RxBus.getDefault().toObserverable(NetDismissBean.class).subscribe(netDismissBean -> {
-            Log.e("mian", "成功接收！！！！");
             if (netDismissBean.isContect()) {
                 if (hintDialog != null && hintDialog.getDialog() != null
                         && hintDialog.getDialog().isShowing()) {
@@ -157,6 +159,15 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
         }, throwable -> {        //处理异常
 
         });
+    }
+
+    /**
+     * 判断网络是否连接
+     */
+    private void isNetConnect() {
+        if (!NetUtils.isNetworkConnected(this)) {
+            showNetConnect();
+        }
     }
 
 

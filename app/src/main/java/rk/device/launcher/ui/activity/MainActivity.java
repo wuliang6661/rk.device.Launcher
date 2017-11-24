@@ -352,8 +352,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
             if (StringUtils.isEmpty(password)) {              //设置管理员密码，判断为第一次进入
                 if (!TextUtils.isEmpty(content)) {
                     SPUtils.putString(Constant.KEY_PASSWORD, content);    //缓存密码
-                    gotoActivity(SetBasicInfoActivity.class, false);
-                    //进入基础设置
+                    gotoActivity(SetBasicInfoActivity.class, false);//进入基础设置
                 }
             } else {                 //本地存在密码,则按缓存序号，跳入未设置页面
                 if (TextUtils.equals(password, content)) {    //密码输入正确
@@ -363,7 +362,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
                             gotoActivity(SetBasicInfoActivity.class, false);
                             break;
                         case 2:           //蓝牙设置
-
+                            gotoActivity(BlueToothActivity.class, false);
                             break;
                         case 3:         //网络设置
                             gotoActivity(SetNetWorkActivity.class, false);
@@ -372,7 +371,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
                             gotoActivity(SetDoorGuardActivity.class, false);
                             break;
                         case 5:     //系统设置
-
+                            gotoActivity(SetSysActivity.class, false);
                             break;
                         default:
                             gotoActivity(SettingActivity.class, false);
