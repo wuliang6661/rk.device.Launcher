@@ -59,6 +59,9 @@ public class SetDoorGuardActivity extends BaseCompatActivity implements View.OnC
 
     DeviceInfoBean device; //关联设备数据
 
+    private String deviceName;    //选中的关联设备数据
+    private int selectPosition = Integer.MAX_VALUE;
+
     @Override
     protected int getLayout() {
         return R.layout.activity_set_door_guard;
@@ -95,9 +98,14 @@ public class SetDoorGuardActivity extends BaseCompatActivity implements View.OnC
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (data == null) {
+            return;
+        }
         switch (requestCode) {
             case 0x11:      //关联设备
-                setSettingData();
+                deviceName = data.getStringExtra("data");
+                selectPosition = data.getIntExtra("position", Integer.MAX_VALUE);
+                mTvConnectedDevice.setText(deviceName.split("_")[1]);
                 break;
         }
     }
@@ -110,19 +118,25 @@ public class SetDoorGuardActivity extends BaseCompatActivity implements View.OnC
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_finish_setting:      //此处保存本页面的所有设置
-                finish();
+                SPUtils.putString(Constant.DEVICE_TYPE, deviceName);
+                boolean isFirstSetting = SPUtils.getBoolean(Constant.IS_FIRST_SETTING, true);    //是否第一次进入设置
+                if (isFirstSetting) {
+                    SPUtils.putInt(Constant.SETTING_NUM, Constant.SETTING_TYPE4);
+                    gotoActivity(SetSysActivity.class, false);
+                } else {
+                    finish();
+                }
                 break;
             case R.id.ll_connected_device:    //关联设备
                 Bundle bundle = new Bundle();
                 bundle.putString("title", "关联设备");
                 bundle.putSerializable("data", device);
                 bundle.putInt("code", 1);     //辨别是哪个选项
+                bundle.putInt("position", selectPosition);
                 Intent intent = new Intent(this, SelectItemListActivity.class);
                 intent.putExtras(bundle);
                 startActivityForResult(intent, 0x11);
                 break;
-
-
         }
     }
 

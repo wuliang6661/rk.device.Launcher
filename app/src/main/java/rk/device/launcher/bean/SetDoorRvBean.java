@@ -10,6 +10,12 @@ import android.os.Parcelable;
 public class SetDoorRvBean implements Parcelable {
 	public boolean isChecked;
 	public String text;
+	public long sleepTime;
+
+	public SetDoorRvBean(String text, long sleepTime) {
+		this.text = text;
+		this.sleepTime = sleepTime;
+	}
 
 	public SetDoorRvBean(String text) {
 		this.text = text;
@@ -29,11 +35,13 @@ public class SetDoorRvBean implements Parcelable {
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeByte(this.isChecked ? (byte) 1 : (byte) 0);
 		dest.writeString(this.text);
+		dest.writeLong(this.sleepTime);
 	}
 
 	protected SetDoorRvBean(Parcel in) {
 		this.isChecked = in.readByte() != 0;
 		this.text = in.readString();
+		this.sleepTime = in.readLong();
 	}
 
 	public static final Parcelable.Creator<SetDoorRvBean> CREATOR = new Parcelable.Creator<SetDoorRvBean>() {

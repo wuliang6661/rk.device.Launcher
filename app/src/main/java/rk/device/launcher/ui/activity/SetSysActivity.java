@@ -3,28 +3,33 @@ package rk.device.launcher.ui.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rk.device.launcher.R;
-import rk.device.launcher.base.BaseActivity;
+import rk.device.launcher.base.BaseCompatActivity;
 import rk.device.launcher.bean.SetDoorRvBean;
 import rk.device.launcher.global.Constant;
+import rk.device.launcher.utils.AppManager;
 import rk.device.launcher.utils.DrawableUtil;
+import rk.device.launcher.utils.SPUtils;
+import rk.device.launcher.utils.uuid.DeviceUuidFactory;
 
 /**
  * 系统设置
  */
-public class SetSysActivity extends BaseActivity {
+public class SetSysActivity extends BaseCompatActivity {
 
 	@Bind(R.id.iv_back)
 	ImageView mIvBack;
@@ -32,113 +37,150 @@ public class SetSysActivity extends BaseActivity {
 	TextView mTvTitle;
 	@Bind(R.id.ll_sleep_time)
 	LinearLayout mLlSleepTime;
-	@Bind(R.id.ll_light_value)
-	LinearLayout mLlLightValue;
 	@Bind(R.id.tv_sleep_time)
 	TextView mTvSleepTime;
-	@Bind(R.id.tv_light_value)
-	EditText mEtLightValue;
 	@Bind(R.id.btn_finish_setting)
 	Button mBtnFinishSetting;
+	@Bind(R.id.tv_device_id)
+	TextView mTvDeviceId;
+	@Bind(R.id.et_client_code)
+	EditText mEtClientCode;
+	@Bind(R.id.cb_light)
+	CheckBox mCbLight;
 
-	private ArrayList<SetDoorRvBean> mSleepTimeDataList;
+    private ArrayList<SetDoorRvBean> mSleepTimeDataList;
 //	private ArrayList<SetDoorRvBean> mLightValueDataList;
 
+    @Override
+    protected int getLayout() {
+        return R.layout.activity_set_sys;
+    }
+
+    @Override
+    protected void initView() {
+        goBack();
+        setTitle("系统设置");
+    }
+
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_set_sys);
+	protected void initData() {
 		mSleepTimeDataList = new ArrayList<>();
-		mSleepTimeDataList.add(new SetDoorRvBean(true, "30秒"));
-		mSleepTimeDataList.add(new SetDoorRvBean("1分钟"));
-		mSleepTimeDataList.add(new SetDoorRvBean("2分钟"));
-		mSleepTimeDataList.add(new SetDoorRvBean("5分钟"));
-		mSleepTimeDataList.add(new SetDoorRvBean("10分钟"));
-		mSleepTimeDataList.add(new SetDoorRvBean("不休眠"));
-//		for (int i = 0; i < 101; i++) {
-//			if (i == 0) {
-//				mSleepTimeDataList.add(new SetDoorRvBean(true, i + ""));
-//			} else {
-//				mSleepTimeDataList.add(new SetDoorRvBean(i + ""));
-//			}
-//		}
+		mSleepTimeDataList.add(new SetDoorRvBean("30秒", 30000));
+		mSleepTimeDataList.add(new SetDoorRvBean("1分钟", 60000));
+		mSleepTimeDataList.add(new SetDoorRvBean("2分钟", 120000));
+		mSleepTimeDataList.add(new SetDoorRvBean("5分钟", 300000));
+		mSleepTimeDataList.add(new SetDoorRvBean("10分钟", 600000));
+		mSleepTimeDataList.add(new SetDoorRvBean("不休眠", -1));
 
-//		mLightValueDataList = new ArrayList<>();
-//		for (int i = 0; i < 101; i++) {
-//			if (i == 0) {
-//				mLightValueDataList.add(new SetDoorRvBean(true, i + ""));
-//			} else {
-//				mLightValueDataList.add(new SetDoorRvBean(i + ""));
-//			}
-//		}
+		// 读取保存的待机时间
+		// 没有设置待机时间的话, 默认是30秒
+		long sleepTime = SPUtils.getLong(Constant.KEY_SLEEP_TIME, 30000);
 
-		ButterKnife.bind(this);
-		hideNavigationBar();
-		mIvBack.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				finish();
+		for (SetDoorRvBean setDoorRvBean : mSleepTimeDataList) {
+			if (setDoorRvBean.sleepTime == sleepTime) {
+				setDoorRvBean.isChecked = true;
+				mTvSleepTime.setText(setDoorRvBean.text);
+				return;
 			}
-		});
-		mTvTitle.setText("系统设置");
-		mTvSleepTime.setText(mSleepTimeDataList.get(0).text);
-//		mEtLightValue.setText(mLightValueDataList.get(0).text);
+		}
+
+		// 读取保存的客户号
+		String clientCode = SPUtils.getString(Constant.KEY_LIGNT);
+		if (!TextUtils.isEmpty(clientCode)) {
+			mEtClientCode.setHint(clientCode);
+		}
+
+		// 读取保存的补光灯的开关状态
+		boolean isLightTurnOn = SPUtils.getBoolean(Constant.KEY_LIGNT, false);
+		mCbLight.setChecked(isLightTurnOn);
+
 		DrawableUtil.addPressedDrawable(this, R.drawable.shape_btn_finish_setting, mBtnFinishSetting);
+		// 设置或者获取uuid
+		DeviceUuidFactory deviceUuidFactory = new DeviceUuidFactory(this);
+		mTvDeviceId.setText(deviceUuidFactory.getUuid().toString());
 		mBtnFinishSetting.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				// 保存待机时间
+				SPUtils.putLong(Constant.KEY_SLEEP_TIME, getSleepTime());
+
+				String clientCode = mEtClientCode.getText().toString();
+				if (!TextUtils.isEmpty(clientCode)) {
+					// 保存客户号
+					SPUtils.putString(Constant.KEY_CLIENT_CODE, clientCode);
+				}
+
+				// 保存补光灯的开关状态
+				SPUtils.putBoolean(Constant.KEY_LIGNT, mCbLight.isChecked());
+
+				boolean isFirstSetting = SPUtils.getBoolean(Constant.IS_FIRST_SETTING, true);    //是否第一次进入设置
+				if (isFirstSetting) {
+					SPUtils.putInt(Constant.SETTING_NUM, -1000);
+					Toast.makeText(SetSysActivity.this, "完成设置", Toast.LENGTH_LONG).show();
+					AppManager.getAppManager().goBackMain();
+				} else {
+					finish();
+				}
+
 				finish();
 			}
 		});
 	}
 
-	@OnClick({R.id.ll_sleep_time})
-	public void onViewClicked(View view) {
-		Intent intent = new Intent(this, SelectItemListActivity.class);
-		Bundle bundle = new Bundle();
-
-		String title = null;
-		if (view instanceof LinearLayout) {
-			LinearLayout ll = (LinearLayout) view;
-			View firstChild = ll.getChildAt(0);
-			if (firstChild instanceof TextView) {
-				title = ((TextView) firstChild).getText().toString();
+	private long getSleepTime() {
+		for (SetDoorRvBean setDoorRvBean : mSleepTimeDataList) {
+			if (setDoorRvBean.isChecked) {
+				return setDoorRvBean.sleepTime;
 			}
 		}
-		bundle.putString(Constant.KEY_TITLE, title);
-		int requestcode = -1;
-		switch (view.getId()) {
-			case R.id.ll_sleep_time:
-				requestcode = 0;
-				bundle.putParcelableArrayList(Constant.KEY_BUNDLE, mSleepTimeDataList);
-				break;
-//			case R.id.ll_light_value:
-//				requestcode = 1;
-//				bundle.putParcelableArrayList(Constant.KEY_BUNDLE, mLightValueDataList);
-//				break;
-		}
-		intent.putExtra(Constant.KEY_INTENT, bundle);
-		startActivityForResult(intent, requestcode);
+		return 30000;
 	}
 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode != Activity.RESULT_OK) {
-			return;
-		}
-		int checkIndex = data.getIntExtra(SelectItemListActivity.KEY_CHECKED_INDEX, -1);
-		switch (requestCode) {
-			case 0:
-				if (checkIndex > -1) {
-					for (SetDoorRvBean setDoorRvBean : mSleepTimeDataList) {
-						setDoorRvBean.isChecked = false;
-					}
-					SetDoorRvBean checkedBean = mSleepTimeDataList.get(checkIndex);
-					checkedBean.isChecked = true;
-					mTvSleepTime.setText(checkedBean.text);
-				}
-				break;
+    @OnClick({R.id.ll_sleep_time})
+    public void onViewClicked(View view) {
+        Intent intent = new Intent(this, SelectItemListActivity.class);
+        Bundle bundle = new Bundle();
+
+        String title = null;
+        if (view instanceof LinearLayout) {
+            LinearLayout ll = (LinearLayout) view;
+            View firstChild = ll.getChildAt(0);
+            if (firstChild instanceof TextView) {
+                title = ((TextView) firstChild).getText().toString();
+            }
+        }
+        bundle.putString(Constant.KEY_TITLE, title);
+        int requestcode = -1;
+        switch (view.getId()) {
+            case R.id.ll_sleep_time:
+                requestcode = 0;
+                bundle.putParcelableArrayList(Constant.KEY_BUNDLE, mSleepTimeDataList);
+                break;
+            default:
+                break;
+        }
+        intent.putExtra(Constant.KEY_INTENT, bundle);
+        startActivityForResult(intent, requestcode);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+        int checkIndex = data.getIntExtra(SelectItemListActivity.KEY_CHECKED_INDEX, -1);
+        switch (requestCode) {
+            case 0:
+                if (checkIndex > -1) {
+                    for (SetDoorRvBean setDoorRvBean : mSleepTimeDataList) {
+                        setDoorRvBean.isChecked = false;
+                    }
+                    SetDoorRvBean checkedBean = mSleepTimeDataList.get(checkIndex);
+                    checkedBean.isChecked = true;
+                    mTvSleepTime.setText(checkedBean.text);
+                }
+                break;
 //			case 1:
 //				if (checkIndex > -1) {
 //					for (SetDoorRvBean setDoorRvBean : mLightValueDataList) {
@@ -150,6 +192,7 @@ public class SetSysActivity extends BaseActivity {
 //				}
 //
 //				break;
-		}
-	}
+        }
+    }
+
 }
