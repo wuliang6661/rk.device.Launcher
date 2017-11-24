@@ -4,14 +4,20 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import butterknife.ButterKnife;
 import rk.device.launcher.R;
+import rk.device.launcher.base.utils.rxbus.RxBus;
+import rk.device.launcher.bean.NetDismissBean;
+import rk.device.launcher.ui.activity.SetNetWorkActivity;
+import rk.device.launcher.ui.fragment.BaseDialogFragment;
 import rk.device.launcher.utils.AppManager;
 import rx.Subscription;
+import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -25,6 +31,10 @@ import rx.subscriptions.CompositeSubscription;
 public abstract class BaseCompatActivity extends AppCompatActivity {
 
     private CompositeSubscription mCompositeSubscription;
+
+
+    /* 提示弹窗*/
+    private BaseDialogFragment hintDialog;
 
     /**
      * 返回布局参数
@@ -50,8 +60,10 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
         hideNavigationBar();
         ButterKnife.bind(this);
         AppManager.getAppManager().addActivity(this);
+        setNetListener();
         initView();
         initData();
+        showMessageDialog("当前电量低于80%");
     }
 
 
@@ -110,6 +122,52 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
 
 
     /**
+     * 显示提示弹窗
+     */
+    protected BaseDialogFragment showMessageDialog(String message) {
+        hintDialog = BaseDialogFragment.newInstance();
+        hintDialog.setMessage(message);
+        hintDialog.setCancleable(true);
+        hintDialog.show(getSupportFragmentManager(), "hint");
+        return hintDialog;
+    }
+
+    /**
+     * 接收网络是否断开的监听
+     */
+    private void setNetListener() {
+        RxBus.getDefault().toObserverable(NetDismissBean.class).subscribe(netDismissBean -> {
+            Log.e("mian", "成功接收！！！！");
+            if (netDismissBean.isContect()) {
+                if (hintDialog != null && hintDialog.getDialog() != null
+                        && hintDialog.getDialog().isShowing()) {
+                    hintDialog.dismiss();
+                }
+            } else {
+                if (hintDialog != null && hintDialog.getDialog() != null
+                        && hintDialog.getDialog().isShowing()) {
+                } else {
+                    showNetConnect();
+                }
+            }
+        });
+    }
+
+
+    /**
+     * 显示断网提示
+     */
+    private BaseDialogFragment showNetConnect() {
+        hintDialog = BaseDialogFragment.newInstance();
+        hintDialog.setCancleable(false);
+        hintDialog.setMessage("网络已断开，请重新连接");
+        hintDialog.setLeftButton("取消", view -> hintDialog.dismiss());
+        hintDialog.setRightButton("去设置", view -> gotoActivity(SetNetWorkActivity.class, false));
+        hintDialog.show(getSupportFragmentManager(), "");
+        return hintDialog;
+    }
+
+    /**
      * 隐藏虚拟按键
      */
     public void hideNavigationBar() {
@@ -147,6 +205,49 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
             this.mCompositeSubscription = new CompositeSubscription();
         }
         this.mCompositeSubscription.add(s);
+    }
+
+    /**
+     * 给id设置监听
+     *
+     * @param ids
+     */
+    protected final void setOnClick(int... ids) {
+        if (ids == null) {
+            return;
+        }
+        for (int i : ids) {
+            setOnClick(this.findView(i));
+        }
+    }
+
+    /**
+     * 给view设置监听
+     *
+     * @param params
+     */
+    protected final void setOnClick(View... params) {
+        if (params == null) {
+            return;
+        }
+
+        for (View view : params) {
+            if (view != null && this instanceof View.OnClickListener) {
+                view.setOnClickListener((View.OnClickListener) this);
+            }
+        }
+    }
+
+    /**
+     * 通过控件的Id获取对应的控件
+     *
+     * @param viewId
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    protected final <U extends View> U findView(int viewId) {
+        View view = findViewById(viewId);
+        return (U) view;
     }
 
 }
