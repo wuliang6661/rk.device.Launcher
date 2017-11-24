@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -13,10 +12,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rk.device.launcher.R;
-import rk.device.launcher.base.BaseActivity;
+import rk.device.launcher.base.BaseCompatActivity;
 import rk.device.launcher.bean.SetDoorRvBean;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.utils.DrawableUtil;
@@ -24,7 +22,7 @@ import rk.device.launcher.utils.DrawableUtil;
 /**
  * 系统设置
  */
-public class SetSysActivity extends BaseActivity {
+public class SetSysActivity extends BaseCompatActivity {
 
 	@Bind(R.id.iv_back)
 	ImageView mIvBack;
@@ -32,22 +30,29 @@ public class SetSysActivity extends BaseActivity {
 	TextView mTvTitle;
 	@Bind(R.id.ll_sleep_time)
 	LinearLayout mLlSleepTime;
-	@Bind(R.id.ll_light_value)
-	LinearLayout mLlLightValue;
 	@Bind(R.id.tv_sleep_time)
 	TextView mTvSleepTime;
-	@Bind(R.id.tv_light_value)
-	EditText mEtLightValue;
 	@Bind(R.id.btn_finish_setting)
 	Button mBtnFinishSetting;
+	@Bind(R.id.tv_device_id)
+	TextView mTvDeviceId;
 
 	private ArrayList<SetDoorRvBean> mSleepTimeDataList;
 //	private ArrayList<SetDoorRvBean> mLightValueDataList;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_set_sys);
+	protected int getLayout() {
+		return R.layout.activity_set_sys;
+	}
+
+	@Override
+	protected void initView() {
+		goBack();
+		setTitle("系统设置");
+	}
+
+	@Override
+	protected void initData() {
 		mSleepTimeDataList = new ArrayList<>();
 		mSleepTimeDataList.add(new SetDoorRvBean(true, "30秒"));
 		mSleepTimeDataList.add(new SetDoorRvBean("1分钟"));
@@ -55,41 +60,8 @@ public class SetSysActivity extends BaseActivity {
 		mSleepTimeDataList.add(new SetDoorRvBean("5分钟"));
 		mSleepTimeDataList.add(new SetDoorRvBean("10分钟"));
 		mSleepTimeDataList.add(new SetDoorRvBean("不休眠"));
-//		for (int i = 0; i < 101; i++) {
-//			if (i == 0) {
-//				mSleepTimeDataList.add(new SetDoorRvBean(true, i + ""));
-//			} else {
-//				mSleepTimeDataList.add(new SetDoorRvBean(i + ""));
-//			}
-//		}
-
-//		mLightValueDataList = new ArrayList<>();
-//		for (int i = 0; i < 101; i++) {
-//			if (i == 0) {
-//				mLightValueDataList.add(new SetDoorRvBean(true, i + ""));
-//			} else {
-//				mLightValueDataList.add(new SetDoorRvBean(i + ""));
-//			}
-//		}
-
-		ButterKnife.bind(this);
-		hideNavigationBar();
-		mIvBack.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				finish();
-			}
-		});
-		mTvTitle.setText("系统设置");
 		mTvSleepTime.setText(mSleepTimeDataList.get(0).text);
-//		mEtLightValue.setText(mLightValueDataList.get(0).text);
 		DrawableUtil.addPressedDrawable(this, R.drawable.shape_btn_finish_setting, mBtnFinishSetting);
-		mBtnFinishSetting.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				finish();
-			}
-		});
 	}
 
 	@OnClick({R.id.ll_sleep_time})
@@ -112,10 +84,8 @@ public class SetSysActivity extends BaseActivity {
 				requestcode = 0;
 				bundle.putParcelableArrayList(Constant.KEY_BUNDLE, mSleepTimeDataList);
 				break;
-//			case R.id.ll_light_value:
-//				requestcode = 1;
-//				bundle.putParcelableArrayList(Constant.KEY_BUNDLE, mLightValueDataList);
-//				break;
+			default:
+				break;
 		}
 		intent.putExtra(Constant.KEY_INTENT, bundle);
 		startActivityForResult(intent, requestcode);

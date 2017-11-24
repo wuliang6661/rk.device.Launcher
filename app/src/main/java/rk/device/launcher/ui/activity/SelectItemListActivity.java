@@ -119,6 +119,7 @@ public class SelectItemListActivity extends BaseCompatActivity {
     private void setDefalt() {
         Bundle bundle = getIntent().getBundleExtra(Constant.KEY_INTENT);
         String title = bundle.getString(Constant.KEY_TITLE);
+		setTitle(title);
         mDataList = bundle.getParcelableArrayList(Constant.KEY_BUNDLE);
         mSetDoorSelectListRvAdapter = new SetDoorSelectListRvAdapter(mDataList);
         mSetDoorSelectListRvAdapter.setOnItemClickedListener(new SetDoorSelectListRvAdapter.OnItemClickedListener() {
