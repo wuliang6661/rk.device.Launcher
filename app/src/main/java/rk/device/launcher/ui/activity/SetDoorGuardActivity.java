@@ -112,6 +112,7 @@ public class SetDoorGuardActivity extends BaseCompatActivity implements View.OnC
             case R.id.btn_finish_setting:      //此处保存本页面的所有设置
                 boolean isFirstSetting = SPUtils.getBoolean(Constant.IS_FIRST_SETTING, true);    //是否第一次进入设置
                 if (isFirstSetting) {
+                    SPUtils.putInt(Constant.SETTING_NUM, Constant.SETTING_TYPE4);
                     gotoActivity(SetSysActivity.class, false);
                 } else {
                     finish();
