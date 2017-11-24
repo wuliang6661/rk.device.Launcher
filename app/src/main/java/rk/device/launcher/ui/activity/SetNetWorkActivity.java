@@ -1,6 +1,5 @@
 package rk.device.launcher.ui.activity;
 
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -11,15 +10,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import rk.device.launcher.R;
-import rk.device.launcher.base.BaseActivity;
+import rk.device.launcher.base.BaseCompatActivity;
 import rk.device.launcher.ui.fragment.AutoObtainNetworkConfigFragment;
 import rk.device.launcher.ui.fragment.ManualConfigFragment;
 import rk.device.launcher.ui.fragment.WifiListFragment;
 import rk.device.launcher.utils.DrawableUtil;
 
-public class SetNetWorkActivity extends BaseActivity implements View.OnClickListener {
+public class SetNetWorkActivity extends BaseCompatActivity implements View.OnClickListener {
 
 	@Bind(R.id.iv_back)
 	ImageView mIvBack;
@@ -43,19 +41,19 @@ public class SetNetWorkActivity extends BaseActivity implements View.OnClickList
 	private String mFragmentTag = "1";
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_set_net_work);
-		ButterKnife.bind(this);
-		hideNavigationBar();
+	protected int getLayout() {
+		return R.layout.activity_set_net_work;
+	}
+
+	@Override
+	protected void initView() {
+        goBack();
+		setTitle("网络设置");
+	}
+
+	@Override
+	protected void initData() {
 		mFragmentManager = getSupportFragmentManager();
-		mTvTitle.setText("网络设置");
-		mIvBack.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				finish();
-			}
-		});
 		mLlAuto.setOnClickListener(this);
 		mLlManul.setOnClickListener(this);
 		mLlWifi.setOnClickListener(this);
