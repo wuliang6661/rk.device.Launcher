@@ -15,12 +15,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.SurfaceHolder;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.alibaba.fastjson.JSONObject;
 
 import java.io.IOException;
 import java.util.List;
@@ -28,9 +27,7 @@ import java.util.Locale;
 
 import butterknife.Bind;
 import rk.device.launcher.R;
-import rk.device.launcher.api.ApiService;
 import rk.device.launcher.base.BaseCompatActivity;
-import rk.device.launcher.bean.WeatherModel;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.ui.fragment.InputWifiPasswordDialogFragment;
 import rk.device.launcher.utils.CommonUtils;
@@ -41,7 +38,6 @@ import rk.device.launcher.utils.ThreadUtils;
 import rk.device.launcher.utils.carema.CameraInterface;
 import rk.device.launcher.widget.CameraSurfaceView;
 import rk.device.launcher.widget.UpdateManager;
-import rx.Subscriber;
 
 import static rk.device.launcher.utils.DateUtil.getTime;
 
@@ -62,6 +58,9 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     ImageView mIvArrow;
     @Bind(R.id.surface_view)
     CameraSurfaceView mSurfaceView;
+    private Camera camera;
+    private SurfaceHolder surfaceholder;
+    Camera.Parameters parameters;
 
     private int PREVIEW_WIDTH = 1280;
     private int PREVIEW_HEIGHT = 720;
@@ -121,6 +120,64 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         }
     }
 
+
+    /**
+     * 后置摄像头回调
+     */
+    class SurfaceHolderCallbackBack implements SurfaceHolder.Callback {
+        @Override
+        public void surfaceCreated(SurfaceHolder holder) {
+            // 获取camera对象
+            int cameraCount = Camera.getNumberOfCameras();
+            if (cameraCount > 0) {
+                camera = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT);
+                if (null != camera) {
+                    try {
+                        // 设置预览监听
+                        camera.setPreviewDisplay(holder);
+                        // 启动摄像头预览
+                        camera.startPreview();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        camera.release();
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+            if (null != camera) {
+                camera.autoFocus(new Camera.AutoFocusCallback() {
+                    @Override
+                    public void onAutoFocus(boolean success, Camera camera) {
+                        if (success) {
+                            parameters = camera.getParameters();
+//                            parameters.setPictureFormat(PixelFormat.JPEG);
+                            parameters.setPictureFormat(ImageFormat.NV21);
+                            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);// 1连续对焦
+                            parameters.setPictureSize(PREVIEW_WIDTH, PREVIEW_HEIGHT);
+                            parameters.setPreviewSize(PREVIEW_WIDTH, PREVIEW_HEIGHT);
+                            // 设置显示的偏转角度，大部分机器是顺时针90度，某些机器需要按情况设置
+//                            parameters.setRotation(90);
+                            camera.setParameters(parameters);
+                            camera.setDisplayOrientation(180);
+                            camera.startPreview();
+                            camera.cancelAutoFocus();// 2如果要实现连续的自动对焦，这一句必须加上
+                        }
+                    }
+                });
+            }
+
+        }
+
+        @Override
+        public void surfaceDestroyed(SurfaceHolder holder) {
+
+        }
+
+    }
+
     private InputWifiPasswordDialogFragment dialogFragment = null;
 
     private void showDialogFragment(String title, InputWifiPasswordDialogFragment.OnConfirmClickListener listener) {
@@ -138,6 +195,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 
     @Override
     protected void initData() {
+
         UpdateManager.getUpdateManager().checkAppUpdate(this, getSupportFragmentManager(), false);
     }
 
@@ -202,7 +260,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
                             Address address = addresses.get(0);
                             String city = address.getLocality();
                             LogUtil.d("city = " + city);
-                            httpGetWeather(address.getSubAdminArea());
+
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -214,27 +272,6 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         });
 
 
-    }
-
-    private void httpGetWeather(String area) {
-        JSONObject params = new JSONObject();
-        params.put("city",area);
-        addSubscription(ApiService.weather(params).subscribe(new Subscriber<WeatherModel>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onNext(WeatherModel result) {
-
-            }
-        }));
     }
 
     private boolean isGpsOpened() {
@@ -309,6 +346,15 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         mStaticHandler.removeCallbacksAndMessages(null);
         unregisterReceiver(mBatteryReceiver);
         super.onDestroy();
+        if (null != camera) {
+//            closeCamera(camera);
+        }
+    }
+
+    private void closeCamera(Camera camera) {
+        camera.setPreviewCallback(null);
+        camera.stopPreview();
+        camera.release();
     }
 
     @Override
