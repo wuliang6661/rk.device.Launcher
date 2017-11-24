@@ -46,7 +46,7 @@
             android:layout_height="match_parent"/>
 
         <EditText
-            android:text="192.168.1.128"
+            android:hint="192.168.1.128"
             android:id="@+id/et_ip"
             style="@style/et_network_item"/>
 
@@ -73,7 +73,7 @@
             android:layout_height="match_parent"/>
 
         <EditText
-            android:text="255.255.255.0"
+            android:hint="255.255.255.0"
             android:id="@+id/et_net_mask"
             style="@style/et_network_item"/>
 
@@ -100,7 +100,7 @@
             android:layout_height="match_parent"/>
 
         <EditText
-            android:text="192.168.1.1"
+            android:hint="192.168.1.1"
             android:id="@+id/et_net_gate"
             style="@style/et_network_item"/>
 
@@ -127,7 +127,7 @@
             android:layout_height="match_parent"/>
 
         <EditText
-            android:text="8.8.8.8"
+            android:hint="8.8.8.8"
             android:id="@+id/et_dns"
             style="@style/et_network_item"/>
 

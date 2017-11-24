@@ -2,7 +2,6 @@ package rk.device.launcher.base;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -12,6 +11,8 @@ import android.widget.TextView;
 import butterknife.ButterKnife;
 import rk.device.launcher.R;
 import rk.device.launcher.utils.AppManager;
+import rx.Subscription;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by wuliang on 2017/11/23.
@@ -23,6 +24,7 @@ import rk.device.launcher.utils.AppManager;
 
 public abstract class BaseCompatActivity extends AppCompatActivity {
 
+    private CompositeSubscription mCompositeSubscription;
 
     /**
      * 返回布局参数
@@ -58,6 +60,9 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
         super.onDestroy();
         AppManager.getAppManager().removeActivity(this);
         ButterKnife.unbind(this);
+        if (this.mCompositeSubscription != null) {
+            this.mCompositeSubscription.unsubscribe();
+        }
     }
 
 
@@ -134,6 +139,14 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+    }
+
+
+    public void addSubscription(Subscription s) {
+        if (this.mCompositeSubscription == null) {
+            this.mCompositeSubscription = new CompositeSubscription();
+        }
+        this.mCompositeSubscription.add(s);
     }
 
 }

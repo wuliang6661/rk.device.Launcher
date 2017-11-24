@@ -67,6 +67,10 @@ public class SetNetWorkActivity extends BaseActivity implements View.OnClickList
 				if (mCurrentFragment instanceof ManualConfigFragment) {
 					ManualConfigFragment fragment = (ManualConfigFragment) mCurrentFragment;
 					fragment.saveIpConfig();
+				} else if (mCurrentFragment instanceof AutoObtainNetworkConfigFragment) {
+					AutoObtainNetworkConfigFragment fragment = (AutoObtainNetworkConfigFragment) mCurrentFragment;
+					// 设置IP获取方式为自动获取
+					fragment.setIPConfigDHCP();
 				}
 				finish();
 			}

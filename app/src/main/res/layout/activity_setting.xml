@@ -1,193 +1,193 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/topbar"/>
+    <include layout="@layout/topbar" />
 
 
     <LinearLayout
-        android:background="@drawable/shape_normal_bg"
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/shape_normal_bg"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:orientation="horizontal"
-            android:layout_weight="1"
             android:layout_width="match_parent"
-            android:layout_height="0dp">
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
 
             <LinearLayout
-                android:background="@color/transparent"
                 android:id="@+id/ll_set_time"
-                android:orientation="vertical"
-                android:layout_weight="1"
                 android:layout_width="0dp"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/transparent"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
 
                 <ImageView
                     android:id="@+id/iv_set_time"
-                    android:src="@drawable/set_time_normal"
-                    style="@style/iv_setting_item"/>
+                    style="@style/iv_setting_item"
+                    android:src="@drawable/set_time_normal" />
 
                 <TextView
                     android:id="@+id/tv_set_time"
-                    android:text="时间设置"
-                    style="@style/tv_setting_item"/>
+                    style="@style/tv_setting_item"
+                    android:text="时间设置" />
 
             </LinearLayout>
 
             <View
-                android:background="@color/blue_31598a"
                 android:layout_width="@dimen/dphalf"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:background="@color/blue_31598a" />
 
             <LinearLayout
-                android:background="@color/transparent"
                 android:id="@+id/ll_set_net"
-                android:orientation="vertical"
-                android:layout_weight="1"
                 android:layout_width="0dp"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/transparent"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
 
                 <ImageView
                     android:id="@+id/iv_set_network"
-                    android:src="@drawable/set_network_normal"
                     style="@style/iv_setting_item"
-                    />
+                    android:src="@drawable/set_network_normal" />
 
                 <TextView
                     android:id="@+id/tv_set_network"
-                    android:text="网络设置"
-                    style="@style/tv_setting_item"/>
+                    style="@style/tv_setting_item"
+                    android:text="网络设置" />
 
             </LinearLayout>
 
         </LinearLayout>
 
         <View
-            android:background="@color/blue_31598a"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dphalf"/>
+            android:layout_height="@dimen/dphalf"
+            android:background="@color/blue_31598a" />
 
         <LinearLayout
-            android:orientation="horizontal"
-            android:layout_weight="1"
             android:layout_width="match_parent"
-            android:layout_height="0dp">
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
 
             <LinearLayout
-                android:background="@color/transparent"
                 android:id="@+id/ll_set_door"
-                android:orientation="vertical"
-                android:layout_weight="1"
                 android:layout_width="0dp"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/transparent"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
 
                 <ImageView
                     android:id="@+id/iv_set_door"
-                    android:src="@drawable/set_door_normal"
                     style="@style/iv_setting_item"
-                    />
+                    android:src="@drawable/set_door_normal" />
 
                 <TextView
                     android:id="@+id/tv_set_door"
-                    android:text="门禁设置"
-                    style="@style/tv_setting_item"/>
+                    style="@style/tv_setting_item"
+                    android:text="门禁设置" />
 
             </LinearLayout>
 
             <View
-                android:background="@color/blue_31598a"
                 android:layout_width="@dimen/dphalf"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:background="@color/blue_31598a" />
 
 
             <LinearLayout
-                android:background="@color/transparent"
                 android:id="@+id/ll_set_sys"
-                android:orientation="vertical"
-                android:layout_weight="1"
                 android:layout_width="0dp"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/transparent"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
 
                 <ImageView
                     android:id="@+id/iv_set_system"
-                    android:src="@drawable/set_system_normal"
                     style="@style/iv_setting_item"
-                    />
+                    android:src="@drawable/set_system_normal" />
 
                 <TextView
                     android:id="@+id/tv_set_sys"
-                    android:text="系统设置"
-                    style="@style/tv_setting_item"/>
+                    style="@style/tv_setting_item"
+                    android:text="系统设置" />
 
             </LinearLayout>
 
         </LinearLayout>
 
         <View
-            android:background="@color/blue_31598a"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dphalf"/>
+            android:layout_height="@dimen/dphalf"
+            android:background="@color/blue_31598a" />
 
 
         <LinearLayout
-            android:orientation="horizontal"
-            android:layout_weight="1"
             android:layout_width="match_parent"
-            android:layout_height="0dp">
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
 
             <LinearLayout
-                android:background="@color/transparent"
                 android:id="@+id/ll_sys_info"
-                android:orientation="vertical"
-                android:layout_weight="1"
                 android:layout_width="0dp"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/transparent"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
 
                 <ImageView
                     android:id="@+id/iv_sys_info"
-                    android:src="@drawable/system_info_normal"
                     style="@style/iv_setting_item"
-                    />
+                    android:src="@drawable/system_info_normal" />
 
                 <TextView
                     android:id="@+id/tv_sys_info"
-                    android:text="系统信息"
-                    style="@style/tv_setting_item"/>
+                    style="@style/tv_setting_item"
+                    android:text="系统信息" />
 
             </LinearLayout>
 
             <View
-                android:background="@color/blue_31598a"
                 android:layout_width="@dimen/dphalf"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:background="@color/blue_31598a" />
 
 
             <LinearLayout
-                android:background="@color/transparent"
                 android:id="@+id/ll_recovery"
-                android:orientation="vertical"
-                android:layout_weight="1"
                 android:layout_width="0dp"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/transparent"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
 
                 <ImageView
                     android:id="@+id/iv_recovery"
-                    android:src="@drawable/recovery_normal"
                     style="@style/iv_setting_item"
-                    />
+                    android:src="@drawable/recovery_normal" />
 
                 <TextView
                     android:id="@+id/tv_recovery"
-                    android:text="恢复出厂"
-                    style="@style/tv_setting_item"/>
+                    style="@style/tv_setting_item"
+                    android:text="恢复出厂" />
 
             </LinearLayout>
 

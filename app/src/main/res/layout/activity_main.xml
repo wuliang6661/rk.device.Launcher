@@ -50,7 +50,7 @@
         <FrameLayout
             android:id="@+id/frame_layout"
             android:layout_width="match_parent"
-            android:layout_height="550dp">
+            android:layout_height="match_parent">
 
             <rk.device.launcher.widget.CameraSurfaceView
                 android:id="@+id/surface_view"
