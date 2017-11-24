@@ -9,6 +9,7 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.text.TextUtils;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -152,7 +153,19 @@ public class WifiHelper {
 		mWifiManager.saveConfiguration();
 	}
 
-	public void forgetNetWork(WifiConfiguration wifiConfiguration) {
+	public void forgetNetWork(ScanResult scanResult) {
+		try {
+			WifiConfiguration wifiConfiguration = isExist(scanResult);
+			Class<? extends WifiManager> clazz = mWifiManager.getClass();
+			Class<?> forgetListenerClazz = Class.forName("android.net.wifi.WifiManager.ActionListener");
+			Method methodForget = clazz.getDeclaredMethod("forget", int.class, forgetListenerClazz);
+			methodForget.setAccessible(true);
+			methodForget.invoke(wifiConfiguration.networkId, new Object[]{});
+//			mWifiManager.forget(wifiConfiguration.networkId, mForgetListener);
+			LogUtil.d("反射方法调用成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 	}
 

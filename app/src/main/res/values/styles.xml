@@ -55,7 +55,7 @@
         <item name="android:layout_marginLeft">15dp</item>
         <item name="android:layout_marginRight">15dp</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">93dp</item>
+        <item name="android:layout_height">@dimen/normal_btn_height</item>
     </style>
 
     <style name="tv_network_conf_item">

@@ -3,6 +3,7 @@ package rk.device.launcher.utils;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.DhcpInfo;
+import android.net.LinkProperties;
 import android.net.NetworkInfo;
 import android.net.NetworkInfo.State;
 import android.net.wifi.WifiInfo;
@@ -138,9 +139,12 @@ public class NetUtils {
 	 */
 	public static String getIP(Context context) {
 		String ip = "0.0.0.0";
-		ConnectivityManager connectivityManager = (ConnectivityManager) context
-				.getSystemService(Context.CONNECTIVITY_SERVICE);
+		ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo info = connectivityManager.getActiveNetworkInfo();
+		if (info == null) {
+			LogUtil.d("没有可用的网络连接");
+			return ip;
+		}
 		int type = info.getType();
 		if (type == ConnectivityManager.TYPE_ETHERNET) {
 			ip = getEtherNetIP();
@@ -250,6 +254,55 @@ public class NetUtils {
 	public static String getIp2(Context context) {
 		DhcpInfo dhcpInfo = getDhcpInfo(context);
 		return intToIp(dhcpInfo.ipAddress);
+	}
+
+	/**
+	 * 获取wifi时的网关地址
+	 * @param context
+	 * @return
+	 */
+	public static String getGateWay(Context context) {
+		DhcpInfo dhcpInfo = getDhcpInfo(context);
+		return intToIp(dhcpInfo.gateway);
+	}
+
+	/**
+	 * 获取wifi时的dns1
+	 * @param context
+	 * @return
+	 */
+	public static String getDns1(Context context) {
+		DhcpInfo dhcpInfo = getDhcpInfo(context);
+		return intToIp(dhcpInfo.dns1);
+	}
+
+	/**
+	 * 从setting里面拷贝过来的获取wifi时IP的方法
+	 * Returns the WIFI IP Addresses, if any, taking into account IPv4 and IPv6 style addresses.
+	 * @param context the application context
+	 * @return the formatted and newline-separated IP addresses, or null if none.
+	 */
+	public static String getWifiIpAddresses(Context context) {
+//		ConnectivityManager cm = (ConnectivityManager)
+//				context.getSystemService(Context.CONNECTIVITY_SERVICE);
+//		LinkProperties prop = cm.getLinkProperties(ConnectivityManager.TYPE_WIFI);
+//		return formatIpAddresses(prop);
+		return null;
+	}
+
+	private static String formatIpAddresses(LinkProperties prop) {
+//		if (prop == null) return null;
+//		Iterator<InetAddress> iter = prop.getAllAddresses().iterator();
+//		// If there are no entries, return null
+//		if (!iter.hasNext()) return null;
+//		// Concatenate all available addresses, comma separated
+//		String addresses = "";
+//		while (iter.hasNext()) {
+//			addresses += iter.next().getHostAddress();
+//			if (iter.hasNext()) addresses += "\n";
+//		}
+//		return addresses;
+		return null;
 	}
 
 

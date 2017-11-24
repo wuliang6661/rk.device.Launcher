@@ -24,6 +24,7 @@ import butterknife.ButterKnife;
 import rk.device.launcher.R;
 import rk.device.launcher.adapter.WifiRvAdapter;
 import rk.device.launcher.utils.LogUtil;
+import rk.device.launcher.utils.NetUtils;
 import rk.device.launcher.utils.WifiHelper;
 import rk.device.launcher.widget.itemdecoration.WifiListRvItemDecoration;
 
@@ -84,7 +85,7 @@ public class WifiListFragment extends Fragment {
 			public void onItemClicked(final int position, final ScanResult scanResult) {
 				// 如果已经连接到该wifi上, 有取消和忘记两种选择
 				if (mWifiHelper.isConnected(scanResult)) {
-					cancelOrForgetPassword(scanResult);
+//					cancelOrForgetPassword(scanResult);
 				} else { // 如果没有连接到该wifi上, 点击进行连接
 					// 如果本机已经配置过的话, 直接连接
 					if (mWifiHelper.isExist(scanResult) != null) {
@@ -92,6 +93,13 @@ public class WifiListFragment extends Fragment {
 					} else { // 如果本机没有配置过, 需要输入密码进行连接
 						connectToThisWifiWithPassword(scanResult);
 					}
+				}
+			}
+
+			@Override
+			public void onLongItemClicked(int position, ScanResult scanResult) {
+				if (mWifiHelper.isConnected(scanResult)) {
+					cancelOrForgetPassword(scanResult);
 				}
 			}
 		});
@@ -122,24 +130,29 @@ public class WifiListFragment extends Fragment {
 	}
 
 	private void cancelOrForgetPassword(final ScanResult scanResult) {
-		final ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment.newInstance();
-		confirmDialogFragment.setConfirmBtnText("忘记")
-				.setMessage("执行操作会造成设备断网, 是否继续?")
-				.setOnCancelClickListener(new ConfirmDialogFragment.onCancelClickListener() {
-					@Override
-					public void onCancelClick() {
-						confirmDialogFragment.dismiss();
-					}
-				})
-				.setOnConfirmClickListener(new ConfirmDialogFragment.OnConfirmClickListener() {
-					@Override
-					public void onConfirmClick() {
-						mWifiHelper.removeNetWork(scanResult);
-						mWifiRvAdapter.notifyDataSetChanged();
-						confirmDialogFragment.dismiss();
-					}
-				});
-		confirmDialogFragment.show(getFragmentManager(), "");
+		String ip = NetUtils.getIP(getContext());
+		String netMask = NetUtils.getNetMask(getContext());
+		String gateWay = NetUtils.getGateWay(getContext());
+		String dns1 = NetUtils.getDns1(getContext());
+		LogUtil.d("ip = " + ip +", netMask = " + netMask+", gateWay = " + gateWay + ", dns1 = " + dns1);
+		WifiDetailDialogFragment wifiDetailDialogFragment = WifiDetailDialogFragment.newInstance();
+		wifiDetailDialogFragment.setWifiName(scanResult.SSID)
+				.setIP(ip)
+				.setNetMask(netMask)
+				.setNetGate(gateWay)
+				.setDns(dns1);
+		wifiDetailDialogFragment.setOnClickListener(new WifiDetailDialogFragment.OnClickListener() {
+			@Override
+			public void onLeftClicked() {
+				mWifiHelper.forgetNetWork(scanResult);
+			}
+
+			@Override
+			public void onRightClicked() {
+
+			}
+		});
+		wifiDetailDialogFragment.show(getFragmentManager(), "");
 	}
 
 	private void connectToThisWifiWithPassword(final ScanResult scanResult) {
@@ -222,7 +235,7 @@ public class WifiListFragment extends Fragment {
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
-//		unbinder.unbind();
+		ButterKnife.unbind(this);
 	}
 
 	@Override

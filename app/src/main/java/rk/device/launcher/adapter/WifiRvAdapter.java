@@ -32,6 +32,8 @@ public class WifiRvAdapter extends RecyclerView.Adapter<WifiRvAdapter.ViewHolder
 
 	public interface OnItemClickedListener{
 		void onItemClicked(int position, ScanResult scanResult);
+
+		void onLongItemClicked(int position, ScanResult scanResult);
 	}
 
 	private OnItemClickedListener mOnItemClickedListener;
@@ -79,6 +81,16 @@ public class WifiRvAdapter extends RecyclerView.Adapter<WifiRvAdapter.ViewHolder
 //					mLastCheckedPosition = position;
 					mOnItemClickedListener.onItemClicked(position, scanResult);
 				}
+			}
+		});
+
+		holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View v) {
+				if (mOnItemClickedListener != null) {
+					mOnItemClickedListener.onLongItemClicked(position, scanResult);
+				}
+				return false;
 			}
 		});
 	}
