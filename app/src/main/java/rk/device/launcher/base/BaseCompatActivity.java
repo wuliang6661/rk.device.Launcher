@@ -13,11 +13,11 @@ import butterknife.ButterKnife;
 import rk.device.launcher.R;
 import rk.device.launcher.base.utils.rxbus.RxBus;
 import rk.device.launcher.bean.NetDismissBean;
+import rk.device.launcher.service.NetBroadcastReceiver;
 import rk.device.launcher.ui.activity.SetNetWorkActivity;
 import rk.device.launcher.ui.fragment.BaseDialogFragment;
 import rk.device.launcher.utils.AppManager;
 import rx.Subscription;
-import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -35,6 +35,8 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
 
     /* 提示弹窗*/
     private BaseDialogFragment hintDialog;
+
+    private Subscription subscription;
 
     /**
      * 返回布局参数
@@ -63,7 +65,6 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
         setNetListener();
         initView();
         initData();
-        showMessageDialog("当前电量低于80%");
     }
 
 
@@ -74,6 +75,9 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
         ButterKnife.unbind(this);
         if (this.mCompositeSubscription != null) {
             this.mCompositeSubscription.unsubscribe();
+        }
+        if (!subscription.isUnsubscribed()) {
+            subscription.unsubscribe();
         }
     }
 
@@ -136,7 +140,7 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
      * 接收网络是否断开的监听
      */
     private void setNetListener() {
-        RxBus.getDefault().toObserverable(NetDismissBean.class).subscribe(netDismissBean -> {
+        subscription = RxBus.getDefault().toObserverable(NetDismissBean.class).subscribe(netDismissBean -> {
             Log.e("mian", "成功接收！！！！");
             if (netDismissBean.isContect()) {
                 if (hintDialog != null && hintDialog.getDialog() != null
@@ -150,6 +154,8 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
                     showNetConnect();
                 }
             }
+        }, throwable -> {        //处理异常
+
         });
     }
 

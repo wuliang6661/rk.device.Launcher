@@ -34,6 +34,7 @@ import rk.device.launcher.utils.CommonUtils;
 import rk.device.launcher.utils.DateUtil;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.SPUtils;
+import rk.device.launcher.utils.StringUtils;
 import rk.device.launcher.utils.ThreadUtils;
 import rk.device.launcher.utils.carema.CameraInterface;
 import rk.device.launcher.widget.CameraSurfaceView;
@@ -303,6 +304,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         switch (v.getId()) {
             case R.id.iv_setting:
                 final String password = SPUtils.getString(Constant.KEY_PASSWORD);
+
                 if (TextUtils.isEmpty(password)) {
                     showDialogFragment("设置管理员密码", new InputWifiPasswordDialogFragment.OnConfirmClickListener() {
                         @Override
@@ -333,6 +335,57 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
                 break;
         }
     }
+
+    /**
+     * 初始设置流程加载
+     */
+    private void settingLoad() {
+        final String password = SPUtils.getString(Constant.KEY_PASSWORD);
+        String message;
+        if (StringUtils.isEmpty(password)) {
+            message = "设置管理员密码";
+        } else {
+            message = "请输入管理员密码";
+        }
+        showDialogFragment(message, content -> {
+            dialogFragment.dismiss();
+            if (StringUtils.isEmpty(password)) {              //设置管理员密码，判断为第一次进入
+                if (!TextUtils.isEmpty(content)) {
+                    SPUtils.putString(Constant.KEY_PASSWORD, content);    //缓存密码
+                    gotoActivity(SetBasicInfoActivity.class, false);
+                    //进入基础设置
+                }
+            } else {                 //本地存在密码,则按缓存序号，跳入未设置页面
+                if (TextUtils.equals(password, content)) {    //密码输入正确
+                    int type = SPUtils.getInt(Constant.SETTING_NUM, 1);
+                    switch (type) {
+                        case 1:         //进入基础设置
+                            gotoActivity(SetBasicInfoActivity.class, false);
+                            break;
+                        case 2:           //蓝牙设置
+
+                            break;
+                        case 3:         //网络设置
+                            gotoActivity(SetNetWorkActivity.class, false);
+                            break;
+                        case 4:       //门禁设置
+                            gotoActivity(SetDoorGuardActivity.class, false);
+                            break;
+                        case 5:     //系统设置
+
+                            break;
+                        default:
+                            gotoActivity(SettingActivity.class, false);
+                            break;
+                    }
+                } else {
+                    dialogFragment.showError();
+                }
+            }
+        });
+        dialogFragment.show(getSupportFragmentManager(), "");
+    }
+
 
     private static class StaticHandler extends Handler {
         @Override
