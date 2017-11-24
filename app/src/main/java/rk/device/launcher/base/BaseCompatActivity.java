@@ -36,6 +36,8 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
     /* 提示弹窗*/
     private BaseDialogFragment hintDialog;
 
+    private Subscription subscription;
+
     /**
      * 返回布局参数
      */
@@ -66,16 +68,6 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
     }
 
 
-    /**
-     * 启动服务监听
-     */
-    private void startService() {
-        Intent intent = new Intent(this, NetBroadcastReceiver.class);
-        startService(intent);
-
-    }
-
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -83,6 +75,9 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
         ButterKnife.unbind(this);
         if (this.mCompositeSubscription != null) {
             this.mCompositeSubscription.unsubscribe();
+        }
+        if (!subscription.isUnsubscribed()) {
+            subscription.unsubscribe();
         }
     }
 
@@ -145,7 +140,7 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
      * 接收网络是否断开的监听
      */
     private void setNetListener() {
-        RxBus.getDefault().toObserverable(NetDismissBean.class).subscribe(netDismissBean -> {
+        subscription = RxBus.getDefault().toObserverable(NetDismissBean.class).subscribe(netDismissBean -> {
             Log.e("mian", "成功接收！！！！");
             if (netDismissBean.isContect()) {
                 if (hintDialog != null && hintDialog.getDialog() != null
@@ -159,6 +154,8 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
                     showNetConnect();
                 }
             }
+        }, throwable -> {        //处理异常
+
         });
     }
 
