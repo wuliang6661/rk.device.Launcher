@@ -17,7 +17,6 @@ import rk.device.launcher.ui.activity.SetNetWorkActivity;
 import rk.device.launcher.ui.fragment.BaseDialogFragment;
 import rk.device.launcher.utils.AppManager;
 import rx.Subscription;
-import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -63,7 +62,6 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
         setNetListener();
         initView();
         initData();
-        showMessageDialog("当前电量低于80%");
     }
 
 

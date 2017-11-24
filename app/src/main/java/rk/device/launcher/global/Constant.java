@@ -13,6 +13,19 @@ public interface Constant {
     String KEY_PASSWORD = "KEY_PASSWORD";
     String LOG_TAG = "launcher";
     boolean isDebug = BuildConfig.DEBUG;
+
+    /**
+     * 缓存在本地的初始引导设置顺序
+     * <p>
+     * sp取值value为int
+     */
+    String SETTING_NUM = "SETTING_NUM";
+    /**
+     * 初始设置是否设置完成
+     * <p>
+     * sp取值value为boolean
+     */
+    String IS_FIRST_SETTING = "IS_FIRSTSETTING";
     /**
      * 客户ID
      */
