@@ -19,4 +19,7 @@
     <string name="basic_settting">基础设置</string>
     <string name="time_setting_illeagel">请选择设置时间</string>
     <string name="open_blue_tooth">开放检测</string>
+    <string name="device_matched">已配对设备</string>
+    <string name="device_search">可用设备</string>
+    <string name="cancel_match">取消配对</string>
 </resources>
