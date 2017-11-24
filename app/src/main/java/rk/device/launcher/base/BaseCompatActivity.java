@@ -13,6 +13,7 @@ import butterknife.ButterKnife;
 import rk.device.launcher.R;
 import rk.device.launcher.base.utils.rxbus.RxBus;
 import rk.device.launcher.bean.NetDismissBean;
+import rk.device.launcher.service.NetBroadcastReceiver;
 import rk.device.launcher.ui.activity.SetNetWorkActivity;
 import rk.device.launcher.ui.fragment.BaseDialogFragment;
 import rk.device.launcher.utils.AppManager;
@@ -62,6 +63,16 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
         setNetListener();
         initView();
         initData();
+    }
+
+
+    /**
+     * 启动服务监听
+     */
+    private void startService() {
+        Intent intent = new Intent(this, NetBroadcastReceiver.class);
+        startService(intent);
+
     }
 
 
