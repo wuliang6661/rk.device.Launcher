@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
@@ -220,7 +221,10 @@ public class WifiListFragment extends Fragment {
 	private void registerWifiReceiver() {
 		IntentFilter labelIntentFilter = new IntentFilter();
 		labelIntentFilter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
-		labelIntentFilter.addAction("android.net.wifi.STATE_CHANGE"); // ConnectivityManager.CONNECTIVITY_ACTION);
+		labelIntentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+//		labelIntentFilter.addAction("android.net.wifi.STATE_CHANGE"); // ConnectivityManager.CONNECTIVITY_ACTION);
+		labelIntentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
+		labelIntentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
 		labelIntentFilter.setPriority(1000); // 设置优先级，最高为1000
 		mContext.registerReceiver(mWifiChangeBroadcaseReceiver, labelIntentFilter);
 	}

@@ -10,6 +10,8 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
@@ -97,7 +99,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     public void initView() {
 		mWifiHelper = new WifiHelper(this);
 		registerBatteryReceiver();
-		registerWifiReceiver();
+		registerNetReceiver();
         initLocation();
         settingTv.setOnClickListener(this);
 //        startGoogleFaceDetect();
@@ -213,26 +215,78 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         registerReceiver(mBatteryReceiver, intentFilter);
     }
 
-	private void registerWifiReceiver() {
+	private void registerNetReceiver() {
 		IntentFilter labelIntentFilter = new IntentFilter();
+		// "android.net.wifi.SCAN_RESULTS"
 		labelIntentFilter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
-		labelIntentFilter.addAction("android.net.wifi.STATE_CHANGE"); // ConnectivityManager.CONNECTIVITY_ACTION);
+		// "android.net.conn.CONNECTIVITY_CHANGE"
+		labelIntentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+		// "android.net.wifi.STATE_CHANGE"
+		labelIntentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
+		// "android.net.wifi.WIFI_STATE_CHANGED"
+		labelIntentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
 		labelIntentFilter.setPriority(1000); // 设置优先级，最高为1000
-		registerReceiver(mWifiChangeBroadcaseReceiver, labelIntentFilter);
+		registerReceiver(mNetChangeBroadcaseReceiver, labelIntentFilter);
 	}
 
-	private final BroadcastReceiver mWifiChangeBroadcaseReceiver = new BroadcastReceiver() {
+	private final BroadcastReceiver mNetChangeBroadcaseReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
-			if (action.equals(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION) || action.equals("android.net.wifi.STATE_CHANGE")) {
-				LogUtil.d("wifi列表刷新或者wifi状态发生了改变");
+			boolean isScanResultChange = action.equals(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
+			boolean isNetworkStateChange = action.equals(WifiManager.NETWORK_STATE_CHANGED_ACTION);
+			boolean isWifiNetworkStateChange = action.equals(WifiManager.WIFI_STATE_CHANGED_ACTION);
+			boolean isConnectStateChange = action.equals(ConnectivityManager.CONNECTIVITY_ACTION);
+			if (isScanResultChange || isNetworkStateChange || isWifiNetworkStateChange) {
+
+				ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+				NetworkInfo info = connectivityManager.getActiveNetworkInfo();
+				if (info != null) {
+					// 是有线的连接方式并且处于可用、可连接的状态
+					if (info.getType() == ConnectivityManager.TYPE_ETHERNET
+							&& NetworkInfo.State.CONNECTED == info.getState()
+							&& info.isAvailable()) {
+						mIvSignal.setImageResource(R.drawable.net_line);
+						return;
+					}
+				}
+
+//				LogUtil.d("wifi列表刷新或者wifi状态发生了改变");
 				ScanResult scanResult = mWifiHelper.getConnectedScanResult();
 				// 先判断wifi是否可用
 				if (scanResult != null && mWifiHelper.checkWifiState() ) {
 					//判断信号强度，显示对应的指示图标
 					changeSignalState(scanResult);
 				} else { // wifi不可用
+					mIvSignal.setImageResource(R.drawable.wifi_signal_disconnect);
+				}
+			} else if (isConnectStateChange) { // 有线或者无线的连接方式发生了改变
+				//获取联网状态的NetworkInfo对象
+				NetworkInfo info = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
+//				ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+//				NetworkInfo info = connectivityManager.getActiveNetworkInfo();
+				if (info == null) {
+					LogUtil.d("没有可用的网络连接");
+					mIvSignal.setImageResource(R.drawable.wifi_signal_disconnect);
+					return;
+				}
+				// 是有线的连接方式并且处于可用、可连接的状态
+				if (info.getType() == ConnectivityManager.TYPE_ETHERNET
+						&& NetworkInfo.State.CONNECTED == info.getState()
+						&& info.isAvailable()) {
+					mIvSignal.setImageResource(R.drawable.net_line);
+				} else if (info.getType() == ConnectivityManager.TYPE_WIFI // wifi可用
+						&& NetworkInfo.State.CONNECTED == info.getState()
+						&& info.isAvailable()) {
+					ScanResult scanResult = mWifiHelper.getConnectedScanResult();
+					// 先判断wifi是否可用
+					if (scanResult != null && mWifiHelper.checkWifiState()) {
+						//判断信号强度，显示对应的指示图标
+						changeSignalState(scanResult);
+					} else { // wifi不可用
+						mIvSignal.setImageResource(R.drawable.wifi_signal_disconnect);
+					}
+				} else { // 剩余的是连接不可用的状态
 					mIvSignal.setImageResource(R.drawable.wifi_signal_disconnect);
 				}
 			}
