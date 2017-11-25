@@ -70,7 +70,7 @@ public class SettingActivity extends BaseCompatActivity {
 	LinearLayout mLlRecovery;
 	@Bind(R.id.tv_title)
 	TextView mTvTitle;
-	private boolean mEraseSdCard = true;
+	private boolean mEraseSdCard = false;
 
 	@Override
 	protected int getLayout() {

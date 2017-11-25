@@ -18,7 +18,7 @@ public class NetDismissBean implements Serializable {
     }
 
 
-    public boolean isContect() {
+    public boolean isConnect() {
         return isContect;
     }
 
