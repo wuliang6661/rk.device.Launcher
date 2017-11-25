@@ -61,7 +61,7 @@ public class SetBasicInfoActivity extends BaseCompatActivity implements View.OnC
                     c.set(Calendar.SECOND, 0);
                     c.set(Calendar.MILLISECOND, 0);
                     when_time = c.getTimeInMillis();
-                    timeTv.setText(timeEvent.year+"-"+timeEvent.month+"-"+timeEvent.day+" "+timeEvent.hour+":"+timeEvent.minute);
+                    timeTv.setText(timeEvent.year + "-" + timeEvent.month + "-" + timeEvent.day + " " + timeEvent.hour + ":" + timeEvent.minute);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -81,13 +81,14 @@ public class SetBasicInfoActivity extends BaseCompatActivity implements View.OnC
                 gotoActivity(SetTimeActivity.class, false);
                 break;
             case R.id.ll_set_blue_tooth:
-
+                gotoActivity(BlueToothActivity.class, false);
                 break;
             case R.id.btn_finish_setting:
                 if (when_time == 0) {
                     T.showShort(getString(R.string.time_setting_illeagel));
                     break;
                 }
+                //设置系统时间
                 if (when_time / 1000 < Integer.MAX_VALUE) {
                     SystemClock.setCurrentTimeMillis(when_time);
                 }
