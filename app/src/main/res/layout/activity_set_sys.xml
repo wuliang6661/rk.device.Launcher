@@ -74,6 +74,7 @@
                 android:layout_weight="1"/>
 
             <EditText
+                android:id="@+id/et_client_code"
                 android:layout_width="wrap_content"
                 android:layout_height="65dp"
                 android:layout_gravity="center_vertical"
@@ -152,6 +153,7 @@
                 android:layout_weight="1"/>
 
             <CheckBox
+                android:id="@+id/cb_light"
                 android:layout_width="50dp"
                 android:layout_height="33dp"
                 android:layout_gravity="center_vertical"
@@ -213,7 +215,7 @@
             android:layout_height="@dimen/item_height"
             android:focusableInTouchMode="true"
             android:orientation="horizontal"
-            android:visibility="gone">
+            >
 
             <TextView
                 android:layout_width="wrap_content"
@@ -230,6 +232,7 @@
                 android:layout_weight="1"/>
 
             <EditText
+                android:id="@+id/et_ip"
                 android:layout_width="wrap_content"
                 android:layout_height="65dp"
                 android:layout_gravity="center_vertical"
@@ -248,7 +251,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/divider_height"
             android:background="@color/blue_31598a"
-            android:visibility="gone"/>
+            />
 
         <!--
         在edittext的第一个父布局中加上focusableInTouchMode
@@ -259,7 +262,7 @@
             android:layout_height="@dimen/item_height"
             android:focusableInTouchMode="true"
             android:orientation="horizontal"
-            android:visibility="gone">
+            >
 
             <TextView
                 android:layout_width="wrap_content"
@@ -276,6 +279,7 @@
                 android:layout_weight="1"/>
 
             <EditText
+                android:id="@+id/et_port"
                 android:layout_width="wrap_content"
                 android:layout_height="65dp"
                 android:layout_gravity="center_vertical"
@@ -294,7 +298,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/divider_height"
             android:background="@color/blue_31598a"
-            android:visibility="gone"/>
+            />
 
         <Space
             android:layout_width="match_parent"

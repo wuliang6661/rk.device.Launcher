@@ -17,6 +17,7 @@ import rk.device.launcher.ui.fragment.BaseDialogFragment;
 import rk.device.launcher.utils.AppManager;
 import rk.device.launcher.utils.NetUtils;
 import rx.Subscription;
+import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -143,20 +144,23 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
      * 接收网络是否断开的监听
      */
     private void setNetListener() {
-        subscription = RxBus.getDefault().toObserverable(NetDismissBean.class).subscribe(netDismissBean -> {
-            if (netDismissBean.isContect()) {
-                if (hintDialog != null && hintDialog.getDialog() != null
-                        && hintDialog.getDialog().isShowing()) {
-                    hintDialog.dismiss();
-                }
-            } else {
-                if (hintDialog != null && hintDialog.getDialog() != null
-                        && hintDialog.getDialog().isShowing()) {
-                } else {
-                    showNetConnect();
-                }
-            }
-        }, throwable -> {        //处理异常
+        subscription = RxBus.getDefault().toObserverable(NetDismissBean.class).subscribe(new Action1<NetDismissBean>() {
+			@Override
+			public void call(NetDismissBean netDismissBean) {
+				if (netDismissBean.isConnect()) {
+					if (hintDialog != null && hintDialog.getDialog() != null
+							&& hintDialog.getDialog().isShowing()) {
+						hintDialog.dismiss();
+					}
+				} else {
+					if (hintDialog != null && hintDialog.getDialog() != null
+							&& hintDialog.getDialog().isShowing()) {
+					} else {
+						BaseCompatActivity.this.showNetConnect();
+					}
+				}
+			}
+		}, throwable -> {        //处理异常
 
         });
     }
@@ -179,7 +183,10 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
         hintDialog.setCancleable(false);
         hintDialog.setMessage("网络已断开，请重新连接");
         hintDialog.setLeftButton("取消", view -> hintDialog.dismiss());
-        hintDialog.setRightButton("去设置", view -> gotoActivity(SetNetWorkActivity.class, false));
+        hintDialog.setRightButton("去设置", view -> {
+			BaseCompatActivity.this.gotoActivity(SetNetWorkActivity.class, false);
+			hintDialog.dismiss();
+		});
         hintDialog.show(getSupportFragmentManager(), "");
         return hintDialog;
     }

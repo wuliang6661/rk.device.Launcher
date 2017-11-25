@@ -57,5 +57,29 @@ public interface Constant {
      */
     String DEVICE_MP3 = "DEVICE_MP3";
 
+	/**
+	 * 待机时间的key值
+	 */
+	String KEY_SLEEP_TIME = "key_sleep_time";
+
+	/**
+	 * 客户号的key值
+	 */
+	String KEY_CLIENT_CODE = "key_client_code";
+
+	/**
+	 * 补光灯的key值
+	 */
+	String KEY_LIGNT = "key_light";
+
+	/**
+	 * IP的key值
+	 */
+	String KEY_IP = "key_ip";
+
+	/**
+	 * 端口号的key值
+	 */
+	String KEY_PORT = "key_port";
 
 }

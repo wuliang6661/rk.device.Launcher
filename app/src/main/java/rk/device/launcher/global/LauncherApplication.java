@@ -3,6 +3,7 @@ package rk.device.launcher.global;
 import android.app.Application;
 import android.content.Context;
 
+import rk.device.launcher.base.utils.STUtils;
 import rk.device.launcher.utils.Utils;
 
 /**
@@ -17,6 +18,7 @@ public class LauncherApplication extends Application {
 		super.onCreate();
 		sContext = getApplicationContext();
 		Utils.init(this);
+		STUtils.init(this);
 	}
 
 	/**

@@ -118,12 +118,19 @@ public class WifiHelper {
 	public WifiConfiguration isExist(ScanResult scanResult) {
 		// 获取所有已经配置过的网络
 		List<WifiConfiguration> configuredNetworks = mWifiManager.getConfiguredNetworks();
-		for (WifiConfiguration existedWifiConfig : configuredNetworks) {
-			if (TextUtils.equals(existedWifiConfig.SSID, "\"" + scanResult.SSID + "\"")) {
-				return existedWifiConfig;
+		if (configuredNetworks != null) {
+			for (WifiConfiguration existedWifiConfig : configuredNetworks) {
+				if (TextUtils.equals(existedWifiConfig.SSID, "\"" + scanResult.SSID + "\"")) {
+					return existedWifiConfig;
+				}
 			}
 		}
 		return null;
+	}
+
+	public boolean isWifiConnected() {
+		List<WifiConfiguration> configuredNetworks = mWifiManager.getConfiguredNetworks();
+		return configuredNetworks == null ? false : true;
 	}
 
 	/**
@@ -197,6 +204,37 @@ public class WifiHelper {
 		}
 		return isConnected;
 	}
+
+	public ScanResult getConnectedScanResult() {
+		mWifiManager.startScan();
+		List<ScanResult> list = mWifiManager.getScanResults();
+		if (list != null) {
+			for (ScanResult scanResult : list) {
+				if (isConnected(scanResult)) {
+					return scanResult;
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * 检测wifi状态 opened return true;
+	 */
+	public boolean checkWifiState() {
+		boolean isOpen = true;
+		int wifiState = mWifiManager.getWifiState();
+
+		if (wifiState == WifiManager.WIFI_STATE_DISABLED
+				|| wifiState == WifiManager.WIFI_STATE_DISABLING
+				|| wifiState == WifiManager.WIFI_STATE_UNKNOWN
+				|| wifiState == WifiManager.WIFI_STATE_ENABLING) {
+			isOpen = false;
+		}
+
+		return isOpen;
+	}
+
 
 	public List<ScanResult> getFilteredScanResult() {
 		mWifiManager.startScan();

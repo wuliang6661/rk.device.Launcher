@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
@@ -189,6 +190,11 @@ public class AutoObtainNetworkConfigFragment extends Fragment {
 	}
 
 	public void setIPConfigDHCP() {
-		mEthernetManager.setConfiguration(new IpConfiguration(IpConfiguration.IpAssignment.DHCP, IpConfiguration.ProxySettings.NONE, null, null));
+		try {
+			mEthernetManager.setConfiguration(new IpConfiguration(IpConfiguration.IpAssignment.DHCP, IpConfiguration.ProxySettings.NONE, null, null));
+		} catch (Exception e) {
+			Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+			e.printStackTrace();
+		}
 	}
 }

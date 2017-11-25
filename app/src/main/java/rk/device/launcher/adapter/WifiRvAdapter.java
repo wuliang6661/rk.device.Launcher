@@ -14,6 +14,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import rk.device.launcher.R;
+import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.WifiHelper;
 
 /**
@@ -97,7 +98,10 @@ public class WifiRvAdapter extends RecyclerView.Adapter<WifiRvAdapter.ViewHolder
 
 	@Override
 	public int getItemCount() {
-		return mDataList == null || mDataList.isEmpty() ? 0 : mDataList.size();
+		LogUtil.d("mDataList = " + mDataList);
+		LogUtil.d("mDataList.size() = " + mDataList.size());
+		boolean isShowContent = mDataList == null || mDataList.isEmpty();
+		return isShowContent ? 0 : mDataList.size();
 	}
 
 	static class ViewHolder extends RecyclerView.ViewHolder {

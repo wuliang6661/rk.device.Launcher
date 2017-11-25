@@ -19,7 +19,7 @@ import com.android.internal.os.storage.ExternalStorageFormatter;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import rk.device.launcher.R;
-import rk.device.launcher.base.BaseActivity;
+import rk.device.launcher.base.BaseCompatActivity;
 import rk.device.launcher.ui.fragment.RecoveryDialogFragment;
 import rk.device.launcher.utils.SettingUtils;
 
@@ -27,7 +27,7 @@ import rk.device.launcher.utils.SettingUtils;
  * Created by mundane on 2017/11/9 上午10:56
  */
 
-public class SettingActivity extends BaseActivity {
+public class SettingActivity extends BaseCompatActivity {
 
 
 	@Bind(R.id.ll_set_time)
@@ -70,23 +70,21 @@ public class SettingActivity extends BaseActivity {
 	LinearLayout mLlRecovery;
 	@Bind(R.id.tv_title)
 	TextView mTvTitle;
-	private boolean mEraseSdCard = true;
+	private boolean mEraseSdCard = false;
 
 	@Override
-	protected void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_setting);
-		ButterKnife.bind(this);
-		hideNavigationBar();
+	protected int getLayout() {
+		return R.layout.activity_setting;
+	}
 
+	@Override
+	protected void initView() {
+		goBack();
+		setTitle("设置");
+	}
 
-		mTvTitle.setText("设置");
-		mIvBack.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				finish();
-			}
-		});
+	@Override
+	protected void initData() {
 		processOnTouchListener(mLlSetTime, mIvSetTime, mTvSetTime, R.drawable.basic_setting_normal, R.drawable.basic_setting_pressed);
 		processOnTouchListener(mLlSetNet, mIvSetNetwork, mTvSetNetwork, R.drawable.set_network_normal, R.drawable.set_network_pressed);
 		processOnTouchListener(mLlSetDoor, mIvSetDoor, mTvSetDoor, R.drawable.set_door_normal, R.drawable.set_door_pressed);
@@ -138,50 +136,48 @@ public class SettingActivity extends BaseActivity {
 						recoveryDialogFragment.dismiss();
 					}
 				})
-                .setOnConfirmClickListener(new RecoveryDialogFragment.OnConfirmClickListener() {
-					@Override
-					public void onConfirmClick() {
-//						Intent intent = new Intent(SettingActivity.this, RecoveryActivity.class);
-//						startActivity(intent);
-						if (SettingUtils.isMonkeyRunning()) {
-							return;
-						}
-
-						final PersistentDataBlockManager pdbManager = (PersistentDataBlockManager)
-								SettingActivity.this.getSystemService("persistent_data_block");
-
-						if (pdbManager != null && !pdbManager.getOemUnlockEnabled() &&
-								Settings.Global.getInt(SettingActivity.this.getContentResolver(),
-										Settings.Global.DEVICE_PROVISIONED, 0) != 0) {
-							// if OEM unlock is enabled, this will be wiped during FR process. If disabled, it
-							// will be wiped here, unless the device is still being provisioned, in which case
-							// the persistent data block will be preserved.
-							final ProgressDialog progressDialog = getProgressDialog();
-							progressDialog.show();
-
-							// need to prevent orientation changes as we're about to go into
-							// a long IO request, so we won't be able to access inflate resources on flash
-							final int oldOrientation = SettingActivity.this.getRequestedOrientation();
-							SettingActivity.this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
-							new AsyncTask<Void, Void, Void>() {
-								@Override
-								protected Void doInBackground(Void... params) {
-									pdbManager.wipe();
-									return null;
+						.setOnConfirmClickListener(new RecoveryDialogFragment.OnConfirmClickListener() {
+							@Override
+							public void onConfirmClick() {
+								if (SettingUtils.isMonkeyRunning()) {
+									return;
 								}
 
-								@Override
-								protected void onPostExecute(Void aVoid) {
-									progressDialog.hide();
-									SettingActivity.this.setRequestedOrientation(oldOrientation);
+								final PersistentDataBlockManager pdbManager = (PersistentDataBlockManager)
+										SettingActivity.this.getSystemService("persistent_data_block");
+
+								if (pdbManager != null && !pdbManager.getOemUnlockEnabled() &&
+										Settings.Global.getInt(SettingActivity.this.getContentResolver(),
+												Settings.Global.DEVICE_PROVISIONED, 0) != 0) {
+									// if OEM unlock is enabled, this will be wiped during FR process. If disabled, it
+									// will be wiped here, unless the device is still being provisioned, in which case
+									// the persistent data block will be preserved.
+									final ProgressDialog progressDialog = getProgressDialog();
+									progressDialog.show();
+
+									// need to prevent orientation changes as we're about to go into
+									// a long IO request, so we won't be able to access inflate resources on flash
+									final int oldOrientation = SettingActivity.this.getRequestedOrientation();
+									SettingActivity.this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
+									new AsyncTask<Void, Void, Void>() {
+										@Override
+										protected Void doInBackground(Void... params) {
+											pdbManager.wipe();
+											return null;
+										}
+
+										@Override
+										protected void onPostExecute(Void aVoid) {
+											progressDialog.hide();
+											SettingActivity.this.setRequestedOrientation(oldOrientation);
+											doMasterClear();
+										}
+									}.execute();
+								} else {
 									doMasterClear();
 								}
-							}.execute();
-						} else {
-							doMasterClear();
-						}
-					}
-				});
+							}
+						});
 				recoveryDialogFragment.show(getSupportFragmentManager(), "");
 			}
 		});

@@ -10,6 +10,8 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.wifi.ScanResult;
+import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
 import android.os.Handler;
 import android.os.Message;
@@ -36,6 +38,7 @@ import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.StringUtils;
 import rk.device.launcher.utils.ThreadUtils;
+import rk.device.launcher.utils.WifiHelper;
 import rk.device.launcher.utils.carema.CameraInterface;
 import rk.device.launcher.widget.CameraSurfaceView;
 import rk.device.launcher.widget.UpdateManager;
@@ -82,16 +85,19 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
             mStaticHandler.postDelayed(this, REFRESH_DELAY);
         }
     };
+	private WifiHelper mWifiHelper;
 
 
-    @Override
+	@Override
     protected int getLayout() {
         return R.layout.activity_main;
     }
 
     @Override
     public void initView() {
-        registerBatteryReceiver();
+		mWifiHelper = new WifiHelper(this);
+		registerBatteryReceiver();
+		registerWifiReceiver();
         initLocation();
         settingTv.setOnClickListener(this);
 //        startGoogleFaceDetect();
@@ -181,18 +187,19 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 
     private InputWifiPasswordDialogFragment dialogFragment = null;
 
-    private void showDialogFragment(String title, InputWifiPasswordDialogFragment.OnConfirmClickListener listener) {
-        if (dialogFragment == null) {
-            dialogFragment = InputWifiPasswordDialogFragment.newInstance();
-        }
-        dialogFragment.setTitle(title);
-        dialogFragment.setOnCancelClickListener(new InputWifiPasswordDialogFragment.onCancelClickListener() {
-            @Override
-            public void onCancelClick() {
-                dialogFragment.dismiss();
-            }
-        }).setOnConfirmClickListener(listener);
-    }
+	private void showDialogFragment(String title, InputWifiPasswordDialogFragment.OnConfirmClickListener listener) {
+		// FIXME: 2017/11/25 不要复用这个dialogFragment
+		if (dialogFragment == null) {
+			dialogFragment = InputWifiPasswordDialogFragment.newInstance();
+		}
+		dialogFragment.setTitle(title);
+		dialogFragment.setOnCancelClickListener(new InputWifiPasswordDialogFragment.onCancelClickListener() {
+			@Override
+			public void onCancelClick() {
+				dialogFragment.dismiss();
+			}
+		}).setOnConfirmClickListener(listener);
+	}
 
     @Override
     protected void initData() {
@@ -206,7 +213,49 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         registerReceiver(mBatteryReceiver, intentFilter);
     }
 
-    private final BroadcastReceiver mBatteryReceiver = new BroadcastReceiver() {
+	private void registerWifiReceiver() {
+		IntentFilter labelIntentFilter = new IntentFilter();
+		labelIntentFilter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
+		labelIntentFilter.addAction("android.net.wifi.STATE_CHANGE"); // ConnectivityManager.CONNECTIVITY_ACTION);
+		labelIntentFilter.setPriority(1000); // 设置优先级，最高为1000
+		registerReceiver(mWifiChangeBroadcaseReceiver, labelIntentFilter);
+	}
+
+	private final BroadcastReceiver mWifiChangeBroadcaseReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String action = intent.getAction();
+			if (action.equals(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION) || action.equals("android.net.wifi.STATE_CHANGE")) {
+				LogUtil.d("wifi列表刷新或者wifi状态发生了改变");
+				ScanResult scanResult = mWifiHelper.getConnectedScanResult();
+				// 先判断wifi是否可用
+				if (scanResult != null && mWifiHelper.checkWifiState() ) {
+					//判断信号强度，显示对应的指示图标
+					changeSignalState(scanResult);
+				} else { // wifi不可用
+					mIvSignal.setImageResource(R.drawable.wifi_signal_disconnect);
+				}
+			}
+		}
+	};
+
+	private void changeSignalState(ScanResult scanResult) {
+		if (Math.abs(scanResult.level) > 100) {
+			mIvSignal.setImageResource(R.drawable.wifi_signal_1);
+		} else if (Math.abs(scanResult.level) > 80) {
+			mIvSignal.setImageResource(R.drawable.wifi_signal_1);
+		} else if (Math.abs(scanResult.level) > 70) {
+			mIvSignal.setImageResource(R.drawable.wifi_signal_1);
+		} else if (Math.abs(scanResult.level) > 60) {
+			mIvSignal.setImageResource(R.drawable.wifi_signal_2);
+		} else if (Math.abs(scanResult.level) > 50) {
+			mIvSignal.setImageResource(R.drawable.wifi_signal_3);
+		} else {
+			mIvSignal.setImageResource(R.drawable.wifi_signal_3);
+		}
+	}
+
+	private final BroadcastReceiver mBatteryReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
@@ -330,18 +379,18 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
                 if (TextUtils.equals(password, content)) {    //密码输入正确
                     int type = SPUtils.getInt(Constant.SETTING_NUM, Constant.SETTING_TYPE1);
                     switch (type) {
-                        case Constant.SETTING_TYPE1:         //进入基础设置
-                            gotoActivity(SetBasicInfoActivity.class, false);   //缓存一个2
-                            break;
-                        case Constant.SETTING_TYPE2:         //网络设置
-                            gotoActivity(SetNetWorkActivity.class, false);    //缓存个4
-                            break;
-                        case Constant.SETTING_TYPE3:       //门禁设置
-                            gotoActivity(SetDoorGuardActivity.class, false);    //缓存个5
-                            break;
-                        case Constant.SETTING_TYPE4:     //系统设置
-                            gotoActivity(SetSysActivity.class, false);
-                            break;
+//                        case Constant.SETTING_TYPE1:         //进入基础设置
+//                            gotoActivity(SetBasicInfoActivity.class, false);   //缓存一个2
+//                            break;
+//                        case Constant.SETTING_TYPE2:         //网络设置
+//                            gotoActivity(SetNetWorkActivity.class, false);    //缓存个4
+//                            break;
+//                        case Constant.SETTING_TYPE3:       //门禁设置
+//                            gotoActivity(SetDoorGuardActivity.class, false);    //缓存个5
+//                            break;
+//                        case Constant.SETTING_TYPE4:     //系统设置
+//                            gotoActivity(SetSysActivity.class, false);
+//                            break;
                         default:
                             gotoActivity(SettingActivity.class, false);
                             break;

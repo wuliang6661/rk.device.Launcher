@@ -111,7 +111,8 @@
         <!--时间设置-->
         <activity android:name=".ui.activity.SetTimeActivity" />
         <!--网络设置-->
-        <activity android:name=".ui.activity.SetNetWorkActivity" />
+        <activity android:name=".ui.activity.SetNetWorkActivity"
+            android:launchMode="singleTop"/>
         <!--门禁设置-->
         <activity android:name=".ui.activity.SetDoorGuardActivity" />
         <activity android:name=".ui.activity.SelectItemListActivity" />
