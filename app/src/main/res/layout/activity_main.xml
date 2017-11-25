@@ -27,6 +27,33 @@
             android:layout_height="match_parent"
             android:layout_weight="1" />
 
+
+        <ImageView
+            android:id="@+id/battry_plug"
+            android:layout_width="33dp"
+            android:layout_height="18dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/plug"
+            android:visibility="gone" />
+
+
+        <TextView
+            android:id="@+id/battry_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="7dp"
+            android:text="97%"
+            android:textColor="@color/white"
+            android:textSize="15dp" />
+
+
+        <rk.device.launcher.widget.BatteryView
+            android:id="@+id/battry_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp" />
+
+
         <ImageView
             android:id="@+id/iv_setting"
             android:layout_width="20dp"
@@ -94,10 +121,10 @@
 
     <include
         android:id="@+id/rl_bottom"
+        layout="@layout/layout_main_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        layout="@layout/layout_main_bottom"/>
+        android:layout_alignParentBottom="true" />
 
     <ImageView
         android:id="@+id/iv_arrow"

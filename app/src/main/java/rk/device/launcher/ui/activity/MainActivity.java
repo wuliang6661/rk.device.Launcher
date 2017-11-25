@@ -15,6 +15,7 @@ import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
@@ -30,6 +31,7 @@ import java.util.List;
 import java.util.Locale;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import rk.device.launcher.R;
 import rk.device.launcher.base.BaseCompatActivity;
 import rk.device.launcher.global.Constant;
@@ -38,10 +40,12 @@ import rk.device.launcher.utils.CommonUtils;
 import rk.device.launcher.utils.DateUtil;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.SPUtils;
+import rk.device.launcher.utils.SizeUtils;
 import rk.device.launcher.utils.StringUtils;
 import rk.device.launcher.utils.ThreadUtils;
 import rk.device.launcher.utils.WifiHelper;
 import rk.device.launcher.utils.carema.CameraInterface;
+import rk.device.launcher.widget.BatteryView;
 import rk.device.launcher.widget.CameraSurfaceView;
 import rk.device.launcher.widget.UpdateManager;
 
@@ -49,6 +53,12 @@ import static rk.device.launcher.utils.DateUtil.getTime;
 
 public class MainActivity extends BaseCompatActivity implements View.OnClickListener {
 
+    @Bind(R.id.battry_num)
+    TextView battryNum;
+    @Bind(R.id.battry_view)
+    BatteryView battryView;
+    @Bind(R.id.battry_plug)
+    ImageView battryPlug;
     private int mCameraId = Camera.CameraInfo.CAMERA_FACING_FRONT;
     @Bind(R.id.tv_time)
     TextView mTvTime;
@@ -87,10 +97,10 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
             mStaticHandler.postDelayed(this, REFRESH_DELAY);
         }
     };
-	private WifiHelper mWifiHelper;
+    private WifiHelper mWifiHelper;
 
 
-	@Override
+    @Override
     protected int getLayout() {
         return R.layout.activity_main;
     }
@@ -127,6 +137,13 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
                 }
             });
         }
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
     }
 
 
@@ -187,32 +204,32 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 
     }
 
+
+    /**
+     * 显示输入管理员密码弹窗
+     */
     private InputWifiPasswordDialogFragment dialogFragment = null;
 
-	private void showDialogFragment(String title, InputWifiPasswordDialogFragment.OnConfirmClickListener listener) {
-		// FIXME: 2017/11/25 不要复用这个dialogFragment
-		if (dialogFragment == null) {
-			dialogFragment = InputWifiPasswordDialogFragment.newInstance();
-		}
-		dialogFragment.setTitle(title);
-		dialogFragment.setOnCancelClickListener(new InputWifiPasswordDialogFragment.onCancelClickListener() {
-			@Override
-			public void onCancelClick() {
-				dialogFragment.dismiss();
-			}
-		}).setOnConfirmClickListener(listener);
-	}
-
-    @Override
-    protected void initData() {
-
-        UpdateManager.getUpdateManager().checkAppUpdate(this, getSupportFragmentManager(), false);
+    private void showDialogFragment(String title, InputWifiPasswordDialogFragment.OnConfirmClickListener listener) {
+        // FIXME: 2017/11/25 不要复用这个dialogFragment
+        if (dialogFragment == null) {
+            dialogFragment = InputWifiPasswordDialogFragment.newInstance();
+        }
+        dialogFragment.setTitle(title);
+        dialogFragment.setOnCancelClickListener(new InputWifiPasswordDialogFragment.onCancelClickListener() {
+            @Override
+            public void onCancelClick() {
+                dialogFragment.dismiss();
+            }
+        }).setOnConfirmClickListener(listener);
     }
 
-    private void registerBatteryReceiver() {
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Intent.ACTION_BATTERY_CHANGED);
-        registerReceiver(mBatteryReceiver, intentFilter);
+    /**
+     * 检测App更新
+     */
+    @Override
+    protected void initData() {
+        UpdateManager.getUpdateManager().checkAppUpdate(this, getSupportFragmentManager(), false);
     }
 
 	private void registerNetReceiver() {
@@ -293,46 +310,23 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 		}
 	};
 
-	private void changeSignalState(ScanResult scanResult) {
-		if (Math.abs(scanResult.level) > 100) {
-			mIvSignal.setImageResource(R.drawable.wifi_signal_1);
-		} else if (Math.abs(scanResult.level) > 80) {
-			mIvSignal.setImageResource(R.drawable.wifi_signal_1);
-		} else if (Math.abs(scanResult.level) > 70) {
-			mIvSignal.setImageResource(R.drawable.wifi_signal_1);
-		} else if (Math.abs(scanResult.level) > 60) {
-			mIvSignal.setImageResource(R.drawable.wifi_signal_2);
-		} else if (Math.abs(scanResult.level) > 50) {
-			mIvSignal.setImageResource(R.drawable.wifi_signal_3);
-		} else {
-			mIvSignal.setImageResource(R.drawable.wifi_signal_3);
-		}
-	}
 
-	private final BroadcastReceiver mBatteryReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
-            int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, 0);
-            int levelPercent = (int) (level * 100f / scale);
-            LogUtil.d("电池电量百分比 = " + levelPercent);
-            int status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, BatteryManager.BATTERY_HEALTH_UNKNOWN);
-            switch (status) {
-                case BatteryManager.BATTERY_STATUS_CHARGING:
-                    LogUtil.d("充电中");
-                    break;
-                case BatteryManager.BATTERY_STATUS_NOT_CHARGING:
-                    LogUtil.d("未充电");
-                    break;
-                case BatteryManager.BATTERY_STATUS_FULL:
-                    LogUtil.d("充电完成");
-                    break;
-                case BatteryManager.BATTERY_STATUS_DISCHARGING:
-                    LogUtil.d("放电中");
-                    break;
-            }
+    private void changeSignalState(ScanResult scanResult) {
+        if (Math.abs(scanResult.level) > 100) {
+            mIvSignal.setImageResource(R.drawable.wifi_signal_1);
+        } else if (Math.abs(scanResult.level) > 80) {
+            mIvSignal.setImageResource(R.drawable.wifi_signal_1);
+        } else if (Math.abs(scanResult.level) > 70) {
+            mIvSignal.setImageResource(R.drawable.wifi_signal_1);
+        } else if (Math.abs(scanResult.level) > 60) {
+            mIvSignal.setImageResource(R.drawable.wifi_signal_2);
+        } else if (Math.abs(scanResult.level) > 50) {
+            mIvSignal.setImageResource(R.drawable.wifi_signal_3);
+        } else {
+            mIvSignal.setImageResource(R.drawable.wifi_signal_3);
         }
-    };
+    }
+
 
     private void initLocation() {
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -407,35 +401,6 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         switch (v.getId()) {
             case R.id.iv_setting:
                 settingLoad();
-//                final String password = SPUtils.getString(Constant.KEY_PASSWORD);
-//
-//                if (TextUtils.isEmpty(password)) {
-//                    showDialogFragment("设置管理员密码", new InputWifiPasswordDialogFragment.OnConfirmClickListener() {
-//                        @Override
-//                        public void onConfirmClick(String content) {
-//                            dialogFragment.dismiss();
-//                            if (!TextUtils.isEmpty(content)) {
-//                                SPUtils.putString(Constant.KEY_PASSWORD, content);
-//                                Intent intent = new Intent(MainActivity.this, SettingActivity.class);
-//                                startActivity(intent);
-//                            }
-//                        }
-//                    });
-//                } else {
-//                    showDialogFragment("请输入管理员密码", new InputWifiPasswordDialogFragment.OnConfirmClickListener() {
-//                        @Override
-//                        public void onConfirmClick(String content) {
-//                            if (TextUtils.equals(password, content)) {
-//                                dialogFragment.dismiss();
-//                                Intent intent = new Intent(MainActivity.this, SettingActivity.class);
-//                                startActivity(intent);
-//                            } else {
-//                                dialogFragment.showError();
-//                            }
-//                        }
-//                    });
-//                }
-//                dialogFragment.show(getSupportFragmentManager(), "");
                 break;
         }
     }
@@ -487,6 +452,69 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     }
 
 
+    private void registerBatteryReceiver() {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_BATTERY_CHANGED);
+        registerReceiver(mBatteryReceiver, intentFilter);
+    }
+
+    private final BroadcastReceiver mBatteryReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
+            int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, 0);
+            int levelPercent = (int) (level * 100f / scale);
+            LogUtil.d("电池电量百分比 = " + levelPercent);
+            int status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, BatteryManager.BATTERY_HEALTH_UNKNOWN);
+            switch (status) {
+                case BatteryManager.BATTERY_STATUS_CHARGING:
+                    LogUtil.d("充电中");
+                    setBattryListener(levelPercent, true);
+                    return;
+                case BatteryManager.BATTERY_STATUS_NOT_CHARGING:
+                    LogUtil.d("未充电");
+                    break;
+                case BatteryManager.BATTERY_STATUS_FULL:
+                    LogUtil.d("充电完成");
+                    break;
+                case BatteryManager.BATTERY_STATUS_DISCHARGING:
+                    LogUtil.d("放电中");
+                    break;
+            }
+            setBattryListener(levelPercent, false);
+        }
+    };
+
+
+    /**
+     * 处理电池变化
+     */
+    private void setBattryListener(int leverPercent, boolean isPlugs) {
+        if (isPlugs) {
+            battryPlug.setVisibility(View.VISIBLE);
+        } else {
+            battryPlug.setVisibility(View.GONE);
+        }
+        battryNum.setText(leverPercent + "%");
+        battryView.setProgress(leverPercent);
+    }
+
+
+    /**
+     * 根据自己的电池图标做响应的调整
+     *
+     * @param progress 0-100
+     * @return 0-10000
+     */
+    private int calculateLevel(int progress) {
+        int leftOffest = SizeUtils.dp2px(2);
+        int powerLength = SizeUtils.dp2px(26.5f);// 40 px in hdpi
+        int totalLength = SizeUtils.dp2px(32.5f);// 49 px in hdpi
+        int level = (leftOffest + powerLength * progress / 100) * 10000 / totalLength;
+        return level;
+    }
+
+
     private static class StaticHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
@@ -497,7 +525,6 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     @Override
     protected void onDestroy() {
         mStaticHandler.removeCallbacksAndMessages(null);
-        unregisterReceiver(mBatteryReceiver);
         super.onDestroy();
         if (null != camera) {
 //            closeCamera(camera);
