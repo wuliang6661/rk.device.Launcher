@@ -72,4 +72,14 @@ public interface Constant {
 	 */
 	String KEY_LIGNT = "key_light";
 
+	/**
+	 * IP的key值
+	 */
+	String KEY_IP = "key_ip";
+
+	/**
+	 * 端口号的key值
+	 */
+	String KEY_PORT = "key_port";
+
 }

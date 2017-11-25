@@ -47,6 +47,10 @@ public class SetSysActivity extends BaseCompatActivity {
 	EditText mEtClientCode;
 	@Bind(R.id.cb_light)
 	CheckBox mCbLight;
+	@Bind(R.id.et_ip)
+	EditText mEtIP;
+	@Bind(R.id.et_port)
+	EditText mEtPort;
 
     private ArrayList<SetDoorRvBean> mSleepTimeDataList;
 //	private ArrayList<SetDoorRvBean> mLightValueDataList;
@@ -75,17 +79,9 @@ public class SetSysActivity extends BaseCompatActivity {
 		// 读取保存的待机时间
 		// 没有设置待机时间的话, 默认是30秒
 		long sleepTime = SPUtils.getLong(Constant.KEY_SLEEP_TIME, 30000);
-
-		for (SetDoorRvBean setDoorRvBean : mSleepTimeDataList) {
-			if (setDoorRvBean.sleepTime == sleepTime) {
-				setDoorRvBean.isChecked = true;
-				mTvSleepTime.setText(setDoorRvBean.text);
-				return;
-			}
-		}
-
+		setSleepTimeText(sleepTime);
 		// 读取保存的客户号
-		String clientCode = SPUtils.getString(Constant.KEY_LIGNT);
+		String clientCode = SPUtils.getString(Constant.KEY_CLIENT_CODE);
 		if (!TextUtils.isEmpty(clientCode)) {
 			mEtClientCode.setHint(clientCode);
 		}
@@ -98,20 +94,45 @@ public class SetSysActivity extends BaseCompatActivity {
 		// 设置或者获取uuid
 		DeviceUuidFactory deviceUuidFactory = new DeviceUuidFactory(this);
 		mTvDeviceId.setText(deviceUuidFactory.getUuid().toString());
+
+		// 读取保存的IP
+		String ip = SPUtils.getString(Constant.KEY_IP);
+		if (!TextUtils.isEmpty(ip)) {
+			mEtIP.setHint(ip);
+		}
+
+		// 读取保存的端口号
+		String port = SPUtils.getString(Constant.KEY_PORT);
+		if (!TextUtils.isEmpty(port)) {
+			mEtPort.setHint(port);
+		}
+
 		mBtnFinishSetting.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				// 保存待机时间
 				SPUtils.putLong(Constant.KEY_SLEEP_TIME, getSleepTime());
 
+				// 保存客户号
 				String clientCode = mEtClientCode.getText().toString();
 				if (!TextUtils.isEmpty(clientCode)) {
-					// 保存客户号
 					SPUtils.putString(Constant.KEY_CLIENT_CODE, clientCode);
 				}
 
 				// 保存补光灯的开关状态
 				SPUtils.putBoolean(Constant.KEY_LIGNT, mCbLight.isChecked());
+
+				// 保存IP
+				String ip = mEtIP.getText().toString();
+				if (!TextUtils.isEmpty(ip)) {
+					SPUtils.putString(Constant.KEY_IP, ip);
+				}
+
+				// 保存端口号
+				String port = mEtPort.getText().toString();
+				if (!TextUtils.isEmpty(port)) {
+					SPUtils.putString(Constant.KEY_PORT, port);
+				}
 
 				boolean isFirstSetting = SPUtils.getBoolean(Constant.IS_FIRST_SETTING, true);    //是否第一次进入设置
 				if (isFirstSetting) {
@@ -122,7 +143,6 @@ public class SetSysActivity extends BaseCompatActivity {
 					finish();
 				}
 
-				finish();
 			}
 		});
 	}
@@ -134,6 +154,17 @@ public class SetSysActivity extends BaseCompatActivity {
 			}
 		}
 		return 30000;
+	}
+
+	private void setSleepTimeText(long sleepTime) {
+		for (SetDoorRvBean setDoorRvBean : mSleepTimeDataList) {
+			if (setDoorRvBean.sleepTime == sleepTime) {
+				setDoorRvBean.isChecked = true;
+				mTvSleepTime.setText(setDoorRvBean.text);
+				return;
+			}
+		}
+
 	}
 
     @OnClick({R.id.ll_sleep_time})

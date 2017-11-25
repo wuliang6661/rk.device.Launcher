@@ -181,18 +181,19 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 
     private InputWifiPasswordDialogFragment dialogFragment = null;
 
-    private void showDialogFragment(String title, InputWifiPasswordDialogFragment.OnConfirmClickListener listener) {
-        if (dialogFragment == null) {
-            dialogFragment = InputWifiPasswordDialogFragment.newInstance();
-        }
-        dialogFragment.setTitle(title);
-        dialogFragment.setOnCancelClickListener(new InputWifiPasswordDialogFragment.onCancelClickListener() {
-            @Override
-            public void onCancelClick() {
-                dialogFragment.dismiss();
-            }
-        }).setOnConfirmClickListener(listener);
-    }
+	private void showDialogFragment(String title, InputWifiPasswordDialogFragment.OnConfirmClickListener listener) {
+		// FIXME: 2017/11/25 不要复用这个dialogFragment
+		if (dialogFragment == null) {
+			dialogFragment = InputWifiPasswordDialogFragment.newInstance();
+		}
+		dialogFragment.setTitle(title);
+		dialogFragment.setOnCancelClickListener(new InputWifiPasswordDialogFragment.onCancelClickListener() {
+			@Override
+			public void onCancelClick() {
+				dialogFragment.dismiss();
+			}
+		}).setOnConfirmClickListener(listener);
+	}
 
     @Override
     protected void initData() {
@@ -359,18 +360,18 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
                 if (TextUtils.equals(password, content)) {    //密码输入正确
                     int type = SPUtils.getInt(Constant.SETTING_NUM, Constant.SETTING_TYPE1);
                     switch (type) {
-                        case Constant.SETTING_TYPE1:         //进入基础设置
-                            gotoActivity(SetBasicInfoActivity.class, false);   //缓存一个2
-                            break;
-                        case Constant.SETTING_TYPE2:         //网络设置
-                            gotoActivity(SetNetWorkActivity.class, false);    //缓存个4
-                            break;
-                        case Constant.SETTING_TYPE3:       //门禁设置
-                            gotoActivity(SetDoorGuardActivity.class, false);    //缓存个5
-                            break;
-                        case Constant.SETTING_TYPE4:     //系统设置
-                            gotoActivity(SetSysActivity.class, false);
-                            break;
+//                        case Constant.SETTING_TYPE1:         //进入基础设置
+//                            gotoActivity(SetBasicInfoActivity.class, false);   //缓存一个2
+//                            break;
+//                        case Constant.SETTING_TYPE2:         //网络设置
+//                            gotoActivity(SetNetWorkActivity.class, false);    //缓存个4
+//                            break;
+//                        case Constant.SETTING_TYPE3:       //门禁设置
+//                            gotoActivity(SetDoorGuardActivity.class, false);    //缓存个5
+//                            break;
+//                        case Constant.SETTING_TYPE4:     //系统设置
+//                            gotoActivity(SetSysActivity.class, false);
+//                            break;
                         default:
                             gotoActivity(SettingActivity.class, false);
                             break;
