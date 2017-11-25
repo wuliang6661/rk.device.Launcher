@@ -3,6 +3,8 @@ package rk.device.launcher.ui.activity;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;

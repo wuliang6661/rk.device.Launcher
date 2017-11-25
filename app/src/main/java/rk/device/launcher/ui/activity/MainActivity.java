@@ -304,35 +304,6 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         switch (v.getId()) {
             case R.id.iv_setting:
                 settingLoad();
-//                final String password = SPUtils.getString(Constant.KEY_PASSWORD);
-//
-//                if (TextUtils.isEmpty(password)) {
-//                    showDialogFragment("设置管理员密码", new InputWifiPasswordDialogFragment.OnConfirmClickListener() {
-//                        @Override
-//                        public void onConfirmClick(String content) {
-//                            dialogFragment.dismiss();
-//                            if (!TextUtils.isEmpty(content)) {
-//                                SPUtils.putString(Constant.KEY_PASSWORD, content);
-//                                Intent intent = new Intent(MainActivity.this, SettingActivity.class);
-//                                startActivity(intent);
-//                            }
-//                        }
-//                    });
-//                } else {
-//                    showDialogFragment("请输入管理员密码", new InputWifiPasswordDialogFragment.OnConfirmClickListener() {
-//                        @Override
-//                        public void onConfirmClick(String content) {
-//                            if (TextUtils.equals(password, content)) {
-//                                dialogFragment.dismiss();
-//                                Intent intent = new Intent(MainActivity.this, SettingActivity.class);
-//                                startActivity(intent);
-//                            } else {
-//                                dialogFragment.showError();
-//                            }
-//                        }
-//                    });
-//                }
-//                dialogFragment.show(getSupportFragmentManager(), "");
                 break;
         }
     }
