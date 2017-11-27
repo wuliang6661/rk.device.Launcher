@@ -40,7 +40,6 @@ import rk.device.launcher.utils.CommonUtils;
 import rk.device.launcher.utils.DateUtil;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.SPUtils;
-import rk.device.launcher.utils.SizeUtils;
 import rk.device.launcher.utils.StringUtils;
 import rk.device.launcher.utils.ThreadUtils;
 import rk.device.launcher.utils.WifiHelper;
@@ -493,21 +492,6 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         }
         battryNum.setText(leverPercent + "%");
         battryView.setProgress(leverPercent);
-    }
-
-
-    /**
-     * 根据自己的电池图标做响应的调整
-     *
-     * @param progress 0-100
-     * @return 0-10000
-     */
-    private int calculateLevel(int progress) {
-        int leftOffest = SizeUtils.dp2px(2);
-        int powerLength = SizeUtils.dp2px(26.5f);// 40 px in hdpi
-        int totalLength = SizeUtils.dp2px(32.5f);// 49 px in hdpi
-        int level = (leftOffest + powerLength * progress / 100) * 10000 / totalLength;
-        return level;
     }
 
 
