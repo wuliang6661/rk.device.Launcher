@@ -330,7 +330,6 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 
     private void initLocation() {
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
         // 既没有打开gps也没有打开网络
         if (!isGpsOpened() && !isNewWorkOpen()) {
             Toast.makeText(this, "请打开网络或GPS定位功能!", Toast.LENGTH_SHORT).show();
@@ -358,7 +357,6 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
                             Address address = addresses.get(0);
                             String city = address.getLocality();
                             LogUtil.d("city = " + city);
-
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -368,8 +366,6 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
                 }
             }
         });
-
-
     }
 
     private boolean isGpsOpened() {

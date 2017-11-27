@@ -28,7 +28,7 @@ import rx.subscriptions.CompositeSubscription;
  * 同时存放所有界面需要的公共方法
  */
 
-public abstract class BaseCompatActivity extends AppCompatActivity {
+public abstract class BaseCompatActivity extends AppCompatActivity  {
 
     private CompositeSubscription mCompositeSubscription;
 
