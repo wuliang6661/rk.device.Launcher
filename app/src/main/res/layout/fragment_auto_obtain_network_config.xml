@@ -79,7 +79,7 @@
             android:id="@+id/tv_sub_code"
             style="@style/tv_network_conf_item"
             android:layout_marginRight="15dp"
-            android:text="255.255.255.0"
+            tools:text="255.255.255.0"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
@@ -109,7 +109,7 @@
             android:id="@+id/tv_net_gate"
             style="@style/tv_network_conf_item"
             android:layout_marginRight="15dp"
-            android:text="192.168.0.1"
+            tools:text="192.168.0.1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
@@ -139,7 +139,7 @@
             android:id="@+id/tv_dns"
             style="@style/tv_network_conf_item"
             android:layout_marginRight="15dp"
-            android:text="192.168.0.1"
+            tools:text="192.168.0.1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
