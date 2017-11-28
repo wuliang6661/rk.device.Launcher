@@ -8,8 +8,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:background="@drawable/shape_normal_bg"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/shape_normal_bg">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -64,8 +64,8 @@
             <LinearLayout
                 android:id="@+id/ll_connected_device"
                 style="@style/ll_set_item"
-                android:visibility="gone"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -90,8 +90,8 @@
             <LinearLayout
                 android:id="@+id/ll_searched_device"
                 style="@style/ll_set_item"
-                android:visibility="gone"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -104,11 +104,17 @@
                     android:textColor="@color/white"
                     android:textSize="@dimen/sp_18" />
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/divider_height"
+                    android:background="@color/blue_31598a" />
 
                 <rk.device.launcher.widget.MyListView
                     android:id="@+id/list_view_searched"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:divider="@color/blue_31598a"
+                    android:dividerHeight="@dimen/divider_height"
                     android:scrollbars="none" />
 
             </LinearLayout>

@@ -22,4 +22,8 @@
     <string name="device_matched">已配对设备</string>
     <string name="device_search">可用设备</string>
     <string name="cancel_match">取消配对</string>
+    <string name="name_setting_illeagel">请输入设备名称</string>
+    <string name="blue_tooth_setting_illeagel">请选择蓝牙</string>
+    <string name="password_error">请输入正确的管理员密码</string>
+    <string name="blue_tooth_error">蓝牙连接失败</string>
 </resources>

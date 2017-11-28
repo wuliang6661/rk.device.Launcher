@@ -111,6 +111,7 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/tv_tem"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="10~20°c"
@@ -123,12 +124,14 @@
                             android:orientation="horizontal">
 
                             <ImageView
+                                android:visibility="gone"
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"
                                 android:layout_gravity="center_vertical"
                                 android:src="@drawable/sunny" />
 
                             <TextView
+                                android:id="@+id/tv_weather"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"

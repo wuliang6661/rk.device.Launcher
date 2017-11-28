@@ -2,6 +2,7 @@ package rk.device.launcher.ui.activity;
 
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
@@ -18,7 +19,9 @@ import butterknife.Bind;
 import rk.device.launcher.R;
 import rk.device.launcher.api.T;
 import rk.device.launcher.base.BaseCompatActivity;
+import rk.device.launcher.base.utils.rxbus.RxBus;
 import rk.device.launcher.bean.BlueToothModel;
+import rk.device.launcher.event.BlueToothEvent;
 import rk.device.launcher.tools.MoreManager;
 import rk.device.launcher.utils.adapter.CommonAdapter;
 import rk.device.launcher.utils.adapter.ViewHolder;
@@ -65,6 +68,14 @@ public class BlueToothActivity extends BaseCompatActivity
             }
         };
         searchedListView.setAdapter(mAdapter);
+        searchedListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                BlueToothModel item = dataList.get(position);
+                RxBus.getDefault().post(new BlueToothEvent(item.getAddress(), item.getName()));
+                finish();
+            }
+        });
     }
 
     /**
@@ -73,6 +84,8 @@ public class BlueToothActivity extends BaseCompatActivity
     private void closeBlueTooth() {
         blueCheckBox.setChecked(false);
         connectedDeviceLL.setVisibility(View.GONE);
+        dataList.clear();
+        mAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -96,10 +109,9 @@ public class BlueToothActivity extends BaseCompatActivity
     }
 
     private void searchBlueTooth() {
-        SearchRequest request = new SearchRequest.Builder()
-                .searchBluetoothLeDevice(3000, 3)   // 先扫BLE设备3次，每次3s
+        SearchRequest request = new SearchRequest.Builder().searchBluetoothLeDevice(3000, 3) // 先扫BLE设备3次，每次3s
                 .searchBluetoothClassicDevice(5000) // 再扫经典蓝牙5s
-                .searchBluetoothLeDevice(2000)      // 再扫BLE设备2s
+                .searchBluetoothLeDevice(2000) // 再扫BLE设备2s
                 .build();
         mClient.search(request, new SearchResponse() {
             @Override
