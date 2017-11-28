@@ -34,21 +34,21 @@ public class BlueToothActivity extends BaseCompatActivity
         implements CheckBox.OnCheckedChangeListener {
 
     @Bind(R.id.checkbox_blue)
-    CheckBox                              blueCheckBox;
+    CheckBox blueCheckBox;
     @Bind(R.id.checkbox_open)
-    CheckBox                              openCheckBox;
+    CheckBox openCheckBox;
     @Bind(R.id.ll_connected_device)
-    LinearLayout                          connectedDeviceLL;
+    LinearLayout connectedDeviceLL;
     @Bind(R.id.ll_searched_device)
-    LinearLayout                          searchedDeviceLL;
+    LinearLayout searchedDeviceLL;
     @Bind(R.id.list_view_searched)
-    MyListView                            searchedListView;
+    MyListView searchedListView;
 
-    private BluetoothClient               mClient     = MoreManager.getBluetoothClient();
+    private BluetoothClient mClient = MoreManager.getBluetoothClient();
 
-    private CommonAdapter<BlueToothModel> mAdapter    = null;
-    private List<BlueToothModel>          dataList    = new ArrayList<>();
-    private List<String>                  addressList = new ArrayList<>();
+    private CommonAdapter<BlueToothModel> mAdapter = null;
+    private List<BlueToothModel> dataList = new ArrayList<>();
+    private List<String> addressList = new ArrayList<>();
 
     @Override
     protected int getLayout() {
@@ -125,7 +125,7 @@ public class BlueToothActivity extends BaseCompatActivity
                 model.setAddress(device.getAddress());
                 model.setName((TextUtils.isEmpty(device.getName()) || device.getName() == null
                         || device.getName().equals("NULL")) ? device.getAddress()
-                                : device.getName());
+                        : device.getName());
                 model.setRssi(device.rssi);
                 model.setScanRecord(device.scanRecord);
                 if (!addressList.contains(device.getAddress())) {

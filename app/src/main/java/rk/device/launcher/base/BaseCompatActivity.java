@@ -28,7 +28,7 @@ import rx.subscriptions.CompositeSubscription;
  * 同时存放所有界面需要的公共方法
  */
 
-public abstract class BaseCompatActivity extends AppCompatActivity  {
+public abstract class BaseCompatActivity extends AppCompatActivity {
 
     private CompositeSubscription mCompositeSubscription;
 
@@ -140,27 +140,39 @@ public abstract class BaseCompatActivity extends AppCompatActivity  {
         return hintDialog;
     }
 
+
+    /**
+     * 隐藏提示弹窗
+     */
+    protected void dissmissMessageDialog() {
+        if (hintDialog != null && hintDialog.getDialog() != null
+                && hintDialog.getDialog().isShowing()) {
+            hintDialog.dismiss();
+        }
+    }
+
+
     /**
      * 接收网络是否断开的监听
      */
     private void setNetListener() {
         subscription = RxBus.getDefault().toObserverable(NetDismissBean.class).subscribe(new Action1<NetDismissBean>() {
-			@Override
-			public void call(NetDismissBean netDismissBean) {
-				if (netDismissBean.isConnect()) {
-					if (hintDialog != null && hintDialog.getDialog() != null
-							&& hintDialog.getDialog().isShowing()) {
-						hintDialog.dismiss();
-					}
-				} else {
-					if (hintDialog != null && hintDialog.getDialog() != null
-							&& hintDialog.getDialog().isShowing()) {
-					} else {
-						BaseCompatActivity.this.showNetConnect();
-					}
-				}
-			}
-		}, throwable -> {        //处理异常
+            @Override
+            public void call(NetDismissBean netDismissBean) {
+                if (netDismissBean.isConnect()) {
+                    if (hintDialog != null && hintDialog.getDialog() != null
+                            && hintDialog.getDialog().isShowing()) {
+                        hintDialog.dismiss();
+                    }
+                } else {
+                    if (hintDialog != null && hintDialog.getDialog() != null
+                            && hintDialog.getDialog().isShowing()) {
+                    } else {
+                        BaseCompatActivity.this.showNetConnect();
+                    }
+                }
+            }
+        }, throwable -> {        //处理异常
 
         });
     }
@@ -184,9 +196,9 @@ public abstract class BaseCompatActivity extends AppCompatActivity  {
         hintDialog.setMessage("网络已断开，请重新连接");
         hintDialog.setLeftButton("取消", view -> hintDialog.dismiss());
         hintDialog.setRightButton("去设置", view -> {
-			BaseCompatActivity.this.gotoActivity(SetNetWorkActivity.class, false);
-			hintDialog.dismiss();
-		});
+            BaseCompatActivity.this.gotoActivity(SetNetWorkActivity.class, false);
+            hintDialog.dismiss();
+        });
         hintDialog.show(getSupportFragmentManager(), "");
         return hintDialog;
     }

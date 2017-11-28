@@ -35,18 +35,19 @@ import static rk.device.launcher.utils.SPUtils.get;
 
 public class SetBasicInfoActivity extends BaseCompatActivity implements View.OnClickListener {
 
-    private long            when_time = 0;
+    private long when_time = 0;
     @Bind(R.id.tv_time)
-    TextView                timeTv;
+    TextView timeTv;
     @Bind(R.id.tv_blue_tooth_name)
-    TextView                blueToothNameTv;
+    TextView blueToothNameTv;
     @Bind(R.id.et_device_name)
-    EditText                deviceNameEt;
+    EditText deviceNameEt;
     @Bind(R.id.checkbox_voice)
-    CheckBox                voiceCheckBox;
-    private boolean         isVoice   = false;                           //是否语音提示
-    private BlueToothEvent  blueEvent = null;
-    private BluetoothClient mClient   = MoreManager.getBluetoothClient();
+    CheckBox voiceCheckBox;
+    private boolean isVoice = false;                           //是否语音提示
+    private BlueToothEvent blueEvent = null;
+    private BleGattProfile data;
+    private BluetoothClient mClient = MoreManager.getBluetoothClient();
 
     @Override
     protected int getLayout() {
@@ -164,13 +165,18 @@ public class SetBasicInfoActivity extends BaseCompatActivity implements View.OnC
 
     /**
      * 连接蓝牙
-     * 
+     *
      * @return
      */
     private boolean connectDevice(String deviceName) {
+        showMessageDialog("正在连接蓝牙锁...");
         mClient.connect(blueEvent.mac, new BleConnectResponse() {
             @Override
             public void onResponse(int code, BleGattProfile data) {
+                MoreManager.setBlueToothEvent(blueEvent);
+                MoreManager.setProfile(data);
+                SetBasicInfoActivity.this.data = data;
+                dissmissMessageDialog();
                 if (code == Constants.REQUEST_SUCCESS) {
                     //下面把相关的参数保存起来
                     //设备名称
@@ -181,6 +187,8 @@ public class SetBasicInfoActivity extends BaseCompatActivity implements View.OnC
                     SPUtils.put(Constant.BLUE_TOOTH, blueEvent.mac);
                     //判断是否是第一次
                     boolean isFirst = (boolean) SPUtils.get(Constant.IS_FIRST_SETTING, false);
+                    MoreManager.openLock((int) (when_time / 1000));
+//                    syncBlueTime();
                     if (isFirst) {
                         gotoActivity(SetNetWorkActivity.class, true);
                     } else {
@@ -195,4 +203,12 @@ public class SetBasicInfoActivity extends BaseCompatActivity implements View.OnC
         return false;
     }
 
+
+    /**
+     * 调取蓝牙同步系统时间
+     */
+    private void syncBlueTime() {
+        int time = (int) (when_time / 1000);
+        MoreManager.syncBlueTime(time);
+    }
 }
