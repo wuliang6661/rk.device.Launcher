@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSONObject;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -37,7 +38,9 @@ import rk.device.launcher.R;
 import rk.device.launcher.api.ApiService;
 import rk.device.launcher.api.T;
 import rk.device.launcher.base.BaseCompatActivity;
+import rk.device.launcher.base.utils.rxbus.RxBus;
 import rk.device.launcher.bean.WeatherModel;
+import rk.device.launcher.event.HomeInfoEvent;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.ui.fragment.InputWifiPasswordDialogFragment;
 import rk.device.launcher.utils.CommonUtils;
@@ -47,6 +50,7 @@ import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.SizeUtils;
 import rk.device.launcher.utils.StringUtils;
 import rk.device.launcher.utils.ThreadUtils;
+import rk.device.launcher.utils.TimeUtils;
 import rk.device.launcher.utils.WifiHelper;
 import rk.device.launcher.utils.carema.CameraInterface;
 import rk.device.launcher.widget.BatteryView;
@@ -119,6 +123,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 
     @Override
     public void initView() {
+        registerRxBus();
         mWifiHelper = new WifiHelper(this);
         registerBatteryReceiver();
         registerNetReceiver();
@@ -126,6 +131,29 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         settingTv.setOnClickListener(this);
         //        startGoogleFaceDetect();
         setLocalInfo();
+    }
+
+    /**
+     * 注册RxBus
+     */
+    private void registerRxBus() {
+        addSubscription(RxBus.getDefault().toObserverable(HomeInfoEvent.class)
+                .subscribe(new Subscriber<HomeInfoEvent>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(HomeInfoEvent homeInfoEvent) {
+                        placeNameTv.setText(homeInfoEvent.name);
+                    }
+                }));
     }
 
     private void setLocalInfo() {
@@ -293,7 +321,6 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 
     private void initLocation() {
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
         // 既没有打开gps也没有打开网络
         if (!isGpsOpened() && !isNewWorkOpen()) {
             Toast.makeText(this, "请打开网络或GPS定位功能!", Toast.LENGTH_SHORT).show();
@@ -323,8 +350,8 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
                         if (addresses.size() > 0) {
                             Address address = addresses.get(0);
                             String city = address.getLocality();
+                            httpGetWeatherInfo(address.getSubAdminArea());
                             LogUtil.d("city = " + city);
-
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -339,6 +366,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 
     private void httpGetWeatherInfo(String city) {
         JSONObject params = new JSONObject();
+        params.put("location", city);
         addSubscription(ApiService.weather(params).subscribe(new Subscriber<WeatherModel>() {
             @Override
             public void onCompleted() {
@@ -352,7 +380,18 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 
             @Override
             public void onNext(WeatherModel weatherModel) {
-
+                if (weatherModel.getResults().size() > 0
+                        && weatherModel.getResults().get(0).getDaily().size() > 0) {
+                    WeatherModel.ResultsBean.DailyBean bean = weatherModel.getResults().get(0)
+                            .getDaily().get(0);
+                    temTv.setText(bean.getLow() + "~" + bean.getHigh() + "℃");
+                    if (TimeUtils.getHour(new Date(System.currentTimeMillis())) > 6
+                            && TimeUtils.getHour(new Date(System.currentTimeMillis())) < 18) {
+                        weatherTv.setText(bean.getText_day());
+                    } else {
+                        weatherTv.setText(bean.getText_night());
+                    }
+                }
             }
         }));
     }

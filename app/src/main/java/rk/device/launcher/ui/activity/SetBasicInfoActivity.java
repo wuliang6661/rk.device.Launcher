@@ -20,6 +20,7 @@ import rk.device.launcher.api.T;
 import rk.device.launcher.base.BaseCompatActivity;
 import rk.device.launcher.base.utils.rxbus.RxBus;
 import rk.device.launcher.event.BlueToothEvent;
+import rk.device.launcher.event.HomeInfoEvent;
 import rk.device.launcher.event.TimeEvent;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.tools.MoreManager;
@@ -185,6 +186,7 @@ public class SetBasicInfoActivity extends BaseCompatActivity implements View.OnC
                     } else {
                         finish();
                     }
+                    RxBus.getDefault().post(new HomeInfoEvent(deviceName));
                 } else {
                     T.showShort(getString(R.string.blue_tooth_error));
                 }
