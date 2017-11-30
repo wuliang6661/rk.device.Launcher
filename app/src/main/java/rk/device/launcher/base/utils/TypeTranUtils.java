@@ -1,4 +1,4 @@
-package com.dusun.facerecog.base.utils;
+package rk.device.launcher.base.utils;
 
 /**
  * 类型转换帮助类

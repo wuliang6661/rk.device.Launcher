@@ -60,4 +60,5 @@
     <color name="color_e10000">#e10000</color>
 
     <color name="red">#fe0200</color>
+    <color name="backColor">#22000000</color>
 </resources>

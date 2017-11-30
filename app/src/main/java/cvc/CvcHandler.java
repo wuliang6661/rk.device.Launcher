@@ -5,10 +5,6 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 
-import com.dusun.facerecog.util.EventUtil;
-
-import static com.dusun.facerecog.util.EventUtil.START_CALIBRATION;
-
 /**
  * Created by hanbin on 2017/11/28.
  */
@@ -54,7 +50,7 @@ public class CvcHandler extends Handler {
                     count++;
                 }
                 break;
-            case START_CALIBRATION:
+            case EventUtil.START_CALIBRATION:
                 ret = CvcHelper.CVC_calibratorStereoCalibrate();
                 if (ret != 0) {
                     Log.i("CVC_calibratorStereo", "校准失败");

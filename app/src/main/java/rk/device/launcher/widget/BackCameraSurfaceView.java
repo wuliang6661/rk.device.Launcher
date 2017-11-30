@@ -1,4 +1,4 @@
-package com.dusun.facerecog.widget;
+package rk.device.launcher.widget;
 
 import android.content.Context;
 import android.graphics.PixelFormat;

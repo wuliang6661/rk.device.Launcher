@@ -1,4 +1,4 @@
-package com.dusun.facerecog.util;
+package cvc;
 
 public class EventUtil {
     public static final int UPDATE_FACE_RECT           = 0;

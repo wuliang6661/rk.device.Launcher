@@ -26,4 +26,9 @@
     <string name="blue_tooth_setting_illeagel">请选择蓝牙</string>
     <string name="password_error">请输入正确的管理员密码</string>
     <string name="blue_tooth_error">蓝牙连接失败</string>
+
+    <string name="hint_width">请输入宽度</string>
+    <string name="hint_height">请输入高度</string>
+    <string name="start_gather">开始采集</string>
+    <string name="finish">完成</string>
 </resources>

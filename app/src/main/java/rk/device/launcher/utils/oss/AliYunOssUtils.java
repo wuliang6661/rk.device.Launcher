@@ -1,4 +1,4 @@
-package rk.device.launcher.utils;
+package rk.device.launcher.utils.oss;
 
 import android.content.Context;
 import android.util.Log;
@@ -22,7 +22,6 @@ import java.util.Date;
 import java.util.Random;
 
 import rk.device.launcher.Config;
-import rk.device.launcher.utils.oss.OssUploadListener;
 
 /**
  * Created by tech60 on 2017/7/13.
@@ -41,8 +40,6 @@ public class AliYunOssUtils {
         mContext = context;
 
         // 在移动端建议使用STS方式初始化OSSClient。
-        //        OSSCredentialProvider credentialProvider = new OSSStsTokenCredentialProvider(
-        //                Config.ALIYUNOSS_APP_KEY, Config.ALIYUNOSS_APP_SECKET, "<StsToken.SecurityToken>");
         OSSCredentialProvider credentialProvider = new OSSCustomSignerCredentialProvider() {
             @Override
             public String signContent(String content) {
@@ -76,8 +73,12 @@ public class AliYunOssUtils {
         return mAliYunOss;
     }
 
-    // 直接上传二进制数据，使用阻塞的同步接口
-    public void putObjectFromByteArray(int position,byte[] uploadData, OssUploadListener mListener) {
+    /**
+     * 直接上传二进制数据，使用阻塞的同步接口
+     * @param uploadData
+     * @param mListener
+     */
+    public void putObjectFromByteArray(byte[] uploadData, OssUploadListener mListener) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
         Date curDate = new Date(System.currentTimeMillis());//获取当前时间
         String str = formatter.format(curDate)+"test";
@@ -97,11 +98,7 @@ public class AliYunOssUtils {
                 new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
                     @Override
                     public void onSuccess(PutObjectRequest request, PutObjectResult result) {
-                        Log.d("PutObject", "UploadSuccess");
-
-                        Log.d("ETag", result.getETag());
-                        Log.d("RequestId", result.getRequestId());
-                        mListener.onSuccess(position,filePath);
+                        mListener.onSuccess(filePath);
                     }
 
                     @Override
@@ -115,10 +112,6 @@ public class AliYunOssUtils {
                         }
                         if (serviceException != null) {
                             // 服务异常
-                            Log.e("ErrorCode", serviceException.getErrorCode());
-                            Log.e("RequestId", serviceException.getRequestId());
-                            Log.e("HostId", serviceException.getHostId());
-                            Log.e("RawMessage", serviceException.getRawMessage());
                         }
                     }
                 });

@@ -7,8 +7,7 @@ package cvc;
 public class CvcHelper {
     static {
 		try {
-            System.loadLibrary("comm");
-			System.loadLibrary("cvc");			
+			System.loadLibrary("cvc");
 		}
 		catch (UnsatisfiedLinkError e) {
 			System.out.println("Failed to load library: " + e);		

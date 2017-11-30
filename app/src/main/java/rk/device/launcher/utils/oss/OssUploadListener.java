@@ -1,4 +1,4 @@
-package com.dusun.facerecog.util;
+package rk.device.launcher.utils.oss;
 
 import com.alibaba.sdk.android.oss.ClientException;
 import com.alibaba.sdk.android.oss.ServiceException;
@@ -9,8 +9,8 @@ import com.alibaba.sdk.android.oss.model.PutObjectRequest;
  */
 
 public interface OssUploadListener {
-    void onSuccess(int position,String filePath);
+    void onSuccess(String filePath);
 
-    void onFailure(PutObjectRequest request, ClientException clientExcepion,
+    void onFailure(PutObjectRequest request, ClientException clientException,
                    ServiceException serviceException);
 }

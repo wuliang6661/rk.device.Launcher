@@ -1,4 +1,4 @@
-package com.dusun.facerecog.api;
+package rk.device.launcher.api;
 
 /**
  * Created by hb on 16/3/9.
@@ -6,9 +6,9 @@ package com.dusun.facerecog.api;
 public class ApiName {
 
     //验证
-    public static final String VERIFY = "youtu/faceVerifyPath";
+    public static final String VERIFY  = "/youtu/faceVerifyPath";
     //更新
-    public static final String UPDATE = "assets/apk/device.json";
+    public static final String UPDATE  = "/public/rest/face/update";
     //天气
-    public static final String WEATHER = "assets/apk/device.json";
+    public static final String WEATHER = "/public/rest/weather";
 }

@@ -1,10 +1,10 @@
-package com.dusun.facerecog.model;
+package rk.device.launcher.bean;
 
 /**
  * Created by Zola on 2017/7/11.
  */
 
-public class VerifyModel {
+public class VerifyBean {
 
     /**
      * ismatch : false
