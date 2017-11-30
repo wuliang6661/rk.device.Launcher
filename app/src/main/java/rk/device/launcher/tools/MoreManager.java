@@ -10,6 +10,7 @@ import com.inuker.bluetooth.library.model.BleGattCharacter;
 import com.inuker.bluetooth.library.model.BleGattProfile;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,8 +18,12 @@ import rk.device.launcher.api.T;
 import rk.device.launcher.event.BlueToothEvent;
 import rk.device.launcher.global.LauncherApplication;
 
+import static com.inuker.bluetooth.library.Constants.REQUEST_SUCCESS;
+
 /**
- * Created by hb on 16/6/29.
+ * Created by wuliang on 16/6/29.
+ * <p>
+ * 调取蓝牙锁方法封装在这里
  */
 public class MoreManager {
 
@@ -42,6 +47,41 @@ public class MoreManager {
             }
         }
         return mClient;
+    }
+
+
+    /**
+     * 蓝牙建立连接之后，开始读取数据
+     */
+    public static void blueReadClient() {
+        for (int i = 0; i < mProfile.getServices().size(); i++) {
+            if (String.valueOf(mProfile.getServices().get(i).getUUID()).equals(serviceUuid)) {
+                UUID uuid = mProfile.getServices().get(i).getUUID();
+                readContent(uuid, mProfile.getServices().get(i).getCharacters());
+            }
+        }
+    }
+
+
+    private static void readContent(UUID uuid, List<BleGattCharacter> characters) {
+        for (int i = 0; i < characters.size(); i++) {
+            if (String.valueOf(characters.get(i).getUuid()).equals(characterUuid)) {
+                UUID characUuid = characters.get(i).getUuid();
+                read(uuid, characUuid);
+            }
+        }
+    }
+
+
+    private static void read(UUID serviceID, UUID charactersId) {
+        mClient.read(mEvent.mac, serviceID, charactersId, new BleReadResponse() {
+            @Override
+            public void onResponse(int code, byte[] data) {
+                if (code == REQUEST_SUCCESS) {
+                    Log.e("wuliang", Arrays.toString(data));
+                }
+            }
+        });
     }
 
 
@@ -81,17 +121,14 @@ public class MoreManager {
      */
     private void writeBlueByte(byte[] data) {
         for (int i = 0; i < mProfile.getServices().size(); i++) {
-            //            Log.i("BlueDevice", String.valueOf(data.getServices().get(i).getUUID()));
             if (String.valueOf(mProfile.getServices().get(i).getUUID()).equals(serviceUuid)) {
-                //                Log.i("BlueDevice", "send");
                 UUID uuid = mProfile.getServices().get(i).getUUID();
                 writeContent(uuid, mProfile.getServices().get(i).getCharacters(), data);
-
             }
         }
     }
 
-    int cut;
+    private int cut;     //数据分成20每份 ， 这个判断总共有多少份
 
     private void writeContent(UUID uuid, List<BleGattCharacter> characters, byte[] data) {
         for (int i = 0; i < characters.size(); i++) {
@@ -100,7 +137,6 @@ public class MoreManager {
                 List<byte[]> list = cutData(data);
                 cut = list.size();
                 for (int j = 0; j < list.size(); j++) {
-//                    Log.e("wuliang", Arrays.toString(list.get(j)));
                     write(j, uuid, characUuid, list.get(j));
                 }
             }
@@ -108,7 +144,10 @@ public class MoreManager {
     }
 
 
-    public static List<byte[]> cutData(byte[] data) {
+    /**
+     * 切割数据成20等份
+     */
+    private static List<byte[]> cutData(byte[] data) {
         List<byte[]> returnList = new ArrayList<>();
         List<Byte> tempList = new ArrayList<>();
         for (int i = 0; i < data.length; i++) {
@@ -136,38 +175,24 @@ public class MoreManager {
                     @Override
                     public void onResponse(int code) {
                         Log.i("BlueDevice", "code:" + code);
-                        if (code == Constants.REQUEST_SUCCESS) {
-                            if (j == cut) {
+                        if (code == REQUEST_SUCCESS) {
+                            if (j == cut - 1) {
                                 mClient.clearRequest(mEvent.mac, Constants.REQUEST_WRITE);
                                 T.showShort("发送成功");
                             }
                         } else if (code == Constants.REQUEST_OVERFLOW) {
-                            if (j == cut) {
+                            if (j == cut - 1) {
                                 mClient.clearRequest(mEvent.mac, Constants.REQUEST_WRITE);
                             } else {
                                 write(j, uuid, characUuid, content);
                             }
                         }
                     }
-
                 });
         try {
             Thread.sleep(80);
         } catch (InterruptedException e) {
-
+            e.printStackTrace();
         }
-    }
-
-
-    private void readResult(UUID uuid, UUID characUuid) {
-        mClient.read(mEvent.mac, uuid, characUuid, new BleReadResponse() {
-            @Override
-            public void onResponse(int code, byte[] data) {
-                if (code == Constants.REQUEST_SUCCESS) {
-                    Log.e("wuliang", data.toString());
-                    mClient.clearRequest(mEvent.mac, Constants.REQUEST_READ);
-                }
-            }
-        });
     }
 }

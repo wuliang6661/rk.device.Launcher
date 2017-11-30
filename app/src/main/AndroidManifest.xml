@@ -83,7 +83,6 @@
     <uses-permission android:name="android.permission.READ_SEARCH_INDEXABLES" />
     <uses-permission android:name="android.permission.OEM_UNLOCK_STATE" />
 
-
     <uses-permission android:name="android.permission.CAMERA" />
 
     <uses-feature android:name="android.hardware.camera" />
@@ -112,8 +111,9 @@
         <!--时间设置-->
         <activity android:name=".ui.activity.SetTimeActivity" />
         <!--网络设置-->
-        <activity android:name=".ui.activity.SetNetWorkActivity"
-            android:launchMode="singleTop"/>
+        <activity
+            android:name=".ui.activity.SetNetWorkActivity"
+            android:launchMode="singleTop" />
         <!--门禁设置-->
         <activity android:name=".ui.activity.SetDoorGuardActivity" />
         <activity android:name=".ui.activity.SelectItemListActivity" />
