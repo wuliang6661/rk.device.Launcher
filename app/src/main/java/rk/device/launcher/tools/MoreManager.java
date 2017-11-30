@@ -10,12 +10,15 @@ import com.inuker.bluetooth.library.model.BleGattCharacter;
 import com.inuker.bluetooth.library.model.BleGattProfile;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 import rk.device.launcher.api.T;
 import rk.device.launcher.event.BlueToothEvent;
 import rk.device.launcher.global.LauncherApplication;
+
+import static com.inuker.bluetooth.library.Constants.REQUEST_SUCCESS;
 
 /**
  * Created by wuliang on 16/6/29.
@@ -44,6 +47,41 @@ public class MoreManager {
             }
         }
         return mClient;
+    }
+
+
+    /**
+     * 蓝牙建立连接之后，开始读取数据
+     */
+    public static void blueReadClient() {
+        for (int i = 0; i < mProfile.getServices().size(); i++) {
+            if (String.valueOf(mProfile.getServices().get(i).getUUID()).equals(serviceUuid)) {
+                UUID uuid = mProfile.getServices().get(i).getUUID();
+                readContent(uuid, mProfile.getServices().get(i).getCharacters());
+            }
+        }
+    }
+
+
+    private static void readContent(UUID uuid, List<BleGattCharacter> characters) {
+        for (int i = 0; i < characters.size(); i++) {
+            if (String.valueOf(characters.get(i).getUuid()).equals(characterUuid)) {
+                UUID characUuid = characters.get(i).getUuid();
+                read(uuid, characUuid);
+            }
+        }
+    }
+
+
+    private static void read(UUID serviceID, UUID charactersId) {
+        mClient.read(mEvent.mac, serviceID, charactersId, new BleReadResponse() {
+            @Override
+            public void onResponse(int code, byte[] data) {
+                if (code == REQUEST_SUCCESS) {
+                    Log.e("wuliang", Arrays.toString(data));
+                }
+            }
+        });
     }
 
 
@@ -90,7 +128,7 @@ public class MoreManager {
         }
     }
 
-    int cut;
+    private int cut;     //数据分成20每份 ， 这个判断总共有多少份
 
     private void writeContent(UUID uuid, List<BleGattCharacter> characters, byte[] data) {
         for (int i = 0; i < characters.size(); i++) {
@@ -106,7 +144,10 @@ public class MoreManager {
     }
 
 
-    public static List<byte[]> cutData(byte[] data) {
+    /**
+     * 切割数据成20等份
+     */
+    private static List<byte[]> cutData(byte[] data) {
         List<byte[]> returnList = new ArrayList<>();
         List<Byte> tempList = new ArrayList<>();
         for (int i = 0; i < data.length; i++) {
@@ -134,7 +175,7 @@ public class MoreManager {
                     @Override
                     public void onResponse(int code) {
                         Log.i("BlueDevice", "code:" + code);
-                        if (code == Constants.REQUEST_SUCCESS) {
+                        if (code == REQUEST_SUCCESS) {
                             if (j == cut - 1) {
                                 mClient.clearRequest(mEvent.mac, Constants.REQUEST_WRITE);
                                 T.showShort("发送成功");
@@ -151,7 +192,7 @@ public class MoreManager {
         try {
             Thread.sleep(80);
         } catch (InterruptedException e) {
-
+            e.printStackTrace();
         }
     }
 }

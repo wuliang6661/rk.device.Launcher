@@ -7,7 +7,9 @@ import rk.device.launcher.base.utils.STUtils;
 import rk.device.launcher.utils.Utils;
 
 /**
- * Created by mundane on 2017/11/11 下午3:49
+ * Created by wuliang on 2017/11/11 下午3:49
+ *
+ * 程序全局监听
  */
 
 public class LauncherApplication extends Application {
@@ -28,4 +30,6 @@ public class LauncherApplication extends Application {
 	public static Context getContext() {
 		return sContext;
 	}
+
+
 }

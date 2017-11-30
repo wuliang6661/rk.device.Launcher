@@ -1,17 +1,27 @@
 package rk.device.launcher.base;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.inuker.bluetooth.library.BluetoothClient;
+import com.inuker.bluetooth.library.Constants;
+import com.inuker.bluetooth.library.receiver.listener.BluetoothBondListener;
 
 import butterknife.ButterKnife;
 import rk.device.launcher.R;
 import rk.device.launcher.base.utils.rxbus.RxBus;
 import rk.device.launcher.bean.NetDismissBean;
+import rk.device.launcher.service.BlueToothsBroadcastReceiver;
+import rk.device.launcher.tools.MoreManager;
 import rk.device.launcher.ui.activity.SetNetWorkActivity;
 import rk.device.launcher.ui.fragment.BaseDialogFragment;
 import rk.device.launcher.utils.AppManager;
@@ -63,6 +73,7 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         AppManager.getAppManager().addActivity(this);
         setNetListener();
+        makeFilters();
         initView();
         initData();
     }
@@ -73,6 +84,7 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
         super.onDestroy();
         AppManager.getAppManager().removeActivity(this);
         ButterKnife.unbind(this);
+        unregisterReceiver(mReceiver);
         if (this.mCompositeSubscription != null) {
             this.mCompositeSubscription.unsubscribe();
         }
@@ -202,6 +214,32 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
         hintDialog.show(getSupportFragmentManager(), "");
         return hintDialog;
     }
+
+    /**
+     * 全局监听蓝牙连接状态
+     */
+    private void registerBlueListener() {
+
+
+
+    }
+
+    private BlueToothsBroadcastReceiver mReceiver;
+
+    //蓝牙监听需要添加的Action
+    private IntentFilter makeFilters() {
+        mReceiver = new BlueToothsBroadcastReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("android.bluetooth.a2dp.profile.action.CONNECTION_STATE_CHANGED");
+        intentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
+        intentFilter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
+        intentFilter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
+        intentFilter.addAction("android.bluetooth.BluetoothAdapter.STATE_OFF");
+        intentFilter.addAction("android.bluetooth.BluetoothAdapter.STATE_ON");
+        registerReceiver(mReceiver, intentFilter);
+        return intentFilter;
+    }
+
 
     /**
      * 隐藏虚拟按键
