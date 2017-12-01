@@ -16,8 +16,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.FileProvider;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -142,10 +144,12 @@ public class UpdateManager {
         mWeakReference = new WeakReference<FragmentManager>(fragmentManager);
         curVersionCode = PackageUtils.getCurrentVersionCode();
         if (isShowMsg) {
-            if (mProDialog == null)
+            if (mProDialog == null) {
                 mProDialog = ProgressDialog.show(mContext, null, "正在检测，请稍后...",
                         true, true);
-            else if (mProDialog.isShowing()
+                Window window = mProDialog.getWindow();
+                window.setGravity(Gravity.CENTER);
+            } else if (mProDialog.isShowing()
                     || (latestOrFailDialog != null && latestOrFailDialog
                     .isShowing()))
                 return;
@@ -205,7 +209,9 @@ public class UpdateManager {
         }
         builder.setPositiveButton(mContext.getString(R.string.confirm), null);
         latestOrFailDialog = builder.create();
+        Window window = latestOrFailDialog.getWindow();
         latestOrFailDialog.show();
+        window.setGravity(Gravity.CENTER);
     }
 
     /**
@@ -262,7 +268,9 @@ public class UpdateManager {
             });
         }
         noticeDialog = builder.create();
+        Window window = noticeDialog.getWindow();
         noticeDialog.show();
+        window.setGravity(Gravity.CENTER);
     }
 
     /**
@@ -294,8 +302,10 @@ public class UpdateManager {
             }
         });
         downloadDialog = builder.create();
+        Window window = downloadDialog.getWindow();
         downloadDialog.setCanceledOnTouchOutside(false);
         downloadDialog.show();
+        window.setGravity(Gravity.CENTER);
         downloadDialog.setCancelable(false);
 
         downloadApk();

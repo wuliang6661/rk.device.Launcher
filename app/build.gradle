@@ -63,4 +63,5 @@ dependencies {
     compile 'com.alibaba:fastjson:1.2.5'
     //蓝牙
     compile 'com.inuker.bluetooth:library:1.4.0'
+    compile 'com.aliyun.dpa:oss-android-sdk:2.4.5'
 }

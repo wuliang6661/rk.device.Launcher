@@ -10,36 +10,42 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import rk.device.launcher.R;
 import rk.device.launcher.base.BaseActivity;
+import rk.device.launcher.base.BaseCompatActivity;
 
-public class RecoveryActivity extends BaseActivity {
+public class RecoveryActivity extends BaseCompatActivity {
 
-	@Bind(R.id.iv)
-	ImageView mIv;
-	@Bind(R.id.tv)
-	TextView mTv;
-	private Handler mHandler;
+    @Bind(R.id.iv)
+    ImageView mIv;
+    @Bind(R.id.tv)
+    TextView mTv;
+    private Handler mHandler;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_recovery);
-		ButterKnife.bind(this);
-		hideNavigationBar();
-		((AnimationDrawable) mIv.getBackground()).start();
-		mHandler = new Handler();
-		mHandler.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				((AnimationDrawable) mIv.getBackground()).stop();
-				mIv.setBackgroundResource(R.drawable.icon_recovery_success);
+    @Override
+    protected int getLayout() {
+        return R.layout.activity_recovery;
+    }
+
+    @Override
+    protected void initView() {
+        ((AnimationDrawable) mIv.getBackground()).start();
+        mHandler = new Handler();
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ((AnimationDrawable) mIv.getBackground()).stop();
+                mIv.setBackgroundResource(R.drawable.icon_recovery_success);
                 mTv.setText("恢复成功, 正在重启");
-			}
-		}, 3000);
+            }
+        }, 3000);
+    }
 
-	}
+    @Override
+    protected void initData() {
 
-	@Override
-	public void onBackPressed() {
+    }
+
+    @Override
+    public void onBackPressed() {
 //		super.onBackPressed();
-	}
+    }
 }

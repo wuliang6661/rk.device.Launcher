@@ -11,7 +11,7 @@ import rk.device.launcher.utils.ByteUtil;
  * 进行手机与蓝牙锁之间的信息体转化
  */
 
-public class BlueToothUtils {
+class BlueToothUtils {
 
 
     /**
@@ -39,7 +39,6 @@ public class BlueToothUtils {
         sun = ByteUtil.byteMerger(start, new byte[]{crc});
         sun = ByteUtil.byteMerger(sun, openData);
         sun = ByteUtil.byteMerger(sun, end);
-
         return transBytes(sun);
     }
 

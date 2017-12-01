@@ -3,7 +3,6 @@ package rk.device.launcher.widget;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -21,16 +20,15 @@ import rk.device.launcher.base.utils.WindowManagerUtils;
  */
 public class DetectedFaceView extends AppCompatImageView {
 
-    private float PREVIEW_WIDTH = 320;
-    private float PREVIEW_HEIGHT = 240;
-    private Context mContext;
-    private Paint mLinePaint;
-    private Rect[] mFaces;
-    private Matrix mMatrix = new Matrix();
-    private RectF mRect = new RectF();
+    private float    PREVIEW_WIDTH  = 320;
+    private float    PREVIEW_HEIGHT = 240;
+    private Context  mContext;
+    private Paint    mLinePaint;
+    private Rect[]   mFaces;
+    private RectF    mRect          = new RectF();
     private Drawable mFaceIndicator = null;
-    private float heightScale = 0;
-    private float widthScale = 0;
+    private float    heightScale    = 0;
+    private float    widthScale     = 0;
 
     public DetectedFaceView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -50,6 +48,10 @@ public class DetectedFaceView extends AppCompatImageView {
         invalidate();
     }
 
+    public void setSize(int width,int height){
+
+    }
+
     public void clearFaces() {
         mFaces = null;
         invalidate();
@@ -61,23 +63,21 @@ public class DetectedFaceView extends AppCompatImageView {
         if (mFaces == null || mFaces.length < 1) {
             return;
         }
-//        boolean isMirror = true;
-//        Util.prepareMatrix(mMatrix, isMirror, 90, getWidth(), 2480);
-//        mMatrix.postRotate(0);
         canvas.rotate(-0);
         for (int i = 0; i < mFaces.length; i++) {
             mRect.set(mFaces[i]);
             canvas.save();
             Log.i("faceView:", "mRect.left:" + mRect.left + ";mRect.top" + mRect.top
                     + ";mRect.right" + mRect.right + ";mRect.bottom" + mRect.bottom);
-//            mMatrix.mapRect(mRect);
             float width = (mRect.right - mRect.left) * widthScale;
-            float left = WindowManagerUtils.getWindowWidth(mContext) - (mRect.right * widthScale);
+            //            float left = WindowManagerUtils.getWindowWidth(mContext) - (mRect.right * widthScale);
+            //            float right = left + width;
+
+            float left = mRect.left * widthScale;
             float right = left + width;
             mFaceIndicator.setBounds(Math.round(left), Math.round(mRect.top * heightScale),
                     Math.round(right), Math.round(mRect.bottom * heightScale));
             mFaceIndicator.draw(canvas);
-            //			canvas.drawRect(mRect, mLinePaint);
         }
         canvas.restore();
         super.onDraw(canvas);

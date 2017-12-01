@@ -13,6 +13,7 @@ import com.inuker.bluetooth.library.connect.response.BleConnectResponse;
 import com.inuker.bluetooth.library.model.BleGattProfile;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import butterknife.Bind;
 import rk.device.launcher.R;
@@ -25,6 +26,8 @@ import rk.device.launcher.event.TimeEvent;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.tools.MoreManager;
 import rk.device.launcher.utils.SPUtils;
+import rk.device.launcher.utils.StringUtils;
+import rk.device.launcher.utils.TimeUtils;
 import rx.Subscriber;
 
 import static rk.device.launcher.utils.SPUtils.get;
@@ -61,6 +64,9 @@ public class SetBasicInfoActivity extends BaseCompatActivity implements View.OnC
         goBack();
     }
 
+    /**
+     * 注册数据回调监听
+     */
     private void registerRxBus() {
         addSubscription(RxBus.getDefault().toObserverable(TimeEvent.class)
                 .subscribe(new Subscriber<TimeEvent>() {
@@ -118,6 +124,15 @@ public class SetBasicInfoActivity extends BaseCompatActivity implements View.OnC
     protected void initData() {
         setTitle(getString(R.string.basic_settting));
         isVoice = (boolean) get(Constant.DEVICE_MP3, false);
+        deviceNameEt.setText((String) get(Constant.DEVICE_NAME, ""));
+        String mac = (String) get(Constant.BLUE_TOOTH, "");
+        String name = (String) get(Constant.BLUE_NAME, "");
+        blueToothNameTv.setText((String) get(Constant.BLUE_NAME, ""));
+        timeTv.setText(TimeUtils.getTime());
+        when_time = new Date().getTime();
+        if (!StringUtils.isEmpty(mac)) {
+            blueEvent = new BlueToothEvent(mac, name);
+        }
         if (isVoice) {
             voiceCheckBox.setChecked(true);
         } else {
@@ -146,14 +161,14 @@ public class SetBasicInfoActivity extends BaseCompatActivity implements View.OnC
                     T.showShort(getString(R.string.name_setting_illeagel));
                     return;
                 }
-                if (when_time == 0) {
-                    T.showShort(getString(R.string.time_setting_illeagel));
-                    return;
-                }
+//                if (when_time == 0) {
+//                    T.showShort(getString(R.string.time_setting_illeagel));
+//                    return;
+//                }
                 //设置系统时间
-                if (when_time / 1000 < Integer.MAX_VALUE) {
-                    //                    SystemClock.setCurrentTimeMillis(when_time);
-                }
+//                if (when_time / 1000 < Integer.MAX_VALUE) {
+//                    //                    SystemClock.setCurrentTimeMillis(when_time);
+//                }
                 if (blueEvent == null) {
                     T.showShort(getString(R.string.blue_tooth_setting_illeagel));
                     return;
@@ -177,6 +192,7 @@ public class SetBasicInfoActivity extends BaseCompatActivity implements View.OnC
                 MoreManager.setProfile(data);
                 SetBasicInfoActivity.this.data = data;
                 dissmissMessageDialog();
+                MoreManager.blueReadClient();
                 if (code == Constants.REQUEST_SUCCESS) {
                     //下面把相关的参数保存起来
                     //设备名称
@@ -185,11 +201,13 @@ public class SetBasicInfoActivity extends BaseCompatActivity implements View.OnC
                     SPUtils.put(Constant.DEVICE_MP3, isVoice);
                     //蓝牙
                     SPUtils.put(Constant.BLUE_TOOTH, blueEvent.mac);
+                    SPUtils.put(Constant.BLUE_NAME, blueEvent.name);
                     //判断是否是第一次
-                    boolean isFirst = (boolean) SPUtils.get(Constant.IS_FIRST_SETTING, false);
+                    boolean isFirst = (boolean) SPUtils.get(Constant.IS_FIRST_SETTING, true);
                     MoreManager.openLock((int) (when_time / 1000));
 //                    syncBlueTime();
                     if (isFirst) {
+                        SPUtils.put(Constant.SETTING_NUM, Constant.SETTING_TYPE2);
                         gotoActivity(SetNetWorkActivity.class, true);
                     } else {
                         finish();

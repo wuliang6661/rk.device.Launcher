@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="rk.device.launcher">
+    package="rk.device.launcher"
+    android:sharedUserId="android.uid.shared">
     <!--android:sharedUserId="android.uid.system"-->
 
     <!--联网-->
@@ -83,7 +84,6 @@
     <uses-permission android:name="android.permission.READ_SEARCH_INDEXABLES" />
     <uses-permission android:name="android.permission.OEM_UNLOCK_STATE" />
 
-
     <uses-permission android:name="android.permission.CAMERA" />
 
     <uses-feature android:name="android.hardware.camera" />
@@ -99,7 +99,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".ui.activity.MainActivity"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -107,27 +108,46 @@
             </intent-filter>
         </activity>
         <!--设置页面-->
-        <activity android:name=".ui.activity.SettingActivity" />
+        <activity
+            android:name=".ui.activity.SettingActivity"
+            android:screenOrientation="portrait" />
         <!--时间设置-->
-        <activity android:name=".ui.activity.SetTimeActivity" />
+        <activity
+            android:name=".ui.activity.SetTimeActivity"
+            android:screenOrientation="portrait" />
         <!--网络设置-->
-        <activity android:name=".ui.activity.SetNetWorkActivity"
-            android:launchMode="singleTop"/>
+        <activity
+            android:name=".ui.activity.SetNetWorkActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
         <!--门禁设置-->
-        <activity android:name=".ui.activity.SetDoorGuardActivity" />
-        <activity android:name=".ui.activity.SelectItemListActivity" />
+        <activity
+            android:name=".ui.activity.SetDoorGuardActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.SelectItemListActivity"
+            android:screenOrientation="portrait" />
         <!--系统设置-->
         <activity
             android:name=".ui.activity.SetSysActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <!--关于设备页面-->
-        <activity android:name=".ui.activity.SystemInfoActivity" />
+        <activity
+            android:name=".ui.activity.SystemInfoActivity"
+            android:screenOrientation="portrait" />
         <!--恢复出厂设置-->
-        <activity android:name=".ui.activity.RecoveryActivity" />
+        <activity
+            android:name=".ui.activity.RecoveryActivity"
+            android:screenOrientation="portrait" />
         <!--基础设置-->
-        <activity android:name=".ui.activity.SetBasicInfoActivity" />
+        <activity
+            android:name=".ui.activity.SetBasicInfoActivity"
+            android:screenOrientation="portrait" />
         <!--蓝牙-->
-        <activity android:name=".ui.activity.BlueToothActivity" />
+        <activity
+            android:name=".ui.activity.BlueToothActivity"
+            android:screenOrientation="portrait" />
 
 
         //网络监听
