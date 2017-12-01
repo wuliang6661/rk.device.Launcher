@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.inuker.bluetooth.library.BluetoothClient;
 import com.inuker.bluetooth.library.Constants;
+import com.inuker.bluetooth.library.connect.response.BleNotifyResponse;
 import com.inuker.bluetooth.library.connect.response.BleReadResponse;
 import com.inuker.bluetooth.library.connect.response.BleWriteResponse;
 import com.inuker.bluetooth.library.model.BleGattCharacter;
@@ -47,41 +48,6 @@ public class MoreManager {
             }
         }
         return mClient;
-    }
-
-
-    /**
-     * 蓝牙建立连接之后，开始读取数据
-     */
-    public static void blueReadClient() {
-        for (int i = 0; i < mProfile.getServices().size(); i++) {
-            if (String.valueOf(mProfile.getServices().get(i).getUUID()).equals(serviceUuid)) {
-                UUID uuid = mProfile.getServices().get(i).getUUID();
-                readContent(uuid, mProfile.getServices().get(i).getCharacters());
-            }
-        }
-    }
-
-
-    private static void readContent(UUID uuid, List<BleGattCharacter> characters) {
-        for (int i = 0; i < characters.size(); i++) {
-            if (String.valueOf(characters.get(i).getUuid()).equals(characterUuid)) {
-                UUID characUuid = characters.get(i).getUuid();
-                read(uuid, characUuid);
-            }
-        }
-    }
-
-
-    private static void read(UUID serviceID, UUID charactersId) {
-        mClient.read(mEvent.mac, serviceID, charactersId, new BleReadResponse() {
-            @Override
-            public void onResponse(int code, byte[] data) {
-                if (code == REQUEST_SUCCESS) {
-                    Log.e("wuliang", Arrays.toString(data));
-                }
-            }
-        });
     }
 
 
@@ -194,5 +160,43 @@ public class MoreManager {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+
+    /**
+     * 蓝牙建立连接之后，开始监听上报数据
+     */
+    public static void blueReadClient() {
+        for (int i = 0; i < mProfile.getServices().size(); i++) {
+            if (String.valueOf(mProfile.getServices().get(i).getUUID()).equals(serviceUuid)) {
+                UUID uuid = mProfile.getServices().get(i).getUUID();
+                readContent(uuid, mProfile.getServices().get(i).getCharacters());
+            }
+        }
+    }
+
+
+    private static void readContent(UUID uuid, List<BleGattCharacter> characters) {
+        for (int i = 0; i < characters.size(); i++) {
+            if (String.valueOf(characters.get(i).getUuid()).equals(characterUuid)) {
+                UUID characUuid = characters.get(i).getUuid();
+                read(uuid, characUuid);
+            }
+        }
+    }
+
+
+    private static void read(UUID serviceID, UUID charactersId) {
+        mClient.notify(mEvent.mac, serviceID, charactersId, new BleNotifyResponse() {
+            @Override
+            public void onResponse(int code) {
+                Log.e("wuliang", "code == " + code);
+            }
+
+            @Override
+            public void onNotify(UUID service, UUID character, byte[] value) {
+                Log.e("wuliang", Arrays.toString(value));
+            }
+        });
     }
 }

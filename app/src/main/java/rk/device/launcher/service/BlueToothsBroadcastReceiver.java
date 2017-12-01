@@ -7,8 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
-import rk.device.launcher.tools.MoreManager;
-
 /**
  * Created by wuliang on 2017/11/30.
  * <p>

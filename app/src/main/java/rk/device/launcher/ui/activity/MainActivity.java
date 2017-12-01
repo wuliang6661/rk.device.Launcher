@@ -69,61 +69,61 @@ import rx.Subscriber;
 public class MainActivity extends BaseCompatActivity implements View.OnClickListener {
 
     @Bind(R.id.battry_num)
-    TextView                  battryNum;
+    TextView battryNum;
     @Bind(R.id.battry_view)
-    BatteryView               battryView;
+    BatteryView battryView;
     @Bind(R.id.battry_plug)
-    ImageView                 battryPlug;
+    ImageView battryPlug;
     @Bind(R.id.tv_time)
-    TextView                  mTvTime;
+    TextView mTvTime;
     @Bind(R.id.tv_week)
-    TextView                  mTvWeek;
+    TextView mTvWeek;
     @Bind(R.id.tv_date)
-    TextView                  mTvDate;
+    TextView mTvDate;
     @Bind(R.id.iv_signal)
-    ImageView                 mIvSignal;
+    ImageView mIvSignal;
     @Bind(R.id.iv_setting)
-    ImageView                 settingTv;
+    ImageView settingTv;
     @Bind(R.id.iv_arrow)
-    ImageView                 mIvArrow;
+    ImageView mIvArrow;
     @Bind(R.id.camera_surfaceview)
-    SurfaceView               surfaceview;
+    SurfaceView surfaceview;
     @Bind(R.id.tv_tem)
-    TextView                  temTv;                                                           //温度
+    TextView temTv;                                                           //温度
     @Bind(R.id.tv_weather)
-    TextView                  weatherTv;                                                       //天气
-    private Camera            camera;
-    private SurfaceHolder     surfaceholder;
-    Camera.Parameters         parameters;
+    TextView weatherTv;                                                       //天气
+    private Camera camera;
+    private SurfaceHolder surfaceholder;
+    Camera.Parameters parameters;
     @Bind(R.id.face_view)
-    DetectedFaceView          faceView;
+    DetectedFaceView faceView;
     @Bind(R.id.et_width)
-    EditText                  widthEt;
+    EditText widthEt;
     @Bind(R.id.et_height)
-    EditText                  heightEt;
+    EditText heightEt;
 
-    private CvcHandler        mHandler             = null;
-    private HandlerThread     thread               = null;
+    private CvcHandler mHandler = null;
+    private HandlerThread thread = null;
 
-    private static final int  REFRESH_DELAY        = 1000;
+    private static final int REFRESH_DELAY = 1000;
 
-    private StaticHandler     mStaticHandler       = new StaticHandler();
-    private DeviceUuidFactory uuidFactory          = null;
-    private String            uUid;
+    private StaticHandler mStaticHandler = new StaticHandler();
+    private DeviceUuidFactory uuidFactory = null;
+    private String uUid;
     // todo 内存泄漏这里需要处理
-    private final Runnable    mRefreshTimeRunnable = new Runnable() {
+    private final Runnable mRefreshTimeRunnable = new Runnable() {
 
-                                                       @Override
-                                                       public void run() {
-                                                           mTvTime.setText(DateUtil.getTime());
-                                                           mTvDate.setText(DateUtil.getDate());
-                                                           mTvWeek.setText(DateUtil.getWeek());
-                                                           mStaticHandler.postDelayed(this,
-                                                                   REFRESH_DELAY);
-                                                       }
-                                                   };
-    private WifiHelper        mWifiHelper;
-    private GpsUtils          gpsUtils             = null;
+        @Override
+        public void run() {
+            mTvTime.setText(DateUtil.getTime());
+            mTvDate.setText(DateUtil.getDate());
+            mTvWeek.setText(DateUtil.getWeek());
+            mStaticHandler.postDelayed(this,
+                    REFRESH_DELAY);
+        }
+    };
+    private WifiHelper mWifiHelper;
+    private GpsUtils gpsUtils = null;
 
     @Override
     protected int getLayout() {
@@ -147,13 +147,13 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         surfaceholder.addCallback(new SurfaceHolderCallbackFont());
     }
 
-    private CvcRect cvcRect         = new CvcRect();
-    private Rect[]  rect            = new Rect[1];
-    private int[]   rectWidth       = new int[1];
-    private int[]   rectHeight      = new int[1];
-    private int[]   possibilityCode = new int[1];
-    private int[]   length          = new int[1];
-    private byte[]  faces           = new byte[10000];
+    private CvcRect cvcRect = new CvcRect();
+    private Rect[] rect = new Rect[1];
+    private int[] rectWidth = new int[1];
+    private int[] rectHeight = new int[1];
+    private int[] possibilityCode = new int[1];
+    private int[] length = new int[1];
+    private byte[] faces = new byte[10000];
 
     class SurfaceHolderCallbackFont implements SurfaceHolder.Callback {
         @Override
@@ -190,7 +190,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
                                 int resultCode = CvcHelper.CVC_determineLivingFace(possibilityCode,
                                         faces, length);
                                 Log.i("CVC_detectFace", "success:" + cvcRect.x + ":" + cvcRect.y
-                                        + ";width:" + rectWidth[0] + ",height:" + rectHeight[0]+";length"+length[0]);
+                                        + ";width:" + rectWidth[0] + ",height:" + rectHeight[0] + ";length" + length[0]);
                                 if (resultCode < 20) {//活体
                                     byte[] result = new byte[length[0]];
                                     synchronized (faces) {
@@ -295,10 +295,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 
     private void showDialogFragment(String title,
                                     InputWifiPasswordDialogFragment.OnConfirmClickListener listener) {
-        // FIXME: 2017/11/25 不要复用这个dialogFragment
-        if (dialogFragment == null) {
-            dialogFragment = InputWifiPasswordDialogFragment.newInstance();
-        }
+        dialogFragment = InputWifiPasswordDialogFragment.newInstance();
         dialogFragment.setTitle(title);
         dialogFragment.setOnCancelClickListener(
                 new InputWifiPasswordDialogFragment.onCancelClickListener() {
@@ -411,7 +408,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 
     /**
      * wifi变化设置不同的wifi图标
-     * 
+     *
      * @param scanResult
      */
     private void changeSignalState(ScanResult scanResult) {
@@ -434,7 +431,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
      * 获取地理位置
      */
     private void initLocation() {
-        if(gpsUtils == null){
+        if (gpsUtils == null) {
             gpsUtils = new GpsUtils(this);
         }
         gpsUtils.initLocation(new GpsCallback() {
@@ -449,7 +446,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 
     /**
      * 天气Api
-     * 
+     *
      * @param area
      */
     private void httpGetWeather(String area) {
@@ -491,6 +488,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         super.onStart();
         mStaticHandler.post(mRefreshTimeRunnable);
     }
+
 
     @Override
     public void onClick(View v) {
@@ -543,18 +541,18 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
                 if (TextUtils.equals(password, content)) { //密码输入正确
                     int type = SPUtils.getInt(Constant.SETTING_NUM, Constant.SETTING_TYPE1);
                     switch (type) {
-                        //                        case Constant.SETTING_TYPE1:         //进入基础设置
-                        //                            gotoActivity(SetBasicInfoActivity.class, false);   //缓存一个2
-                        //                            break;
-                        //                        case Constant.SETTING_TYPE2:         //网络设置
-                        //                            gotoActivity(SetNetWorkActivity.class, false);    //缓存个4
-                        //                            break;
-                        //                        case Constant.SETTING_TYPE3:       //门禁设置
-                        //                            gotoActivity(SetDoorGuardActivity.class, false);    //缓存个5
-                        //                            break;
-                        //                        case Constant.SETTING_TYPE4:     //系统设置
-                        //                            gotoActivity(SetSysActivity.class, false);
-                        //                            break;
+                        case Constant.SETTING_TYPE1:         //进入基础设置
+                            gotoActivity(SetBasicInfoActivity.class, false);   //缓存一个2
+                            break;
+                        case Constant.SETTING_TYPE2:         //网络设置
+                            gotoActivity(SetNetWorkActivity.class, false);    //缓存个4
+                            break;
+                        case Constant.SETTING_TYPE3:       //门禁设置
+                            gotoActivity(SetDoorGuardActivity.class, false);    //缓存个5
+                            break;
+                        case Constant.SETTING_TYPE4:     //系统设置
+                            gotoActivity(SetSysActivity.class, false);
+                            break;
                         default:
                             gotoActivity(SettingActivity.class, false);
                             break;
@@ -627,6 +625,8 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         if (null != camera) {
             closeCamera(camera);
         }
+        unregisterReceiver(mBatteryReceiver);
+        unregisterReceiver(mNetChangeBroadcastReceiver);
         mStaticHandler.removeCallbacksAndMessages(null);
         CvcHelper.CVC_deinit();
     }

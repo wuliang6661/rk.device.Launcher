@@ -203,10 +203,11 @@ public class SetBasicInfoActivity extends BaseCompatActivity implements View.OnC
                     SPUtils.put(Constant.BLUE_TOOTH, blueEvent.mac);
                     SPUtils.put(Constant.BLUE_NAME, blueEvent.name);
                     //判断是否是第一次
-                    boolean isFirst = (boolean) SPUtils.get(Constant.IS_FIRST_SETTING, false);
+                    boolean isFirst = (boolean) SPUtils.get(Constant.IS_FIRST_SETTING, true);
                     MoreManager.openLock((int) (when_time / 1000));
 //                    syncBlueTime();
                     if (isFirst) {
+                        SPUtils.put(Constant.SETTING_NUM, Constant.SETTING_TYPE2);
                         gotoActivity(SetNetWorkActivity.class, true);
                     } else {
                         finish();

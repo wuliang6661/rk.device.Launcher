@@ -5,6 +5,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,6 +95,7 @@ public class BaseDialogFragment extends DialogFragment {
         Window window = getDialog().getWindow();
         WindowManager.LayoutParams params = window.getAttributes();
         params.width = ScreenUtil.getScreenWidth(getContext()) - 300;
+        params.gravity = Gravity.CENTER;
         window.setAttributes(params);
     }
 

@@ -97,7 +97,7 @@ public class DeviceUtils {
     @SuppressLint("HardwareIds")
     private static String getMacAddressByWifiInfo() {
         try {
-            WifiManager wifi = (WifiManager) Utils.getContext().getSystemService(Context.WIFI_SERVICE);
+            WifiManager wifi = (WifiManager) Utils.getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
             if (wifi != null) {
                 WifiInfo info = wifi.getConnectionInfo();
                 if (info != null) return info.getMacAddress();
@@ -197,7 +197,6 @@ public class DeviceUtils {
     /**
      * 重启
      * <p>需要root权限或者系统权限 {@code <android:sharedUserId="android.uid.system"/>}</p>
-     *
      */
     public static void reboot() {
         ShellUtils.execCmd("reboot", true);
@@ -212,7 +211,7 @@ public class DeviceUtils {
      * 重启
      * <p>需系统权限 {@code <android:sharedUserId="android.uid.system"/>}</p>
      *
-     * @param reason  传递给内核来请求特殊的引导模式，如"recovery"
+     * @param reason 传递给内核来请求特殊的引导模式，如"recovery"
      */
     public static void reboot(String reason) {
         PowerManager mPowerManager = (PowerManager) Utils.getContext().getSystemService(Context.POWER_SERVICE);
