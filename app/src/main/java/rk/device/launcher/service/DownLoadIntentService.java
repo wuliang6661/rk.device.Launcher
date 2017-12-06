@@ -52,6 +52,7 @@ public class DownLoadIntentService extends IntentService {
 					installApk();
 					break;
 				case DOWNLOAD_ROM_OVER:
+					// TODO: 2017/12/6
 					break;
 			}
 		}
@@ -109,7 +110,7 @@ public class DownLoadIntentService extends IntentService {
 				@Override
 				public void onResponse(Call call, Response response) throws IOException {
 					if (!response.isSuccessful()) {
-						Log.d(TAG, "response is not success");
+						Log.e(TAG, "response is not success");
 						return;
 					}
 					InputStream is = null;
@@ -132,7 +133,7 @@ public class DownLoadIntentService extends IntentService {
 						mHandler.sendEmptyMessage(DOWNLOAD_APK_OVER);
 					} catch (Exception e) {
 						e.printStackTrace();
-						Log.d(TAG, "下载失败");
+						Log.e(TAG, "下载失败");
 					} finally {
 						CloseUtils.closeIOQuietly(is);
 						CloseUtils.closeIOQuietly(fos);
@@ -206,7 +207,7 @@ public class DownLoadIntentService extends IntentService {
 			@Override
 			public void onResponse(Call call, Response response) throws IOException {
 				if (!response.isSuccessful()) {
-					Log.d(TAG, "response is not success");
+					Log.e(TAG, "response is not success");
 					return;
 				}
 				InputStream is = null;
@@ -229,7 +230,7 @@ public class DownLoadIntentService extends IntentService {
 					mHandler.sendEmptyMessage(DOWNLOAD_ROM_OVER);
 				} catch (Exception e) {
 					e.printStackTrace();
-					Log.d(TAG, "下载失败");
+					Log.e(TAG, "下载失败");
 				} finally {
 					CloseUtils.closeIOQuietly(is);
 					CloseUtils.closeIOQuietly(fos);

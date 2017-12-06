@@ -12,6 +12,7 @@ import com.igexin.sdk.message.GTTransmitMessage;
 
 import rk.device.launcher.bean.PushMessageModel;
 import rk.device.launcher.global.Constant;
+import rk.device.launcher.utils.SPUtils;
 
 
 public class RKLauncherPushIntentService extends GTIntentService {
@@ -51,6 +52,10 @@ public class RKLauncherPushIntentService extends GTIntentService {
 					}
 					break;
 				case "notice": // 通知消息
+					if (TextUtils.equals("text", data.type)) {
+						SPUtils.putString(Constant.KEY_FIRSTPAGE_CONTENT, data.content);
+						
+					}
 					break;
 				case "ad": // 广告通知
 					break;
