@@ -1,6 +1,9 @@
 package rk.device.launcher.tools;
 
+import android.util.Log;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import rk.device.launcher.utils.ByteUtil;
@@ -60,6 +63,19 @@ class BlueToothUtils {
         return transBytes(sun);
     }
 
+    /**
+     * 获取Ping包
+     */
+    static byte[] getLockNet() {
+        byte[] start = new byte[]{0x01, (byte) 0xAA, 0x06, 0x03, 0x00, 0x00};
+        byte crc = CrcTobyte((byte) 0xAA, (byte) 0x06, (byte) 0x03, new byte[]{0x00, 0x00}, null);
+        byte[] end = new byte[]{0x03};
+        byte[] sun;   //数据集合合并之后的总值
+        sun = ByteUtil.byteMerger(start, new byte[]{crc});
+        sun = ByteUtil.byteMerger(sun, end);
+        return transBytes(sun);
+    }
+
 
     /**
      * CRC校验
@@ -73,6 +89,9 @@ class BlueToothUtils {
         u8CRC_sum_Value ^= len[1] & 0xff;
         u8CRC_sum_Value ^= len[0] & 0xff;
 
+        if (data == null) {
+            return u8CRC_sum_Value;
+        }
         for (n = 0; n < data.length; n++) {
             u8CRC_sum_Value ^= data[n];
         }
@@ -109,6 +128,7 @@ class BlueToothUtils {
         for (int i = 0; i < list.size(); i++) {
             suns[i] = list.get(i);
         }
+        Log.i("wuliang", Arrays.toString(suns));
         return suns;
     }
 

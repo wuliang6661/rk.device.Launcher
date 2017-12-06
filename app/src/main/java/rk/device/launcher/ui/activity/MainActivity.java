@@ -25,6 +25,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.sdk.android.oss.ClientException;
 import com.alibaba.sdk.android.oss.ServiceException;
@@ -68,6 +69,8 @@ import rx.Subscriber;
 
 public class MainActivity extends BaseCompatActivity implements View.OnClickListener {
 
+    private static final String TAG = "MainActivity";
+
     @Bind(R.id.battry_num)
     TextView battryNum;
     @Bind(R.id.battry_view)
@@ -103,7 +106,6 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     EditText heightEt;
 
     private CvcHandler mHandler = null;
-    private HandlerThread thread = null;
 
     private static final int REFRESH_DELAY = 1000;
 
@@ -149,67 +151,27 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 
     private CvcRect cvcRect = new CvcRect();
     private Rect[] rect = new Rect[1];
-    private int[] rectWidth = new int[1];
-    private int[] rectHeight = new int[1];
-    private int[] possibilityCode = new int[1];
-    private int[] length = new int[1];
-    private byte[] faces = new byte[10000];
+
 
     class SurfaceHolderCallbackFont implements SurfaceHolder.Callback {
         @Override
         public void surfaceCreated(SurfaceHolder holder) {
-            // 获取camera对象
-            int cameraCount = Camera.getNumberOfCameras();
-            if (cameraCount == 2) {
-                camera = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT);
-            }
-            if (null != camera) {
-                try {
-                    // 设置预览监听
+            try {
+                if (camera != null) {
                     camera.setPreviewDisplay(holder);
-                    // 启动摄像头预览
-                    camera.startPreview();
-                    camera.setPreviewCallback(new Camera.PreviewCallback() {
-                        @Override
-                        public void onPreviewFrame(byte[] data, Camera camera) {
-                            int statusCode = CvcHelper.CVC_detectFace(
-                                    Camera.CameraInfo.CAMERA_FACING_FRONT, cvcRect, rectWidth,
-                                    rectHeight);
-                            if (statusCode == 0) {
-                                Rect oneRect = new Rect();
-                                oneRect.set(cvcRect.x, cvcRect.y, cvcRect.x + cvcRect.w,
-                                        cvcRect.y + cvcRect.h);
-                                rect[0] = oneRect;
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        //T.showShort("检测到人脸");
-                                        faceView.setFaces(rect);
-                                    }
-                                });
-                                int resultCode = CvcHelper.CVC_determineLivingFace(possibilityCode,
-                                        faces, length);
-                                Log.i("CVC_detectFace", "success:" + cvcRect.x + ":" + cvcRect.y
-                                        + ";width:" + rectWidth[0] + ",height:" + rectHeight[0] + ";length" + length[0]);
-                                if (resultCode < 20) {//活体
-                                    byte[] result = new byte[length[0]];
-                                    synchronized (faces) {
-                                        System.arraycopy(faces, 0, result, 0, length[0]);
-                                    }
-                                    httpUploadPic(result);
-                                }
-                            }
-                        }
-                    });
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    camera.release();
+                    return;
                 }
+                openCamera(holder);
+            } catch (IOException e) {
+                e.printStackTrace();
+//                    camera.release();
             }
         }
 
         @Override
         public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+            Log.d(TAG, "width = [" + width + "], height = [" + height + "]");
+            faceView.setRoomHeight(height);
             if (null != camera) {
                 camera.autoFocus(new Camera.AutoFocusCallback() {
                     @Override
@@ -219,9 +181,12 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
                             parameters.setPictureFormat(PixelFormat.JPEG);
                             parameters
                                     .setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);// 1连续对焦
-                            //                        setDisplay(parameters, camera);
+                            //                        setDisplay(parameters, camera);\
+                            parameters.setPictureSize(640, 480);
+                            parameters.setPreviewSize(width, height);
                             camera.setParameters(parameters);
                             camera.startPreview();
+                            camera.cancelAutoFocus();
                         }
                     }
                 });
@@ -230,10 +195,79 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 
         @Override
         public void surfaceDestroyed(SurfaceHolder holder) {
-
+            Log.d(TAG, "surface被干掉了！！！！！");
         }
     }
 
+
+    int faceCount = 0;//记录摄像头采集的画面帧数,每5帧调取一次人脸识别
+
+    /**
+     * 第一次进入页面，开始打开camera
+     */
+    private void openCamera(SurfaceHolder holder) throws IOException {
+        // 获取camera对象
+        int cameraCount = Camera.getNumberOfCameras();
+        Log.d(TAG, cameraCount + "");
+        if (cameraCount == 2) {
+            camera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
+        }
+        if (null != camera) {
+            // 设置预览监听
+            camera.setPreviewDisplay(holder);
+            // 启动摄像头预览
+            camera.startPreview();
+            camera.setPreviewCallback(new Camera.PreviewCallback() {
+                @Override
+                public void onPreviewFrame(byte[] data, Camera camera) {
+                    faceCount++;
+                    if (faceCount % 5 != 0) {
+                        return;
+                    }
+                    Message message = new Message();
+                    message.what = EventUtil.CVC_DETECTFACE;
+                    message.obj = cvcRect;
+                    mHandler.setOnBioAssay(new CvcHandler.OnBioAssay() {
+                        @Override
+                        public void setOnBioFace(CvcRect cvcRect, int[] rectWidth, int[] rectHeight) {
+                            Rect oneRect = new Rect();
+                            oneRect.set(cvcRect.x, cvcRect.y, cvcRect.x + cvcRect.w,
+                                    cvcRect.y + cvcRect.h);
+                            rect[0] = oneRect;
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //T.showShort("检测到人脸");
+                                    faceView.setFaces(rect, cvcRect.w, cvcRect.h, rectWidth[0], rectHeight[0]);
+                                }
+                            });
+                            Log.i("CVC_detectFace", "success:" + cvcRect.x + ":" + cvcRect.y
+                                    + ";width:" + rectWidth[0] + ",height:" + rectHeight[0]);
+                            Message msg = new Message();
+                            msg.what = EventUtil.CVC_LIVINGFACE;
+                            mHandler.sendMessage(msg);
+                        }
+
+                        @Override
+                        public void setOnBioAssay(int[] possibilityCode, byte[] faces, int[] lenght) {
+                            byte[] result = new byte[lenght[0]];
+                            synchronized (faces) {
+                                System.arraycopy(faces, 0, result, 0, lenght[0]);
+                            }
+                            httpUploadPic(result);
+                        }
+                    });
+                    mHandler.sendMessage(message);
+                    faceCount = faceCount == 25 ? 0 : faceCount;
+                }
+            });
+        }
+    }
+
+
+    /**
+     * 人脸数据上传到阿里云进行识别
+     */
     private void httpUploadPic(byte[] result) {
         AliYunOssUtils.getInstance(this).putObjectFromByteArray(result, new OssUploadListener() {
             @Override
@@ -256,6 +290,9 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         });
     }
 
+    /**
+     * 判断返回数据是否成功，成功则开门
+     */
     private void httpFaceVerifyPath(String filePath, String uuid) {
         String myType = String.valueOf(SPUtils.getInt(Constant.DEVICE_TYPE));
         Map<String, Object> params = new HashMap<>();
@@ -279,10 +316,14 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
                 //加上isVerified是为了防止出现多次验证成功
                 if (model.isIsmatch()) {
                     //                    SoundPlayUtils.play(3);//播放声音
+                    Log.i("wuliang", "face scusess!!!!");
+                    Toast.makeText(MainActivity.this, "身份验证成功，请开门！", Toast.LENGTH_SHORT).show();
                     T.showShort("身份验证成功，请开门！");
                 } else {
                     //                    SoundPlayUtils.play(1);//播放声音
                     //                        SoundPlayUtils.play(2);//播放声音
+                    Log.i("wuliang", "face no  no   no!!!!");
+                    Toast.makeText(MainActivity.this, "身份验证错误！", Toast.LENGTH_SHORT).show();
                 }
             }
         }));
@@ -317,11 +358,12 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
      * 初始化Cvc
      */
     private void initHandlerThread() {
-        thread = new HandlerThread("new_thread");
+        HandlerThread thread = new HandlerThread("new_thread");
         thread.start();
         Looper looper = thread.getLooper();
         mHandler = new CvcHandler(looper);
         int code = CvcHelper.CVC_init();
+        Log.d(TAG, code + "    ------cvcCode");
         if (code != 0) {
             T.showShort("load cvc error...");
         }
@@ -636,6 +678,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
             camera.setPreviewCallback(null);
             camera.stopPreview();
             camera.release();
+            camera = null;
         }
     }
 
@@ -644,5 +687,4 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         mStaticHandler.removeCallbacksAndMessages(null);
         super.onStop();
     }
-
 }

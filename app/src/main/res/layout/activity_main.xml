@@ -8,17 +8,15 @@
     <LinearLayout
         android:id="@+id/ll_header"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="40dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/iv_signal"
-            android:layout_width="20dp"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="@dimen/dp_5"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="@dimen/dp_5"
+            android:layout_width="30dp"
+            android:layout_height="26dp"
+            android:layout_marginLeft="15dp"
             android:scaleType="centerInside"
             android:src="@drawable/icon_signal" />
 
@@ -44,7 +42,7 @@
             android:layout_marginRight="7dp"
             android:text="97%"
             android:textColor="@color/white"
-            android:textSize="15dp" />
+            android:textSize="20dp" />
 
 
         <rk.device.launcher.widget.BatteryView
@@ -56,10 +54,10 @@
 
         <ImageView
             android:id="@+id/iv_setting"
-            android:layout_width="20dp"
+            android:layout_width="30dp"
             android:layout_height="match_parent"
             android:layout_marginBottom="@dimen/dp_5"
-            android:layout_marginRight="@dimen/dp_10"
+            android:layout_marginRight="@dimen/dp_15"
             android:layout_marginTop="@dimen/dp_5"
             android:scaleType="centerInside"
             android:src="@drawable/icon_setting" />
@@ -72,17 +70,19 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/rl_bottom"
         android:layout_below="@+id/ll_header"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:visibility="visible">
 
         <FrameLayout
             android:id="@+id/frame_layout"
             android:layout_width="match_parent"
-            android:layout_height="620dp">
+            android:layout_height="match_parent">
 
             <SurfaceView
                 android:id="@+id/camera_surfaceview"
                 android:layout_width="match_parent"
-                android:layout_height="550dp" />
+                android:layout_height="match_parent" />
 
             <rk.device.launcher.widget.BackCameraSurfaceView
                 android:id="@+id/camera_surfaceview1"

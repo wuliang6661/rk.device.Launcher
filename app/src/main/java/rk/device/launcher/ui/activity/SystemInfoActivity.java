@@ -3,16 +3,17 @@ package rk.device.launcher.ui.activity;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.os.Build;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.Date;
+
 import butterknife.Bind;
 import rk.device.launcher.R;
 import rk.device.launcher.base.BaseCompatActivity;
+import rk.device.launcher.tools.MoreManager;
 import rk.device.launcher.utils.AppUtils;
 import rk.device.launcher.utils.QRCodeUtils;
 import rk.device.launcher.utils.ScreenUtil;
@@ -79,5 +80,7 @@ public class SystemInfoActivity extends BaseCompatActivity implements View.OnCli
     @Override
     public void onClick(View view) {
         UpdateManager.getUpdateManager().checkAppUpdate(this, getSupportFragmentManager(), true);
+        int time = (int) (new Date().getTime() / 1000);
+        MoreManager.syncBlueTime(time);
     }
 }

@@ -18,9 +18,11 @@ import java.lang.reflect.Method;
 
 public class BackCameraSurfaceView extends SurfaceView implements SurfaceHolder.Callback {
 
-    Context           mContext;
-    SurfaceHolder     mSurfaceHolder;
-    private Camera    camera;
+    private static final String TAG = "BackCameraSurfaceView";
+
+    Context mContext;
+    SurfaceHolder mSurfaceHolder;
+    private Camera camera;
     Camera.Parameters parameters;
 
     public BackCameraSurfaceView(Context context, AttributeSet attrs) {
@@ -35,21 +37,26 @@ public class BackCameraSurfaceView extends SurfaceView implements SurfaceHolder.
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        // 获取camera对象
-        int cameraCount = Camera.getNumberOfCameras();
-        if (cameraCount > 0) {
-            camera = Camera.open(0);
-            if (null != camera) {
-                try {
+        try {
+            if (camera != null) {
+                camera.setPreviewDisplay(holder);
+                return;
+            }
+            // 获取camera对象
+            int cameraCount = Camera.getNumberOfCameras();
+            Log.d(TAG, cameraCount + "");
+            if (cameraCount > 0) {
+                camera = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT);
+                if (null != camera) {
                     // 设置预览监听
                     camera.setPreviewDisplay(holder);
                     // 启动摄像头预览
                     camera.startPreview();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    camera.release();
                 }
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+//                    camera.release();
         }
     }
 
@@ -76,7 +83,8 @@ public class BackCameraSurfaceView extends SurfaceView implements SurfaceHolder.
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        closeCamera();
+        Log.d(TAG, "surface后置被干掉了！！！！！");
+//        closeCamera();
     }
 
     // 控制图像的正确显示方向
@@ -94,22 +102,23 @@ public class BackCameraSurfaceView extends SurfaceView implements SurfaceHolder.
         Method downPolymorphic;
         try {
             downPolymorphic = camera.getClass().getMethod("setDisplayOrientation",
-                    new Class[] { int.class });
+                    new Class[]{int.class});
             if (downPolymorphic != null) {
-                downPolymorphic.invoke(camera, new Object[] { i });
+                downPolymorphic.invoke(camera, new Object[]{i});
             }
         } catch (Exception e) {
             Log.e("Came_e", "图像出错");
         }
     }
 
-    public SurfaceHolder getSurfaceHolder() {
-        return mSurfaceHolder;
-    }
-
     private void closeCamera() {
         camera.setPreviewCallback(null);
         camera.stopPreview();
         camera.release();
+        camera = null;
+    }
+
+    public SurfaceHolder getSurfaceHolder() {
+        return mSurfaceHolder;
     }
 }

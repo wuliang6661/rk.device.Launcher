@@ -13,22 +13,26 @@ import android.util.Log;
 
 import rk.device.launcher.R;
 import rk.device.launcher.base.utils.DensityUtils;
-import rk.device.launcher.base.utils.WindowManagerUtils;
+import rk.device.launcher.utils.ScreenUtil;
 
 /**
  * Created by hanbin on 2017/11/22.
  */
 public class DetectedFaceView extends AppCompatImageView {
 
-    private float    PREVIEW_WIDTH  = 320;
-    private float    PREVIEW_HEIGHT = 240;
-    private Context  mContext;
-    private Paint    mLinePaint;
-    private Rect[]   mFaces;
-    private RectF    mRect          = new RectF();
+    private float PREVIEW_WIDTH = 320;
+    private float PREVIEW_HEIGHT = 240;
+    private Context mContext;
+    private Paint mLinePaint;
+    private Rect[] mFaces;
+    private RectF mRect = new RectF();
     private Drawable mFaceIndicator = null;
-    private float    heightScale    = 0;
-    private float    widthScale     = 0;
+
+
+    private int roomHeight;
+    private float faceRegionW;
+    private float faceRegionH;
+
 
     public DetectedFaceView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -36,21 +40,26 @@ public class DetectedFaceView extends AppCompatImageView {
         initPaint();
         mContext = context;
         mFaceIndicator = getResources().getDrawable(R.drawable.face);
-        widthScale = WindowManagerUtils.getWindowWidth(mContext) / PREVIEW_WIDTH;
-        heightScale = DensityUtils.dp2px(mContext, 550) / PREVIEW_HEIGHT;
-        Log.i("widthScale", "widthScale:" + WindowManagerUtils.getWindowWidth(mContext));
-        Log.i("widthScale", "widthScale:" + widthScale);
-        Log.i("heightScale", "heightScale:" + heightScale);
+        roomHeight = DensityUtils.dp2px(mContext, 550);   //默认外部容器高度为550
     }
 
-    public void setFaces(Rect[] faces) {
+    public void setFaces(Rect[] faces, float faceRegionW, int faceRegionH, float width, float height) {
+        this.faceRegionW = faceRegionW;
+        this.faceRegionH = faceRegionH;
+        this.PREVIEW_WIDTH = width;
+        this.PREVIEW_HEIGHT = height;
         this.mFaces = faces;
         invalidate();
     }
 
-    public void setSize(int width,int height){
 
+    /**
+     * 设置总体外部容器高度
+     */
+    public void setRoomHeight(int height) {
+        this.roomHeight = height;
     }
+
 
     public void clearFaces() {
         mFaces = null;
@@ -69,14 +78,12 @@ public class DetectedFaceView extends AppCompatImageView {
             canvas.save();
             Log.i("faceView:", "mRect.left:" + mRect.left + ";mRect.top" + mRect.top
                     + ";mRect.right" + mRect.right + ";mRect.bottom" + mRect.bottom);
-            float width = (mRect.right - mRect.left) * widthScale;
-            //            float left = WindowManagerUtils.getWindowWidth(mContext) - (mRect.right * widthScale);
-            //            float right = left + width;
-
-            float left = mRect.left * widthScale;
+            float width = faceRegionW / PREVIEW_WIDTH * ScreenUtil.getScreenWidth(mContext);
+            float left = ScreenUtil.getScreenWidth(mContext) - mRect.left / PREVIEW_WIDTH * ScreenUtil.getScreenWidth(mContext) - width;
+            float top = mRect.top / PREVIEW_HEIGHT * roomHeight;
+            float buttom = top + (faceRegionH / PREVIEW_HEIGHT * roomHeight);
             float right = left + width;
-            mFaceIndicator.setBounds(Math.round(left), Math.round(mRect.top * heightScale),
-                    Math.round(right), Math.round(mRect.bottom * heightScale));
+            mFaceIndicator.setBounds(Math.round(left), Math.round(top), Math.round(right), Math.round(buttom));
             mFaceIndicator.draw(canvas);
         }
         canvas.restore();
