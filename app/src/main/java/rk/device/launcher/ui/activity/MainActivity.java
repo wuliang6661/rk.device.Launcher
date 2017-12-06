@@ -47,6 +47,8 @@ import rk.device.launcher.api.ApiService;
 import rk.device.launcher.api.T;
 import rk.device.launcher.base.BaseCompatActivity;
 import rk.device.launcher.base.utils.TypeTranUtils;
+import rk.device.launcher.base.utils.rxbus.RxBus;
+import rk.device.launcher.bean.SetPageContentBean;
 import rk.device.launcher.bean.VerifyBean;
 import rk.device.launcher.bean.WeatherModel;
 import rk.device.launcher.global.Constant;
@@ -66,6 +68,8 @@ import rk.device.launcher.widget.BatteryView;
 import rk.device.launcher.widget.DetectedFaceView;
 import rk.device.launcher.widget.UpdateManager;
 import rx.Subscriber;
+import rx.Subscription;
+import rx.functions.Action1;
 
 public class MainActivity extends BaseCompatActivity implements View.OnClickListener {
 
@@ -104,6 +108,8 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     EditText widthEt;
     @Bind(R.id.et_height)
     EditText heightEt;
+	@Bind(R.id.tv_declare)
+	TextView mTvDeclare;
 
     private CvcHandler mHandler = null;
 
@@ -120,14 +126,14 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
             mTvTime.setText(DateUtil.getTime());
             mTvDate.setText(DateUtil.getDate());
             mTvWeek.setText(DateUtil.getWeek());
-            mStaticHandler.postDelayed(this,
-                    REFRESH_DELAY);
+            mStaticHandler.postDelayed(this, REFRESH_DELAY);
         }
     };
     private WifiHelper mWifiHelper;
     private GpsUtils gpsUtils = null;
-
-    @Override
+	private Subscription mSubscription;
+	
+	@Override
     protected int getLayout() {
         return R.layout.activity_main;
     }
@@ -141,7 +147,24 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         initLocation();
         settingTv.setOnClickListener(this);
         initSurfaceViewOne();
+	    registerRxBus();
     }
+	
+	private void registerRxBus() {
+		mSubscription = RxBus.getDefault().toObserverable(SetPageContentBean.class).subscribe(new Action1<SetPageContentBean>() {
+			@Override
+			public void call(SetPageContentBean setPageContentBean) {
+				if (mTvDeclare != null) {
+					mTvDeclare.setText(setPageContentBean.content);
+				}
+			}
+		}, new Action1<Throwable>() {
+			@Override
+			public void call(Throwable throwable) {
+				
+			}
+		});
+	}
 
     private void initSurfaceViewOne() {
         surfaceholder = surfaceview.getHolder();
@@ -349,7 +372,9 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 
     @Override
     protected void initData() {
-        //检测App更新
+	    String declareContent = SPUtils.getString(Constant.KEY_FIRSTPAGE_CONTENT);
+	    mTvDeclare.setText(declareContent);
+	    //检测App更新
         UpdateManager.getUpdateManager().checkAppUpdate(this, getSupportFragmentManager(), false);
         initHandlerThread();
     }
@@ -667,6 +692,9 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         if (null != camera) {
             closeCamera(camera);
         }
+	    if (!mSubscription.isUnsubscribed()) {
+		    mSubscription.unsubscribe();
+	    }
         unregisterReceiver(mBatteryReceiver);
         unregisterReceiver(mNetChangeBroadcastReceiver);
         mStaticHandler.removeCallbacksAndMessages(null);

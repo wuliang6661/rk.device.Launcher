@@ -150,7 +150,7 @@
             android:screenOrientation="portrait" />
 
 
-        //网络监听
+        <!--网络监听-->
         <receiver android:name=".service.NetBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
@@ -160,12 +160,28 @@
         </receiver>
 
 
-        //电量监听
+        <!--电量监听-->
         <receiver android:name=".service.ElectricBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.ACTION_BATTERY_CHANGED" />
             </intent-filter>
         </receiver>
+
+        <!-- 个推 -->
+        <service
+            android:name=".service.RKLauncherPushService"
+            android:exported="true"
+            android:label="PushService"
+            android:process=":pushservice">
+        </service>
+        <service android:name=".service.RKLauncherPushIntentService">
+        </service>
+        <service
+            android:name=".service.DownLoadIntentService"
+            android:exported="false">
+        </service>
+
+
 
     </application>
 
