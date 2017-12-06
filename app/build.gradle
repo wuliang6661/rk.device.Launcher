@@ -74,4 +74,5 @@ dependencies {
     compile 'com.aliyun.dpa:oss-android-sdk:2.4.5'
     // 个推
     compile 'com.getui:sdk:2.11.1.0'
+    compile 'cat.ereza:customactivityoncrash:1.5.0'
 }

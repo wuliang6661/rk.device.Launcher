@@ -5,7 +5,6 @@ import android.util.Log;
 import com.inuker.bluetooth.library.BluetoothClient;
 import com.inuker.bluetooth.library.Constants;
 import com.inuker.bluetooth.library.connect.response.BleNotifyResponse;
-import com.inuker.bluetooth.library.connect.response.BleReadResponse;
 import com.inuker.bluetooth.library.connect.response.BleWriteResponse;
 import com.inuker.bluetooth.library.model.BleGattCharacter;
 import com.inuker.bluetooth.library.model.BleGattProfile;
@@ -79,6 +78,14 @@ public class MoreManager {
      */
     public static void syncBlueTime(int time) {
         new MoreManager().writeBlueByte(BlueToothUtils.getBlueTimeByte(time));
+    }
+
+
+    /**
+     * 获取锁的网络状态
+     */
+    public static void getLockNetBoll() {
+        new MoreManager().writeBlueByte(BlueToothUtils.getLockNet());
     }
 
 
@@ -199,4 +206,6 @@ public class MoreManager {
             }
         });
     }
+
+
 }

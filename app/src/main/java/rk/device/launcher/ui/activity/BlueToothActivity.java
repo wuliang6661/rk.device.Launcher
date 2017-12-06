@@ -8,6 +8,9 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 
 import com.inuker.bluetooth.library.BluetoothClient;
+import com.inuker.bluetooth.library.Constants;
+import com.inuker.bluetooth.library.connect.response.BleConnectResponse;
+import com.inuker.bluetooth.library.model.BleGattProfile;
 import com.inuker.bluetooth.library.search.SearchRequest;
 import com.inuker.bluetooth.library.search.SearchResult;
 import com.inuker.bluetooth.library.search.response.SearchResponse;
@@ -22,7 +25,10 @@ import rk.device.launcher.base.BaseCompatActivity;
 import rk.device.launcher.base.utils.rxbus.RxBus;
 import rk.device.launcher.bean.BlueToothModel;
 import rk.device.launcher.event.BlueToothEvent;
+import rk.device.launcher.event.HomeInfoEvent;
+import rk.device.launcher.global.Constant;
 import rk.device.launcher.tools.MoreManager;
+import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.adapter.CommonAdapter;
 import rk.device.launcher.utils.adapter.ViewHolder;
 import rk.device.launcher.widget.MyListView;
@@ -162,4 +168,6 @@ public class BlueToothActivity extends BaseCompatActivity
                 break;
         }
     }
+
+
 }
