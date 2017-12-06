@@ -91,6 +91,10 @@ public interface Constant {
      * 蓝牙名称
      */
     String BLUE_NAME = "blue_name";
+	
+	String KEY_ROM = "rom";
+	
+	String KEY_APK = "apk";
 
 
 }
