@@ -7,21 +7,19 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.inuker.bluetooth.library.BluetoothClient;
-import com.inuker.bluetooth.library.Constants;
-import com.inuker.bluetooth.library.receiver.listener.BluetoothBondListener;
+import com.igexin.sdk.PushManager;
 
 import butterknife.ButterKnife;
 import rk.device.launcher.R;
 import rk.device.launcher.base.utils.rxbus.RxBus;
 import rk.device.launcher.bean.NetDismissBean;
 import rk.device.launcher.service.BlueToothsBroadcastReceiver;
-import rk.device.launcher.tools.MoreManager;
+import rk.device.launcher.service.RKLauncherPushIntentService;
+import rk.device.launcher.service.RKLauncherPushService;
 import rk.device.launcher.ui.activity.SetNetWorkActivity;
 import rk.device.launcher.ui.fragment.BaseDialogFragment;
 import rk.device.launcher.utils.AppManager;
@@ -77,9 +75,15 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
         initView();
         initData();
     }
-
-
-    @Override
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		PushManager.getInstance().initialize(getApplicationContext(), RKLauncherPushService.class);
+		PushManager.getInstance().registerPushIntentService(getApplicationContext(), RKLauncherPushIntentService.class);
+	}
+	
+	@Override
     protected void onDestroy() {
         super.onDestroy();
         AppManager.getAppManager().removeActivity(this);

@@ -45,14 +45,21 @@ public class RkRetrofit {
 //        File cacheFile = new File(LauncherApplication.getContext().getCacheDir(), "cache");
 //        Cache cache = new Cache(cacheFile, 1024 * 1024 * 100); //100Mb
 
-        apiClient = new OkHttpClient.Builder().readTimeout(20000, TimeUnit.MILLISECONDS)
-                .connectTimeout(20000, TimeUnit.MILLISECONDS).addInterceptor(mInterceptor)
-                .addInterceptor(interceptor).addNetworkInterceptor(new HttpCacheInterceptor())
+        apiClient = new OkHttpClient
+                .Builder()
+                .readTimeout(20000, TimeUnit.MILLISECONDS)
+                .connectTimeout(20000, TimeUnit.MILLISECONDS)
+                .addInterceptor(mInterceptor)
+                .addInterceptor(interceptor)
+                .addNetworkInterceptor(new HttpCacheInterceptor())
                 .build();
 
-        Retrofit retrofit = new Retrofit.Builder().baseUrl(Config.APP_WEATHER)
+        Retrofit retrofit = new Retrofit
+                .Builder()
+                .baseUrl(Config.APP_WEATHER)
                 .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create()).client(apiClient).build();
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .client(apiClient).build();
         return retrofit;
     }
 
