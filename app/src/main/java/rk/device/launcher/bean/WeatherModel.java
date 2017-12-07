@@ -7,22 +7,7 @@ import java.util.List;
  */
 public class WeatherModel{
 
-    private List<ResultsBean> results;
-
-    public List<ResultsBean> getResults() {
-        return results;
-    }
-
-    public void setResults(List<ResultsBean> results) {
-        this.results = results;
-    }
-
-    public static class ResultsBean {
-        /**
-         * location : {"id":"WTMKQ069CCJ7","name":"杭州","country":"CN","path":"杭州,杭州,浙江,中国","timezone":"Asia/Shanghai","timezone_offset":"+08:00"}
-         * daily : [{"date":"2017-08-21","text_day":"雷阵雨","code_day":"11","text_night":"多云","code_night":"4","high":"34","low":"26","precip":"","wind_direction":"东","wind_direction_degree":"90","wind_speed":"10","wind_scale":"2"}]
-         * last_update : 2017-08-21T11:00:00+08:00
-         */
+    
 
         private LocationBean location;
         private String last_update;
@@ -243,5 +228,4 @@ public class WeatherModel{
                 this.wind_scale = wind_scale;
             }
         }
-    }
 }

@@ -1,5 +1,6 @@
 package rk.device.launcher.api;
 
+import java.util.List;
 import java.util.Map;
 
 import rk.device.launcher.bean.DeviceInfoBean;
@@ -22,7 +23,7 @@ public class ApiService {
      * @param params
      * @return
      */
-    public static Observable<WeatherModel> weather(Map<String, Object> params) {
+    public static Observable<List<WeatherModel>> weather(Map<String, Object> params) {
         return ApiFactory.weatherFactory().weather(params).compose(RxResultHelper.httpRusult());
     }
 	

@@ -526,9 +526,9 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 		    addSubscription(
 		        ApiService.address("js")
 		            .subscribeOn(Schedulers.io())
-		            .flatMap(new Func1<String, Observable<WeatherModel>>() {
+		            .flatMap(new Func1<String, Observable<List<WeatherModel>>>() {
 			            @Override
-			            public Observable<WeatherModel> call(String s) {
+			            public Observable<List<WeatherModel>> call(String s) {
 				            int start = s.indexOf("{");
 				            int end = s.indexOf("}");
 				            String json = s.substring(start, end + 1);
@@ -539,7 +539,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 			            }
 		            })
 		            .observeOn(AndroidSchedulers.mainThread())
-		            .subscribe(new Subscriber<WeatherModel>() {
+		            .subscribe(new Subscriber<List<WeatherModel>>() {
 			            @Override
 			            public void onCompleted() {
 				
@@ -551,7 +551,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 			            }
 			
 			            @Override
-			            public void onNext(WeatherModel weatherModel) {
+			            public void onNext(List<WeatherModel> weatherModel) {
 				            showWeather(weatherModel);
 			            }
 		            })
@@ -568,7 +568,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     private void httpGetWeather(String area) {
         Map params = new HashMap();
         params.put("city", area);
-        addSubscription(ApiService.weather(params).subscribe(new Subscriber<WeatherModel>() {
+        addSubscription(ApiService.weather(params).subscribe(new Subscriber<List<WeatherModel>>() {
             @Override
             public void onCompleted() {
 
@@ -580,17 +580,16 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
             }
 
             @Override
-            public void onNext(WeatherModel weatherModel) {
+            public void onNext(List<WeatherModel> weatherModel) {
 	            showWeather(weatherModel);
             }
         }));
 
     }
 	
-	private void showWeather(WeatherModel weatherModel) {
-		List<WeatherModel.ResultsBean> beanList = weatherModel.getResults();
-		if (beanList.size() > 0 && beanList.get(0).getDaily().size() > 0) {
-		    WeatherModel.ResultsBean.DailyBean detailBean = beanList.get(0).getDaily()
+	private void showWeather(List<WeatherModel> weatherModel) {
+		if (weatherModel.size() > 0 && weatherModel.get(0).getDaily().size() > 0) {
+		    WeatherModel.DailyBean detailBean = weatherModel.get(0).getDaily()
 		            .get(0);
 		    temTv.setText(detailBean.getLow() + "~" + detailBean.getHigh() + "℃");
 		    //判断当前时间是晚上还是白天来显示天气

@@ -1,5 +1,6 @@
 package rk.device.launcher.api;
 
+import java.util.List;
 import java.util.Map;
 
 import retrofit2.http.Field;
@@ -28,7 +29,7 @@ public interface BaseApi {
      */
     @Headers({ "Content-Type: application/json", "Accept: application/json" })
     @GET(ApiName.WEATHER)
-    Observable<BaseResult<WeatherModel>> weather(@QueryMap Map<String, Object> params);
+    Observable<BaseResult<List<WeatherModel>>> weather(@QueryMap Map<String, Object> params);
 
     /**
      * 检查app是否有更新
