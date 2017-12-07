@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="rk.device.launcher">
+    package="rk.device.launcher">
 
     <!-- android:sharedUserId="android.uid.system" -->
 
@@ -150,7 +150,12 @@
             android:screenOrientation="portrait" />
 
 
-        //网络监听
+        <!--双目校验-->
+        <activity
+            android:name=".ui.activity.EyesCorrectActivity"
+            android:screenOrientation="portrait" />
+
+        <!--网络监听-->
         <receiver android:name=".service.NetBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
@@ -160,7 +165,7 @@
         </receiver>
 
 
-        //电量监听
+        <!--电量监听-->
         <receiver android:name=".service.ElectricBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.ACTION_BATTERY_CHANGED" />

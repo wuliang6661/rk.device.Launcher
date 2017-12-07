@@ -39,8 +39,18 @@
     </declare-styleable>
 
     <declare-styleable name="EasyPickView">
-        <attr name="recycleMode" format="boolean"/>
-        <attr name="showRowCount" format="integer"/>
-        <attr name="dividerColor" format="color|reference"/>
+        <attr name="recycleMode" format="boolean" />
+        <attr name="showRowCount" format="integer" />
+        <attr name="dividerColor" format="color|reference" />
     </declare-styleable>
+
+
+    <declare-styleable name="GifView">
+        <attr name="gif" format="reference" />
+        <attr name="paused" format="boolean" />
+    </declare-styleable>
+    <declare-styleable name="CustomTheme">
+        <attr name="gifViewStyle" format="reference" />
+    </declare-styleable>
+
 </resources>

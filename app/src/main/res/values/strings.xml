@@ -16,6 +16,7 @@
     <string name="voice_notice">语音提示</string>
     <string name="time_setting">时间设置</string>
     <string name="blue_tooth">蓝牙</string>
+    <string name="eyes_verify">双目校验</string>
     <string name="basic_settting">基础设置</string>
     <string name="time_setting_illeagel">请选择设置时间</string>
     <string name="open_blue_tooth">开放检测</string>
@@ -31,4 +32,14 @@
     <string name="hint_height">请输入高度</string>
     <string name="start_gather">开始采集</string>
     <string name="finish">完成</string>
+
+    <string name="zhuyi">注意变化棋盘格的角度和拍摄齐全</string>
+    <string name="deng_off">轻点关闭</string>
+    <string name="deng_on">轻点照亮</string>
+    <string name="jiaozhunqian">校准前测试</string>
+    <string name="edit_jianpan">输入键盘格的行数和列数</string>
+    <string name="edit_hint">成功次数（次数越高识别越准确）</string>
+    <string name="anima_hint">拍照过程中多变化角度，能加\n快校准速度，操作如下图所示</string>
+    <string name="jiaozhun_wait">正在校准，需要几分钟左右，请稍后...</string>
+
 </resources>

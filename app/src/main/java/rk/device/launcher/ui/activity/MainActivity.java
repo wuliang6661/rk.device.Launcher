@@ -4,10 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.PixelFormat;
 import android.graphics.Rect;
-import android.hardware.Camera;
-import android.location.Address;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
@@ -22,7 +19,6 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,7 +27,6 @@ import com.alibaba.sdk.android.oss.ClientException;
 import com.alibaba.sdk.android.oss.ServiceException;
 import com.alibaba.sdk.android.oss.model.PutObjectRequest;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -43,10 +38,10 @@ import cvc.CvcHelper;
 import cvc.CvcRect;
 import cvc.EventUtil;
 import rk.device.launcher.R;
+import rk.device.launcher.SurfaceHolderCaremaFont;
 import rk.device.launcher.api.ApiService;
 import rk.device.launcher.api.T;
 import rk.device.launcher.base.BaseCompatActivity;
-import rk.device.launcher.base.utils.TypeTranUtils;
 import rk.device.launcher.bean.VerifyBean;
 import rk.device.launcher.bean.WeatherModel;
 import rk.device.launcher.global.Constant;
@@ -57,7 +52,6 @@ import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.StringUtils;
 import rk.device.launcher.utils.TimeUtils;
 import rk.device.launcher.utils.WifiHelper;
-import rk.device.launcher.utils.gps.GpsCallback;
 import rk.device.launcher.utils.gps.GpsUtils;
 import rk.device.launcher.utils.oss.AliYunOssUtils;
 import rk.device.launcher.utils.oss.OssUploadListener;
@@ -95,26 +89,19 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     TextView temTv;                                                           //温度
     @Bind(R.id.tv_weather)
     TextView weatherTv;                                                       //天气
-    private Camera camera;
-    private SurfaceHolder surfaceholder;
-    Camera.Parameters parameters;
     @Bind(R.id.face_view)
     DetectedFaceView faceView;
-    @Bind(R.id.et_width)
-    EditText widthEt;
-    @Bind(R.id.et_height)
-    EditText heightEt;
 
     private CvcHandler mHandler = null;
-
     private static final int REFRESH_DELAY = 1000;
+    SurfaceHolderCaremaFont callbackFont;
+
 
     private StaticHandler mStaticHandler = new StaticHandler();
     private DeviceUuidFactory uuidFactory = null;
     private String uUid;
     // todo 内存泄漏这里需要处理
     private final Runnable mRefreshTimeRunnable = new Runnable() {
-
         @Override
         public void run() {
             mTvTime.setText(DateUtil.getTime());
@@ -134,7 +121,6 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 
     @Override
     public void initView() {
-        setOnClick(R.id.tv_sure, R.id.tv_finish);
         mWifiHelper = new WifiHelper(this);
         registerBatteryReceiver();
         registerNetReceiver();
@@ -144,60 +130,15 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     }
 
     private void initSurfaceViewOne() {
-        surfaceholder = surfaceview.getHolder();
+        SurfaceHolder surfaceholder = surfaceview.getHolder();
         surfaceholder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-        surfaceholder.addCallback(new SurfaceHolderCallbackFont());
+        callbackFont = new SurfaceHolderCaremaFont();
+        openCamera();
+        surfaceholder.addCallback(callbackFont);
     }
 
     private CvcRect cvcRect = new CvcRect();
     private Rect[] rect = new Rect[1];
-
-
-    class SurfaceHolderCallbackFont implements SurfaceHolder.Callback {
-        @Override
-        public void surfaceCreated(SurfaceHolder holder) {
-            try {
-                if (camera != null) {
-                    camera.setPreviewDisplay(holder);
-                    return;
-                }
-                openCamera(holder);
-            } catch (IOException e) {
-                e.printStackTrace();
-//                    camera.release();
-            }
-        }
-
-        @Override
-        public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-            Log.d(TAG, "width = [" + width + "], height = [" + height + "]");
-            faceView.setRoomHeight(height);
-            if (null != camera) {
-                camera.autoFocus(new Camera.AutoFocusCallback() {
-                    @Override
-                    public void onAutoFocus(boolean success, Camera camera) {
-                        if (success) {
-                            parameters = camera.getParameters();
-                            parameters.setPictureFormat(PixelFormat.JPEG);
-                            parameters
-                                    .setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);// 1连续对焦
-                            //                        setDisplay(parameters, camera);\
-                            parameters.setPictureSize(640, 480);
-                            parameters.setPreviewSize(width, height);
-                            camera.setParameters(parameters);
-                            camera.startPreview();
-                            camera.cancelAutoFocus();
-                        }
-                    }
-                });
-            }
-        }
-
-        @Override
-        public void surfaceDestroyed(SurfaceHolder holder) {
-            Log.d(TAG, "surface被干掉了！！！！！");
-        }
-    }
 
 
     int faceCount = 0;//记录摄像头采集的画面帧数,每5帧调取一次人脸识别
@@ -205,63 +146,51 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     /**
      * 第一次进入页面，开始打开camera
      */
-    private void openCamera(SurfaceHolder holder) throws IOException {
-        // 获取camera对象
-        int cameraCount = Camera.getNumberOfCameras();
-        Log.d(TAG, cameraCount + "");
-        if (cameraCount == 2) {
-            camera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
-        }
-        if (null != camera) {
-            // 设置预览监听
-            camera.setPreviewDisplay(holder);
-            // 启动摄像头预览
-            camera.startPreview();
-            camera.setPreviewCallback(new Camera.PreviewCallback() {
-                @Override
-                public void onPreviewFrame(byte[] data, Camera camera) {
-                    faceCount++;
-                    if (faceCount % 5 != 0) {
-                        return;
-                    }
-                    Message message = new Message();
-                    message.what = EventUtil.CVC_DETECTFACE;
-                    message.obj = cvcRect;
-                    mHandler.setOnBioAssay(new CvcHandler.OnBioAssay() {
-                        @Override
-                        public void setOnBioFace(CvcRect cvcRect, int[] rectWidth, int[] rectHeight) {
-                            Rect oneRect = new Rect();
-                            oneRect.set(cvcRect.x, cvcRect.y, cvcRect.x + cvcRect.w,
-                                    cvcRect.y + cvcRect.h);
-                            rect[0] = oneRect;
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    //T.showShort("检测到人脸");
-                                    faceView.setFaces(rect, cvcRect.w, cvcRect.h, rectWidth[0], rectHeight[0]);
-                                }
-                            });
-                            Log.i("CVC_detectFace", "success:" + cvcRect.x + ":" + cvcRect.y
-                                    + ";width:" + rectWidth[0] + ",height:" + rectHeight[0]);
-                            Message msg = new Message();
-                            msg.what = EventUtil.CVC_LIVINGFACE;
-                            mHandler.sendMessage(msg);
-                        }
-
-                        @Override
-                        public void setOnBioAssay(int[] possibilityCode, byte[] faces, int[] lenght) {
-                            byte[] result = new byte[lenght[0]];
-                            synchronized (faces) {
-                                System.arraycopy(faces, 0, result, 0, lenght[0]);
-                            }
-                            httpUploadPic(result);
-                        }
-                    });
-                    mHandler.sendMessage(message);
-                    faceCount = faceCount == 25 ? 0 : faceCount;
+    private void openCamera() {
+        callbackFont.setCallBack(new SurfaceHolderCaremaFont.CallBack() {
+            @Override
+            public void callMessage() {
+                faceCount++;
+                if (faceCount % 5 != 0) {
+                    return;
                 }
-            });
-        }
+                Message message = new Message();
+                message.what = EventUtil.CVC_DETECTFACE;
+                message.obj = cvcRect;
+                mHandler.setOnBioAssay(new CvcHandler.OnBioAssay() {
+                    @Override
+                    public void setOnBioFace(CvcRect cvcRect1, int[] rectWidth, int[] rectHeight) {
+                        Rect oneRect = new Rect();
+                        oneRect.set(cvcRect1.x, cvcRect1.y, cvcRect1.x + cvcRect1.w,
+                                cvcRect1.y + cvcRect1.h);
+                        rect[0] = oneRect;
+                        runOnUiThread(() -> {
+                            //T.showShort("检测到人脸");
+                            faceView.setFaces(rect, cvcRect1.w, cvcRect1.h, rectWidth[0], rectHeight[0]);
+                        });
+                        Message msg = new Message();
+                        msg.what = EventUtil.CVC_LIVINGFACE;
+                        mHandler.sendMessage(msg);
+                    }
+
+                    @Override
+                    public void setOnBioAssay(int[] possibilityCode, byte[] faces, int[] lenght) {
+                        byte[] result = new byte[lenght[0]];
+                        synchronized (faces) {
+                            System.arraycopy(faces, 0, result, 0, lenght[0]);
+                        }
+                        httpUploadPic(result);
+                    }
+                });
+                mHandler.sendMessage(message);
+                faceCount = faceCount == 25 ? 0 : faceCount;
+            }
+
+            @Override
+            public void callHeightAndWidth(int width, int height) {
+                faceView.setRoomHeight(height);
+            }
+        });
     }
 
 
@@ -334,17 +263,10 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
      */
     private InputWifiPasswordDialogFragment dialogFragment = null;
 
-    private void showDialogFragment(String title,
-                                    InputWifiPasswordDialogFragment.OnConfirmClickListener listener) {
+    private void showDialogFragment(String title, InputWifiPasswordDialogFragment.OnConfirmClickListener listener) {
         dialogFragment = InputWifiPasswordDialogFragment.newInstance();
         dialogFragment.setTitle(title);
-        dialogFragment.setOnCancelClickListener(
-                new InputWifiPasswordDialogFragment.onCancelClickListener() {
-                    @Override
-                    public void onCancelClick() {
-                        dialogFragment.dismiss();
-                    }
-                }).setOnConfirmClickListener(listener);
+        dialogFragment.setOnCancelClickListener(() -> dialogFragment.dismiss()).setOnConfirmClickListener(listener);
     }
 
     @Override
@@ -450,8 +372,6 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 
     /**
      * wifi变化设置不同的wifi图标
-     *
-     * @param scanResult
      */
     private void changeSignalState(ScanResult scanResult) {
         if (Math.abs(scanResult.level) > 100) {
@@ -476,12 +396,9 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         if (gpsUtils == null) {
             gpsUtils = new GpsUtils(this);
         }
-        gpsUtils.initLocation(new GpsCallback() {
-            @Override
-            public void onResult(List<Address> address) {
-                if (address.size() > 0) {
-                    httpGetWeather(address.get(0).getSubAdminArea());
-                }
+        gpsUtils.initLocation(address -> {
+            if (address.size() > 0) {
+                httpGetWeather(address.get(0).getSubAdminArea());
             }
         });
     }
@@ -538,26 +455,6 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
             case R.id.iv_setting:
                 settingLoad();
                 break;
-            case R.id.tv_sure:
-                String width = widthEt.getText().toString();
-                String height = heightEt.getText().toString();
-                if (TextUtils.isEmpty(width) || TextUtils.isEmpty(height)) {
-                    Log.i("CVC_determineLivingFace", "请设置宽高");
-                    return;
-                }
-                if (mHandler != null) {
-                    Message msg = new Message();
-                    msg.what = EventUtil.START_CVC;
-                    msg.arg1 = TypeTranUtils.str2Int(width);
-                    msg.arg2 = TypeTranUtils.str2Int(height);
-                    mHandler.sendMessageDelayed(msg, 10);
-                }
-                break;
-            case R.id.tv_finish:
-                if (mHandler != null) {
-                    mHandler.sendEmptyMessageDelayed(EventUtil.START_CALIBRATION, 10);
-                }
-                break;
         }
     }
 
@@ -606,6 +503,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         });
         dialogFragment.show(getSupportFragmentManager(), "");
     }
+
 
     private void registerBatteryReceiver() {
         IntentFilter intentFilter = new IntentFilter();
@@ -664,22 +562,10 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (null != camera) {
-            closeCamera(camera);
-        }
         unregisterReceiver(mBatteryReceiver);
         unregisterReceiver(mNetChangeBroadcastReceiver);
         mStaticHandler.removeCallbacksAndMessages(null);
         CvcHelper.CVC_deinit();
-    }
-
-    private void closeCamera(Camera camera) {
-        if (camera != null) {
-            camera.setPreviewCallback(null);
-            camera.stopPreview();
-            camera.release();
-            camera = null;
-        }
     }
 
     @Override
