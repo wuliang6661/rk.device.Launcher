@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="rk.device.launcher">
+          package="rk.device.launcher">
 
     <!-- android:sharedUserId="android.uid.system" -->
 
@@ -171,6 +171,24 @@
                 <action android:name="android.net.conn.ACTION_BATTERY_CHANGED" />
             </intent-filter>
         </receiver>
+
+        <!-- 个推 -->
+        <service
+            android:name=".service.RKLauncherPushService"
+            android:exported="true"
+            android:label="PushService"
+            android:process=":pushservice">
+        </service>
+        <service android:name=".service.RKLauncherPushIntentService">
+        </service>
+        <service
+            android:name=".service.DownLoadIntentService"
+            android:exported="false">
+        </service>
+
+        <service android:name=".service.SocketService"/>
+
+
 
     </application>
 

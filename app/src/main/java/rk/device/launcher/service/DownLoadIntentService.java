@@ -52,6 +52,7 @@ public class DownLoadIntentService extends IntentService {
 					installApk();
 					break;
 				case DOWNLOAD_ROM_OVER:
+					// TODO: 2017/12/6
 					break;
 			}
 		}
@@ -109,7 +110,7 @@ public class DownLoadIntentService extends IntentService {
 				@Override
 				public void onResponse(Call call, Response response) throws IOException {
 					if (!response.isSuccessful()) {
-						Log.d(TAG, "response is not success");
+						Log.e(TAG, "response is not success");
 						return;
 					}
 					InputStream is = null;
@@ -132,7 +133,7 @@ public class DownLoadIntentService extends IntentService {
 						mHandler.sendEmptyMessage(DOWNLOAD_APK_OVER);
 					} catch (Exception e) {
 						e.printStackTrace();
-						Log.d(TAG, "下载失败");
+						Log.e(TAG, "下载失败");
 					} finally {
 						CloseUtils.closeIOQuietly(is);
 						CloseUtils.closeIOQuietly(fos);
@@ -192,7 +193,7 @@ public class DownLoadIntentService extends IntentService {
 		if (!dir.exists()) {
 			dir.mkdirs();
 		}
-		final File downLoadApk = new File(dir, "update.img");
+		final File downLoadRom = new File(dir, "update.img");
 		OkHttpClient client = new OkHttpClient();
 		Request request = new Request.Builder()
 		        .url(url)
@@ -206,7 +207,7 @@ public class DownLoadIntentService extends IntentService {
 			@Override
 			public void onResponse(Call call, Response response) throws IOException {
 				if (!response.isSuccessful()) {
-					Log.d(TAG, "response is not success");
+					Log.e(TAG, "response is not success");
 					return;
 				}
 				InputStream is = null;
@@ -218,7 +219,7 @@ public class DownLoadIntentService extends IntentService {
 					Log.e(TAG, "total------>" + total);
 					long current = 0;
 					is = response.body().byteStream();
-					fos = new FileOutputStream(downLoadApk);
+					fos = new FileOutputStream(downLoadRom);
 					while ((len = is.read(buffer)) != -1) {
 						current += len;
 						fos.write(buffer, 0, len);
@@ -229,7 +230,7 @@ public class DownLoadIntentService extends IntentService {
 					mHandler.sendEmptyMessage(DOWNLOAD_ROM_OVER);
 				} catch (Exception e) {
 					e.printStackTrace();
-					Log.d(TAG, "下载失败");
+					Log.e(TAG, "下载失败");
 				} finally {
 					CloseUtils.closeIOQuietly(is);
 					CloseUtils.closeIOQuietly(fos);

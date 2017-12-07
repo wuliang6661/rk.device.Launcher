@@ -95,6 +95,10 @@ public interface Constant {
 	String KEY_ROM = "rom";
 	
 	String KEY_APK = "apk";
+	
+	String KEY_FIRSTPAGE_CONTENT = "key_firstpage_content";
+	
+	String KEY_ADDRESS = "key_address";
 
 
 }

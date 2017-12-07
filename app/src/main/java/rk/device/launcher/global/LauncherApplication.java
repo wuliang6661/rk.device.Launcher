@@ -16,6 +16,8 @@ import rk.device.launcher.utils.Utils;
 
 public class LauncherApplication extends Application {
     public static Context sContext;
+	public static int sLevel;
+	public static int sIsCharge;
 
     @Override
     public void onCreate() {
