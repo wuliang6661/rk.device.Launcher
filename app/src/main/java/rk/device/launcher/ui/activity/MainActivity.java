@@ -5,11 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Rect;
+import android.location.Address;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
@@ -34,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import cvc.CvcHandler;
 import cvc.CvcHelper;
 import cvc.CvcRect;
@@ -43,7 +46,6 @@ import rk.device.launcher.SurfaceHolderCaremaFont;
 import rk.device.launcher.api.ApiService;
 import rk.device.launcher.api.T;
 import rk.device.launcher.base.BaseCompatActivity;
-import rk.device.launcher.base.utils.TypeTranUtils;
 import rk.device.launcher.base.utils.rxbus.RxBus;
 import rk.device.launcher.bean.AddressModel;
 import rk.device.launcher.bean.SetPageContentBean;
@@ -59,6 +61,7 @@ import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.StringUtils;
 import rk.device.launcher.utils.TimeUtils;
 import rk.device.launcher.utils.WifiHelper;
+import rk.device.launcher.utils.gps.GpsCallback;
 import rk.device.launcher.utils.gps.GpsUtils;
 import rk.device.launcher.utils.oss.AliYunOssUtils;
 import rk.device.launcher.utils.oss.OssUploadListener;
@@ -104,11 +107,14 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     TextView weatherTv;                                                       //天气
     @Bind(R.id.face_view)
     DetectedFaceView faceView;
+    @Bind(R.id.tv_declare)
+    TextView mTvDeclare;
 
     private CvcHandler mHandler = null;
     private static final int REFRESH_DELAY = 1000;
     SurfaceHolderCaremaFont callbackFont;
 
+    Subscription mSubscription;
 
     private StaticHandler mStaticHandler = new StaticHandler();
     private DeviceUuidFactory uuidFactory = null;
@@ -125,9 +131,8 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     };
     private WifiHelper mWifiHelper;
     private GpsUtils gpsUtils = null;
-	private Subscription mSubscription;
 
-	@Override
+    @Override
     protected int getLayout() {
         return R.layout.activity_main;
     }
@@ -140,25 +145,25 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         initLocation();
         settingTv.setOnClickListener(this);
         initSurfaceViewOne();
-	    registerRxBus();
-	    startService(new Intent(this, SocketService.class));
+        registerRxBus();
+        startService(new Intent(this, SocketService.class));
     }
 
-	private void registerRxBus() {
-		mSubscription = RxBus.getDefault().toObserverable(SetPageContentBean.class).subscribe(new Action1<SetPageContentBean>() {
-			@Override
-			public void call(SetPageContentBean setPageContentBean) {
-				if (mTvDeclare != null) {
-					mTvDeclare.setText(setPageContentBean.content);
-				}
-			}
-		}, new Action1<Throwable>() {
-			@Override
-			public void call(Throwable throwable) {
+    private void registerRxBus() {
+        mSubscription = RxBus.getDefault().toObserverable(SetPageContentBean.class).subscribe(new Action1<SetPageContentBean>() {
+            @Override
+            public void call(SetPageContentBean setPageContentBean) {
+                if (mTvDeclare != null) {
+                    mTvDeclare.setText(setPageContentBean.content);
+                }
+            }
+        }, new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
 
-			}
-		});
-	}
+            }
+        });
+    }
 
     private void initSurfaceViewOne() {
         SurfaceHolder surfaceholder = surfaceview.getHolder();
@@ -302,9 +307,9 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 
     @Override
     protected void initData() {
-	    String declareContent = SPUtils.getString(Constant.KEY_FIRSTPAGE_CONTENT);
-	    mTvDeclare.setText(declareContent);
-	    //检测App更新
+        String declareContent = SPUtils.getString(Constant.KEY_FIRSTPAGE_CONTENT);
+        mTvDeclare.setText(declareContent);
+        //检测App更新
         UpdateManager.getUpdateManager().checkAppUpdate(this, getSupportFragmentManager(), false);
         initHandlerThread();
     }
@@ -429,53 +434,106 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         if (gpsUtils == null) {
             gpsUtils = new GpsUtils(this);
         }
-	    if (gpsUtils.isLoactionAvailable()) { // 定位可用, 通过定位获取地址
-		    gpsUtils.initLocation(new GpsCallback() {
-			    @Override
-			    public void onResult(List<Address> address) {
-				    if (address.size() > 0) {
-					    String area = address.get(0).getSubAdminArea();
-					    LogUtil.d(TAG, "area = " + area);
-					    SPUtils.putString(Constant.KEY_ADDRESS, area);
-					    httpGetWeather(area);
-				    }
-			    }
-		    });
-	    } else { // 定位不可用, 通过IP获取地址
-		    addSubscription(
-		        ApiService.address("js")
-		            .subscribeOn(Schedulers.io())
-		            .flatMap(new Func1<String, Observable<List<WeatherModel>>>() {
-			            @Override
-			            public Observable<List<WeatherModel>> call(String s) {
-				            int start = s.indexOf("{");
-				            int end = s.indexOf("}");
-				            String json = s.substring(start, end + 1);
-				            AddressModel addressModel = JSON.parseObject(json, AddressModel.class);
-				            Map params = new HashMap();
-				            params.put("city", addressModel.city);
-				            return ApiService.weather(params);
-			            }
-		            })
-		            .observeOn(AndroidSchedulers.mainThread())
-		            .subscribe(new Subscriber<List<WeatherModel>>() {
-			            @Override
-			            public void onCompleted() {
+        if (gpsUtils.isLoactionAvailable()) { // 定位可用, 通过定位获取地址
+            gpsUtils.initLocation(new GpsCallback() {
+                @Override
+                public void onResult(List<Address> address) {
+                    if (address.size() > 0) {
+                        String area = address.get(0).getSubAdminArea();
+                        LogUtil.d(TAG, "area = " + area);
+                        SPUtils.putString(Constant.KEY_ADDRESS, area);
+                        httpGetWeather(area);
+                    }
+                }
+            });
+        } else { // 定位不可用, 通过IP获取地址
+            addSubscription(
+                    ApiService.address("js")
+                            .subscribeOn(Schedulers.io())
+                            .flatMap(new Func1<String, Observable<List<WeatherModel>>>() {
+                                @Override
+                                public Observable<List<WeatherModel>> call(String s) {
+                                    int start = s.indexOf("{");
+                                    int end = s.indexOf("}");
+                                    String json = s.substring(start, end + 1);
+                                    AddressModel addressModel = JSON.parseObject(json, AddressModel.class);
+                                    Map params = new HashMap();
+                                    params.put("city", addressModel.city);
+                                    return ApiService.weather(params);
+                                }
+                            })
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Subscriber<List<WeatherModel>>() {
+                                @Override
+                                public void onCompleted() {
 
-			            }
+                                }
 
-			            @Override
-			            public void onError(Throwable e) {
+                                @Override
+                                public void onError(Throwable e) {
 
-			            }
+                                }
 
-			            @Override
-			            public void onNext(List<WeatherModel> weatherModel) {
-				            showWeather(weatherModel);
-			            }
-		            })
-		    );
-	    }
+                                @Override
+                                public void onNext(List<WeatherModel> weatherModel) {
+                                    showWeather(weatherModel);
+                                }
+                            })
+            );
+        }
+
+        gpsUtils.initLocation(address -> {
+            if (address.size() > 0) {
+                httpGetWeather(address.get(0).getSubAdminArea());
+            }
+        });
+        if (gpsUtils.isLoactionAvailable()) { // 定位可用, 通过定位获取地址
+            gpsUtils.initLocation(new GpsCallback() {
+                @Override
+                public void onResult(List<Address> address) {
+                    if (address.size() > 0) {
+                        String area = address.get(0).getSubAdminArea();
+                        LogUtil.d(TAG, "area = " + area);
+                        SPUtils.putString(Constant.KEY_ADDRESS, area);
+                        httpGetWeather(area);
+                    }
+                }
+            });
+        } else { // 定位不可用, 通过IP获取地址
+            addSubscription(
+                    ApiService.address("js")
+                            .subscribeOn(Schedulers.io())
+                            .flatMap(new Func1<String, Observable<List<WeatherModel>>>() {
+                                @Override
+                                public Observable<List<WeatherModel>> call(String s) {
+                                    int start = s.indexOf("{");
+                                    int end = s.indexOf("}");
+                                    String json = s.substring(start, end + 1);
+                                    AddressModel addressModel = JSON.parseObject(json, AddressModel.class);
+                                    Map params = new HashMap();
+                                    params.put("city", addressModel.city);
+                                    return ApiService.weather(params);
+                                }
+                            })
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Subscriber<List<WeatherModel>>() {
+                                @Override
+                                public void onCompleted() {
+
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+
+                                }
+
+                                @Override
+                                public void onNext(List<WeatherModel> weatherModel) {
+                                    showWeather(weatherModel);
+                                }
+                            })
+            );
+        }
 
     }
 
@@ -500,28 +558,28 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 
             @Override
             public void onNext(List<WeatherModel> weatherModel) {
-	            showWeather(weatherModel);
+                showWeather(weatherModel);
             }
         }));
 
     }
 
-	private void showWeather(List<WeatherModel> weatherModel) {
-		if (weatherModel.size() > 0 && weatherModel.get(0).getDaily().size() > 0) {
-		    WeatherModel.DailyBean detailBean = weatherModel.get(0).getDaily()
-		            .get(0);
-		    temTv.setText(detailBean.getLow() + "~" + detailBean.getHigh() + "℃");
-		    //判断当前时间是晚上还是白天来显示天气
-		    if (TimeUtils.getHour(new Date(System.currentTimeMillis())) > 6
-		            && TimeUtils.getHour(new Date(System.currentTimeMillis())) < 18) {
-		        weatherTv.setText(detailBean.getText_day());
-		    } else {
-		        weatherTv.setText(detailBean.getText_night());
-		    }
-		}
-	}
+    private void showWeather(List<WeatherModel> weatherModel) {
+        if (weatherModel.size() > 0 && weatherModel.get(0).getDaily().size() > 0) {
+            WeatherModel.DailyBean detailBean = weatherModel.get(0).getDaily()
+                    .get(0);
+            temTv.setText(detailBean.getLow() + "~" + detailBean.getHigh() + "℃");
+            //判断当前时间是晚上还是白天来显示天气
+            if (TimeUtils.getHour(new Date(System.currentTimeMillis())) > 6
+                    && TimeUtils.getHour(new Date(System.currentTimeMillis())) < 18) {
+                weatherTv.setText(detailBean.getText_day());
+            } else {
+                weatherTv.setText(detailBean.getText_night());
+            }
+        }
+    }
 
-	@Override
+    @Override
     protected void onStart() {
         super.onStart();
         mStaticHandler.post(mRefreshTimeRunnable);
@@ -583,6 +641,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         dialogFragment.show(getSupportFragmentManager(), "");
     }
 
+
     private void registerBatteryReceiver() {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Intent.ACTION_BATTERY_CHANGED);
@@ -596,14 +655,14 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
             int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, 0);
             int levelPercent = (int) (level * 100f / scale);
             LogUtil.d("电池电量百分比 = " + levelPercent);
-	        LauncherApplication.sLevel = levelPercent;
-	        int status = intent.getIntExtra(BatteryManager.EXTRA_STATUS,
+            LauncherApplication.sLevel = levelPercent;
+            int status = intent.getIntExtra(BatteryManager.EXTRA_STATUS,
                     BatteryManager.BATTERY_HEALTH_UNKNOWN);
-	        if (status == BatteryManager.BATTERY_STATUS_CHARGING) {
-		        LauncherApplication.sIsCharge = 1;
-	        } else {
-		        LauncherApplication.sIsCharge = 0;
-	        }
+            if (status == BatteryManager.BATTERY_STATUS_CHARGING) {
+                LauncherApplication.sIsCharge = 1;
+            } else {
+                LauncherApplication.sIsCharge = 0;
+            }
             switch (status) {
                 case BatteryManager.BATTERY_STATUS_CHARGING:
                     LogUtil.d("充电中");
@@ -636,6 +695,13 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         battryView.setProgress(leverPercent);
     }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
+    }
+
     private static class StaticHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
@@ -646,9 +712,9 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     @Override
     protected void onDestroy() {
         super.onDestroy();
-	    if (!mSubscription.isUnsubscribed()) {
-		    mSubscription.unsubscribe();
-	    }
+        if (!mSubscription.isUnsubscribed()) {
+            mSubscription.unsubscribe();
+        }
         unregisterReceiver(mBatteryReceiver);
         unregisterReceiver(mNetChangeBroadcastReceiver);
         mStaticHandler.removeCallbacksAndMessages(null);

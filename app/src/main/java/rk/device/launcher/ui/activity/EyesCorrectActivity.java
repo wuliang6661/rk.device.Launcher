@@ -1,6 +1,5 @@
 package rk.device.launcher.ui.activity;
 
-import android.nfc.cardemulation.HostNfcFService;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
