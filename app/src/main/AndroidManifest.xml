@@ -150,6 +150,11 @@
             android:screenOrientation="portrait" />
 
 
+        <!--双目校验-->
+        <activity
+            android:name=".ui.activity.EyesCorrectActivity"
+            android:screenOrientation="portrait" />
+
         <!--网络监听-->
         <receiver android:name=".service.NetBroadcastReceiver">
             <intent-filter>

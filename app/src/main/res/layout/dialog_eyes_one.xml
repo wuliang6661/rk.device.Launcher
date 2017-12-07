@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_dialog_top"
+        android:orientation="vertical">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="69dp">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/jiaozhunqian"
+                android:textColor="@color/white"
+                android:textSize="25dp" />
+
+
+            <ImageView
+                android:id="@+id/close_dialog"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="15dp"
+                android:src="@drawable/close" />
+
+
+        </RelativeLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/color_b7dbf9" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="26dp"
+            android:layout_marginTop="33dp"
+            android:text="@string/edit_jianpan"
+            android:textColor="@color/white"
+            android:textSize="22dp" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+
+            <EditText
+                android:id="@+id/hang_num"
+                android:layout_width="0dp"
+                android:layout_height="65dp"
+                android:layout_marginLeft="26dp"
+                android:layout_weight="1"
+                android:background="@drawable/edit_bg"
+                android:hint="行数"
+                android:inputType="number"
+                android:maxLength="1"
+                android:paddingLeft="10dp"
+                android:text="6"
+                android:textColor="#cccccc"
+                android:textColorHint="#cccccc"
+                android:textSize="22dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:text="*"
+                android:textColor="@color/white"
+                android:textSize="22dp" />
+
+
+            <EditText
+                android:id="@+id/lie_num"
+                android:layout_width="0dp"
+                android:layout_height="65dp"
+                android:layout_marginRight="26dp"
+                android:layout_weight="1"
+                android:background="@drawable/edit_bg"
+                android:hint="列数"
+                android:inputType="number"
+                android:maxLength="1"
+                android:paddingLeft="10dp"
+                android:text="9"
+                android:textColor="#cccccc"
+                android:textColorHint="#cccccc"
+                android:textSize="22dp" />
+
+        </LinearLayout>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="26dp"
+            android:layout_marginTop="40dp"
+            android:text="@string/edit_hint"
+            android:textColor="@color/white"
+            android:textSize="22dp" />
+
+
+        <EditText
+            android:id="@+id/count_num"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:layout_marginLeft="26dp"
+            android:layout_marginRight="26dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/edit_bg"
+            android:hint="请输入"
+            android:inputType="number"
+            android:maxLength="2"
+            android:paddingLeft="10dp"
+            android:text="20"
+            android:textColor="#cccccc"
+            android:textColorHint="#cccccc"
+            android:textSize="22dp" />
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="45dp"
+            android:background="@color/color_b7dbf9" />
+
+
+        <Button
+            android:id="@+id/btn_confirm"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_weight="1"
+            android:background="@drawable/shape_dialog_btn_cancel"
+            android:gravity="center"
+            android:text="下一步"
+            android:textColor="@color/white"
+            android:textSize="22dp" />
+
+
+    </LinearLayout>
+
+</FrameLayout>

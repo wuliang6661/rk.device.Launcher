@@ -1,11 +1,32 @@
 package cvc;
 
 public class EventUtil {
-    public static final int UPDATE_FACE_RECT = 0;
-    public static final int CAMERA_HAS_STARTED_PREVIEW = 1;
-    public static final int START_CVC = 2;
-    public static final int START_CALIBRATION = 3;//开始校验
-    public static final int CVC_DETECTFACE = 4;//人脸检测
 
+
+    /**
+     * 初始话摄像头校验行和列
+     */
+    public static final int START_CVC = 2;
+
+    /**
+     * 校验
+     */
+    public static final int START_CORRECT = 6;
+
+    /**
+     * 摄像头校准完成
+     */
+
+    public static final int START_CALIBRATION = 3;
+
+
+    /**
+     * 人脸检测
+     */
+
+    public static final int CVC_DETECTFACE = 4;
+    /**
+     * 活体检测
+     */
     public static final int CVC_LIVINGFACE = 5;
 }

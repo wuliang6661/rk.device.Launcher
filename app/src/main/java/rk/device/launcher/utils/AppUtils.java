@@ -82,20 +82,20 @@ public class AppUtils {
 //        activity.startActivityForResult(IntentUtils.getInstallAppIntent(file), requestCode);
 //    }
 //
-//    /**
-//     * 静默安装App
-//     * <p>非root需添加权限 {@code <uses-permission android:name="android.permission.INSTALL_PACKAGES" />}</p>
-//     *
-//     * @param filePath 文件路径
-//     * @return {@code true}: 安装成功<br>{@code false}: 安装失败
-//     */
-//    public static boolean installAppSilent(String filePath) {
-//        File file = FileUtils.getFileByPath(filePath);
-//        if (!FileUtils.isFileExists(file)) return false;
-//        String command = "LD_LIBRARY_PATH=/vendor/lib:/system/lib pm install " + filePath;
-//        ShellUtils.CommandResult commandResult = ShellUtils.execCmd(command, !isSystemApp(Utils.getContext()), true);
-//        return commandResult.successMsg != null && commandResult.successMsg.toLowerCase().contains("success");
-//    }
+    /**
+     * 静默安装App
+     * <p>非root需添加权限 {@code <uses-permission android:name="android.permission.INSTALL_PACKAGES" />}</p>
+     *
+     * @param filePath 文件路径
+     * @return {@code true}: 安装成功<br>{@code false}: 安装失败
+     */
+    public static boolean installAppSilent(String filePath) {
+        File file = FileUtils.getFileByPath(filePath);
+        if (!FileUtils.isFileExists(file)) return false;
+        String command = "LD_LIBRARY_PATH=/vendor/lib:/system/lib pm install " + filePath;
+        ShellUtils.CommandResult commandResult = ShellUtils.execCmd(command, !isSystemApp(Utils.getContext()), true);
+        return commandResult.successMsg != null && commandResult.successMsg.toLowerCase().contains("success");
+    }
 //
 //    /**
 //     * 卸载App

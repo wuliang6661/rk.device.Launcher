@@ -20,10 +20,10 @@ import rk.device.launcher.utils.ThreadUtils;
  */
 public class GpsUtils {
 
-    private final String    TAG              = "GpsUtils";
+    private final String TAG = "GpsUtils";
 
     private LocationManager mLocationManager = null;
-    private Context         mContext;
+    private Context mContext;
 
     public GpsUtils(Context context) {
         this.mContext = context;
@@ -82,7 +82,7 @@ public class GpsUtils {
         });
     }
 
-    public boolean isGpsOpened() {
+    private boolean isGpsOpened() {
         boolean isOpen = true;
         // 没有开启GPS
         if (!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
@@ -91,7 +91,7 @@ public class GpsUtils {
         return isOpen;
     }
 
-    public boolean isNewWorkOpen() {
+    private boolean isNewWorkOpen() {
         boolean isOpen = true;
         // 没有开启网络定位
         if (!mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {

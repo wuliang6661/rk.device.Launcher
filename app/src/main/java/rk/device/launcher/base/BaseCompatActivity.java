@@ -23,7 +23,6 @@ import rk.device.launcher.service.RKLauncherPushService;
 import rk.device.launcher.ui.activity.SetNetWorkActivity;
 import rk.device.launcher.ui.fragment.BaseDialogFragment;
 import rk.device.launcher.utils.AppManager;
-import rk.device.launcher.utils.NetUtils;
 import rx.Subscription;
 import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
@@ -75,15 +74,15 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
         initView();
         initData();
     }
-	
-	@Override
-	protected void onResume() {
-		super.onResume();
-		PushManager.getInstance().initialize(getApplicationContext(), RKLauncherPushService.class);
-		PushManager.getInstance().registerPushIntentService(getApplicationContext(), RKLauncherPushIntentService.class);
-	}
-	
-	@Override
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        PushManager.getInstance().initialize(getApplicationContext(), RKLauncherPushService.class);
+        PushManager.getInstance().registerPushIntentService(getApplicationContext(), RKLauncherPushIntentService.class);
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         AppManager.getAppManager().removeActivity(this);
@@ -158,6 +157,20 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
 
 
     /**
+     * 显示需要自定义的提示弹窗
+     */
+    protected BaseDialogFragment showMessageDialog(String message, String right, View.OnClickListener listener) {
+        hintDialog = BaseDialogFragment.newInstance();
+        hintDialog.setMessage(message);
+        hintDialog.setCancleable(true);
+        hintDialog.setLeftButton("取消", view -> hintDialog.dismiss());
+        hintDialog.setRightButton(right, listener);
+        hintDialog.show(getSupportFragmentManager(), "hint");
+        return hintDialog;
+    }
+
+
+    /**
      * 隐藏提示弹窗
      */
     protected void dissmissMessageDialog() {
@@ -193,15 +206,6 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
         });
     }
 
-    /**
-     * 判断网络是否连接
-     */
-    private void isNetConnect() {
-        if (!NetUtils.isNetworkConnected(this)) {
-            showNetConnect();
-        }
-    }
-
 
     /**
      * 显示断网提示
@@ -219,14 +223,6 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
         return hintDialog;
     }
 
-    /**
-     * 全局监听蓝牙连接状态
-     */
-    private void registerBlueListener() {
-
-
-
-    }
 
     private BlueToothsBroadcastReceiver mReceiver;
 

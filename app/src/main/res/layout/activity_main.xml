@@ -96,51 +96,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-            <EditText
-                android:id="@+id/et_width"
-                android:layout_width="80dp"
-                android:layout_height="50dp"
-                android:background="@color/backColor"
-                android:gravity="center"
-                android:hint="@string/hint_width"
-                android:inputType="number"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_14" />
-
-            <EditText
-                android:id="@+id/et_height"
-                android:layout_width="80dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="90dp"
-                android:background="@color/backColor"
-                android:gravity="center"
-                android:hint="@string/hint_height"
-                android:inputType="number"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_14" />
-
-            <TextView
-                android:id="@+id/tv_sure"
-                android:layout_width="80dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="180dp"
-                android:background="@color/backColor"
-                android:gravity="center"
-                android:text="@string/start_gather"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_14" />
-
-            <TextView
-                android:id="@+id/tv_finish"
-                android:layout_width="80dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="270dp"
-                android:background="@color/backColor"
-                android:gravity="center"
-                android:text="@string/finish"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_14" />
-
             <TextView
                 android:id="@+id/tv_declare"
                 android:layout_width="match_parent"

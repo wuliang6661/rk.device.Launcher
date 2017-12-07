@@ -1,21 +1,21 @@
 package rk.device.launcher.ui.activity;
 
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.inuker.bluetooth.library.BluetoothClient;
 import com.inuker.bluetooth.library.Constants;
-import com.inuker.bluetooth.library.connect.response.BleConnectResponse;
-import com.inuker.bluetooth.library.model.BleGattProfile;
 
 import java.util.Calendar;
 import java.util.Date;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import rk.device.launcher.R;
 import rk.device.launcher.api.T;
 import rk.device.launcher.base.BaseCompatActivity;
@@ -39,6 +39,9 @@ import static rk.device.launcher.utils.SPUtils.get;
 public class SetBasicInfoActivity extends BaseCompatActivity implements View.OnClickListener {
 
     private long when_time = 0;
+
+    @Bind(R.id.eyes_verify)
+    LinearLayout eyesVerify;
     @Bind(R.id.tv_time)
     TextView timeTv;
     @Bind(R.id.tv_blue_tooth_name)
@@ -49,7 +52,6 @@ public class SetBasicInfoActivity extends BaseCompatActivity implements View.OnC
     CheckBox voiceCheckBox;
     private boolean isVoice = false;                           //是否语音提示
     private BlueToothEvent blueEvent = null;
-    private BleGattProfile data;
     private BluetoothClient mClient = MoreManager.getBluetoothClient();
 
     @Override
@@ -60,7 +62,7 @@ public class SetBasicInfoActivity extends BaseCompatActivity implements View.OnC
     @Override
     protected void initView() {
         registerRxBus();
-        setOnClick(R.id.ll_set_time, R.id.ll_set_blue_tooth, R.id.btn_finish_setting);
+        setOnClick(R.id.ll_set_time, R.id.ll_set_blue_tooth, R.id.btn_finish_setting, R.id.eyes_verify);
         goBack();
     }
 
@@ -138,14 +140,13 @@ public class SetBasicInfoActivity extends BaseCompatActivity implements View.OnC
         } else {
             voiceCheckBox.setChecked(false);
         }
-        voiceCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                isVoice = isChecked;
-            }
-        });
+        voiceCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> isVoice = isChecked);
     }
 
+
+    /**
+     * 设置监听
+     */
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -155,22 +156,17 @@ public class SetBasicInfoActivity extends BaseCompatActivity implements View.OnC
             case R.id.ll_set_blue_tooth:
                 gotoActivity(BlueToothActivity.class, false);
                 break;
+            case R.id.eyes_verify:    //双目校验
+                gotoActivity(EyesCorrectActivity.class, false);
+                break;
             case R.id.btn_finish_setting:
                 String deviceName = deviceNameEt.getText().toString();
                 if (TextUtils.isEmpty(deviceName)) {
                     T.showShort(getString(R.string.name_setting_illeagel));
                     return;
                 }
-//                if (when_time == 0) {
-//                    T.showShort(getString(R.string.time_setting_illeagel));
-//                    return;
-//                }
-                //设置系统时间
-//                if (when_time / 1000 < Integer.MAX_VALUE) {
-//                    //                    SystemClock.setCurrentTimeMillis(when_time);
-//                }
                 if (blueEvent == null) {
-                    T.showShort(getString(R.string.blue_tooth_setting_illeagel));
+                    saveDataFinish(deviceName);
                     return;
                 }
                 connectDevice(deviceName);
@@ -180,42 +176,23 @@ public class SetBasicInfoActivity extends BaseCompatActivity implements View.OnC
 
     /**
      * 连接蓝牙
-     *
-     * @return
      */
     private boolean connectDevice(String deviceName) {
         showMessageDialog("正在连接蓝牙锁...");
-        mClient.connect(blueEvent.mac, new BleConnectResponse() {
-            @Override
-            public void onResponse(int code, BleGattProfile data) {
-                MoreManager.setBlueToothEvent(blueEvent);
-                MoreManager.setProfile(data);
-                SetBasicInfoActivity.this.data = data;
-                dissmissMessageDialog();
-                MoreManager.blueReadClient();
-                if (code == Constants.REQUEST_SUCCESS) {
-                    //下面把相关的参数保存起来
-                    //设备名称
-                    SPUtils.put(Constant.DEVICE_NAME, deviceName);
-                    //语音设置
-                    SPUtils.put(Constant.DEVICE_MP3, isVoice);
-                    //蓝牙
-                    SPUtils.put(Constant.BLUE_TOOTH, blueEvent.mac);
-                    SPUtils.put(Constant.BLUE_NAME, blueEvent.name);
-                    //判断是否是第一次
-                    boolean isFirst = (boolean) SPUtils.get(Constant.IS_FIRST_SETTING, true);
-                    MoreManager.openLock((int) (when_time / 1000));
-//                    syncBlueTime();
-                    if (isFirst) {
-                        SPUtils.put(Constant.SETTING_NUM, Constant.SETTING_TYPE2);
-                        gotoActivity(SetNetWorkActivity.class, true);
-                    } else {
-                        finish();
-                    }
-                    RxBus.getDefault().post(new HomeInfoEvent(deviceName));
-                } else {
-                    T.showShort(getString(R.string.blue_tooth_error));
-                }
+        mClient.connect(blueEvent.mac, (code, data) -> {
+            MoreManager.setBlueToothEvent(blueEvent);
+            MoreManager.setProfile(data);
+            dissmissMessageDialog();
+            MoreManager.blueReadClient();   //开启蓝牙数据监听
+            if (code == Constants.REQUEST_SUCCESS) {
+                //蓝牙
+                SPUtils.put(Constant.BLUE_TOOTH, blueEvent.mac);
+                SPUtils.put(Constant.BLUE_NAME, blueEvent.name);
+                MoreManager.openLock((int) (when_time / 1000));
+                saveDataFinish(deviceName);
+                RxBus.getDefault().post(new HomeInfoEvent(deviceName));
+            } else {
+                T.showShort(getString(R.string.blue_tooth_error));
             }
         });
         return false;
@@ -228,5 +205,26 @@ public class SetBasicInfoActivity extends BaseCompatActivity implements View.OnC
     private void syncBlueTime() {
         int time = (int) (when_time / 1000);
         MoreManager.syncBlueTime(time);
+    }
+
+
+    /**
+     * 保存必需参数并退出页面
+     */
+    private void saveDataFinish(String deviceName) {
+        //下面把相关的参数保存起来
+        //设备名称
+        SPUtils.put(Constant.DEVICE_NAME, deviceName);
+        //语音设置
+        SPUtils.put(Constant.DEVICE_MP3, isVoice);
+        //判断是否是第一次
+        boolean isFirst = (boolean) SPUtils.get(Constant.IS_FIRST_SETTING, true);
+//                    syncBlueTime();
+        if (isFirst) {
+            SPUtils.put(Constant.SETTING_NUM, Constant.SETTING_TYPE2);
+            gotoActivity(SetNetWorkActivity.class, true);
+        } else {
+            finish();
+        }
     }
 }
