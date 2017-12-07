@@ -93,10 +93,10 @@ public class DownLoadIntentService extends IntentService {
 			mApkPath = savePath + getAppInfo() + ".apk";
 			File apkFile = new File(mApkPath);
 			// 是否已下载更新文件
-			if (apkFile.exists()) {
-				installApk();
-				return;
-			}
+//			if (apkFile.exists()) {
+//				installApk();
+//				return;
+//			}
 			OkHttpClient client = new OkHttpClient();
 			Request request = new Request.Builder()
 			        .url(url)
@@ -164,10 +164,11 @@ public class DownLoadIntentService extends IntentService {
 			intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
 			startActivity(intent);
 		} else {
-			Intent i = new Intent(Intent.ACTION_VIEW);
-			i.setDataAndType(Uri.parse("file://" + apkfile.toString()),
+			Intent intent = new Intent(Intent.ACTION_VIEW);
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			intent.setDataAndType(Uri.parse("file://" + apkfile.toString()),
 			"application/vnd.android.package-archive");
-			startActivity(i);
+			startActivity(intent);
 		}
 	}
 	
