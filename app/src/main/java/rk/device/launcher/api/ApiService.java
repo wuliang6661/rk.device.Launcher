@@ -25,8 +25,16 @@ public class ApiService {
     public static Observable<WeatherModel> weather(Map<String, Object> params) {
         return ApiFactory.weatherFactory().weather(params).compose(RxResultHelper.httpRusult());
     }
-
-    /**
+	
+	/**
+	 * 访问外网, 根据IP地址获取地址
+	 * @return
+	 */
+	public static Observable<String> address(String format) {
+		return ApiFactory.createAddressAPI().getAddress(format);
+	}
+	
+	/**
      * 检测App是否更新
      */
     public static Observable<VersionBean> updateApp(String verCode) {

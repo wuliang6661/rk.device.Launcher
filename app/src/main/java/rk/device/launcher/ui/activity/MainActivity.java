@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.sdk.android.oss.ClientException;
 import com.alibaba.sdk.android.oss.ServiceException;
 import com.alibaba.sdk.android.oss.model.PutObjectRequest;
@@ -48,10 +49,13 @@ import rk.device.launcher.api.T;
 import rk.device.launcher.base.BaseCompatActivity;
 import rk.device.launcher.base.utils.TypeTranUtils;
 import rk.device.launcher.base.utils.rxbus.RxBus;
+import rk.device.launcher.bean.AddressModel;
 import rk.device.launcher.bean.SetPageContentBean;
 import rk.device.launcher.bean.VerifyBean;
 import rk.device.launcher.bean.WeatherModel;
 import rk.device.launcher.global.Constant;
+import rk.device.launcher.global.LauncherApplication;
+import rk.device.launcher.service.SocketService;
 import rk.device.launcher.ui.fragment.InputWifiPasswordDialogFragment;
 import rk.device.launcher.utils.DateUtil;
 import rk.device.launcher.utils.LogUtil;
@@ -67,9 +71,13 @@ import rk.device.launcher.utils.uuid.DeviceUuidFactory;
 import rk.device.launcher.widget.BatteryView;
 import rk.device.launcher.widget.DetectedFaceView;
 import rk.device.launcher.widget.UpdateManager;
+import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 public class MainActivity extends BaseCompatActivity implements View.OnClickListener {
 
@@ -148,6 +156,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         settingTv.setOnClickListener(this);
         initSurfaceViewOne();
 	    registerRxBus();
+	    startService(new Intent(this, SocketService.class));
     }
 	
 	private void registerRxBus() {
@@ -501,14 +510,54 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         if (gpsUtils == null) {
             gpsUtils = new GpsUtils(this);
         }
-        gpsUtils.initLocation(new GpsCallback() {
-            @Override
-            public void onResult(List<Address> address) {
-                if (address.size() > 0) {
-                    httpGetWeather(address.get(0).getSubAdminArea());
-                }
-            }
-        });
+	    if (gpsUtils.isLoactionAvailable()) { // 定位可用, 通过定位获取地址
+		    gpsUtils.initLocation(new GpsCallback() {
+			    @Override
+			    public void onResult(List<Address> address) {
+				    if (address.size() > 0) {
+					    String area = address.get(0).getSubAdminArea();
+					    LogUtil.d(TAG, "area = " + area);
+					    SPUtils.putString(Constant.KEY_ADDRESS, area);
+					    httpGetWeather(area);
+				    }
+			    }
+		    });
+	    } else { // 定位不可用, 通过IP获取地址
+		    addSubscription(
+		        ApiService.address("js")
+		            .subscribeOn(Schedulers.io())
+		            .flatMap(new Func1<String, Observable<WeatherModel>>() {
+			            @Override
+			            public Observable<WeatherModel> call(String s) {
+				            int start = s.indexOf("{");
+				            int end = s.indexOf("}");
+				            String json = s.substring(start, end + 1);
+				            AddressModel addressModel = JSON.parseObject(json, AddressModel.class);
+				            Map params = new HashMap();
+				            params.put("city", addressModel.city);
+				            return ApiService.weather(params);
+			            }
+		            })
+		            .observeOn(AndroidSchedulers.mainThread())
+		            .subscribe(new Subscriber<WeatherModel>() {
+			            @Override
+			            public void onCompleted() {
+				
+			            }
+			
+			            @Override
+			            public void onError(Throwable e) {
+				
+			            }
+			
+			            @Override
+			            public void onNext(WeatherModel weatherModel) {
+				            showWeather(weatherModel);
+			            }
+		            })
+		    );
+	    }
+	    
     }
 
     /**
@@ -518,7 +567,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
      */
     private void httpGetWeather(String area) {
         Map params = new HashMap();
-        params.put("location", area);
+        params.put("city", area);
         addSubscription(ApiService.weather(params).subscribe(new Subscriber<WeatherModel>() {
             @Override
             public void onCompleted() {
@@ -532,25 +581,29 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 
             @Override
             public void onNext(WeatherModel weatherModel) {
-                List<WeatherModel.ResultsBean> beanList = weatherModel.getResults();
-                if (beanList.size() > 0 && beanList.get(0).getDaily().size() > 0) {
-                    WeatherModel.ResultsBean.DailyBean detailBean = beanList.get(0).getDaily()
-                            .get(0);
-                    temTv.setText(detailBean.getLow() + "~" + detailBean.getHigh() + "℃");
-                    //判断当前时间是晚上还是白天来显示天气
-                    if (TimeUtils.getHour(new Date(System.currentTimeMillis())) > 6
-                            && TimeUtils.getHour(new Date(System.currentTimeMillis())) < 18) {
-                        weatherTv.setText(detailBean.getText_day());
-                    } else {
-                        weatherTv.setText(detailBean.getText_night());
-                    }
-                }
+	            showWeather(weatherModel);
             }
         }));
 
     }
-
-    @Override
+	
+	private void showWeather(WeatherModel weatherModel) {
+		List<WeatherModel.ResultsBean> beanList = weatherModel.getResults();
+		if (beanList.size() > 0 && beanList.get(0).getDaily().size() > 0) {
+		    WeatherModel.ResultsBean.DailyBean detailBean = beanList.get(0).getDaily()
+		            .get(0);
+		    temTv.setText(detailBean.getLow() + "~" + detailBean.getHigh() + "℃");
+		    //判断当前时间是晚上还是白天来显示天气
+		    if (TimeUtils.getHour(new Date(System.currentTimeMillis())) > 6
+		            && TimeUtils.getHour(new Date(System.currentTimeMillis())) < 18) {
+		        weatherTv.setText(detailBean.getText_day());
+		    } else {
+		        weatherTv.setText(detailBean.getText_night());
+		    }
+		}
+	}
+	
+	@Override
     protected void onStart() {
         super.onStart();
         mStaticHandler.post(mRefreshTimeRunnable);
@@ -645,8 +698,14 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
             int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, 0);
             int levelPercent = (int) (level * 100f / scale);
             LogUtil.d("电池电量百分比 = " + levelPercent);
-            int status = intent.getIntExtra(BatteryManager.EXTRA_STATUS,
+	        LauncherApplication.sLevel = levelPercent;
+	        int status = intent.getIntExtra(BatteryManager.EXTRA_STATUS,
                     BatteryManager.BATTERY_HEALTH_UNKNOWN);
+	        if (status == BatteryManager.BATTERY_STATUS_CHARGING) {
+		        LauncherApplication.sIsCharge = 1;
+	        } else {
+		        LauncherApplication.sIsCharge = 0;
+	        }
             switch (status) {
                 case BatteryManager.BATTERY_STATUS_CHARGING:
                     LogUtil.d("充电中");

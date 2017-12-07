@@ -24,7 +24,7 @@ public class RkRetrofitFactory {
     private static class SingletonApiHolder {
         private static final BaseApi INSTANCE = getApiSingleton();
     }
-
+	
     /**
      * 天气
      *

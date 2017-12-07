@@ -193,7 +193,7 @@ public class DownLoadIntentService extends IntentService {
 		if (!dir.exists()) {
 			dir.mkdirs();
 		}
-		final File downLoadApk = new File(dir, "update.img");
+		final File downLoadRom = new File(dir, "update.img");
 		OkHttpClient client = new OkHttpClient();
 		Request request = new Request.Builder()
 		        .url(url)
@@ -219,7 +219,7 @@ public class DownLoadIntentService extends IntentService {
 					Log.e(TAG, "total------>" + total);
 					long current = 0;
 					is = response.body().byteStream();
-					fos = new FileOutputStream(downLoadApk);
+					fos = new FileOutputStream(downLoadRom);
 					while ((len = is.read(buffer)) != -1) {
 						current += len;
 						fos.write(buffer, 0, len);

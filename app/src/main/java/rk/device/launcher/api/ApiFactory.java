@@ -8,6 +8,8 @@ package rk.device.launcher.api;
  */
 public class ApiFactory {
     public static BaseApi weatherApi = null;
+	
+	public static BaseApi addressApi;
 
 
     /**
@@ -23,5 +25,10 @@ public class ApiFactory {
         }
         return weatherApi;
     }
+	
+	public static AddressAPI createAddressAPI() {
+		return RetrofitManager.getInstance().getAddressAPI();
+	}
+	
 
 }

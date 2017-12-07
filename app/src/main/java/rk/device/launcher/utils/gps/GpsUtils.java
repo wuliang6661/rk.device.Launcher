@@ -6,7 +6,6 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.List;
@@ -37,14 +36,20 @@ public class GpsUtils {
             }
         }
     }
+	
+	public boolean isLoactionAvailable() {
+		if (!isGpsOpened() && !isNewWorkOpen()) {
+			return false;
+		}
+		return true;
+	}
 
     public void initLocation(GpsCallback callback) {
         mLocationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
         // 既没有打开gps也没有打开网络
         if (!isGpsOpened() && !isNewWorkOpen()) {
-            Toast.makeText(mContext, "请打开网络或GPS定位功能!", Toast.LENGTH_SHORT).show();
-            //			Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            //			startActivityForResult(intent, 0);
+//            Toast.makeText(mContext, "请打开网络或GPS定位功能!", Toast.LENGTH_SHORT).show();
+	        
             return;
         }
         ThreadUtils.newThread(new Runnable() {
