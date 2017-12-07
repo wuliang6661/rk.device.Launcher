@@ -56,6 +56,7 @@ public class EyesCorrectActivity extends BaseCompatActivity implements View.OnCl
 
     private CvcHandler mHandler = null;
     EyesCorrectDialogOneFra dialogOneFra;
+    Timer timer;
 
     @Override
     protected int getLayout() {
@@ -108,7 +109,10 @@ public class EyesCorrectActivity extends BaseCompatActivity implements View.OnCl
      */
     private void showDialogTwo() {
         EyesCorrectDialog dialog = EyesCorrectDialog.newInstance();
-        dialog.setonCallBack(() -> new Timer().schedule(task, 0, 3000));
+        dialog.setonCallBack(() -> {
+            timer = new Timer();
+            timer.schedule(task, 0, 3000);
+        });
         dialog.show(getSupportFragmentManager(), "");
     }
 
@@ -156,6 +160,7 @@ public class EyesCorrectActivity extends BaseCompatActivity implements View.OnCl
                 haveCount++;
                 UIhandler.sendEmptyMessage(0x11);
                 if (haveCount == CountNum) {
+                    timer.cancel();
                     UIhandler.sendEmptyMessage(0x22);
                     Message msg = new Message();
                     msg.what = EventUtil.START_CALIBRATION;
