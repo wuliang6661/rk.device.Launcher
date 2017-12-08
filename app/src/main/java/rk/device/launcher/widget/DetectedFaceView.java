@@ -11,6 +11,7 @@ import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.util.Log;
 
+import cvc.CvcRect;
 import rk.device.launcher.R;
 import rk.device.launcher.base.utils.DensityUtils;
 import rk.device.launcher.utils.ScreenUtil;
@@ -33,6 +34,8 @@ public class DetectedFaceView extends AppCompatImageView {
     private float faceRegionW;
     private float faceRegionH;
 
+    private Rect[] rect = new Rect[1];
+
 
     public DetectedFaceView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -43,12 +46,16 @@ public class DetectedFaceView extends AppCompatImageView {
         roomHeight = DensityUtils.dp2px(mContext, 550);   //默认外部容器高度为550
     }
 
-    public void setFaces(Rect[] faces, float faceRegionW, int faceRegionH, float width, float height) {
+    public void setFaces(CvcRect cvcRect1, float faceRegionW, int faceRegionH, float width, float height) {
         this.faceRegionW = faceRegionW;
         this.faceRegionH = faceRegionH;
         this.PREVIEW_WIDTH = width;
         this.PREVIEW_HEIGHT = height;
-        this.mFaces = faces;
+        Rect oneRect = new Rect();
+        oneRect.set(cvcRect1.x, cvcRect1.y, cvcRect1.x + cvcRect1.w,
+                cvcRect1.y + cvcRect1.h);
+        rect[0] = oneRect;
+        this.mFaces = rect;
         invalidate();
     }
 

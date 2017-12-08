@@ -67,7 +67,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="43dp"
+            android:layout_marginTop="280dp"
             android:gravity="bottom"
             android:orientation="horizontal">
 
@@ -78,7 +78,7 @@
                 android:layout_height="wrap_content"
                 android:text="0"
                 android:textColor="@color/white"
-                android:textSize="35dp" />
+                android:textSize="50dp" />
 
             <TextView
                 android:id="@+id/all_num"
@@ -86,7 +86,7 @@
                 android:layout_height="wrap_content"
                 android:text="/20"
                 android:textColor="#cccccc"
-                android:textSize="25dp" />
+                android:textSize="40dp" />
 
 
         </LinearLayout>
@@ -96,6 +96,7 @@
             android:id="@+id/deng_off"
             android:layout_width="119dp"
             android:layout_height="119dp"
+            android:visibility="invisible"
             android:layout_marginTop="48dp"
             android:src="@drawable/deng_off" />
 
@@ -107,6 +108,7 @@
             android:layout_marginBottom="47dp"
             android:layout_marginTop="15dp"
             android:text="@string/deng_on"
+            android:visibility="invisible"
             android:textColor="@color/white"
             android:textSize="21dp" />
 

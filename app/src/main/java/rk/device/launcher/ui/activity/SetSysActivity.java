@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.OnClick;
+import peripherals.LedHelper;
 import rk.device.launcher.R;
 import rk.device.launcher.base.BaseCompatActivity;
 import rk.device.launcher.bean.SetDoorRvBean;
@@ -118,10 +119,13 @@ public class SetSysActivity extends BaseCompatActivity {
                 if (!TextUtils.isEmpty(clientCode)) {
                     SPUtils.putString(Constant.KEY_CLIENT_CODE, clientCode);
                 }
-
                 // 保存补光灯的开关状态
                 SPUtils.putBoolean(Constant.KEY_LIGNT, mCbLight.isChecked());
-
+                if (mCbLight.isChecked()) {
+                    LedHelper.PER_ledToggle(1);
+                } else {
+                    LedHelper.PER_ledToggle(0);
+                }
                 // 保存IP
                 String ip = mEtIP.getText().toString();
                 if (!TextUtils.isEmpty(ip)) {
@@ -213,17 +217,6 @@ public class SetSysActivity extends BaseCompatActivity {
                     mTvSleepTime.setText(checkedBean.text);
                 }
                 break;
-//			case 1:
-//				if (checkIndex > -1) {
-//					for (SetDoorRvBean setDoorRvBean : mLightValueDataList) {
-//						setDoorRvBean.isChecked = false;
-//					}
-//					SetDoorRvBean checkedBean = mLightValueDataList.get(checkIndex);
-//					checkedBean.isChecked = true;
-//					mEtLightValue.setText(checkedBean.text);
-//				}
-//
-//				break;
         }
     }
 

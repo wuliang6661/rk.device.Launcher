@@ -35,10 +35,6 @@ public interface Constant {
      */
     String IS_FIRST_SETTING = "IS_FIRSTSETTING";
     /**
-     * 客户ID
-     */
-    String CLIENT_ID = "CLIENT_ID";
-    /**
      * 设备名称（门禁设置 ）
      * <p>
      * sp取值value为String

@@ -2,16 +2,21 @@ package cvc;
 
 public class EventUtil {
 
+    /**
+     * 初始化所有jni库
+     */
+    public static final int INIT_JNI = 0;
+
 
     /**
      * 初始话摄像头校验行和列
      */
-    public static final int START_CVC = 2;
+    public static final int START_CVC = 1;
 
     /**
      * 校验
      */
-    public static final int START_CORRECT = 6;
+    public static final int START_CORRECT = 2;
 
     /**
      * 摄像头校准完成
@@ -29,4 +34,7 @@ public class EventUtil {
      * 活体检测
      */
     public static final int CVC_LIVINGFACE = 5;
+
+
+
 }

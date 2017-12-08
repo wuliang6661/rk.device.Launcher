@@ -11,7 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import rk.device.launcher.R;
 import rk.device.launcher.utils.ScreenUtil;
@@ -24,6 +26,11 @@ import rk.device.launcher.utils.ScreenUtil;
 
 public class WaitDialog extends DialogFragment {
 
+
+    @Bind(R.id.progress_text)
+    TextView progressText;
+
+    String text;
 
     /**
      * 获取dialog对象
@@ -63,7 +70,14 @@ public class WaitDialog extends DialogFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        progressText.setText(text);
     }
+
+
+    public void setText(String message) {
+        this.text = message;
+    }
+
 
     @Override
     public void onDestroyView() {

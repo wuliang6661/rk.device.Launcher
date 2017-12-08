@@ -10,19 +10,19 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import butterknife.Bind;
-import cvc.CvcHandler;
 import cvc.EventUtil;
+import peripherals.LedHelper;
 import rk.device.launcher.R;
 import rk.device.launcher.SurfaceHolderCaremaFont;
 import rk.device.launcher.api.T;
 import rk.device.launcher.base.BaseCompatActivity;
+import rk.device.launcher.base.JniHandler;
+import rk.device.launcher.global.Constant;
 import rk.device.launcher.ui.fragment.EyesCorrectDialog;
 import rk.device.launcher.ui.fragment.EyesCorrectDialogOneFra;
 import rk.device.launcher.ui.fragment.WaitDialog;
+import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.widget.BackCameraSurfaceView;
 
 /**
@@ -40,10 +40,6 @@ public class EyesCorrectActivity extends BaseCompatActivity implements View.OnCl
     BackCameraSurfaceView surfaceview01;
     @Bind(R.id.picule_num)
     TextView piculeNum;
-    @Bind(R.id.deng_off)
-    ImageView dengOff;
-    @Bind(R.id.deng_text)
-    TextView dengText;
     @Bind(R.id.iv_back)
     ImageView ivBack;
     @Bind(R.id.all_num)
@@ -53,9 +49,13 @@ public class EyesCorrectActivity extends BaseCompatActivity implements View.OnCl
     int haveCount = 0;    //已成功收集的照片，默认从0开始
 
 
-    private CvcHandler mHandler = null;
+    private JniHandler mHandler = null;
     EyesCorrectDialogOneFra dialogOneFra;
-    Timer timer;
+    WaitDialog dialog;
+
+    private static boolean isBack = false;    //页面是否结束
+    private static boolean isCallBack = true;   //收集照片是否完成
+
 
     @Override
     protected int getLayout() {
@@ -65,17 +65,19 @@ public class EyesCorrectActivity extends BaseCompatActivity implements View.OnCl
     @Override
     protected void initView() {
         setTitle("摄像头校准");
+        isBack = false;
         openCarmea();
         HandlerThread thread = new HandlerThread("new_thread");
         thread.start();
         Looper looper = thread.getLooper();
-        mHandler = new CvcHandler(looper);
+        mHandler = new JniHandler(looper);
     }
 
     @Override
     protected void initData() {
         ivBack.setOnClickListener(this);
         setCorectListener();
+        LedHelper.PER_ledToggle(1);
         showDialogOne();
     }
 
@@ -90,7 +92,11 @@ public class EyesCorrectActivity extends BaseCompatActivity implements View.OnCl
             public void callMessage(int line, int lie, int countNum) {
                 EyesCorrectActivity.this.CountNum = countNum;
                 allNum.setText(String.valueOf("/" + countNum));
-                setCorrectWAndH(line, lie);
+                if (isCallBack) {
+                    setCorrectWAndH(line, lie);
+                } else {
+                    T.showShort("上一次收集照片尚未完成，请稍后重新开始...");
+                }
             }
 
             @Override
@@ -109,8 +115,9 @@ public class EyesCorrectActivity extends BaseCompatActivity implements View.OnCl
     private void showDialogTwo() {
         EyesCorrectDialog dialog = EyesCorrectDialog.newInstance();
         dialog.setonCallBack(() -> {
-            timer = new Timer();
-            timer.schedule(task, 0, 3000);
+            Message msg = new Message();
+            msg.what = EventUtil.START_CORRECT;
+            mHandler.sendMessageDelayed(msg, 10);
         });
         dialog.show(getSupportFragmentManager(), "");
     }
@@ -130,6 +137,7 @@ public class EyesCorrectActivity extends BaseCompatActivity implements View.OnCl
      * 设置棋盘格宽高
      */
     private void setCorrectWAndH(int line, int lie) {
+        showWaitProgress("正在初始化，请稍后...");
         Message msg = new Message();
         msg.what = EventUtil.START_CVC;
         msg.arg1 = lie;
@@ -142,34 +150,57 @@ public class EyesCorrectActivity extends BaseCompatActivity implements View.OnCl
      * 初始化校验监听
      */
     private void setCorectListener() {
-        mHandler.setEyesCallback(new CvcHandler.OnEyesCallBack() {
+        mHandler.setEyesCallback(new JniHandler.OnEyesCallBack() {
             @Override
             public void initSuress() {
+                dialog.dismiss();
                 dialogOneFra.dismiss();
                 showDialogTwo();
             }
 
             @Override
             public void initError() {
+                dialog.dismiss();
                 T.showShort("棋盘格设置错误！请重新设置！");
             }
 
             @Override
-            public void picluerNext() {
+            public void picluerNextSuress() {
                 haveCount++;
                 UIhandler.sendEmptyMessage(0x11);
-                if (haveCount == CountNum) {
-                    timer.cancel();
+                isCallBack = true;
+                if (haveCount >= CountNum) {
                     UIhandler.sendEmptyMessage(0x22);
                     Message msg = new Message();
                     msg.what = EventUtil.START_CALIBRATION;
+                    mHandler.sendMessageDelayed(msg, 10);
+                } else {
+                    if (isBack || dialogOneFra.isVisible()) {
+                        return;
+                    }
+                    isCallBack = false;
+                    Message msg = new Message();
+                    msg.what = EventUtil.START_CORRECT;
                     mHandler.sendMessageDelayed(msg, 10);
                 }
             }
 
             @Override
+            public void picluerNextError() {
+                isCallBack = true;
+                if (isBack || dialogOneFra.isVisible()) {
+                    return;
+                }
+                isCallBack = false;
+                Message msg = new Message();
+                msg.what = EventUtil.START_CORRECT;
+                mHandler.sendMessageDelayed(msg, 10);
+            }
+
+            @Override
             public void pictureFinnish() {
                 T.showShort("校准完成！");
+                isBack = true;
                 finish();
             }
         });
@@ -182,6 +213,7 @@ public class EyesCorrectActivity extends BaseCompatActivity implements View.OnCl
             case R.id.iv_back:
                 showMessageDialog("校准照片未满" + CountNum + "张，\n\n确认退出后此次校准失败", "确定", view1 -> {
                     dissmissMessageDialog();
+                    isBack = true;
                     finish();
                 });
                 break;
@@ -189,33 +221,38 @@ public class EyesCorrectActivity extends BaseCompatActivity implements View.OnCl
     }
 
 
-    /**
-     * 执行收集照片
-     */
-    TimerTask task = new TimerTask() {
-        @Override
-        public void run() {
-            Message msg = new Message();
-            msg.what = EventUtil.START_CORRECT;
-            mHandler.sendMessageDelayed(msg, 10);
-        }
-    };
-
     Handler UIhandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
                 case 0x11:
-                    piculeNum.setText(String.valueOf(haveCount));
+                    if (piculeNum != null) {
+                        piculeNum.setText(String.valueOf(haveCount));
+                    }
                     break;
                 case 0x22:
-                    WaitDialog dialog = new WaitDialog();
-                    dialog.show(getSupportFragmentManager(), "");
+                    showWaitProgress("正在校准，需要几分钟左右，请稍后...");
                     break;
             }
         }
     };
 
 
+    /**
+     * 显示进度条弹窗
+     */
+    private void showWaitProgress(String text) {
+        dialog = WaitDialog.newInstance();
+        dialog.setText(text);
+        dialog.show(getSupportFragmentManager(), "");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (!SPUtils.getBoolean(Constant.KEY_LIGNT, false)) {
+            LedHelper.PER_ledToggle(0);
+        }
+    }
 }

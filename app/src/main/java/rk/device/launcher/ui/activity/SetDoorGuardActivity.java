@@ -128,6 +128,9 @@ public class SetDoorGuardActivity extends BaseCompatActivity implements View.OnC
                 }
                 break;
             case R.id.ll_connected_device:    //关联设备
+                if (device == null) {
+                    return;
+                }
                 Bundle bundle = new Bundle();
                 bundle.putString("title", "关联设备");
                 bundle.putSerializable("data", device);
@@ -152,7 +155,8 @@ public class SetDoorGuardActivity extends BaseCompatActivity implements View.OnC
 
             @Override
             public void onError(Throwable e) {
-                Toast.makeText(SetDoorGuardActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(SetDoorGuardActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                mTvConnectedDevice.setText("蓝牙锁");
             }
 
             @Override

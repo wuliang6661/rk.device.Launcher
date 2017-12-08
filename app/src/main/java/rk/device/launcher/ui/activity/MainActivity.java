@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Rect;
 import android.location.Address;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -37,7 +36,6 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import cvc.CvcHandler;
 import cvc.CvcHelper;
 import cvc.CvcRect;
 import cvc.EventUtil;
@@ -46,6 +44,7 @@ import rk.device.launcher.SurfaceHolderCaremaFont;
 import rk.device.launcher.api.ApiService;
 import rk.device.launcher.api.T;
 import rk.device.launcher.base.BaseCompatActivity;
+import rk.device.launcher.base.JniHandler;
 import rk.device.launcher.base.utils.rxbus.RxBus;
 import rk.device.launcher.bean.AddressModel;
 import rk.device.launcher.bean.SetPageContentBean;
@@ -73,7 +72,6 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
@@ -110,7 +108,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     @Bind(R.id.tv_declare)
     TextView mTvDeclare;
 
-    private CvcHandler mHandler = null;
+    private JniHandler mHandler = null;
     private static final int REFRESH_DELAY = 1000;
     SurfaceHolderCaremaFont callbackFont;
 
@@ -150,18 +148,12 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     }
 
     private void registerRxBus() {
-        mSubscription = RxBus.getDefault().toObserverable(SetPageContentBean.class).subscribe(new Action1<SetPageContentBean>() {
-            @Override
-            public void call(SetPageContentBean setPageContentBean) {
-                if (mTvDeclare != null) {
-                    mTvDeclare.setText(setPageContentBean.content);
-                }
+        mSubscription = RxBus.getDefault().toObserverable(SetPageContentBean.class).subscribe(setPageContentBean -> {
+            if (mTvDeclare != null) {
+                mTvDeclare.setText(setPageContentBean.content);
             }
-        }, new Action1<Throwable>() {
-            @Override
-            public void call(Throwable throwable) {
+        }, throwable -> {
 
-            }
         });
     }
 
@@ -172,9 +164,6 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         openCamera();
         surfaceholder.addCallback(callbackFont);
     }
-
-    private CvcRect cvcRect = new CvcRect();
-    private Rect[] rect = new Rect[1];
 
 
     int faceCount = 0;//记录摄像头采集的画面帧数,每5帧调取一次人脸识别
@@ -192,17 +181,12 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
                 }
                 Message message = new Message();
                 message.what = EventUtil.CVC_DETECTFACE;
-                message.obj = cvcRect;
-                mHandler.setOnBioAssay(new CvcHandler.OnBioAssay() {
+                mHandler.setOnBioAssay(new JniHandler.OnBioAssay() {
                     @Override
                     public void setOnBioFace(CvcRect cvcRect1, int[] rectWidth, int[] rectHeight) {
-                        Rect oneRect = new Rect();
-                        oneRect.set(cvcRect1.x, cvcRect1.y, cvcRect1.x + cvcRect1.w,
-                                cvcRect1.y + cvcRect1.h);
-                        rect[0] = oneRect;
                         runOnUiThread(() -> {
                             //T.showShort("检测到人脸");
-                            faceView.setFaces(rect, cvcRect1.w, cvcRect1.h, rectWidth[0], rectHeight[0]);
+                            faceView.setFaces(cvcRect1, cvcRect1.w, cvcRect1.h, rectWidth[0], rectHeight[0]);
                         });
                         Message msg = new Message();
                         msg.what = EventUtil.CVC_LIVINGFACE;
@@ -315,18 +299,16 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     }
 
     /**
-     * 初始化Cvc
+     * 初始化所有JNI外设
      */
     private void initHandlerThread() {
         HandlerThread thread = new HandlerThread("new_thread");
         thread.start();
         Looper looper = thread.getLooper();
-        mHandler = new CvcHandler(looper);
-        int code = CvcHelper.CVC_init();
-        Log.d(TAG, code + "    ------cvcCode");
-        if (code != 0) {
-            T.showShort("load cvc error...");
-        }
+        mHandler = new JniHandler(looper);
+        Message msg = new Message();
+        msg.what = EventUtil.INIT_JNI;
+        mHandler.sendMessageDelayed(msg, 10);
     }
 
     /**
@@ -450,17 +432,14 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
             addSubscription(
                     ApiService.address("js")
                             .subscribeOn(Schedulers.io())
-                            .flatMap(new Func1<String, Observable<List<WeatherModel>>>() {
-                                @Override
-                                public Observable<List<WeatherModel>> call(String s) {
-                                    int start = s.indexOf("{");
-                                    int end = s.indexOf("}");
-                                    String json = s.substring(start, end + 1);
-                                    AddressModel addressModel = JSON.parseObject(json, AddressModel.class);
-                                    Map params = new HashMap();
-                                    params.put("city", addressModel.city);
-                                    return ApiService.weather(params);
-                                }
+                            .flatMap((Func1<String, Observable<List<WeatherModel>>>) s -> {
+                                int start = s.indexOf("{");
+                                int end = s.indexOf("}");
+                                String json = s.substring(start, end + 1);
+                                AddressModel addressModel = JSON.parseObject(json, AddressModel.class);
+                                Map params = new HashMap();
+                                params.put("city", addressModel.city);
+                                return ApiService.weather(params);
                             })
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(new Subscriber<List<WeatherModel>>() {
@@ -488,32 +467,26 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
             }
         });
         if (gpsUtils.isLoactionAvailable()) { // 定位可用, 通过定位获取地址
-            gpsUtils.initLocation(new GpsCallback() {
-                @Override
-                public void onResult(List<Address> address) {
-                    if (address.size() > 0) {
-                        String area = address.get(0).getSubAdminArea();
-                        LogUtil.d(TAG, "area = " + area);
-                        SPUtils.putString(Constant.KEY_ADDRESS, area);
-                        httpGetWeather(area);
-                    }
+            gpsUtils.initLocation(address -> {
+                if (address.size() > 0) {
+                    String area = address.get(0).getSubAdminArea();
+                    LogUtil.d(TAG, "area = " + area);
+                    SPUtils.putString(Constant.KEY_ADDRESS, area);
+                    httpGetWeather(area);
                 }
             });
         } else { // 定位不可用, 通过IP获取地址
             addSubscription(
                     ApiService.address("js")
                             .subscribeOn(Schedulers.io())
-                            .flatMap(new Func1<String, Observable<List<WeatherModel>>>() {
-                                @Override
-                                public Observable<List<WeatherModel>> call(String s) {
-                                    int start = s.indexOf("{");
-                                    int end = s.indexOf("}");
-                                    String json = s.substring(start, end + 1);
-                                    AddressModel addressModel = JSON.parseObject(json, AddressModel.class);
-                                    Map params = new HashMap();
-                                    params.put("city", addressModel.city);
-                                    return ApiService.weather(params);
-                                }
+                            .flatMap((Func1<String, Observable<List<WeatherModel>>>) s -> {
+                                int start = s.indexOf("{");
+                                int end = s.indexOf("}");
+                                String json = s.substring(start, end + 1);
+                                AddressModel addressModel = JSON.parseObject(json, AddressModel.class);
+                                Map params = new HashMap();
+                                params.put("city", addressModel.city);
+                                return ApiService.weather(params);
                             })
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(new Subscriber<List<WeatherModel>>() {
