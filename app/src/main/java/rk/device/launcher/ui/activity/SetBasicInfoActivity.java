@@ -1,9 +1,10 @@
 package rk.device.launcher.ui.activity;
 
-import android.os.Bundle;
+import android.os.SystemClock;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -15,7 +16,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import rk.device.launcher.R;
 import rk.device.launcher.api.T;
 import rk.device.launcher.base.BaseCompatActivity;
@@ -94,7 +94,7 @@ public class SetBasicInfoActivity extends BaseCompatActivity implements View.OnC
                             c.set(Calendar.SECOND, 0);
                             c.set(Calendar.MILLISECOND, 0);
                             when_time = c.getTimeInMillis();
-                            timeTv.setText(
+	                        timeTv.setText(
                                     timeEvent.year + "-" + timeEvent.month + "-" + timeEvent.day
                                             + " " + timeEvent.hour + ":" + timeEvent.minute);
                         } catch (Exception e) {
@@ -140,7 +140,12 @@ public class SetBasicInfoActivity extends BaseCompatActivity implements View.OnC
         } else {
             voiceCheckBox.setChecked(false);
         }
-        voiceCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> isVoice = isChecked);
+        voiceCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+	        @Override
+	        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+		        isVoice = isChecked;
+	        }
+        });
     }
 
 
@@ -217,6 +222,10 @@ public class SetBasicInfoActivity extends BaseCompatActivity implements View.OnC
         SPUtils.put(Constant.DEVICE_NAME, deviceName);
         //语音设置
         SPUtils.put(Constant.DEVICE_MP3, isVoice);
+	    // 设置系统时间
+	    if (when_time / 1000 < Integer.MAX_VALUE) {
+		    SystemClock.setCurrentTimeMillis(when_time);
+	    }
         //判断是否是第一次
         boolean isFirst = (boolean) SPUtils.get(Constant.IS_FIRST_SETTING, true);
 //                    syncBlueTime();

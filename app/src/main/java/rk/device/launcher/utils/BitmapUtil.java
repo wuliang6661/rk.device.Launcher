@@ -23,9 +23,7 @@ import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 
 
 public class BitmapUtil {
@@ -331,7 +329,7 @@ public class BitmapUtil {
 		return inSampleSize;
 	}
 
-//	// 根据路径获得突破并压缩返回bitmap用于显示
+	// 根据路径获得突破并压缩返回bitmap用于显示
 //	public static String getSmallImage(String filePath) {
 //		try {
 //			final BitmapFactory.Options options = new BitmapFactory.Options();

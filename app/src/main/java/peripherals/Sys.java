@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /**
  * Created by Papillon on Nov 21, 2017.
  * "C:\Program Files\Java\jdk1.8.0_144\bin\javah.exe" -v -jni -classpath ./jni -d ./jni peripherals.LedHelper

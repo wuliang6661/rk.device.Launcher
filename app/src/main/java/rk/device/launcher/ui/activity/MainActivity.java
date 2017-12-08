@@ -21,6 +21,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +37,7 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import cvc.CvcHandler;
 import cvc.CvcHelper;
 import cvc.CvcRect;
 import cvc.EventUtil;
@@ -47,6 +49,7 @@ import rk.device.launcher.base.BaseCompatActivity;
 import rk.device.launcher.base.JniHandler;
 import rk.device.launcher.base.utils.rxbus.RxBus;
 import rk.device.launcher.bean.AddressModel;
+import rk.device.launcher.bean.DeviceInfoBean;
 import rk.device.launcher.bean.SetPageContentBean;
 import rk.device.launcher.bean.VerifyBean;
 import rk.device.launcher.bean.WeatherModel;
@@ -54,6 +57,7 @@ import rk.device.launcher.global.Constant;
 import rk.device.launcher.global.LauncherApplication;
 import rk.device.launcher.service.SocketService;
 import rk.device.launcher.ui.fragment.InputWifiPasswordDialogFragment;
+import rk.device.launcher.utils.AppUtils;
 import rk.device.launcher.utils.DateUtil;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.SPUtils;
@@ -74,6 +78,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
+
 
 public class MainActivity extends BaseCompatActivity implements View.OnClickListener {
 
