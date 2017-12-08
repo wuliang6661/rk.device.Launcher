@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -18,14 +19,14 @@ import rk.device.launcher.utils.ScreenUtil;
 
 /**
  * Created by hanbin on 2017/11/22.
+ * <p>
+ * 人脸框空
  */
 public class DetectedFaceView extends AppCompatImageView {
 
     private float PREVIEW_WIDTH = 320;
     private float PREVIEW_HEIGHT = 240;
     private Context mContext;
-    private Paint mLinePaint;
-    private Rect[] mFaces;
     private RectF mRect = new RectF();
     private Drawable mFaceIndicator = null;
 
@@ -33,6 +34,7 @@ public class DetectedFaceView extends AppCompatImageView {
     private int roomHeight;
     private float faceRegionW;
     private float faceRegionH;
+
 
     private Rect[] rect = new Rect[1];
 
@@ -42,7 +44,7 @@ public class DetectedFaceView extends AppCompatImageView {
         // TODO Auto-generated constructor stub
         initPaint();
         mContext = context;
-        mFaceIndicator = getResources().getDrawable(R.drawable.face);
+        mFaceIndicator = ContextCompat.getDrawable(context, R.drawable.face);
         roomHeight = DensityUtils.dp2px(mContext, 550);   //默认外部容器高度为550
     }
 
@@ -55,10 +57,8 @@ public class DetectedFaceView extends AppCompatImageView {
         oneRect.set(cvcRect1.x, cvcRect1.y, cvcRect1.x + cvcRect1.w,
                 cvcRect1.y + cvcRect1.h);
         rect[0] = oneRect;
-        this.mFaces = rect;
         invalidate();
     }
-
 
     /**
      * 设置总体外部容器高度
@@ -68,20 +68,18 @@ public class DetectedFaceView extends AppCompatImageView {
     }
 
 
-    public void clearFaces() {
-        mFaces = null;
-        invalidate();
-    }
-
     @Override
     protected void onDraw(Canvas canvas) {
         // TODO Auto-generated method stub
-        if (mFaces == null || mFaces.length < 1) {
+        if (rect == null || rect.length < 1) {
+            return;
+        }
+        if (rect[0] == null) {
             return;
         }
         canvas.rotate(-0);
-        for (int i = 0; i < mFaces.length; i++) {
-            mRect.set(mFaces[i]);
+        for (Rect aRect : rect) {
+            mRect.set(aRect);
             canvas.save();
             Log.i("faceView:", "mRect.left:" + mRect.left + ";mRect.top" + mRect.top
                     + ";mRect.right" + mRect.right + ";mRect.bottom" + mRect.bottom);
@@ -98,7 +96,7 @@ public class DetectedFaceView extends AppCompatImageView {
     }
 
     private void initPaint() {
-        mLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        Paint mLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         //		int color = Color.rgb(0, 150, 255);
         int color = Color.rgb(98, 212, 68);
         //		mLinePaint.setColor(Color.RED);

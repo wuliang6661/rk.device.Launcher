@@ -15,9 +15,19 @@ import rk.device.launcher.utils.Utils;
  */
 
 public class LauncherApplication extends Application {
+
+
     public static Context sContext;
-	public static int sLevel;
-	public static int sIsCharge;
+
+    /**
+     * 记录电量数据上报
+     */
+    public static int sLevel;
+
+    /**
+     * 记录是否在充电
+     */
+    public static int sIsCharge;
 
     @Override
     public void onCreate() {

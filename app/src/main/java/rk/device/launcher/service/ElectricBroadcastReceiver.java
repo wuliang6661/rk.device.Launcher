@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.BatteryManager;
 
-import rk.device.launcher.base.utils.rxbus.RxBus;
-import rk.device.launcher.bean.ElectricBean;
 import rk.device.launcher.utils.LogUtil;
 
 /**
@@ -16,6 +14,12 @@ import rk.device.launcher.utils.LogUtil;
  */
 
 public class ElectricBroadcastReceiver extends BroadcastReceiver {
+
+
+    private CallBack callBack;
+
+    boolean isChange = false;
+
     @Override
     public void onReceive(Context context, Intent intent) {
         int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
@@ -23,9 +27,10 @@ public class ElectricBroadcastReceiver extends BroadcastReceiver {
         int levelPercent = (int) (level * 100f / scale);
         LogUtil.d("电池电量百分比 = " + levelPercent);
         int status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, BatteryManager.BATTERY_HEALTH_UNKNOWN);
-        RxBus.getDefault().post(new ElectricBean(levelPercent, status));
+        isChange = false;
         switch (status) {
             case BatteryManager.BATTERY_STATUS_CHARGING:
+                isChange = true;
                 LogUtil.d("充电中");
                 break;
             case BatteryManager.BATTERY_STATUS_NOT_CHARGING:
@@ -38,5 +43,26 @@ public class ElectricBroadcastReceiver extends BroadcastReceiver {
                 LogUtil.d("放电中");
                 break;
         }
+        if (callBack != null) {
+            callBack.onElectricMessage(isChange, levelPercent);
+        }
     }
+
+
+    public void setCallBack(CallBack callBack) {
+        this.callBack = callBack;
+    }
+
+    /**
+     * 返回电量状态
+     */
+    public interface CallBack {
+
+        /**
+         * 返回充电状态及电量
+         */
+        void onElectricMessage(boolean isChange, int levelPercent);
+
+    }
+
 }
