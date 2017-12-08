@@ -23,9 +23,7 @@ import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 
 
 public class BitmapUtil {
@@ -332,29 +330,29 @@ public class BitmapUtil {
 	}
 
 	// 根据路径获得突破并压缩返回bitmap用于显示
-	public static String getSmallImage(String filePath) {
-		try {
-			final BitmapFactory.Options options = new BitmapFactory.Options();
-			options.inJustDecodeBounds = true;
-			BitmapFactory.decodeFile(filePath, options);
-
-			// Calculate inSampleSize
-			options.inSampleSize = calculateInSampleSize(options, 720, 1280);
-
-			// Decode bitmap with inSampleSize set
-			options.inJustDecodeBounds = false;
-
-			Bitmap bitmap =  BitmapFactory.decodeFile(filePath, options);
-			FileUtils fileUtils = new FileUtils();
-			File file = fileUtils.getImagesTempFile(System.currentTimeMillis() + RandomTool.generateString(8)+ ".jpg");
-			OutputStream outputStream = new FileOutputStream(file);
-			bitmap.compress(Bitmap.CompressFormat.JPEG, 90, outputStream);
-			return file.getAbsolutePath();
-		}
-		catch (Exception e) {
-			return filePath;
-		}
-	}
+//	public static String getSmallImage(String filePath) {
+//		try {
+//			final BitmapFactory.Options options = new BitmapFactory.Options();
+//			options.inJustDecodeBounds = true;
+//			BitmapFactory.decodeFile(filePath, options);
+//
+//			// Calculate inSampleSize
+//			options.inSampleSize = calculateInSampleSize(options, 720, 1280);
+//
+//			// Decode bitmap with inSampleSize set
+//			options.inJustDecodeBounds = false;
+//
+//			Bitmap bitmap =  BitmapFactory.decodeFile(filePath, options);
+//			FileUtils fileUtils = new FileUtils();
+//			File file = fileUtils.getImagesTempFile(System.currentTimeMillis() + RandomTool.generateString(8)+ ".jpg");
+//			OutputStream outputStream = new FileOutputStream(file);
+//			bitmap.compress(Bitmap.CompressFormat.JPEG, 90, outputStream);
+//			return file.getAbsolutePath();
+//		}
+//		catch (Exception e) {
+//			return filePath;
+//		}
+//	}
 
 
 	//压缩图片

@@ -3,12 +3,9 @@ package rk.device.launcher.service;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -22,9 +19,11 @@ import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import peripherals.Sys;
 import rk.device.launcher.global.Constant;
+import rk.device.launcher.utils.AppUtils;
 import rk.device.launcher.utils.CloseUtils;
-import rk.device.launcher.utils.PackageUtils;
+import rk.device.launcher.utils.LogUtil;
 
 public class DownLoadIntentService extends IntentService {
 	private static final String ACTION_DOWNLOAD = "rk.device.launcher.service.action.DOWNLOAD";
@@ -52,7 +51,7 @@ public class DownLoadIntentService extends IntentService {
 					installApk();
 					break;
 				case DOWNLOAD_ROM_OVER:
-					// TODO: 2017/12/6
+					Sys.rebootToRecovery();
 					break;
 			}
 		}
@@ -152,24 +151,26 @@ public class DownLoadIntentService extends IntentService {
 		if (!apkfile.exists()) {
 			return;
 		}
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-			//参数1 上下文, 参数2 Provider主机地址 和配置文件中保持一致   参数3  共享的文件
-			Uri apkUri =
-			FileProvider.getUriForFile(this, PackageUtils.getPageageName() + ".fileprovider", apkfile);
-			Intent intent = new Intent(Intent.ACTION_VIEW);
-			// 由于没有在Activity环境下启动Activity,设置下面的标签
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			//添加这一句表示对目标应用临时授权该Uri所代表的文件
-			intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-			intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
-			startActivity(intent);
-		} else {
-			Intent intent = new Intent(Intent.ACTION_VIEW);
-			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			intent.setDataAndType(Uri.parse("file://" + apkfile.toString()),
-			"application/vnd.android.package-archive");
-			startActivity(intent);
-		}
+		LogUtil.e(TAG, "开始静默安装了");
+		AppUtils.installAppSilent(mApkPath);
+//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//			//参数1 上下文, 参数2 Provider主机地址 和配置文件中保持一致   参数3  共享的文件
+//			Uri apkUri =
+//			FileProvider.getUriForFile(this, PackageUtils.getPageageName() + ".fileprovider", apkfile);
+//			Intent intent = new Intent(Intent.ACTION_VIEW);
+//			// 由于没有在Activity环境下启动Activity,设置下面的标签
+//			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//			//添加这一句表示对目标应用临时授权该Uri所代表的文件
+//			intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//			intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
+//			startActivity(intent);
+//		} else {
+//			Intent intent = new Intent(Intent.ACTION_VIEW);
+//			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//			intent.setDataAndType(Uri.parse("file://" + apkfile.toString()),
+//			"application/vnd.android.package-archive");
+//			startActivity(intent);
+//		}
 	}
 	
 	private String getAppInfo() {
@@ -194,7 +195,7 @@ public class DownLoadIntentService extends IntentService {
 		if (!dir.exists()) {
 			dir.mkdirs();
 		}
-		final File downLoadRom = new File(dir, "update.img");
+		final File downLoadRom = new File(dir, "update.rom");
 		OkHttpClient client = new OkHttpClient();
 		Request request = new Request.Builder()
 		        .url(url)
