@@ -9,10 +9,11 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -37,6 +38,8 @@ public class DownLoadIntentService extends IntentService {
 	
 	private static final int DOWNLOAD_ROM_OVER = 3;
 	private String mApkPath;
+	private static final int IO_BUFFER_SIZE = 8 * 1024;
+	
 	
 	
 	public DownLoadIntentService() {
@@ -112,30 +115,29 @@ public class DownLoadIntentService extends IntentService {
 						Log.e(TAG, "response is not success");
 						return;
 					}
-					InputStream is = null;
-					byte[] buffer = new byte[8 * 1024];
+					BufferedInputStream in = null;
+					BufferedOutputStream out = null;
 					int len = 0;
-					FileOutputStream fos = null;
 					try {
 						long total = response.body().contentLength();
 						Log.e(TAG, "total------>" + total);
 						long current = 0;
-						is = response.body().byteStream();
-						fos = new FileOutputStream(apkFile);
-						while ((len = is.read(buffer)) != -1) {
+						in = new BufferedInputStream(response.body().byteStream(), IO_BUFFER_SIZE);
+						out = new BufferedOutputStream(new FileOutputStream(apkFile), IO_BUFFER_SIZE);
+						while ((len = in.read()) != -1) {
 							current += len;
-							fos.write(buffer, 0, len);
+							out.write(len);
 							Log.e(TAG, "current------>" + current);
 						}
-						fos.flush();
+						out.flush();
 						Log.d(TAG, "下载完成！！！");
 						mHandler.sendEmptyMessage(DOWNLOAD_APK_OVER);
 					} catch (Exception e) {
 						e.printStackTrace();
 						Log.e(TAG, "下载失败");
 					} finally {
-						CloseUtils.closeIOQuietly(is);
-						CloseUtils.closeIOQuietly(fos);
+						CloseUtils.closeIOQuietly(in);
+						CloseUtils.closeIOQuietly(out);
 					}
 				}
 			});
@@ -212,30 +214,29 @@ public class DownLoadIntentService extends IntentService {
 					Log.e(TAG, "response is not success");
 					return;
 				}
-				InputStream is = null;
-				byte[] buffer = new byte[8 * 1024];
+				BufferedInputStream in = null;
+				BufferedOutputStream out = null;
 				int len = 0;
-				FileOutputStream fos = null;
 				try {
 					long total = response.body().contentLength();
 					Log.e(TAG, "total------>" + total);
 					long current = 0;
-					is = response.body().byteStream();
-					fos = new FileOutputStream(downLoadRom);
-					while ((len = is.read(buffer)) != -1) {
+					in = new BufferedInputStream(response.body().byteStream(), IO_BUFFER_SIZE);
+					out = new BufferedOutputStream(new FileOutputStream(downLoadRom), IO_BUFFER_SIZE);
+					while ((len = in.read()) != -1) {
 						current += len;
-						fos.write(buffer, 0, len);
+						out.write(len);
 						Log.e(TAG, "current------>" + current);
 					}
-					fos.flush();
+					out.flush();
 					Log.d(TAG, "下载完成！！！");
 					mHandler.sendEmptyMessage(DOWNLOAD_ROM_OVER);
 				} catch (Exception e) {
 					e.printStackTrace();
 					Log.e(TAG, "下载失败");
 				} finally {
-					CloseUtils.closeIOQuietly(is);
-					CloseUtils.closeIOQuietly(fos);
+					CloseUtils.closeIOQuietly(in);
+					CloseUtils.closeIOQuietly(out);
 				}
 			}
 		});
