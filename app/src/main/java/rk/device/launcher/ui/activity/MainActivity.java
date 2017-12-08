@@ -35,7 +35,6 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import cvc.CvcHelper;
 import cvc.CvcRect;
 import cvc.EventUtil;
@@ -672,8 +671,6 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
     }
 
     private static class StaticHandler extends Handler {
