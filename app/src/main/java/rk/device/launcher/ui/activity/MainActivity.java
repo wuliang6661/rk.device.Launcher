@@ -21,7 +21,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,8 +35,6 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
-import cvc.CvcHandler;
 import cvc.CvcHelper;
 import cvc.CvcRect;
 import cvc.EventUtil;
@@ -49,7 +46,6 @@ import rk.device.launcher.base.BaseCompatActivity;
 import rk.device.launcher.base.JniHandler;
 import rk.device.launcher.base.utils.rxbus.RxBus;
 import rk.device.launcher.bean.AddressModel;
-import rk.device.launcher.bean.DeviceInfoBean;
 import rk.device.launcher.bean.SetPageContentBean;
 import rk.device.launcher.bean.VerifyBean;
 import rk.device.launcher.bean.WeatherModel;
@@ -57,7 +53,6 @@ import rk.device.launcher.global.Constant;
 import rk.device.launcher.global.LauncherApplication;
 import rk.device.launcher.service.SocketService;
 import rk.device.launcher.ui.fragment.InputWifiPasswordDialogFragment;
-import rk.device.launcher.utils.AppUtils;
 import rk.device.launcher.utils.DateUtil;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.SPUtils;
@@ -119,10 +114,10 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 
     Subscription mSubscription;
 
-    private StaticHandler mStaticHandler = new StaticHandler();
+    private Handler mStaticHandler = new StaticHandler();
     private DeviceUuidFactory uuidFactory = null;
     private String uUid;
-    // todo 内存泄漏这里需要处理
+    // fixme 内存泄漏
     private final Runnable mRefreshTimeRunnable = new Runnable() {
         @Override
         public void run() {
@@ -676,8 +671,6 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
     }
 
     private static class StaticHandler extends Handler {
