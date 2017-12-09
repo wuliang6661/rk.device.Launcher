@@ -39,6 +39,7 @@ import rk.device.launcher.base.BaseCompatActivity;
 import rk.device.launcher.base.JniHandler;
 import rk.device.launcher.base.utils.rxbus.RxBus;
 import rk.device.launcher.bean.AddressModel;
+import rk.device.launcher.bean.DeviceInfoBean;
 import rk.device.launcher.bean.SetPageContentBean;
 import rk.device.launcher.bean.VerifyBean;
 import rk.device.launcher.bean.WeatherModel;
@@ -48,6 +49,7 @@ import rk.device.launcher.service.ElectricBroadcastReceiver;
 import rk.device.launcher.service.NetChangeBroadcastRecever;
 import rk.device.launcher.service.SocketService;
 import rk.device.launcher.ui.fragment.InputWifiPasswordDialogFragment;
+import rk.device.launcher.utils.AppUtils;
 import rk.device.launcher.utils.DateUtil;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.SPUtils;
@@ -116,6 +118,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     ElectricBroadcastReceiver mBatteryReceiver;
     private GpsUtils gpsUtils = null;
     private InputWifiPasswordDialogFragment dialogFragment = null;
+    private String modilePhone;
 
 
     @Override
@@ -130,6 +133,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         initLocation();
         settingTv.setOnClickListener(this);
         initSurfaceViewOne();
+        getData();
         registerRxBus();
         startService(new Intent(this, SocketService.class));
     }
@@ -280,12 +284,12 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
      */
     private void getIPLocation() {
         addSubscription(ApiService.address("js").subscribeOn(Schedulers.io())
-                .flatMap((Func1<String, Observable<List<WeatherModel>>>) s -> {
+                .flatMap(s -> {
                     int start = s.indexOf("{");
                     int end = s.indexOf("}");
                     String json = s.substring(start, end + 1);
                     AddressModel addressModel = JSON.parseObject(json, AddressModel.class);
-                    Map params = new HashMap();
+                    Map<String, Object> params = new HashMap<>();
                     params.put("city", addressModel.city);
                     return ApiService.weather(params);
                 }).observeOn(AndroidSchedulers.mainThread())
@@ -366,11 +370,36 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
             case R.id.iv_setting:
                 settingLoad();
                 break;
-	        case R.id.rl_contact_manager:
-//		        showMessageDialog("联系电话: " + )
-	        	break;
+            case R.id.rl_contact_manager:
+                if (!StringUtils.isEmpty(modilePhone)) {
+                    showMessageDialog("联系电话: " + modilePhone);
+                }
+                break;
         }
     }
+
+
+    /**
+     * 获取关联设备的配置
+     */
+    public void getData() {
+        ApiService.deviceConfiguration(AppUtils.getAppVersionCode(this) + "", null).subscribe(new Subscriber<DeviceInfoBean>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+            }
+
+            @Override
+            public void onNext(DeviceInfoBean s) {
+                modilePhone = s.getMobile();
+            }
+        });
+    }
+
 
     /**
      * 初始设置流程加载

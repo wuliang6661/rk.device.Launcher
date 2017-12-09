@@ -14,6 +14,7 @@ public interface Constant {
     String LOG_TAG = "launcher";
     boolean isDebug = BuildConfig.DEBUG;
 
+
     /**
      * 缓存在本地的初始引导设置顺序
      * <p>
@@ -28,6 +29,7 @@ public interface Constant {
     int SETTING_TYPE3 = 3;                //下次进入跳入门禁设置
 
     int SETTING_TYPE4 = 4;                //下次进入跳入系统设置
+
     /**
      * 初始设置是否设置完成
      * <p>
@@ -87,14 +89,14 @@ public interface Constant {
      * 蓝牙名称
      */
     String BLUE_NAME = "blue_name";
-	
-	String KEY_ROM = "rom";
-	
-	String KEY_APK = "apk";
-	
-	String KEY_FIRSTPAGE_CONTENT = "key_firstpage_content";
-	
-	String KEY_ADDRESS = "key_address";
+
+    String KEY_ROM = "rom";
+
+    String KEY_APK = "apk";
+
+    String KEY_FIRSTPAGE_CONTENT = "key_firstpage_content";
+
+    String KEY_ADDRESS = "key_address";
 
 
 }

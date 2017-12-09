@@ -12,6 +12,7 @@ import cvc.EventUtil;
 import peripherals.LedHelper;
 import peripherals.MdHelper;
 import peripherals.NfcHelper;
+import rk.device.launcher.global.Constant;
 
 /**
  * Created by wuliang on 2017/11/28.
@@ -30,6 +31,7 @@ public class JniHandler extends Handler {
 
     private OnBioAssay onBioAssay;
     private OnEyesCallBack callBack;
+
 
     private int countFace = 1;   //记录返回11的次数 ，超过5次，则隐藏人脸框
 
@@ -195,12 +197,17 @@ public class JniHandler extends Handler {
     }
 
 
+    public void setOnInitListener(OnInitListener callBack){
+
+    }
+
+
     /**
      * 所有JNI接口初始化接口
      */
     public interface OnInitListener {
 
-        void initCallBack(boolean isSuress);
+        void initCallBack(int cvcStatus, int LedStatus, int MdStatus, int NfcStatus);
     }
 
 

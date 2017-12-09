@@ -164,6 +164,5 @@ public class SetDoorGuardActivity extends BaseCompatActivity implements View.OnC
                 device = s;
             }
         });
-
     }
 }
