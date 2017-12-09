@@ -366,6 +366,9 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
             case R.id.iv_setting:
                 settingLoad();
                 break;
+	        case R.id.rl_contact_manager:
+//		        showMessageDialog("联系电话: " + )
+	        	break;
         }
     }
 
