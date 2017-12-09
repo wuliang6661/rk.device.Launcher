@@ -10,9 +10,7 @@ import cvc.CvcHelper;
 import cvc.CvcRect;
 import cvc.EventUtil;
 import peripherals.LedHelper;
-import peripherals.MdHelper;
 import peripherals.NfcHelper;
-import rk.device.launcher.global.Constant;
 
 /**
  * Created by wuliang on 2017/11/28.
@@ -31,10 +29,14 @@ public class JniHandler extends Handler {
 
     private OnBioAssay onBioAssay;
     private OnEyesCallBack callBack;
-
+    private OnInitListener initListener;
 
     private int countFace = 1;   //记录返回11的次数 ，超过5次，则隐藏人脸框
 
+    private int cvcStatus = 1;
+    private int LedStatus = 1;
+    private int MdStatus = 1;
+    private int NfcStatus = 1;
 
     @Override
     public void handleMessage(Message msg) {
@@ -68,27 +70,23 @@ public class JniHandler extends Handler {
      * 初始化外设库，并处理结果
      */
     private void initSuress() {
-        int cvcStatus = CvcHelper.CVC_init();
-        int LedStatus = LedHelper.PER_ledInit();
-//                int MdStatus = MdHelper.PER_mdInit();
-        int NfcStatus = NfcHelper.PER_nfcInit();
         if (cvcStatus != 0) {
-            Log.e("wuliang", "cvc init error" + cvcStatus);
-        } else {
-            Log.i("wuliang", "cvc init suress" + cvcStatus);
+            cvcStatus = CvcHelper.CVC_init();
         }
         if (LedStatus != 0) {
-            Log.e("wuliang", "led init error" + LedStatus);
-        } else {
-            Log.i("wuliang", "led init suress" + LedStatus);
+            LedStatus = LedHelper.PER_ledInit();
+        }
+        if (MdStatus != 0) {
+//                int MdStatus = MdHelper.PER_mdInit();
         }
         if (NfcStatus != 0) {
-            Log.e("wuliang", "nfc init error" + NfcStatus);
-        } else {
-            Log.i("wuliang", "nfc init suress" + NfcStatus);
+            NfcStatus = NfcHelper.PER_nfcInit();
         }
         if (cvcStatus == 0 && LedStatus == 0 && NfcStatus == 0) {
             Log.i("wuliang", "all device init surecc!!!!");
+        }
+        if (initListener != null) {
+            initListener.initCallBack(cvcStatus, LedStatus, 1, NfcStatus);
         }
     }
 
@@ -197,8 +195,8 @@ public class JniHandler extends Handler {
     }
 
 
-    public void setOnInitListener(OnInitListener callBack){
-
+    public void setOnInitListener(OnInitListener callBack) {
+        this.initListener = callBack;
     }
 
 

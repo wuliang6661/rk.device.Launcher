@@ -48,6 +48,7 @@ import rk.device.launcher.global.LauncherApplication;
 import rk.device.launcher.service.ElectricBroadcastReceiver;
 import rk.device.launcher.service.NetChangeBroadcastRecever;
 import rk.device.launcher.service.SocketService;
+import rk.device.launcher.ui.fragment.InitErrorDialogFragmen;
 import rk.device.launcher.ui.fragment.InputWifiPasswordDialogFragment;
 import rk.device.launcher.utils.AppUtils;
 import rk.device.launcher.utils.DateUtil;
@@ -62,16 +63,14 @@ import rk.device.launcher.utils.uuid.DeviceUuidFactory;
 import rk.device.launcher.widget.BatteryView;
 import rk.device.launcher.widget.DetectedFaceView;
 import rk.device.launcher.widget.UpdateManager;
-import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 
 public class MainActivity extends BaseCompatActivity implements View.OnClickListener,
-        ElectricBroadcastReceiver.CallBack, NetChangeBroadcastRecever.CallBack, JniHandler.OnBioAssay {
+        ElectricBroadcastReceiver.CallBack, NetChangeBroadcastRecever.CallBack, JniHandler.OnBioAssay, JniHandler.OnInitListener {
 
     private static final String TAG = "MainActivity";
 
@@ -105,6 +104,8 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     TextView mTvDeclare;
     @Bind(R.id.tv_place_name)
     TextView tvPlaceName;
+    @Bind(R.id.init_error)
+    ImageView initError;
 
     int faceCount = 0;//记录摄像头采集的画面帧数,每5帧调取一次人脸识别
     private JniHandler mHandler = null;
@@ -119,6 +120,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     private GpsUtils gpsUtils = null;
     private InputWifiPasswordDialogFragment dialogFragment = null;
     private String modilePhone;
+    private InitErrorDialogFragmen initDialog;
 
 
     @Override
@@ -128,10 +130,12 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 
     @Override
     public void initView() {
+        initDialog = InitErrorDialogFragmen.newInstance();
         registerBatteryReceiver();
         registerNetReceiver();
         initLocation();
         settingTv.setOnClickListener(this);
+        setOnClick(R.id.rl_contact_manager, R.id.init_error);
         initSurfaceViewOne();
         getData();
         registerRxBus();
@@ -157,6 +161,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         thread.start();
         Looper looper = thread.getLooper();
         mHandler = new JniHandler(looper);
+        mHandler.setOnInitListener(this);
         Message msg = new Message();
         msg.what = EventUtil.INIT_JNI;
         mHandler.sendMessageDelayed(msg, 10);
@@ -375,6 +380,9 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
                     showMessageDialog("联系电话: " + modilePhone);
                 }
                 break;
+            case R.id.init_error:     //有外设初始化失败
+                initDialog.show(getSupportFragmentManager(), "");
+                break;
         }
     }
 
@@ -525,6 +533,39 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         }
         httpUploadPic(result);
     }
+
+
+    /**
+     * 初始化外设
+     */
+    @Override
+    public void initCallBack(int cvcStatus, int LedStatus, int MdStatus, int NfcStatus) {
+        if (cvcStatus == 0 && LedStatus == 0 && MdStatus == 0 && NfcStatus == 0) {
+            initError.setVisibility(View.GONE);
+            if (initDialog != null && initDialog.isVisible()) {
+                initDialog.dismiss();
+            }
+        } else {
+            initError.setVisibility(View.VISIBLE);
+            initDialog.setStatus(cvcStatus, LedStatus, MdStatus, NfcStatus, mHandler);
+            UIHandler.sendEmptyMessage(0x11);
+        }
+    }
+
+    Handler UIHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case 0x11:
+                    if (initDialog != null && initDialog.isVisible()) {
+                        T.showShort("部分设备初始化失败！建议重启设备！");
+                        initDialog.setInitFinish();
+                    }
+                    break;
+            }
+        }
+    };
 
 
     /**
