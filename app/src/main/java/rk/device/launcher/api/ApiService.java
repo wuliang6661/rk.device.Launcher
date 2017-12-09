@@ -3,10 +3,15 @@ package rk.device.launcher.api;
 import java.util.List;
 import java.util.Map;
 
+import retrofit2.Retrofit;
+import rk.device.launcher.Config;
 import rk.device.launcher.bean.DeviceInfoBean;
 import rk.device.launcher.bean.VerifyBean;
 import rk.device.launcher.bean.VersionBean;
 import rk.device.launcher.bean.WeatherModel;
+import rk.device.launcher.global.Constant;
+import rk.device.launcher.utils.SPUtils;
+import rk.device.launcher.utils.StringUtils;
 import rx.Observable;
 
 /**
@@ -17,6 +22,59 @@ import rx.Observable;
 
 public class ApiService {
 
+
+    private static volatile Retrofit mApiRetrofit;
+
+    private static String IP;
+    private static String HOST;
+
+    /**
+     * 返回请求接口服务
+     **/
+    private static BaseApi weatherFactorys() {
+        IP = SPUtils.getString(Constant.KEY_IP);
+        HOST = SPUtils.getString(Constant.KEY_PORT);
+        if(StringUtils.isEmpty(IP)|| StringUtils.isEmpty(HOST)){
+            if (mApiRetrofit == null) {
+                synchronized (Retrofit.class) {
+                    if (mApiRetrofit == null) {
+                        mApiRetrofit = new RkRetrofit().init_api(Config.APP_WEATHER);
+                    }
+                }
+            }
+            return mApiRetrofit.create(BaseApi.class);
+        }else{
+            StringBuilder buffer = new StringBuilder();
+            buffer.append("https://");
+            buffer.append(IP);
+            buffer.append(":");
+            buffer.append(HOST);
+            if (mApiRetrofit == null) {
+                synchronized (Retrofit.class) {
+                    if (mApiRetrofit == null) {
+                        mApiRetrofit = new RkRetrofit().init_api(buffer.toString());
+                    }
+                }
+            }
+            return mApiRetrofit.create(BaseApi.class);
+        }
+    }
+
+
+    /**
+     * 切換IP和端口之后需清空请求对象
+     */
+    public static void clearIP(){
+        mApiRetrofit = null;
+    }
+
+
+    private static AddressAPI createAddressAPI() {
+        return RetrofitManager.getInstance().getAddressAPI();
+    }
+
+
+
     /**
      * 获取天气接口
      *
@@ -24,7 +82,7 @@ public class ApiService {
      * @return
      */
     public static Observable<List<WeatherModel>> weather(Map<String, Object> params) {
-        return ApiFactory.weatherFactory().weather(params).compose(RxResultHelper.httpRusult());
+        return weatherFactorys().weather(params).compose(RxResultHelper.httpRusult());
     }
 	
 	/**
@@ -32,21 +90,21 @@ public class ApiService {
 	 * @return
 	 */
 	public static Observable<String> address(String format) {
-		return ApiFactory.createAddressAPI().getAddress(format);
+		return createAddressAPI().getAddress(format);
 	}
 	
 	/**
      * 检测App是否更新
      */
     public static Observable<VersionBean> updateApp(String verCode) {
-        return ApiFactory.weatherFactory().updateApp(verCode).compose(RxResultHelper.httpRusult());
+        return weatherFactorys().updateApp(verCode).compose(RxResultHelper.httpRusult());
     }
 
     /**
      * 获取配置接口
      */
     public static Observable<DeviceInfoBean> deviceConfiguration(String verCode, String cid) {
-        return ApiFactory.weatherFactory().deviceConfiguration(verCode, cid)
+        return weatherFactorys().deviceConfiguration(verCode, cid)
                 .compose(RxResultHelper.httpRusult());
     }
 
@@ -57,7 +115,7 @@ public class ApiService {
      * @return
      */
     public static Observable<VerifyBean> verifyFace(Map<String, Object> params) {
-        return ApiFactory.weatherFactory().verify(params).compose(RxResultHelper.httpRusult());
+        return weatherFactorys().verify(params).compose(RxResultHelper.httpRusult());
     }
 
 }

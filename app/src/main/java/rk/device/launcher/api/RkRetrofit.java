@@ -38,13 +38,9 @@ public class RkRetrofit {
      *
      * @return
      */
-    public Retrofit init_api() {
+    public Retrofit init_api(String baseUrl) {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-//        File cacheFile = new File(LauncherApplication.getContext().getCacheDir(), "cache");
-//        Cache cache = new Cache(cacheFile, 1024 * 1024 * 100); //100Mb
-
         apiClient = new OkHttpClient
                 .Builder()
                 .readTimeout(20000, TimeUnit.MILLISECONDS)
@@ -56,7 +52,7 @@ public class RkRetrofit {
 
         Retrofit retrofit = new Retrofit
                 .Builder()
-                .baseUrl(Config.APP_WEATHER)
+                .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .client(apiClient).build();

@@ -10,6 +10,7 @@ import cvc.CvcHelper;
 import cvc.CvcRect;
 import cvc.EventUtil;
 import peripherals.LedHelper;
+import peripherals.MdHelper;
 import peripherals.NfcHelper;
 
 /**
@@ -77,16 +78,17 @@ public class JniHandler extends Handler {
             LedStatus = LedHelper.PER_ledInit();
         }
         if (MdStatus != 0) {
-//                int MdStatus = MdHelper.PER_mdInit();
+            MdStatus = MdHelper.PER_mdInit();
         }
         if (NfcStatus != 0) {
             NfcStatus = NfcHelper.PER_nfcInit();
         }
-        if (cvcStatus == 0 && LedStatus == 0 && NfcStatus == 0) {
+        Log.i("wuliang", "cvcStatus == " + cvcStatus + "LedStatus == " + LedStatus + "MdStatus == "+ MdStatus + "NfcStatus == " + NfcStatus) ;
+        if (cvcStatus == 0 && LedStatus == 0 && NfcStatus == 0 && MdStatus == 0) {
             Log.i("wuliang", "all device init surecc!!!!");
         }
         if (initListener != null) {
-            initListener.initCallBack(cvcStatus, LedStatus, 1, NfcStatus);
+            initListener.initCallBack(cvcStatus, LedStatus, MdStatus, NfcStatus);
         }
     }
 

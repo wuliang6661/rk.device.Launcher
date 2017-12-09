@@ -1,15 +1,12 @@
 package rk.device.launcher.ui.activity;
 
 import android.graphics.drawable.AnimationDrawable;
-import android.os.Bundle;
 import android.os.Handler;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import rk.device.launcher.R;
-import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.base.BaseCompatActivity;
 
 public class RecoveryActivity extends BaseCompatActivity {

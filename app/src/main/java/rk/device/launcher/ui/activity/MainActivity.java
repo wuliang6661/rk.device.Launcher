@@ -269,7 +269,6 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         if (gpsUtils == null) {
             gpsUtils = new GpsUtils(this);
         }
-        Log.d("wuliang", String.valueOf(gpsUtils.isLoactionAvailable()));
         if (gpsUtils.isLoactionAvailable()) { // 定位可用, 通过定位获取地址
             gpsUtils.initLocation(address -> {
                 if (address.size() > 0) {
@@ -515,7 +514,9 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     public void setOnBioFace(CvcRect cvcRect1, int[] rectWidth, int[] rectHeight) {
         runOnUiThread(() -> {
             //T.showShort("检测到人脸");
-            faceView.setFaces(cvcRect1, cvcRect1.w, cvcRect1.h, rectWidth[0], rectHeight[0]);
+            if(faceView != null){
+                faceView.setFaces(cvcRect1, cvcRect1.w, cvcRect1.h, rectWidth[0], rectHeight[0]);
+            }
         });
         Message msg = new Message();
         msg.what = EventUtil.CVC_LIVINGFACE;
@@ -528,6 +529,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     @Override
     public void setOnBioAssay(int[] possibilityCode, byte[] faces, int[] lenght) {
         byte[] result = new byte[lenght[0]];
+        UIHandler.sendEmptyMessage(0x22);
         synchronized (faces) {
             System.arraycopy(faces, 0, result, 0, lenght[0]);
         }
@@ -562,6 +564,9 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
                         T.showShort("部分设备初始化失败！建议重启设备！");
                         initDialog.setInitFinish();
                     }
+                    break;
+                case 0x22:
+                    T.showShort("真人概率大于50%，开始认证人脸！");
                     break;
             }
         }

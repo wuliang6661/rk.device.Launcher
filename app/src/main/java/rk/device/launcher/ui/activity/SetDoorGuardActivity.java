@@ -147,7 +147,7 @@ public class SetDoorGuardActivity extends BaseCompatActivity implements View.OnC
      * 获取关联设备的配置
      */
     public void getData() {
-        ApiService.deviceConfiguration(AppUtils.getAppVersionCode(this) + "", "").subscribe(new Subscriber<DeviceInfoBean>() {
+        ApiService.deviceConfiguration(AppUtils.getAppVersionCode(this) + "", null).subscribe(new Subscriber<DeviceInfoBean>() {
             @Override
             public void onCompleted() {
 
@@ -155,7 +155,6 @@ public class SetDoorGuardActivity extends BaseCompatActivity implements View.OnC
 
             @Override
             public void onError(Throwable e) {
-//                Toast.makeText(SetDoorGuardActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 mTvConnectedDevice.setText("蓝牙锁");
             }
 
