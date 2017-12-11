@@ -2,17 +2,22 @@ package rk.device.launcher.base;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.igexin.sdk.PushManager;
+
+import java.util.logging.Logger;
 
 import butterknife.ButterKnife;
 import rk.device.launcher.R;
@@ -46,6 +51,11 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
 
     private Subscription subscription;
 
+    /***
+     * 屏幕锁
+     */
+    private PowerManager.WakeLock wakeLock;
+
     /**
      * 返回布局参数
      */
@@ -66,7 +76,6 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(getLayout());
         hideNavigationBar();
         ButterKnife.bind(this);
@@ -80,8 +89,15 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        acquireWakeLock();
         PushManager.getInstance().initialize(getApplicationContext(), RKLauncherPushService.class);
         PushManager.getInstance().registerPushIntentService(getApplicationContext(), RKLauncherPushIntentService.class);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        releaseWakeLock();
     }
 
     @Override
@@ -100,6 +116,26 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
                 && hintDialog.getDialog().isShowing()) {
             hintDialog.dismiss();
         }
+    }
+
+
+    private void acquireWakeLock() {
+        if (wakeLock == null) {
+            Log.d("wuliang", "Acquiring wake lock");
+            PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+            wakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, this.getClass().getCanonicalName());
+            wakeLock.acquire();
+        }
+
+    }
+
+    //释放锁
+    private void releaseWakeLock() {
+        if (wakeLock != null && wakeLock.isHeld()) {
+            wakeLock.release();
+            wakeLock = null;
+        }
+
     }
 
 

@@ -25,8 +25,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.alibaba.fastjson.JSONObject;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -40,7 +38,6 @@ import java.text.DecimalFormat;
 import rk.device.launcher.R;
 import rk.device.launcher.api.ApiService;
 import rk.device.launcher.bean.VersionBean;
-import rk.device.launcher.global.Constant;
 import rk.device.launcher.utils.AppUtils;
 import rk.device.launcher.utils.PackageUtils;
 import rk.device.launcher.widget.dialog.BaseDialogFragment;
@@ -339,7 +336,7 @@ public class UpdateManager {
                 String apkName = "rk_launcher.apk";
                 String tmpApk = "rk_launcher.tmp";
                 // 判断是否挂载了SD卡
-                String storageState = Environment.getExternalStorageState();
+//                String storageState = Environment.getExternalStorageState();
 //                if (storageState.equals(Environment.MEDIA_MOUNTED)) {
 //                    savePath = Environment.getExternalStorageDirectory()
 //                            .getAbsolutePath() + "/upload/Update/";
@@ -356,8 +353,8 @@ public class UpdateManager {
 //                    mHandler.sendEmptyMessage(DOWN_NOSDCARD);
 //                    return;
 //                }
-                apkFilePath = getDirPath(apkName);
-                tmpFilePath = getDirPath(tmpApk);
+                apkFilePath = getDirPath("") + apkName;
+                tmpFilePath = getDirPath("") + tmpApk;
 
                 File ApkFile = new File(apkFilePath);
 
@@ -430,8 +427,9 @@ public class UpdateManager {
             // directoryPath =context.getExternalCacheDir().getAbsolutePath() ;
         } else {
             //没内存卡就存机身内存
-            directoryPath = mContext.getFilesDir() + File.separator + dir;
-            // directoryPath=context.getCacheDir()+File.separator+dir;
+//            directoryPath = mContext.getFilesDir() + File.separator + dir;
+//            directoryPath = mContext.getCacheDir() + File.separator + dir;
+            directoryPath = "/data/rk_backup/" + dir;
         }
         File file = new File(directoryPath);
         if (!file.exists()) {//判断文件目录是否存在
