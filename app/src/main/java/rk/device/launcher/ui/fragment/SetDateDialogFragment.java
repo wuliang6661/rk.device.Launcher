@@ -133,7 +133,7 @@ public class SetDateDialogFragment extends DialogFragment {
 		initView(view);
 
 		//设置窗口以对话框样式显示
-		setStyle(DialogFragment.STYLE_NO_TITLE, R.style.dialog);
+//		setStyle(DialogFragment.STYLE_NO_TITLE, R.style.dialog);
 		//设置对话框背景色，否则有虚框
 		getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 		//设置对话框弹出动画，从底部滑入，从底部滑出

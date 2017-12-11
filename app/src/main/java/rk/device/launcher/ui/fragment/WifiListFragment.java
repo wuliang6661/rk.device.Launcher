@@ -237,7 +237,7 @@ public class WifiListFragment extends Fragment {
 			if (action.equals(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)) {
 				LogUtil.d("wifi列表刷新了");
                 updateWifiList();
-			} else if (action.equals("android.net.wifi.STATE_CHANGE")) {
+			} else if (action.equals(WifiManager.WIFI_STATE_CHANGED_ACTION)) {
 				LogUtil.d("wifi状态发生了变化");
 				// 刷新状态显示
 				updateWifiList();
