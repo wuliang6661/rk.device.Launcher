@@ -29,7 +29,6 @@ import rk.device.launcher.base.utils.rxbus.RxBus;
 import rk.device.launcher.bean.NetDismissBean;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.NetUtils;
-import rk.device.launcher.utils.NetWorkUtil;
 import rk.device.launcher.utils.WifiHelper;
 import rk.device.launcher.widget.itemdecoration.WifiListRvItemDecoration;
 import rx.Subscription;
@@ -66,6 +65,7 @@ public class WifiListFragment extends Fragment {
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		updateWifiList();
 		registerWifiReceiver();
 		mSubscription = RxBus.getDefault().toObserverable(NetDismissBean.class).subscribe(new Action1<NetDismissBean>() {
 			@Override
@@ -253,12 +253,14 @@ public class WifiListFragment extends Fragment {
 	private void updateWifiList() {
 		if (mScanResultList != null && mWifiRvAdapter != null) {
 			mScanResultList.clear();
+			// 就算wifi没连接也要显示出可以连接的wifi
+			mScanResultList.addAll(mWifiHelper.getFilteredScanResult());
 			// 这里要用双重校验来判断wifi是否可用
-			if (NetWorkUtil.isWifiConnected(getContext()) && mWifiHelper.isWifiConnected()) {
-				mScanResultList.addAll(mWifiHelper.getFilteredScanResult());
-			} else {
-				LogUtil.d("wifi不可用");
-			}
+//			if (NetWorkUtil.isWifiConnected(getContext()) && mWifiHelper.isWifiConnected()) {
+//				mScanResultList.addAll(mWifiHelper.getFilteredScanResult());
+//			} else {
+//				LogUtil.d("wifi不可用");
+//			}
 			LogUtil.d("mScanResultList = " + mScanResultList);
 			LogUtil.d("mScanResultList.size() = " + mScanResultList.size());
 			mWifiRvAdapter.notifyDataSetChanged();
