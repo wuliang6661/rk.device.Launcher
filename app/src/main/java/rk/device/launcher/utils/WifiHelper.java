@@ -237,39 +237,45 @@ public class WifiHelper {
 
 
 	public List<ScanResult> getFilteredScanResult() {
-		mWifiManager.startScan();
-		List<ScanResult> list = mWifiManager.getScanResults();
-		HashMap<String, ScanResult> scanResultMap = new HashMap<>();
-		for (ScanResult scanResult : list) {
-			if (!TextUtils.isEmpty(scanResult.SSID)) { // 如果wifi名字不为空
-				String key = scanResult.SSID + " " + scanResult.capabilities;
-				if (!scanResultMap.containsKey(key)) { // 没有跟它重复的, 直接添加进去
-					scanResultMap.put(key, scanResult);
-				} else { // 出现重复的SSID了
-					ScanResult oldScanResult = scanResultMap.get(key);
-					// 将当前遍历到的scanResult的信号强度和之前已经存在的scanResult的信号强度进行比较, 如果信号更强, 就替换掉以前的
-					// 信号越强, 绝对值越小
-					if (Math.abs(scanResult.level) < Math.abs(oldScanResult.level)) {
+		try {
+			mWifiManager.startScan();
+			List<ScanResult> list = mWifiManager.getScanResults();
+			HashMap<String, ScanResult> scanResultMap = new HashMap<>();
+			for (ScanResult scanResult : list) {
+				if (!TextUtils.isEmpty(scanResult.SSID)) { // 如果wifi名字不为空
+					String key = scanResult.SSID + " " + scanResult.capabilities;
+					if (!scanResultMap.containsKey(key)) { // 没有跟它重复的, 直接添加进去
 						scanResultMap.put(key, scanResult);
+					} else { // 出现重复的SSID了
+						ScanResult oldScanResult = scanResultMap.get(key);
+						// 将当前遍历到的scanResult的信号强度和之前已经存在的scanResult的信号强度进行比较, 如果信号更强, 就替换掉以前的
+						// 信号越强, 绝对值越小
+						if (Math.abs(scanResult.level) < Math.abs(oldScanResult.level)) {
+							scanResultMap.put(key, scanResult);
+						}
 					}
 				}
 			}
-		}
-
-		List<ScanResult> filteredList = new ArrayList<>();
-		for (String key : scanResultMap.keySet()) {
-			filteredList.add(scanResultMap.get(key));
-		}
-		// 按信号强度从强到弱排列
-		Collections.sort(filteredList, new Comparator<ScanResult>() {
-			@Override
-			public int compare(ScanResult o1, ScanResult o2) {
-				return Math.abs(o1.level) - Math.abs(o2.level);
+			
+			List<ScanResult> filteredList = new ArrayList<>();
+			for (String key : scanResultMap.keySet()) {
+				filteredList.add(scanResultMap.get(key));
 			}
-		});
-		return filteredList;
-
+			// 按信号强度从强到弱排列
+			Collections.sort(filteredList, new Comparator<ScanResult>() {
+				@Override
+				public int compare(ScanResult o1, ScanResult o2) {
+					return Math.abs(o1.level) - Math.abs(o2.level);
+				}
+			});
+			return filteredList;
+		} catch (Exception e) {
+			LogUtil.e(e.getMessage());
+		}
+		return null;
 	}
+	
+	private final String TAG = "WifiHelper";
 
 	/**
 	 * 得到手机搜索到的ssid集合，从中判断出设备的ssid（dssid）
