@@ -103,23 +103,21 @@ public class NetUtils {
 		}
 	}
 
-	public static boolean ping() {
+	public static boolean ping(String ipAndAddress) {
 		boolean success = false;
 		Process p = null;
-		String ip = "http://www.baidu.com";
 		try {
-			p = Runtime.getRuntime().exec("ping -c 1 -W 1" + ip);
+			p = Runtime.getRuntime().exec("ping -c 1 -W 1" + ipAndAddress);
 			int status = p.waitFor();
 			if (status == 0) {
 				success = true;
 			} else {
 				success = false;
 			}
-		} catch (IOException e) {
-			success = false;
-		} catch (InterruptedException e) {
+		} catch (IOException | InterruptedException e) {
 			success = false;
 		} finally {
+			assert p != null;
 			p.destroy();
 		}
 		return success;

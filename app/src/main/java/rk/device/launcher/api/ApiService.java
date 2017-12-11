@@ -29,12 +29,12 @@ public class ApiService {
     private static String HOST;
 
     /**
-     * 返回请求接口服务
+     * 动态分配IP地址
      **/
     private static BaseApi weatherFactorys() {
         IP = SPUtils.getString(Constant.KEY_IP);
         HOST = SPUtils.getString(Constant.KEY_PORT);
-        if(StringUtils.isEmpty(IP)|| StringUtils.isEmpty(HOST)){
+        if (StringUtils.isEmpty(IP) || StringUtils.isEmpty(HOST)) {
             if (mApiRetrofit == null) {
                 synchronized (Retrofit.class) {
                     if (mApiRetrofit == null) {
@@ -43,16 +43,16 @@ public class ApiService {
                 }
             }
             return mApiRetrofit.create(BaseApi.class);
-        }else{
-            StringBuilder buffer = new StringBuilder();
-            buffer.append("https://");
-            buffer.append(IP);
-            buffer.append(":");
-            buffer.append(HOST);
+        } else {
+            StringBuilder builder = new StringBuilder();
+            builder.append("https://");
+            builder.append(IP);
+            builder.append(":");
+            builder.append(HOST);
             if (mApiRetrofit == null) {
                 synchronized (Retrofit.class) {
                     if (mApiRetrofit == null) {
-                        mApiRetrofit = new RkRetrofit().init_api(buffer.toString());
+                        mApiRetrofit = new RkRetrofit().init_api(builder.toString());
                     }
                 }
             }
@@ -64,7 +64,7 @@ public class ApiService {
     /**
      * 切換IP和端口之后需清空请求对象
      */
-    public static void clearIP(){
+    public static void clearIP() {
         mApiRetrofit = null;
     }
 
@@ -72,7 +72,6 @@ public class ApiService {
     private static AddressAPI createAddressAPI() {
         return RetrofitManager.getInstance().getAddressAPI();
     }
-
 
 
     /**
@@ -84,16 +83,17 @@ public class ApiService {
     public static Observable<List<WeatherModel>> weather(Map<String, Object> params) {
         return weatherFactorys().weather(params).compose(RxResultHelper.httpRusult());
     }
-	
-	/**
-	 * 访问外网, 根据IP地址获取地址
-	 * @return
-	 */
-	public static Observable<String> address(String format) {
-		return createAddressAPI().getAddress(format);
-	}
-	
-	/**
+
+    /**
+     * 访问外网, 根据IP地址获取地址
+     *
+     * @return
+     */
+    public static Observable<String> address(String format) {
+        return createAddressAPI().getAddress(format);
+    }
+
+    /**
      * 检测App是否更新
      */
     public static Observable<VersionBean> updateApp(String verCode) {
@@ -110,7 +110,7 @@ public class ApiService {
 
     /**
      * 人脸识别
-     * 
+     *
      * @param params
      * @return
      */

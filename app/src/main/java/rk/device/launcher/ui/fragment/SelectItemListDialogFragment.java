@@ -5,6 +5,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +45,7 @@ public class SelectItemListDialogFragment extends DialogFragment {
 		WindowManager.LayoutParams params = window.getAttributes();
 		params.width = WindowManager.LayoutParams.MATCH_PARENT;
 		params.height = WindowManager.LayoutParams.MATCH_PARENT;
+		params.gravity = Gravity.CENTER;
 		window.setAttributes(params);
 //		View decorView = window.getDecorView();
 //		decorView.setPadding(100, 0, 100, 0);

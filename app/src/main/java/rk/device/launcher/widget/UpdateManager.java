@@ -16,6 +16,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.FileProvider;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +40,7 @@ import java.text.DecimalFormat;
 import rk.device.launcher.R;
 import rk.device.launcher.api.ApiService;
 import rk.device.launcher.bean.VersionBean;
+import rk.device.launcher.global.Constant;
 import rk.device.launcher.utils.AppUtils;
 import rk.device.launcher.utils.PackageUtils;
 import rk.device.launcher.widget.dialog.BaseDialogFragment;
@@ -51,6 +53,8 @@ import rx.subscriptions.CompositeSubscription;
  * @version 1.0
  */
 public class UpdateManager {
+
+    private static final String TAG = "UpdateManager";
 
     private static final int DOWN_NOSDCARD = 0;
     private static final int DOWN_UPDATE = 1;
@@ -163,7 +167,6 @@ public class UpdateManager {
 
             @Override
             public void onError(Throwable e) {
-                Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -248,6 +251,7 @@ public class UpdateManager {
      * 显示版本更新通知对话框
      */
     private void showNoticeDialog(final boolean canDelay) {
+        Log.d(TAG, "show notice dialog");
         Builder builder = new Builder(mContext);
         builder.setTitle("软件版本更新");
         builder.setMessage(updateMsg);
@@ -307,7 +311,6 @@ public class UpdateManager {
         downloadDialog.show();
         window.setGravity(Gravity.CENTER);
         downloadDialog.setCancelable(false);
-
         downloadApk();
     }
 
@@ -331,35 +334,39 @@ public class UpdateManager {
                 return;
             }
             try {
-                String apkName = getAppInfo() + ".apk";
-                String tmpApk = getAppInfo() + ".tmp";
+//                String apkName = getAppInfo() + ".apk";
+//                String tmpApk = getAppInfo() + ".tmp";
+                String apkName = "rk_launcher.apk";
+                String tmpApk = "rk_launcher.tmp";
                 // 判断是否挂载了SD卡
                 String storageState = Environment.getExternalStorageState();
-                if (storageState.equals(Environment.MEDIA_MOUNTED)) {
-                    savePath = Environment.getExternalStorageDirectory()
-                            .getAbsolutePath() + "/upload/Update/";
-                    File file = new File(savePath);
-                    if (!file.exists()) {
-                        file.mkdirs();
-                    }
-                    apkFilePath = savePath + apkName;
-                    tmpFilePath = savePath + tmpApk;
-                }
+//                if (storageState.equals(Environment.MEDIA_MOUNTED)) {
+//                    savePath = Environment.getExternalStorageDirectory()
+//                            .getAbsolutePath() + "/upload/Update/";
+//                    File file = new File(savePath);
+//                    if (!file.exists()) {
+//                        file.mkdirs();
+//                    }
+//                    apkFilePath = savePath + apkName;
+//                    tmpFilePath = savePath + tmpApk;
+//                }
 
-                // 没有挂载SD卡，无法下载文件
-                if (apkFilePath == null || apkFilePath == "") {
-                    mHandler.sendEmptyMessage(DOWN_NOSDCARD);
-                    return;
-                }
+//                // 没有挂载SD卡，无法下载文件
+//                if (apkFilePath == null || apkFilePath == "") {
+//                    mHandler.sendEmptyMessage(DOWN_NOSDCARD);
+//                    return;
+//                }
+                apkFilePath = getDirPath(apkName);
+                tmpFilePath = getDirPath(tmpApk);
 
                 File ApkFile = new File(apkFilePath);
 
                 // 是否已下载更新文件
-                if (ApkFile.exists()) {
-                    downloadDialog.dismiss();
-                    installApk();
-                    return;
-                }
+//                if (ApkFile.exists()) {
+//                    downloadDialog.dismiss();
+//                    installApk();
+//                    return;
+//                }
 
                 // 输出临时下载文件
                 File tmpFile = new File(tmpFilePath);
@@ -410,6 +417,30 @@ public class UpdateManager {
 
         }
     };
+
+
+    /**
+     * 检测本机是否存在Sd卡，没有则将apk下载至内部存储路径
+     */
+    private String getDirPath(String dir) {
+        String directoryPath = "";
+        //判断SD卡是否可用
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+            directoryPath = mContext.getExternalFilesDir(dir).getAbsolutePath();
+            // directoryPath =context.getExternalCacheDir().getAbsolutePath() ;
+        } else {
+            //没内存卡就存机身内存
+            directoryPath = mContext.getFilesDir() + File.separator + dir;
+            // directoryPath=context.getCacheDir()+File.separator+dir;
+        }
+        File file = new File(directoryPath);
+        if (!file.exists()) {//判断文件目录是否存在
+            file.mkdirs();
+        }
+        Log.i(TAG, "filePath====>" + directoryPath);
+        return directoryPath;
+    }
+
 
     /**
      * 下载apk

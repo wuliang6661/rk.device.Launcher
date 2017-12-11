@@ -43,6 +43,7 @@ import rk.device.launcher.bean.DeviceInfoBean;
 import rk.device.launcher.bean.SetPageContentBean;
 import rk.device.launcher.bean.VerifyBean;
 import rk.device.launcher.bean.WeatherModel;
+import rk.device.launcher.event.IpHostEvent;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.global.LauncherApplication;
 import rk.device.launcher.service.ElectricBroadcastReceiver;
@@ -122,6 +123,8 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     private String modilePhone;
     private InitErrorDialogFragmen initDialog;
 
+    private boolean isNetWork = true;// 此状态保存上次网络是否连接，默认已连接
+
 
     @Override
     protected int getLayout() {
@@ -133,12 +136,13 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         initDialog = InitErrorDialogFragmen.newInstance();
         registerBatteryReceiver();
         registerNetReceiver();
+        registerRxBus();
+        registerIPHost();
         initLocation();
         settingTv.setOnClickListener(this);
         setOnClick(R.id.rl_contact_manager, R.id.init_error);
         initSurfaceViewOne();
         getData();
-        registerRxBus();
         startService(new Intent(this, SocketService.class));
     }
 
@@ -197,6 +201,18 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         mBatteryReceiver.setCallBack(this);
         intentFilter.addAction(Intent.ACTION_BATTERY_CHANGED);
         registerReceiver(mBatteryReceiver, intentFilter);
+    }
+
+    /**
+     * 接收服务器IP地址更改，所有数据重新请求
+     */
+    private void registerIPHost() {
+        RxBus.getDefault().toObserverable(IpHostEvent.class).subscribe(ipHostEvent -> {
+            initLocation();
+            getData();
+        }, throwable -> {
+
+        });
     }
 
 
@@ -420,14 +436,17 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
             message = "请输入管理员密码";
         }
         showDialogFragment(message, content -> {
-            dialogFragment.dismiss();
             if (StringUtils.isEmpty(password)) { //设置管理员密码，判断为第一次进入
                 if (!TextUtils.isEmpty(content)) {
+                    dialogFragment.dismiss();
                     SPUtils.putString(Constant.KEY_PASSWORD, content); //缓存密码
                     gotoActivity(SetBasicInfoActivity.class, false);//进入基础设置
+                } else {
+                    dialogFragment.showError("请设置管理员密码！");
                 }
             } else { //本地存在密码,则按缓存序号，跳入未设置页面
                 if (TextUtils.equals(password, content)) { //密码输入正确
+                    dialogFragment.dismiss();
                     int type = SPUtils.getInt(Constant.SETTING_NUM, Constant.SETTING_TYPE1);
                     switch (type) {
                         case Constant.SETTING_TYPE1:         //进入基础设置
@@ -453,6 +472,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         });
         dialogFragment.show(getSupportFragmentManager(), "");
     }
+
 
     @Override
     protected void onResume() {
@@ -486,8 +506,16 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     public void onCallMessage(boolean isNoNet, int WifiorNetStatus, int scanLever) {
         if (!isNoNet) {
             mIvSignal.setImageResource(R.drawable.wifi_signal_disconnect);
+            isNetWork = false;
             return;
         }
+        if (!isNetWork) {    //之前网络未连接，现在连接了
+            initLocation();
+            getData();
+            //检测App更新
+            UpdateManager.getUpdateManager().checkAppUpdate(this, getSupportFragmentManager(), false);
+        }
+        isNetWork = true;
         if (WifiorNetStatus == 0) {
             mIvSignal.setImageResource(R.drawable.net_line);
         } else {
@@ -514,7 +542,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     public void setOnBioFace(CvcRect cvcRect1, int[] rectWidth, int[] rectHeight) {
         runOnUiThread(() -> {
             //T.showShort("检测到人脸");
-            if(faceView != null){
+            if (faceView != null) {
                 faceView.setFaces(cvcRect1, cvcRect1.w, cvcRect1.h, rectWidth[0], rectHeight[0]);
             }
         });
@@ -554,11 +582,11 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         }
     }
 
-    Handler UIHandler = new Handler(){
+    Handler UIHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
+            switch (msg.what) {
                 case 0x11:
                     if (initDialog != null && initDialog.isVisible()) {
                         T.showShort("部分设备初始化失败！建议重启设备！");

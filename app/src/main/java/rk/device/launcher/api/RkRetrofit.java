@@ -12,7 +12,6 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import rk.device.launcher.Config;
 import rk.device.launcher.R;
 import rk.device.launcher.global.LauncherApplication;
 import rk.device.launcher.utils.NetWorkUtil;
@@ -20,32 +19,23 @@ import rk.device.launcher.utils.NetWorkUtil;
 
 /**
  * Created by hb on 16/3/7.
+ * <p>
+ * 所有网络请求及过滤器都在此处
  */
 public class RkRetrofit {
 
     private OkHttpClient apiClient = null;
 
-    Interceptor mInterceptor = new Interceptor() {
-        @Override
-        public Response intercept(Chain chain) throws IOException {
-            Request.Builder request = chain.request().newBuilder();
-            return chain.proceed(request.build());
-        }
-    };
-
     /**
      * Api接口
-     *
-     * @return
      */
-    public Retrofit init_api(String baseUrl) {
+    Retrofit init_api(String baseUrl) {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         apiClient = new OkHttpClient
                 .Builder()
                 .readTimeout(20000, TimeUnit.MILLISECONDS)
                 .connectTimeout(20000, TimeUnit.MILLISECONDS)
-                .addInterceptor(mInterceptor)
                 .addInterceptor(interceptor)
                 .addNetworkInterceptor(new HttpCacheInterceptor())
                 .build();
@@ -58,9 +48,9 @@ public class RkRetrofit {
                 .client(apiClient).build();
         return retrofit;
     }
-    
 
-    class HttpCacheInterceptor implements Interceptor {
+
+    private class HttpCacheInterceptor implements Interceptor {
 
         @Override
         public Response intercept(Chain chain) throws IOException {

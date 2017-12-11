@@ -13,18 +13,24 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.OnClick;
 import peripherals.LedHelper;
 import rk.device.launcher.R;
+import rk.device.launcher.api.ApiService;
 import rk.device.launcher.base.BaseCompatActivity;
+import rk.device.launcher.base.utils.rxbus.RxBus;
 import rk.device.launcher.bean.SetDoorRvBean;
+import rk.device.launcher.event.IpHostEvent;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.utils.AppManager;
 import rk.device.launcher.utils.DrawableUtil;
+import rk.device.launcher.utils.NetUtils;
 import rk.device.launcher.utils.SPUtils;
+import rk.device.launcher.utils.StringUtils;
 import rk.device.launcher.utils.uuid.DeviceUuidFactory;
 
 /**
@@ -111,6 +117,22 @@ public class SetSysActivity extends BaseCompatActivity {
         mBtnFinishSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // 保存IP
+                String ip = mEtIP.getText().toString();
+                // 保存端口号
+                String port = mEtPort.getText().toString();
+                if (!StringUtils.isEmpty(ip) && !StringUtils.isEmpty(port)) {
+                    String address = "https://" + ip + ":" + port;
+                    if (NetUtils.ping(address)) {
+                        SPUtils.putString(Constant.KEY_IP, ip);
+                        SPUtils.putString(Constant.KEY_PORT, port);
+                        ApiService.clearIP();
+                        RxBus.getDefault().post(new IpHostEvent(true));
+                    } else {
+                        showMessageDialog("服务器IP地址或端口不可用！");
+                        return;
+                    }
+                }
                 // 保存待机时间
                 SPUtils.putLong(Constant.KEY_SLEEP_TIME, getSleepTime());
 
@@ -125,17 +147,6 @@ public class SetSysActivity extends BaseCompatActivity {
                     LedHelper.PER_ledToggle(1);
                 } else {
                     LedHelper.PER_ledToggle(0);
-                }
-                // 保存IP
-                String ip = mEtIP.getText().toString();
-                if (!TextUtils.isEmpty(ip)) {
-                    SPUtils.putString(Constant.KEY_IP, ip);
-                }
-
-                // 保存端口号
-                String port = mEtPort.getText().toString();
-                if (!TextUtils.isEmpty(port)) {
-                    SPUtils.putString(Constant.KEY_PORT, port);
                 }
 
                 boolean isFirstSetting = SPUtils.getBoolean(Constant.IS_FIRST_SETTING, true);    //是否第一次进入设置
@@ -219,5 +230,26 @@ public class SetSysActivity extends BaseCompatActivity {
                 break;
         }
     }
+
+    /**
+     * ping一个地址是否可用
+     */
+    private boolean pingIpAddress(String ipAddress) {
+        try {
+            Process process = Runtime.getRuntime().exec("/system/bin/ping -c 1 -w 100 " + ipAddress);
+            int status = process.waitFor();
+            if (status == 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 
 }
