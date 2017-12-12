@@ -157,6 +157,7 @@ public class InputWifiPasswordDialogFragment extends DialogFragment {
         mTvTitle.setText(mTitle);
         DrawableUtil.addPressedDrawable(getContext(), R.drawable.shape_dialog_btn_cancel, mBtnCancel);
         DrawableUtil.addPressedDrawable(getContext(), R.drawable.shape_dialog_btn_confirm, mBtnConfirm);
+
         mBtnCancel.setOnClickListener(v -> {
             if (mOnCancelClickListener != null) {
                 mOnCancelClickListener.onCancelClick();
@@ -170,7 +171,7 @@ public class InputWifiPasswordDialogFragment extends DialogFragment {
                 return;
             }
             if (mPassWord.length() != 6) {
-                showError("管理员密码必须为6位！");
+                showError("请输入完整密码！");
                 return;
             }
             mLlError.setVisibility(View.INVISIBLE);
