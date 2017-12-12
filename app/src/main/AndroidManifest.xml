@@ -128,6 +128,7 @@
         <!-- 网络设置 -->
         <activity
             android:name=".ui.activity.SetNetWorkActivity"
+            android:windowSoftInputMode="adjustResize"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <!-- 门禁设置 -->

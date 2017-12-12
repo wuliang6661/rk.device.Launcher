@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -16,10 +17,13 @@ import rk.device.launcher.global.Constant;
 import rk.device.launcher.ui.fragment.AutoObtainNetworkConfigFragment;
 import rk.device.launcher.ui.fragment.ManualConfigFragment;
 import rk.device.launcher.ui.fragment.WifiListFragment;
+import rk.device.launcher.utils.DensityUtil;
 import rk.device.launcher.utils.DrawableUtil;
+import rk.device.launcher.utils.KeyBoardHelper;
+import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.SPUtils;
 
-public class SetNetWorkActivity extends BaseCompatActivity implements View.OnClickListener {
+public class SetNetWorkActivity extends BaseCompatActivity implements View.OnClickListener, KeyBoardHelper.OnKeyBoardStatusChangeListener {
 
     @Bind(R.id.iv_back)
     ImageView mIvBack;
@@ -39,10 +43,13 @@ public class SetNetWorkActivity extends BaseCompatActivity implements View.OnCli
     ImageView mIvWifi;
     @Bind(R.id.btn_finish_setting)
     Button mBtnFinishSetting;
+	@Bind(R.id.ll_content)
+	LinearLayout mLlContent;
     private FragmentManager mFragmentManager;
     private String mFragmentTag = "1";
-
-    @Override
+	private KeyBoardHelper mKeyBoardHelper;
+	
+	@Override
     protected int getLayout() {
         return R.layout.activity_set_net_work;
     }
@@ -52,10 +59,20 @@ public class SetNetWorkActivity extends BaseCompatActivity implements View.OnCli
         goBack();
         setTitle("网络设置");
     }
-
-    @Override
+	
+	@Override
+	protected void onDestroy() {
+		mKeyBoardHelper.onDestory();
+		super.onDestroy();
+	}
+	
+	@Override
     protected void initData() {
-        mFragmentManager = getSupportFragmentManager();
+	    mKeyBoardHelper = new KeyBoardHelper(this);
+	    mKeyBoardHelper.onCreate();
+	    mKeyBoardHelper.setOnKeyBoardStatusChangeListener(this);
+	    
+	    mFragmentManager = getSupportFragmentManager();
         mLlAuto.setOnClickListener(this);
         mLlManul.setOnClickListener(this);
         mLlWifi.setOnClickListener(this);
@@ -66,7 +83,9 @@ public class SetNetWorkActivity extends BaseCompatActivity implements View.OnCli
             public void onClick(View v) {
                 if (mCurrentFragment instanceof ManualConfigFragment) {
                     ManualConfigFragment fragment = (ManualConfigFragment) mCurrentFragment;
-                    fragment.saveIpConfig();
+	                if (!fragment.saveIpConfig()) { // IP参数没有设置成功
+		                return;
+	                }
                 } else if (mCurrentFragment instanceof AutoObtainNetworkConfigFragment) {
                     AutoObtainNetworkConfigFragment fragment = (AutoObtainNetworkConfigFragment) mCurrentFragment;
                     // 设置IP获取方式为自动获取
@@ -161,4 +180,24 @@ public class SetNetWorkActivity extends BaseCompatActivity implements View.OnCli
         }
 
     }
+	
+	private final String TAG = "SetNetWorkActivity";
+	
+	@Override
+	public void OnKeyBoardPop(int keyBoardheight) {
+		LogUtil.d(TAG, "键盘打开");
+		final ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) mLlContent.getLayoutParams();
+		lp.topMargin = -DensityUtil.dp2px(60);
+		mLlContent.setLayoutParams(lp);
+	}
+	
+	@Override
+	public void OnKeyBoardClose(int oldKeyBoardheight) {
+		LogUtil.d(TAG, "键盘关闭");
+		final ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) mLlContent.getLayoutParams();
+		lp.topMargin = 0;
+		mLlContent.setLayoutParams(lp);
+	}
+	
+	
 }
