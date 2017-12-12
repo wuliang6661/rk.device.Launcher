@@ -125,7 +125,7 @@ public class SetBasicInfoActivity extends BaseCompatActivity implements View.OnC
     @Override
     protected void initData() {
         setTitle(getString(R.string.basic_settting));
-        isVoice = (boolean) get(Constant.DEVICE_MP3, false);
+        isVoice = (boolean) get(Constant.DEVICE_MP3, true);
         deviceNameEt.setText((String) get(Constant.DEVICE_NAME, ""));
         deviceNameEt.setSelection(deviceNameEt.getText().length());
         String mac = (String) get(Constant.BLUE_TOOTH, "");
@@ -136,11 +136,7 @@ public class SetBasicInfoActivity extends BaseCompatActivity implements View.OnC
         if (!StringUtils.isEmpty(mac)) {
             blueEvent = new BlueToothEvent(mac, name);
         }
-        if (isVoice) {
-            voiceCheckBox.setChecked(true);
-        } else {
-            voiceCheckBox.setChecked(false);
-        }
+        voiceCheckBox.setChecked(isVoice);
         voiceCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

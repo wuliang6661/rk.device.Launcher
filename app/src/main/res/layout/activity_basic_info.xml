@@ -55,6 +55,7 @@
 
             <CheckBox
                 android:id="@+id/checkbox_voice"
+                android:checked="true"
                 style="@style/style_check_box" />
 
         </LinearLayout>

@@ -37,6 +37,7 @@ import java.text.DecimalFormat;
 
 import rk.device.launcher.R;
 import rk.device.launcher.api.ApiService;
+import rk.device.launcher.api.T;
 import rk.device.launcher.bean.VersionBean;
 import rk.device.launcher.utils.AppUtils;
 import rk.device.launcher.utils.PackageUtils;
@@ -113,6 +114,7 @@ public class UpdateManager {
                     break;
                 case DOWN_OVER:
                     downloadDialog.dismiss();
+//                    AppUtils.installAppSilent(apkFilePath);
                     installApk();
                     break;
                 case DOWN_NOSDCARD:
@@ -164,6 +166,12 @@ public class UpdateManager {
 
             @Override
             public void onError(Throwable e) {
+                // 进度条对话框不显示 - 检测结果也不显示
+                if (mProDialog != null && !mProDialog.isShowing()) {
+                    T.showShort("检测失败！请检查网络是否连接");
+                    mProDialog.dismiss();
+                    mProDialog = null;
+                }
             }
 
             @Override
@@ -331,39 +339,12 @@ public class UpdateManager {
                 return;
             }
             try {
-//                String apkName = getAppInfo() + ".apk";
-//                String tmpApk = getAppInfo() + ".tmp";
                 String apkName = "rk_launcher.apk";
                 String tmpApk = "rk_launcher.tmp";
-                // 判断是否挂载了SD卡
-//                String storageState = Environment.getExternalStorageState();
-//                if (storageState.equals(Environment.MEDIA_MOUNTED)) {
-//                    savePath = Environment.getExternalStorageDirectory()
-//                            .getAbsolutePath() + "/upload/Update/";
-//                    File file = new File(savePath);
-//                    if (!file.exists()) {
-//                        file.mkdirs();
-//                    }
-//                    apkFilePath = savePath + apkName;
-//                    tmpFilePath = savePath + tmpApk;
-//                }
-
-//                // 没有挂载SD卡，无法下载文件
-//                if (apkFilePath == null || apkFilePath == "") {
-//                    mHandler.sendEmptyMessage(DOWN_NOSDCARD);
-//                    return;
-//                }
                 apkFilePath = getDirPath("") + apkName;
                 tmpFilePath = getDirPath("") + tmpApk;
 
                 File ApkFile = new File(apkFilePath);
-
-                // 是否已下载更新文件
-//                if (ApkFile.exists()) {
-//                    downloadDialog.dismiss();
-//                    installApk();
-//                    return;
-//                }
 
                 // 输出临时下载文件
                 File tmpFile = new File(tmpFilePath);
@@ -469,7 +450,7 @@ public class UpdateManager {
             mContext.startActivity(intent);
         } else {
             Intent i = new Intent(Intent.ACTION_VIEW);
-            i.setDataAndType(Uri.parse("file://" + apkfile.toString()),
+            i.setDataAndType(Uri.parse("file://" + apkFilePath),
                     "application/vnd.android.package-archive");
             mContext.startActivity(i);
         }

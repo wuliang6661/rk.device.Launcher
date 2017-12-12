@@ -56,6 +56,7 @@ import rk.device.launcher.utils.AppUtils;
 import rk.device.launcher.utils.DateUtil;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.SPUtils;
+import rk.device.launcher.utils.ShellUtils;
 import rk.device.launcher.utils.StringUtils;
 import rk.device.launcher.utils.TimeUtils;
 import rk.device.launcher.utils.gps.GpsUtils;
@@ -150,6 +151,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 
     @Override
     protected void initData() {
+        ShellUtils.upgradeRootPermission("/data/rk_backup");
         String declareContent = SPUtils.getString(Constant.KEY_FIRSTPAGE_CONTENT);
         mTvDeclare.setText(declareContent);
         //检测App更新
@@ -275,11 +277,12 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     private void showDialogFragment(String title, InputWifiPasswordDialogFragment.OnConfirmClickListener listener, boolean isHideInput) {
         dialogFragment = InputWifiPasswordDialogFragment.newInstance();
         dialogFragment.setTitle(title);
-        Log.d("wuliang", String.valueOf(isHideInput));
+        dialogFragment.showHite("请输入6位数密码");
+        dialogFragment.setMaxLength(6);
         if (isHideInput) {
-            dialogFragment.setInputType(InputType.TYPE_NUMBER_VARIATION_PASSWORD);
+            dialogFragment.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);   //隐藏密码
         } else {
-            dialogFragment.setInputType(InputType.TYPE_CLASS_NUMBER);
+            dialogFragment.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);   //显示密码
         }
         dialogFragment.setOnCancelClickListener(() -> dialogFragment.dismiss()).setOnConfirmClickListener(listener);
     }
@@ -446,6 +449,14 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
             isHideInput = true;
         }
         showDialogFragment(message, content -> {
+            if (StringUtils.isEmpty(content)) {
+                dialogFragment.showError("请输入管理员密码！");
+                return;
+            }
+            if (content.length() != 6) {
+                dialogFragment.showError("请输入完整密码！");
+                return;
+            }
             if (StringUtils.isEmpty(password)) { //设置管理员密码，判断为第一次进入
                 if (!TextUtils.isEmpty(content)) {
                     dialogFragment.dismiss();
