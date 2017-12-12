@@ -29,6 +29,7 @@ import java.util.regex.Pattern;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import rk.device.launcher.R;
+import rk.device.launcher.api.T;
 import rk.device.launcher.utils.LogUtil;
 
 /**
@@ -138,14 +139,16 @@ public class ManualConfigFragment extends Fragment {
 		ButterKnife.unbind(this);
 	}
 
-	public void saveIpConfig() {
+	public boolean saveIpConfig() {
 		mEthIpAddress = mEtIp.getText().toString();
 		mEthNetmask = mEtNetMask.getText().toString();
 		mEthGateway = mEtNetGate.getText().toString();
 		mEthdns1 = mEtDns.getText().toString();
 		if (setStaticIpConfiguration()) {
 			mEthManager.setConfiguration(mIpConfiguration);
+			return true;
 		}
+		return false;
 
 	}
 
@@ -159,7 +162,10 @@ public class ManualConfigFragment extends Fragment {
 		int prefixLength = maskStr2InetMask(this.mEthNetmask);
 		InetAddress gatewayAddr =getIPv4Address(this.mEthGateway);
 		InetAddress dnsAddr = getIPv4Address(this.mEthdns1);
-
+		if (inetAddr == null || gatewayAddr == null || dnsAddr == null) {
+			T.showShort("网络设置出错, 请重新设置");
+			return false;
+		}
 		if (inetAddr.getAddress().toString().isEmpty() || prefixLength ==0 || gatewayAddr.toString().isEmpty()
 				|| dnsAddr.toString().isEmpty()) {
 			LogUtil.d("ip,mask or dnsAddr is wrong");

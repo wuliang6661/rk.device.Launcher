@@ -83,7 +83,9 @@ public class SetNetWorkActivity extends BaseCompatActivity implements View.OnCli
             public void onClick(View v) {
                 if (mCurrentFragment instanceof ManualConfigFragment) {
                     ManualConfigFragment fragment = (ManualConfigFragment) mCurrentFragment;
-                    fragment.saveIpConfig();
+	                if (!fragment.saveIpConfig()) { // IP参数没有设置成功
+		                return;
+	                }
                 } else if (mCurrentFragment instanceof AutoObtainNetworkConfigFragment) {
                     AutoObtainNetworkConfigFragment fragment = (AutoObtainNetworkConfigFragment) mCurrentFragment;
                     // 设置IP获取方式为自动获取
