@@ -126,8 +126,9 @@ public class SetBasicInfoActivity extends BaseCompatActivity implements View.OnC
     @Override
     protected void initData() {
         setTitle(getString(R.string.basic_settting));
-        isVoice = (boolean) get(Constant.DEVICE_MP3, false);
+        isVoice = (boolean) get(Constant.DEVICE_MP3, true);
         deviceNameEt.setText((String) get(Constant.DEVICE_NAME, ""));
+        deviceNameEt.setSelection(deviceNameEt.getText().length());
         String mac = (String) get(Constant.BLUE_TOOTH, "");
         String name = (String) get(Constant.BLUE_NAME, "");
         blueToothNameTv.setText((String) get(Constant.BLUE_NAME, ""));
@@ -136,16 +137,12 @@ public class SetBasicInfoActivity extends BaseCompatActivity implements View.OnC
         if (!StringUtils.isEmpty(mac)) {
             blueEvent = new BlueToothEvent(mac, name);
         }
-        if (isVoice) {
-            voiceCheckBox.setChecked(true);
-        } else {
-            voiceCheckBox.setChecked(false);
-        }
+        voiceCheckBox.setChecked(isVoice);
         voiceCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-	        @Override
-	        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-		        isVoice = isChecked;
-	        }
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                isVoice = isChecked;
+            }
         });
     }
 
@@ -223,10 +220,10 @@ public class SetBasicInfoActivity extends BaseCompatActivity implements View.OnC
         SPUtils.put(Constant.DEVICE_NAME, deviceName);
         //语音设置
         SPUtils.put(Constant.DEVICE_MP3, isVoice);
-	    // 设置系统时间
-	    if (when_time / 1000 < Integer.MAX_VALUE) {
-		    SystemClock.setCurrentTimeMillis(when_time);
-	    }
+        // 设置系统时间
+        if (when_time / 1000 < Integer.MAX_VALUE) {
+            SystemClock.setCurrentTimeMillis(when_time);
+        }
         //判断是否是第一次
         boolean isFirst = (boolean) SPUtils.get(Constant.IS_FIRST_SETTING, true);
 //                    syncBlueTime();

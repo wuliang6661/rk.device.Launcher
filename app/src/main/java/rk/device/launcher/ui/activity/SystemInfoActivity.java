@@ -12,6 +12,7 @@ import butterknife.Bind;
 import rk.device.launcher.R;
 import rk.device.launcher.base.BaseCompatActivity;
 import rk.device.launcher.utils.AppUtils;
+import rk.device.launcher.utils.NetWorkUtil;
 import rk.device.launcher.utils.QRCodeUtils;
 import rk.device.launcher.utils.ScreenUtil;
 import rk.device.launcher.widget.UpdateManager;
@@ -76,6 +77,10 @@ public class SystemInfoActivity extends BaseCompatActivity implements View.OnCli
 
     @Override
     public void onClick(View view) {
-        UpdateManager.getUpdateManager().checkAppUpdate(this, getSupportFragmentManager(), true);
+        if (NetWorkUtil.isNetConnected(this)) {
+            UpdateManager.getUpdateManager().checkAppUpdate(this, getSupportFragmentManager(), true);
+        } else {
+            showMessageDialog("当前网络未连接!");
+        }
     }
 }

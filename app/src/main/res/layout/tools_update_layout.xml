@@ -17,6 +17,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
-        android:textColor="@color/white" />
+        android:textColor="@color/blue_31598a" />
 
 </LinearLayout>

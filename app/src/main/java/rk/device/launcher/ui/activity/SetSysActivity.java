@@ -92,6 +92,7 @@ public class SetSysActivity extends BaseCompatActivity {
         if (!TextUtils.isEmpty(clientCode)) {
             mEtClientCode.setHint(clientCode);
         }
+        mEtClientCode.setSelection(mEtClientCode.getText().length());
 
         // 读取保存的补光灯的开关状态
         boolean isLightTurnOn = SPUtils.getBoolean(Constant.KEY_LIGNT, false);
@@ -107,13 +108,14 @@ public class SetSysActivity extends BaseCompatActivity {
         if (!TextUtils.isEmpty(ip)) {
             mEtIP.setHint(ip);
         }
+        mEtIP.setSelection(mEtIP.getText().length());
 
         // 读取保存的端口号
         String port = SPUtils.getString(Constant.KEY_PORT);
         if (!TextUtils.isEmpty(port)) {
             mEtPort.setHint(port);
         }
-
+        mEtPort.setSelection(mEtPort.getText().length());
         mBtnFinishSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

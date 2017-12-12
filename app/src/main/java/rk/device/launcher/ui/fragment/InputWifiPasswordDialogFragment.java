@@ -5,6 +5,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.text.InputFilter;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,7 +51,8 @@ public class InputWifiPasswordDialogFragment extends DialogFragment {
     private onCancelClickListener mOnCancelClickListener;
     private CharSequence mTitle;
     private Integer mInputType;
-    private String mPassWord;
+    private String hint;
+    private int maxLength = 0;
 
     public String getEtText() {
         return mEtPassword.getText().toString();
@@ -96,6 +98,22 @@ public class InputWifiPasswordDialogFragment extends DialogFragment {
     public void showError(String message) {
         mLlError.setVisibility(View.VISIBLE);
         errorMessage.setText(message);
+    }
+
+
+    /**
+     * 显示默认显示文字
+     */
+    public void showHite(String hint) {
+        this.hint = hint;
+    }
+
+
+    /**
+     * 设置最大输入数
+     */
+    public void setMaxLength(int length) {
+        this.maxLength = length;
     }
 
 
@@ -154,9 +172,16 @@ public class InputWifiPasswordDialogFragment extends DialogFragment {
         if (mInputType != null) {
             mEtPassword.setInputType(mInputType);
         }
+        if (hint != null) {
+            mEtPassword.setHint(hint);
+        }
+        if (maxLength != 0) {
+            mEtPassword.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLength)}); //最大输入长度
+        }
         mTvTitle.setText(mTitle);
         DrawableUtil.addPressedDrawable(getContext(), R.drawable.shape_dialog_btn_cancel, mBtnCancel);
         DrawableUtil.addPressedDrawable(getContext(), R.drawable.shape_dialog_btn_confirm, mBtnConfirm);
+
         mBtnCancel.setOnClickListener(v -> {
             if (mOnCancelClickListener != null) {
                 mOnCancelClickListener.onCancelClick();
@@ -164,16 +189,6 @@ public class InputWifiPasswordDialogFragment extends DialogFragment {
         });
 
         mBtnConfirm.setOnClickListener(v -> {
-            mPassWord = mEtPassword.getText().toString();
-            if (StringUtils.isEmpty(mPassWord)) {
-                showError("请输入管理员密码！");
-                return;
-            }
-            if (mPassWord.length() != 6) {
-                showError("管理员密码必须为6位！");
-                return;
-            }
-            mLlError.setVisibility(View.INVISIBLE);
             if (mOnConfirmClickListener != null) {
                 mOnConfirmClickListener.onConfirmClick(mEtPassword.getText().toString());
             }

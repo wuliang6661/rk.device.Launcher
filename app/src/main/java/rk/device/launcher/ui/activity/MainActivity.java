@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -55,6 +56,7 @@ import rk.device.launcher.utils.AppUtils;
 import rk.device.launcher.utils.DateUtil;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.SPUtils;
+import rk.device.launcher.utils.ShellUtils;
 import rk.device.launcher.utils.StringUtils;
 import rk.device.launcher.utils.TimeUtils;
 import rk.device.launcher.utils.gps.GpsUtils;
@@ -149,6 +151,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 
     @Override
     protected void initData() {
+        ShellUtils.upgradeRootPermission("/data/rk_backup");
         String declareContent = SPUtils.getString(Constant.KEY_FIRSTPAGE_CONTENT);
         mTvDeclare.setText(declareContent);
         //检测App更新
@@ -271,9 +274,16 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     /**
      * 显示输入管理员密码弹窗
      */
-    private void showDialogFragment(String title, InputWifiPasswordDialogFragment.OnConfirmClickListener listener) {
+    private void showDialogFragment(String title, InputWifiPasswordDialogFragment.OnConfirmClickListener listener, boolean isHideInput) {
         dialogFragment = InputWifiPasswordDialogFragment.newInstance();
         dialogFragment.setTitle(title);
+        dialogFragment.showHite("请输入6位数密码");
+        dialogFragment.setMaxLength(6);
+        if (isHideInput) {
+            dialogFragment.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);   //隐藏密码
+        } else {
+            dialogFragment.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);   //显示密码
+        }
         dialogFragment.setOnCancelClickListener(() -> dialogFragment.dismiss()).setOnConfirmClickListener(listener);
     }
 
@@ -428,14 +438,25 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
      * 初始设置流程加载
      */
     private void settingLoad() {
+        boolean isHideInput;
         final String password = SPUtils.getString(Constant.KEY_PASSWORD);
         String message;
         if (StringUtils.isEmpty(password)) {
+            isHideInput = false;
             message = "设置管理员密码";
         } else {
             message = "请输入管理员密码";
+            isHideInput = true;
         }
         showDialogFragment(message, content -> {
+            if (StringUtils.isEmpty(content)) {
+                dialogFragment.showError("请输入管理员密码！");
+                return;
+            }
+            if (content.length() != 6) {
+                dialogFragment.showError("请输入完整密码！");
+                return;
+            }
             if (StringUtils.isEmpty(password)) { //设置管理员密码，判断为第一次进入
                 if (!TextUtils.isEmpty(content)) {
                     dialogFragment.dismiss();
@@ -469,7 +490,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
                     dialogFragment.showError();
                 }
             }
-        });
+        }, isHideInput);
         dialogFragment.show(getSupportFragmentManager(), "");
     }
 
