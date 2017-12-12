@@ -1,151 +1,172 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:orientation="vertical"
-    android:id="@+id/ll_content"
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="rk.device.launcher.ui.activity.SetNetWorkActivity">
-    <include layout="@layout/topbar"/>
-    <LinearLayout
-        android:background="@drawable/shape_normal_bg"
-        android:orientation="vertical"
+    <ScrollView
+        android:fillViewport="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/item_height">
-
-            <TextView
-                android:padding="10dp"
-                android:layout_marginLeft="20dp"
-                android:background="@drawable/network_type_bg"
-                android:layout_centerVertical="true"
-                android:gravity="center"
-                android:textColor="@color/white"
-                android:textSize="27dp"
-                android:text="网络类型"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-        </RelativeLayout>
-
-        <View
-            android:background="@color/blue_31598a"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"/>
         <LinearLayout
-            android:background="@color/half_transparent_white"
-            android:id="@+id/ll_auto"
-            android:orientation="horizontal"
+            android:id="@+id/ll_content"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/item_height">
+            android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/iv_auto"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="20dp"
-                android:src="@drawable/circle_checked"
-                android:layout_width="33dp"
-                android:layout_height="33dp"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="93dp"/>
 
-            <TextView
-                android:layout_marginLeft="13dp"
-                android:layout_gravity="center_vertical"
-                android:textColor="@color/white"
-                android:textSize="@dimen/normal_textsize_sp27"
-                android:text="有线 (自动)"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+            <LinearLayout
+                android:background="@drawable/shape_normal_bg"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_height">
+
+                    <TextView
+                        android:padding="10dp"
+                        android:layout_marginLeft="20dp"
+                        android:background="@drawable/network_type_bg"
+                        android:layout_centerVertical="true"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        android:textSize="27dp"
+                        android:text="网络类型"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </RelativeLayout>
+
+                <View
+                    android:background="@color/blue_31598a"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"/>
+                <LinearLayout
+                    android:background="@color/half_transparent_white"
+                    android:id="@+id/ll_auto"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_height">
+
+                    <ImageView
+                        android:id="@+id/iv_auto"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="20dp"
+                        android:src="@drawable/circle_checked"
+                        android:layout_width="33dp"
+                        android:layout_height="33dp"/>
+
+                    <TextView
+                        android:layout_marginLeft="13dp"
+                        android:layout_gravity="center_vertical"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/normal_textsize_sp27"
+                        android:text="有线 (自动)"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+                <View
+                    android:background="@color/blue_31598a"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"/>
+
+                <LinearLayout
+                    android:background="@color/transparent"
+                    android:id="@+id/ll_manul"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_height">
+
+                    <ImageView
+                        android:id="@+id/iv_manul"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="20dp"
+                        android:src="@drawable/circle_uncheck"
+                        android:layout_width="33dp"
+                        android:layout_height="33dp"/>
+
+                    <TextView
+                        android:layout_marginLeft="13dp"
+                        android:layout_gravity="center_vertical"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/normal_textsize_sp27"
+                        android:text="有线 (手动)"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+                <View
+                    android:background="@color/blue_31598a"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"/>
+
+                <LinearLayout
+                    android:background="@color/transparent"
+                    android:id="@+id/ll_wifi"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_height">
+
+                    <ImageView
+                        android:id="@+id/iv_wifi"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="20dp"
+                        android:src="@drawable/circle_uncheck"
+                        android:layout_width="33dp"
+                        android:layout_height="33dp"/>
+
+                    <TextView
+                        android:layout_marginLeft="13dp"
+                        android:layout_gravity="center_vertical"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/normal_textsize_sp27"
+                        android:text="WIFI"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+                <View
+                    android:background="@color/blue_31598a"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"/>
+
+                <FrameLayout
+                    android:id="@+id/fl_container"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp">
+
+                </FrameLayout>
+
+                <Button
+                    android:id="@+id/btn_finish_setting"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="80dp"
+                    android:text="完成设置"
+                    style="@style/btn_finish"
+                    />
+
+            </LinearLayout>
+
 
         </LinearLayout>
-        <View
-            android:background="@color/blue_31598a"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"/>
 
-        <LinearLayout
-            android:background="@color/transparent"
-            android:id="@+id/ll_manul"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/item_height">
+    </ScrollView>
 
-            <ImageView
-                android:id="@+id/iv_manul"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="20dp"
-                android:src="@drawable/circle_uncheck"
-                android:layout_width="33dp"
-                android:layout_height="33dp"/>
 
-            <TextView
-                android:layout_marginLeft="13dp"
-                android:layout_gravity="center_vertical"
-                android:textColor="@color/white"
-                android:textSize="@dimen/normal_textsize_sp27"
-                android:text="有线 (手动)"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-        </LinearLayout>
-        <View
-            android:background="@color/blue_31598a"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"/>
-
-        <LinearLayout
-            android:background="@color/transparent"
-            android:id="@+id/ll_wifi"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/item_height">
-
-            <ImageView
-                android:id="@+id/iv_wifi"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="20dp"
-                android:src="@drawable/circle_uncheck"
-                android:layout_width="33dp"
-                android:layout_height="33dp"/>
-
-            <TextView
-                android:layout_marginLeft="13dp"
-                android:layout_gravity="center_vertical"
-                android:textColor="@color/white"
-                android:textSize="@dimen/normal_textsize_sp27"
-                android:text="WIFI"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-        </LinearLayout>
-        <View
-            android:background="@color/blue_31598a"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"/>
-
-        <FrameLayout
-            android:id="@+id/fl_container"
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="0dp">
-
-        </FrameLayout>
-
-        <Button
-            android:id="@+id/btn_finish_setting"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="80dp"
-            android:text="完成设置"
-            style="@style/btn_finish"
-            />
-
-    </LinearLayout>
+    <include layout="@layout/topbar"/>
 
 
 
 
-</LinearLayout>
+
+</RelativeLayout>
