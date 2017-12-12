@@ -17,6 +17,49 @@
         android:layout_height="match_parent">
 
         <LinearLayout
+            android:id="@+id/ll_set_time_zone"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_height">
+
+            <TextView
+                android:textColor="@color/white"
+                android:layout_marginLeft="20dp"
+                android:textSize="27dp"
+                android:layout_gravity="center_vertical"
+                android:text="时区"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <Space
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"/>
+
+            <TextView
+                android:id="@+id/tv_time_zone"
+                android:textColor="@color/white"
+                android:textSize="27dp"
+                android:layout_gravity="center_vertical"
+                android:text="GMT+8:00 中国标准时间"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <ImageView
+                android:layout_marginLeft="27dp"
+                android:layout_marginRight="20dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/arrow_right"
+                android:layout_width="16dp"
+                android:layout_height="29dp"/>
+
+        </LinearLayout>
+
+        <View
+            android:background="@color/blue_31598a"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+
+        <LinearLayout
             android:id="@+id/ll_set_date"
             android:orientation="horizontal"
             android:layout_width="match_parent"
