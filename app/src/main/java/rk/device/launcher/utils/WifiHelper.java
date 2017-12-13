@@ -179,7 +179,7 @@ public class WifiHelper {
 		}
 
 	}
-
+	
 	public boolean ConnectToNetId(int netId) {
 		return mWifiManager.enableNetwork(netId, true);
 	}
@@ -341,6 +341,57 @@ public class WifiHelper {
 		return isSuccess;
 
 	}
+	
+	public int CreateWifiInfo2(ScanResult wifiinfo, String pwd) {
+		int type = -1;
+		if (wifiinfo.capabilities.contains("WPA2-PSK")) {
+			// WPA-PSK加密
+			type = TYPE_WPA2_PSK;
+		} else if (wifiinfo.capabilities.contains("WPA-PSK")) {
+			// WPA-PSK加密
+			type = TYPE_WPA_PSK;
+		} else if (wifiinfo.capabilities.contains("WPA-EAP")) {
+			// WPA-EAP加密
+			type = TYPE_WPA_EAP;
+		} else if (wifiinfo.capabilities.contains("WEP")) {
+			// WEP加密
+			type = TYPE_WPA_EAP;
+		} else {
+			// 无密码
+			type = TYPE_NO_PASSWORD;
+		}
+		
+		WifiConfiguration config = CreateWifiInfo(wifiinfo.SSID, wifiinfo.BSSID, pwd, type);
+		if (config != null) {
+			return mWifiManager.addNetwork(config);
+		} else {
+			return -1;
+		}
+	}
+	
+	public boolean connectToWifiWithPwd(ScanResult scanResult, String password) {
+		int type = -1;
+		if (scanResult.capabilities.contains("WPA2-PSK")) {
+			// WPA-PSK加密
+			type = TYPE_WPA2_PSK;
+		} else if (scanResult.capabilities.contains("WPA-PSK")) {
+			// WPA-PSK加密
+			type = TYPE_WPA_PSK;
+		} else if (scanResult.capabilities.contains("WPA-EAP")) {
+			// WPA-EAP加密
+			type = TYPE_WPA_EAP;
+		} else if (scanResult.capabilities.contains("WEP")) {
+			// WEP加密
+			type = TYPE_WPA_EAP;
+		} else {
+			// 无密码
+			type = TYPE_NO_PASSWORD;
+		}
+		
+		WifiConfiguration config = CreateWifiInfo(scanResult.SSID, scanResult.BSSID, password, type);
+		int netId = mWifiManager.addNetwork(config);
+		return mWifiManager.enableNetwork(netId, true);
+	}
 
 	private int getMaxPriority() {
 		List<WifiConfiguration> localList = mWifiManager.getConfiguredNetworks();
@@ -402,30 +453,6 @@ public class WifiHelper {
 	private final int TYPE_WPA_EAP = 3;
 	private final int TYPE_WEP = 4;
 	private final int TYPE_NO_PASSWORD = 5;
-
-	public boolean connectToWifiWithPwd(ScanResult scanResult, String password) {
-		int type = -1;
-		if (scanResult.capabilities.contains("WPA2-PSK")) {
-			// WPA-PSK加密
-			type = TYPE_WPA2_PSK;
-		} else if (scanResult.capabilities.contains("WPA-PSK")) {
-			// WPA-PSK加密
-			type = TYPE_WPA_PSK;
-		} else if (scanResult.capabilities.contains("WPA-EAP")) {
-			// WPA-EAP加密
-			type = TYPE_WPA_EAP;
-		} else if (scanResult.capabilities.contains("WEP")) {
-			// WEP加密
-			type = TYPE_WPA_EAP;
-		} else {
-			// 无密码
-			type = TYPE_NO_PASSWORD;
-		}
-
-		WifiConfiguration config = CreateWifiInfo(scanResult.SSID, scanResult.BSSID, password, type);
-		int netId = mWifiManager.addNetwork(config);
-		return mWifiManager.enableNetwork(netId, true);
-	}
 
 	/**
 	 * 配置一个连接

@@ -185,18 +185,24 @@ public class SetNetWorkActivity extends BaseCompatActivity implements View.OnCli
 	
 	@Override
 	public void OnKeyBoardPop(int keyBoardheight) {
-		LogUtil.d(TAG, "键盘打开");
-		final ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) mLlContent.getLayoutParams();
-		lp.topMargin = -DensityUtil.dp2px(60);
-		mLlContent.setLayoutParams(lp);
+		if (mCurrentFragment != null && mCurrentFragment instanceof ManualConfigFragment) {
+			LogUtil.d(TAG, "键盘打开");
+			final ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) mLlContent.getLayoutParams();
+			lp.topMargin = -DensityUtil.dp2px(60);
+			mLlContent.setLayoutParams(lp);
+		}
+		
 	}
 	
 	@Override
 	public void OnKeyBoardClose(int oldKeyBoardheight) {
-		LogUtil.d(TAG, "键盘关闭");
-		final ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) mLlContent.getLayoutParams();
-		lp.topMargin = 0;
-		mLlContent.setLayoutParams(lp);
+		if (mCurrentFragment != null && mCurrentFragment instanceof ManualConfigFragment) {
+			LogUtil.d(TAG, "键盘关闭");
+			final ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) mLlContent.getLayoutParams();
+			lp.topMargin = 0;
+			mLlContent.setLayoutParams(lp);
+		}
+		
 	}
 	
 	

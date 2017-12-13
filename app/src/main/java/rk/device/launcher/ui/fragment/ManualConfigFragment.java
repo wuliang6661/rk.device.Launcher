@@ -145,8 +145,13 @@ public class ManualConfigFragment extends Fragment {
 		mEthGateway = mEtNetGate.getText().toString();
 		mEthdns1 = mEtDns.getText().toString();
 		if (setStaticIpConfiguration()) {
-			mEthManager.setConfiguration(mIpConfiguration);
-			return true;
+			try {
+				mEthManager.setConfiguration(mIpConfiguration);
+				return true;
+			} catch (Exception e) {
+				e.printStackTrace();
+				T.showShort(e.getMessage());
+			}
 		}
 		return false;
 

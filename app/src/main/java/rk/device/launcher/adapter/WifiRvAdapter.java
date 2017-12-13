@@ -14,7 +14,6 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import rk.device.launcher.R;
-import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.WifiHelper;
 
 /**
@@ -32,7 +31,7 @@ public class WifiRvAdapter extends RecyclerView.Adapter<WifiRvAdapter.ViewHolder
 	}
 
 	public interface OnItemClickedListener{
-		void onItemClicked(int position, ScanResult scanResult);
+		void onItemClicked(int position, ScanResult scanResult, ViewHolder holder);
 
 		void onLongItemClicked(int position, ScanResult scanResult);
 	}
@@ -80,7 +79,7 @@ public class WifiRvAdapter extends RecyclerView.Adapter<WifiRvAdapter.ViewHolder
 //						return;
 //					}
 //					mLastCheckedPosition = position;
-					mOnItemClickedListener.onItemClicked(position, scanResult);
+					mOnItemClickedListener.onItemClicked(position, scanResult, holder);
 				}
 			}
 		});
@@ -98,22 +97,22 @@ public class WifiRvAdapter extends RecyclerView.Adapter<WifiRvAdapter.ViewHolder
 
 	@Override
 	public int getItemCount() {
-		LogUtil.d("mDataList = " + mDataList);
-		LogUtil.d("mDataList.size() = " + mDataList.size());
+//		LogUtil.d("mDataList = " + mDataList);
+//		LogUtil.d("mDataList.size() = " + mDataList.size());
 		boolean isShowContent = mDataList == null || mDataList.isEmpty();
 		return isShowContent ? 0 : mDataList.size();
 	}
 
-	static class ViewHolder extends RecyclerView.ViewHolder {
+	public static class ViewHolder extends RecyclerView.ViewHolder {
 
 		@Bind(R.id.iv_check)
-		ImageView ivCheck;
+		public ImageView ivCheck;
 		@Bind(R.id.tv_wifi_name)
-		TextView tvWifiName;
+		public TextView tvWifiName;
 		@Bind(R.id.iv_lock)
-		ImageView ivLock;
+		public ImageView ivLock;
 		@Bind(R.id.iv_signal_strength)
-		ImageView ivSignalStrength;
+		public ImageView ivSignalStrength;
 		public ViewHolder(View itemView) {
 			super(itemView);
 			ButterKnife.bind(this, itemView);

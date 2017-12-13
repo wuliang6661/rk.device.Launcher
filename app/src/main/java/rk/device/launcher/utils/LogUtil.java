@@ -30,7 +30,7 @@ public class LogUtil {
 		if ((TextUtils.isEmpty(text))) {
 			Log.e(tag, "log输出内容为空");
 		} else if (text.length() <= DEFAULT_SUBSTRING_LENGTH) {
-			Log.d(Constant.LOG_TAG, text);
+			Log.d(tag, text);
 		} else {
 
 			for (int i = 0; i < text.length(); i += 3000) {
