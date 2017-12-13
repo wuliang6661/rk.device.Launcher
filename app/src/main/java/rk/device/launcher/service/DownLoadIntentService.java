@@ -54,6 +54,7 @@ public class DownLoadIntentService extends IntentService {
 					installApk();
 					break;
 				case DOWNLOAD_ROM_OVER:
+					LogUtil.e(TAG, "开始安装rom了!!!");
 					Sys.rebootToRecovery();
 					break;
 			}
@@ -227,6 +228,7 @@ public class DownLoadIntentService extends IntentService {
 						current += len;
 						out.write(len);
 						Log.e(TAG, "current------>" + current);
+						LogUtil.d(TAG, "percent = " + current * 1.0f / total);
 					}
 					out.flush();
 					Log.d(TAG, "下载完成！！！");
