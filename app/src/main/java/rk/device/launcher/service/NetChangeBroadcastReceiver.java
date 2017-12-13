@@ -8,7 +8,6 @@ import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 
-import rk.device.launcher.R;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.WifiHelper;
 
@@ -18,7 +17,7 @@ import rk.device.launcher.utils.WifiHelper;
  * 监听网络变化
  */
 
-public class NetChangeBroadcastRecever extends BroadcastReceiver {
+public class NetChangeBroadcastReceiver extends BroadcastReceiver {
 
 
     private WifiHelper mWifiHelper;
@@ -45,6 +44,8 @@ public class NetChangeBroadcastRecever extends BroadcastReceiver {
             setNetworkStutas(info);
         }
     }
+	
+	private final String TAG = "NetChangeBroadcastReceiver";
 
 
     /**
@@ -52,7 +53,7 @@ public class NetChangeBroadcastRecever extends BroadcastReceiver {
      */
     private void setNetworkStutas(NetworkInfo info) {
         if (info == null) {
-            LogUtil.d("没有可用的网络连接");
+            LogUtil.d(TAG, "没有可用的网络连接");
             if (callBack != null) {
                 callBack.onCallMessage(false, 0, 0);
             }

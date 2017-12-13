@@ -85,6 +85,7 @@ public class SetBasicInfoActivity extends BaseCompatActivity implements View.OnC
                     @Override
                     public void onNext(TimeEvent timeEvent) {
                         try {
+	                        int realMonth = timeEvent.month + 1;
                             Calendar c = Calendar.getInstance();
                             c.set(Calendar.YEAR, timeEvent.year);
                             c.set(Calendar.MONTH, timeEvent.month);
@@ -94,8 +95,8 @@ public class SetBasicInfoActivity extends BaseCompatActivity implements View.OnC
                             c.set(Calendar.SECOND, 0);
                             c.set(Calendar.MILLISECOND, 0);
                             when_time = c.getTimeInMillis();
-                            timeTv.setText(
-                                    timeEvent.year + "-" + timeEvent.month + "-" + timeEvent.day
+	                        timeTv.setText(
+                                    timeEvent.year + "-" + realMonth + "-" + timeEvent.day
                                             + " " + timeEvent.hour + ":" + timeEvent.minute);
                         } catch (Exception e) {
                             e.printStackTrace();

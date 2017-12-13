@@ -48,7 +48,7 @@ import rk.device.launcher.event.IpHostEvent;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.global.LauncherApplication;
 import rk.device.launcher.service.ElectricBroadcastReceiver;
-import rk.device.launcher.service.NetChangeBroadcastRecever;
+import rk.device.launcher.service.NetChangeBroadcastReceiver;
 import rk.device.launcher.service.SocketService;
 import rk.device.launcher.ui.fragment.InitErrorDialogFragmen;
 import rk.device.launcher.ui.fragment.InputWifiPasswordDialogFragment;
@@ -73,7 +73,7 @@ import rx.schedulers.Schedulers;
 
 
 public class MainActivity extends BaseCompatActivity implements View.OnClickListener,
-        ElectricBroadcastReceiver.CallBack, NetChangeBroadcastRecever.CallBack, JniHandler.OnBioAssay, JniHandler.OnInitListener {
+        ElectricBroadcastReceiver.CallBack, NetChangeBroadcastReceiver.CallBack, JniHandler.OnBioAssay, JniHandler.OnInitListener {
 
     private static final String TAG = "MainActivity";
 
@@ -118,7 +118,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     private StaticHandler mStaticHandler = new StaticHandler();
     private DeviceUuidFactory uuidFactory = null;
     private String uUid;
-    NetChangeBroadcastRecever netChangeBroadcastRecever;
+    NetChangeBroadcastReceiver netChangeBroadcastRecever;
     ElectricBroadcastReceiver mBatteryReceiver;
     private GpsUtils gpsUtils = null;
     private InputWifiPasswordDialogFragment dialogFragment = null;
@@ -179,7 +179,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
      * 注册网络监听
      */
     private void registerNetReceiver() {
-        netChangeBroadcastRecever = new NetChangeBroadcastRecever();
+        netChangeBroadcastRecever = new NetChangeBroadcastReceiver();
         IntentFilter labelIntentFilter = new IntentFilter();
         // "android.net.wifi.SCAN_RESULTS"
         labelIntentFilter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
@@ -331,7 +331,8 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 
                     @Override
                     public void onError(Throwable e) {
-                        T.showShort(e.getMessage());
+	                    e.printStackTrace();
+//                        T.showShort(e.getMessage());
                     }
 
                     @Override

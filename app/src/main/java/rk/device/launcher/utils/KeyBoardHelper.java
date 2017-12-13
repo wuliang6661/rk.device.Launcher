@@ -46,7 +46,7 @@ public class KeyBoardHelper {
 			// 判断窗口可见区域大小
 			Rect rect = new Rect();
 			activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(rect);
-			// 如果屏幕高度和Window可见区域高度差值大于整个屏幕高度的1/3, 则表示软键盘弹出, 否则为软键盘收起
+			// fixme 如果屏幕高度和Window可见区域高度差值大于整个屏幕高度的1/3, 则表示软键盘弹出, 否则为软键盘收起
 			int heightDifference = screenHeight - rect.bottom;
 			if (isFirst) {
 				blankHeight = heightDifference;

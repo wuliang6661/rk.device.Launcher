@@ -28,6 +28,7 @@ import rk.device.launcher.event.IpHostEvent;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.utils.AppManager;
 import rk.device.launcher.utils.DrawableUtil;
+import rk.device.launcher.utils.EditUtil;
 import rk.device.launcher.utils.NetUtils;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.StringUtils;
@@ -102,7 +103,8 @@ public class SetSysActivity extends BaseCompatActivity {
         // 设置或者获取uuid
         DeviceUuidFactory deviceUuidFactory = new DeviceUuidFactory(this);
         mTvDeviceId.setText(deviceUuidFactory.getUuid().toString());
-
+	
+	    EditUtil.limitInput(mEtIP);
         // 读取保存的IP
         String ip = SPUtils.getString(Constant.KEY_IP);
         if (!TextUtils.isEmpty(ip)) {

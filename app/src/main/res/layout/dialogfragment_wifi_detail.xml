@@ -56,64 +56,85 @@
                 android:layout_height="0.5dp"
                 android:background="@color/color_b7dbf9"/>
 
-            <TextView
-                android:id="@+id/tv_ip"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/item_height"
-                android:gravity="center"
-                android:padding="10dp"
-                android:text="IP地址: 116.118.119.155"
-                android:textColor="@color/white"
-                android:textSize="33dp"/>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/color_b7dbf9"/>
+                android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/tv_net_mask"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/item_height"
-                android:gravity="center"
-                android:padding="10dp"
-                android:text="子网掩码: 116.118.119.155"
-                android:textColor="@color/white"
-                android:textSize="33dp"/>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/color_b7dbf9"/>
+                <TextView
+                    android:layout_centerHorizontal="true"
+                    android:id="@+id/tv_ip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/item_height"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="IP地址: 116.118.119.155"
+                    android:textColor="@color/white"
+                    android:textSize="33dp"/>
 
-            <TextView
-                android:id="@+id/tv_net_gate"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/item_height"
-                android:gravity="center"
-                android:padding="10dp"
-                android:text="网关: 116.118.119.155"
-                android:textColor="@color/white"
-                android:textSize="33dp"/>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/color_b7dbf9"/>
+                <View
+                    android:layout_below="@+id/tv_ip"
+                    android:id="@+id/view_ip"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/color_b7dbf9"/>
 
+                <TextView
+                    android:layout_alignLeft="@+id/tv_ip"
+                    android:layout_below="@+id/view_ip"
+                    android:id="@+id/tv_net_mask"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/item_height"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="子网掩码: 116.118.119.155"
+                    android:textColor="@color/white"
+                    android:textSize="33dp"/>
 
-            <TextView
-                android:id="@+id/tv_dns"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/item_height"
-                android:gravity="center"
-                android:padding="10dp"
-                android:text="DNS: 116.118.119.155"
-                android:textColor="@color/white"
-                android:textSize="33dp"/>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/color_b7dbf9"/>
+                <View
+                    android:id="@+id/view_net_mask"
+                    android:layout_below="@+id/tv_net_mask"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/color_b7dbf9"/>
 
+                <TextView
+                    android:layout_alignLeft="@+id/tv_ip"
+                    android:layout_below="@+id/view_net_mask"
+                    android:id="@+id/tv_net_gate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/item_height"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="网关: 116.118.119.155"
+                    android:textColor="@color/white"
+                    android:textSize="33dp"/>
 
+                <View
+                    android:id="@+id/view_net_gate"
+                    android:layout_below="@+id/tv_net_gate"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/color_b7dbf9"/>
+
+                <TextView
+                    android:layout_alignLeft="@+id/tv_ip"
+                    android:layout_below="@+id/view_net_gate"
+                    android:id="@+id/tv_dns"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/item_height"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="DNS: 116.118.119.155"
+                    android:textColor="@color/white"
+                    android:textSize="33dp"/>
+
+                <View
+                    android:layout_below="@+id/tv_dns"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/color_b7dbf9"/>
+
+            </RelativeLayout>
 
         </LinearLayout>
 
