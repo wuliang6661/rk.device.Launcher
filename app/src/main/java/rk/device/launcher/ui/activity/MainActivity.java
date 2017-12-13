@@ -562,6 +562,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
      */
     @Override
     public void setOnBioFace(CvcRect cvcRect1, int[] rectWidth, int[] rectHeight) {
+        Log.d(TAG, "setOnBioFace() called with: cvcRect1 = [" + cvcRect1 + "], rectWidth = [" + rectWidth + "], rectHeight = [" + rectHeight + "]");
         runOnUiThread(() -> {
             //T.showShort("检测到人脸");
             if (faceView != null) {

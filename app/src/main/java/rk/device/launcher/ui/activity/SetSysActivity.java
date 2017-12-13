@@ -125,7 +125,7 @@ public class SetSysActivity extends BaseCompatActivity {
                 String ip = mEtIP.getText().toString();
                 // 保存端口号
                 String port = mEtPort.getText().toString();
-                if (!StringUtils.isEmpty(ip) && !StringUtils.isEmpty(port)) {
+                if (!StringUtils.isEmpty(ip) || !StringUtils.isEmpty(port)) {
                     String address = "https://" + ip + ":" + port;
                     if (NetUtils.ping(address)) {
                         SPUtils.putString(Constant.KEY_IP, ip);

@@ -56,7 +56,7 @@ public class SystemInfoActivity extends BaseCompatActivity implements View.OnCli
         mBtnCheckUpdate.setBackgroundResource(R.drawable.shape_btn_round_corner);
 
         mIvQrcode.post(() -> {
-            Bitmap qrCodeBitmap = QRCodeUtils.createQRCode("mundane", mIvQrcode.getWidth(), mIvQrcode.getHeight());
+            Bitmap qrCodeBitmap = QRCodeUtils.createQRCode("http://mj.roombanker.cn", mIvQrcode.getWidth(), mIvQrcode.getHeight());
             mIvQrcode.setImageBitmap(qrCodeBitmap);
         });
         mBtnCheckUpdate.setOnClickListener(this);
