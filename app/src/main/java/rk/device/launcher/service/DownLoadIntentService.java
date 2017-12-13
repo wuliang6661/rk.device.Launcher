@@ -14,6 +14,8 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -215,20 +217,24 @@ public class DownLoadIntentService extends IntentService {
 					Log.e(TAG, "response is not success");
 					return;
 				}
-				BufferedInputStream in = null;
-				BufferedOutputStream out = null;
+				InputStream in = null;
+//				BufferedOutputStream out = null;
+				OutputStream out = null;
 				int len = 0;
 				try {
 					long total = response.body().contentLength();
 					Log.e(TAG, "total------>" + total);
 					long current = 0;
-					in = new BufferedInputStream(response.body().byteStream(), IO_BUFFER_SIZE);
-					out = new BufferedOutputStream(new FileOutputStream(downLoadRom), IO_BUFFER_SIZE);
-					while ((len = in.read()) != -1) {
+					byte[] buffer = new byte[8 * 1024];
+					in = response.body().byteStream();
+//					in = new BufferedInputStream(response.body().byteStream(), IO_BUFFER_SIZE);
+//					out = new BufferedOutputStream(new FileOutputStream(downLoadRom), IO_BUFFER_SIZE);
+					out = new FileOutputStream(downLoadRom);
+					while ((len = in.read(buffer)) != -1) {
 						current += len;
-						out.write(len);
+						out.write(buffer, 0, len);
 						Log.e(TAG, "current------>" + current);
-						LogUtil.d(TAG, "percent = " + current * 1.0f / total);
+						LogUtil.d(TAG, "percent = " + current * 100.0f / total + "%");
 					}
 					out.flush();
 					Log.d(TAG, "下载完成！！！");
