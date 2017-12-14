@@ -36,6 +36,7 @@ import rk.device.launcher.R;
 import rk.device.launcher.SurfaceHolderCaremaFont;
 import rk.device.launcher.api.ApiService;
 import rk.device.launcher.api.RxResultHelper;
+import rk.device.launcher.api.T;
 import rk.device.launcher.base.BaseCompatActivity;
 import rk.device.launcher.base.JniHandler;
 import rk.device.launcher.base.utils.rxbus.RxBus;
@@ -158,7 +159,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         String declareContent = SPUtils.getString(Constant.KEY_FIRSTPAGE_CONTENT);
 	    if (!TextUtils.isEmpty(declareContent)) {
 		    mTvDeclare.setVisibility(View.VISIBLE);
-		    mTvDeclare.setText(String.format(getString(R.string.declare_content), declareContent, declareContent));
+		    mTvDeclare.setText(String.format(getString(R.string.declare_content), declareContent));
 	    } else {
 		    mTvDeclare.setVisibility(View.GONE);
 	    }
