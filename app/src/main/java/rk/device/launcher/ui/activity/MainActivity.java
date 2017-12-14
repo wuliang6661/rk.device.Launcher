@@ -153,7 +153,12 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     protected void initData() {
         ShellUtils.upgradeRootPermission("/data/rk_backup");
         String declareContent = SPUtils.getString(Constant.KEY_FIRSTPAGE_CONTENT);
-        mTvDeclare.setText(declareContent);
+	    if (!TextUtils.isEmpty(declareContent)) {
+		    mTvDeclare.setVisibility(View.VISIBLE);
+		    mTvDeclare.setText(String.format(getString(R.string.declare_content), declareContent));
+	    } else {
+		    mTvDeclare.setVisibility(View.GONE);
+	    }
         //检测App更新
         UpdateManager.getUpdateManager().checkAppUpdate(this, getSupportFragmentManager(), false);
         initHandlerThread();
@@ -224,9 +229,15 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
      */
     private void registerRxBus() {
         mSubscription = RxBus.getDefault().toObserverable(SetPageContentBean.class).subscribe(setPageContentBean -> {
-            if (mTvDeclare != null) {
-                mTvDeclare.setText(setPageContentBean.content);
-            }
+//            if (mTvDeclare != null) {
+//                mTvDeclare.setText(setPageContentBean.content);
+//            }
+	        if (!TextUtils.isEmpty(setPageContentBean.content)) {
+		        mTvDeclare.setVisibility(View.VISIBLE);
+		        mTvDeclare.setText(String.format(getString(R.string.declare_content), setPageContentBean.content));
+	        } else {
+		        mTvDeclare.setVisibility(View.GONE);
+	        }
         }, throwable -> {
 
         });

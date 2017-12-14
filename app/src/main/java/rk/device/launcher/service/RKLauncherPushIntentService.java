@@ -55,6 +55,9 @@ public class RKLauncherPushIntentService extends GTIntentService {
 					break;
 				case "notice": // 通知消息
 					if (TextUtils.equals("text", data.type)) {
+						if (TextUtils.isEmpty(data.content)) {
+							return;
+						}
 						SPUtils.putString(Constant.KEY_FIRSTPAGE_CONTENT, data.content);
 						RxBus.getDefault().post(new SetPageContentBean(data.content));
 					}
