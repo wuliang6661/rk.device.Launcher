@@ -36,8 +36,8 @@ import rk.device.launcher.utils.LogUtil;
  * Createed by mundane
  */
 public class ManualConfigFragment extends Fragment {
-
-
+	
+	
 	@Bind(R.id.et_ip)
 	EditText mEtIp;
 	@Bind(R.id.et_net_mask)
@@ -46,32 +46,32 @@ public class ManualConfigFragment extends Fragment {
 	EditText mEtNetGate;
 	@Bind(R.id.et_dns)
 	EditText mEtDns;
-	private  static String mEthHwAddress = null;
-	private  static String mEthIpAddress = null;
-	private  static String mEthNetmask = null;
-	private  static String mEthGateway = null;
-	private  static String mEthdns1 = null;
-	private  static String mEthdns2 = null;
+	private static String mEthHwAddress = null;
+	private static String mEthIpAddress = null;
+	private static String mEthNetmask = null;
+	private static String mEthGateway = null;
+	private static String mEthdns1 = null;
+	private static String mEthdns2 = null;
 	private final static String nullIpInfo = "0.0.0.0";
 	private StaticIpConfiguration mStaticIpConfiguration;
 	private IpConfiguration mIpConfiguration;
 	private EthernetManager mEthManager;
-
+	
 	public ManualConfigFragment() {
 		// Required empty public constructor
 	}
-
+	
 	public static ManualConfigFragment newInstance() {
 		ManualConfigFragment fragment = new ManualConfigFragment();
 		return fragment;
 	}
-
+	
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mEthManager = (EthernetManager) getContext().getSystemService("ethernet");
 	}
-
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
@@ -138,7 +138,7 @@ public class ManualConfigFragment extends Fragment {
 		super.onDestroyView();
 		ButterKnife.unbind(this);
 	}
-
+	
 	public boolean saveIpConfig() {
 		mEthIpAddress = mEtIp.getText().toString();
 		mEthNetmask = mEtNetMask.getText().toString();
@@ -154,30 +154,30 @@ public class ManualConfigFragment extends Fragment {
 			}
 		}
 		return false;
-
+		
 	}
-
+	
 	private boolean setStaticIpConfiguration() {
-
+		
 		mStaticIpConfiguration = new StaticIpConfiguration();
 		 /*
 		  * get ip address, netmask,dns ,gw etc.
 		  */
 		Inet4Address inetAddr = getIPv4Address(this.mEthIpAddress);
 		int prefixLength = maskStr2InetMask(this.mEthNetmask);
-		InetAddress gatewayAddr =getIPv4Address(this.mEthGateway);
+		InetAddress gatewayAddr = getIPv4Address(this.mEthGateway);
 		InetAddress dnsAddr = getIPv4Address(this.mEthdns1);
 		if (inetAddr == null || gatewayAddr == null || dnsAddr == null) {
 			T.showShort("网络设置出错, 请重新设置");
 			return false;
 		}
-		if (inetAddr.getAddress().toString().isEmpty() || prefixLength ==0 || gatewayAddr.toString().isEmpty()
-				|| dnsAddr.toString().isEmpty()) {
+		if (inetAddr.getAddress().toString().isEmpty() || prefixLength == 0 || gatewayAddr.toString().isEmpty()
+		|| dnsAddr.toString().isEmpty()) {
 			LogUtil.d("ip,mask or dnsAddr is wrong");
 			return false;
 		}
-
-		String dnsStr2=this.mEthdns2;
+		
+		String dnsStr2 = this.mEthdns2;
 //		mStaticIpConfiguration.ipAddress = new LinkAddress(inetAddr, prefixLength);
 		Class<?> clazz = null;
 		try {
@@ -185,17 +185,17 @@ public class ManualConfigFragment extends Fragment {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		
 		Class[] cl = new Class[]{InetAddress.class, int.class};
 		Constructor cons = null;
-
+		
 		//取得所有构造函数
 		try {
 			cons = clazz.getConstructor(cl);
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
 		}
-
+		
 		//给传入参数赋初值
 		Object[] x = {inetAddr, prefixLength};
 		try {
@@ -203,29 +203,29 @@ public class ManualConfigFragment extends Fragment {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		mStaticIpConfiguration.gateway=gatewayAddr;
+		mStaticIpConfiguration.gateway = gatewayAddr;
 		mStaticIpConfiguration.dnsServers.add(dnsAddr);
-
+		
 		if (!TextUtils.isEmpty(dnsStr2)) {
 			mStaticIpConfiguration.dnsServers.add(getIPv4Address(dnsStr2));
 		}
-		mIpConfiguration =new IpConfiguration(IpConfiguration.IpAssignment.STATIC, IpConfiguration.ProxySettings.NONE, mStaticIpConfiguration,null);
+		mIpConfiguration = new IpConfiguration(IpConfiguration.IpAssignment.STATIC, IpConfiguration.ProxySettings.NONE, mStaticIpConfiguration, null);
 		return true;
 	}
-
+	
 	private Inet4Address getIPv4Address(String text) {
 		try {
 			return (Inet4Address) NetworkUtils.numericToInetAddress(text);
-		} catch (IllegalArgumentException|ClassCastException e) {
+		} catch (IllegalArgumentException | ClassCastException e) {
 			return null;
 		}
 	}
-
+	
 	/*
-     * convert subMask string to prefix length
+	 * convert subMask string to prefix length
      */
 	private int maskStr2InetMask(String maskStr) {
-		StringBuffer sb ;
+		StringBuffer sb;
 		String str;
 		int inetmask = 0;
 		int count = 0;
@@ -236,19 +236,19 @@ public class ManualConfigFragment extends Fragment {
 		if (pattern.matcher(maskStr).matches() == false) {
 			return 0;
 		}
-
+		
 		String[] ipSegment = maskStr.split("\\.");
-		for(int n =0; n<ipSegment.length;n++) {
+		for (int n = 0; n < ipSegment.length; n++) {
 			sb = new StringBuffer(Integer.toBinaryString(Integer.parseInt(ipSegment[n])));
 			str = sb.reverse().toString();
-			count=0;
-			for(int i=0; i<str.length();i++) {
-				i=str.indexOf("1",i);
-				if(i==-1)
+			count = 0;
+			for (int i = 0; i < str.length(); i++) {
+				i = str.indexOf("1", i);
+				if (i == -1)
 					break;
 				count++;
 			}
-			inetmask+=count;
+			inetmask += count;
 		}
 		return inetmask;
 	}
