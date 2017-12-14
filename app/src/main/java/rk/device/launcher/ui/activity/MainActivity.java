@@ -36,7 +36,6 @@ import rk.device.launcher.R;
 import rk.device.launcher.SurfaceHolderCaremaFont;
 import rk.device.launcher.api.ApiService;
 import rk.device.launcher.api.RxResultHelper;
-import rk.device.launcher.api.T;
 import rk.device.launcher.base.BaseCompatActivity;
 import rk.device.launcher.base.JniHandler;
 import rk.device.launcher.base.utils.rxbus.RxBus;
@@ -157,12 +156,12 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     protected void initData() {
         ShellUtils.upgradeRootPermission("/data/rk_backup");
         String declareContent = SPUtils.getString(Constant.KEY_FIRSTPAGE_CONTENT);
-        if (!TextUtils.isEmpty(declareContent)) {
-            mTvDeclare.setVisibility(View.VISIBLE);
-            mTvDeclare.setText(String.format(getString(R.string.declare_content), declareContent));
-        } else {
-            mTvDeclare.setVisibility(View.GONE);
-        }
+	    if (!TextUtils.isEmpty(declareContent)) {
+		    mTvDeclare.setVisibility(View.VISIBLE);
+		    mTvDeclare.setText(String.format(getString(R.string.declare_content), declareContent, declareContent));
+	    } else {
+		    mTvDeclare.setVisibility(View.GONE);
+	    }
         //检测App更新
         UpdateManager.getUpdateManager().checkAppUpdate(this, getSupportFragmentManager(), false);
         initHandlerThread();
@@ -236,12 +235,12 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 //            if (mTvDeclare != null) {
 //                mTvDeclare.setText(setPageContentBean.content);
 //            }
-            if (!TextUtils.isEmpty(setPageContentBean.content)) {
-                mTvDeclare.setVisibility(View.VISIBLE);
-                mTvDeclare.setText(String.format(getString(R.string.declare_content), setPageContentBean.content));
-            } else {
-                mTvDeclare.setVisibility(View.GONE);
-            }
+	        if (!TextUtils.isEmpty(setPageContentBean.content)) {
+		        mTvDeclare.setVisibility(View.VISIBLE);
+		        mTvDeclare.setText(String.format(getString(R.string.declare_content), setPageContentBean.content));
+	        } else {
+		        mTvDeclare.setVisibility(View.GONE);
+	        }
         }, throwable -> {
 
         });
