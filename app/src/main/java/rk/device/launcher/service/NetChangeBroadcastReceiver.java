@@ -34,8 +34,7 @@ public class NetChangeBroadcastReceiver extends BroadcastReceiver {
         boolean isWifiNetworkStateChange = action.equals(WifiManager.WIFI_STATE_CHANGED_ACTION);
         boolean isConnectStateChange = action.equals(ConnectivityManager.CONNECTIVITY_ACTION);
         if (isScanResultChange || isNetworkStateChange || isWifiNetworkStateChange) {
-            ConnectivityManager connectivityManager = (ConnectivityManager) context
-                    .getSystemService(Context.CONNECTIVITY_SERVICE);
+            ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo info = connectivityManager.getActiveNetworkInfo();
             setNetworkStutas(info);
         } else if (isConnectStateChange) { // 有线或者无线的连接方式发生了改变

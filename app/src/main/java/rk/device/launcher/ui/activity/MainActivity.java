@@ -185,18 +185,18 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
      */
     private void registerNetReceiver() {
         netChangeBroadcastRecever = new NetChangeBroadcastReceiver();
-        IntentFilter labelIntentFilter = new IntentFilter();
+        IntentFilter intentFilter = new IntentFilter();
         // "android.net.wifi.SCAN_RESULTS"
-        labelIntentFilter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
+        intentFilter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
         // "android.net.conn.CONNECTIVITY_CHANGE"
-        labelIntentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         // "android.net.wifi.STATE_CHANGE"
-        labelIntentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
+        intentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
         // "android.net.wifi.WIFI_STATE_CHANGED"
-        labelIntentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
+        intentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
         netChangeBroadcastRecever.setCallBack(this);
-        labelIntentFilter.setPriority(1000); // 设置优先级，最高为1000
-        registerReceiver(netChangeBroadcastRecever, labelIntentFilter);
+        intentFilter.setPriority(1000); // 设置优先级，最高为1000
+        registerReceiver(netChangeBroadcastRecever, intentFilter);
     }
 
 
@@ -531,7 +531,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     }
 
     /**
-     * @param isNoNet         网络是否连接
+     * @param isNoNet         网络是否连接, false表示没有网络, true表示有网络
      * @param WifiorNetStatus 连接是Wifi还是网线   0:网线 1: wifi
      * @param scanLever       wifi信号强度
      */
