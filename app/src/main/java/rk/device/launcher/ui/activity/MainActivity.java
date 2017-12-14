@@ -342,8 +342,8 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 
                     @Override
                     public void onError(Throwable e) {
-	                    e.printStackTrace();
-//                        T.showShort(e.getMessage());
+                        e.printStackTrace();
+                        showMessageDialog("服务器数据获取出错！\n\n请检查网络或IP地址是否可用！");
                     }
 
                     @Override

@@ -103,19 +103,19 @@ public class SetSysActivity extends BaseCompatActivity {
         // 设置或者获取uuid
         DeviceUuidFactory deviceUuidFactory = new DeviceUuidFactory(this);
         mTvDeviceId.setText(deviceUuidFactory.getUuid().toString());
-	
-	    EditUtil.limitInput(mEtIP);
+
+        EditUtil.limitInput(mEtIP);
         // 读取保存的IP
         String ip = SPUtils.getString(Constant.KEY_IP);
         if (!TextUtils.isEmpty(ip)) {
-            mEtIP.setHint(ip);
+            mEtIP.setText(ip);
         }
         mEtIP.setSelection(mEtIP.getText().length());
 
         // 读取保存的端口号
         String port = SPUtils.getString(Constant.KEY_PORT);
         if (!TextUtils.isEmpty(port)) {
-            mEtPort.setHint(port);
+            mEtPort.setText(port);
         }
         mEtPort.setSelection(mEtPort.getText().length());
         mBtnFinishSetting.setOnClickListener(new View.OnClickListener() {
@@ -126,25 +126,31 @@ public class SetSysActivity extends BaseCompatActivity {
                 // 保存端口号
                 String port = mEtPort.getText().toString();
                 if (!StringUtils.isEmpty(ip) || !StringUtils.isEmpty(port)) {
-                    String address = "https://" + ip + ":" + port;
-                    if (NetUtils.ping(address)) {
-                        SPUtils.putString(Constant.KEY_IP, ip);
-                        SPUtils.putString(Constant.KEY_PORT, port);
-                        ApiService.clearIP();
-                        RxBus.getDefault().post(new IpHostEvent(true));
-                    } else {
-                        showMessageDialog("服务器IP地址或端口不可用！");
+                    if (!pingIpAddress(ip)) {
+                        showMessageDialog("服务器IP地址不可用！");
                         return;
                     }
                 }
-                // 保存待机时间
-                SPUtils.putLong(Constant.KEY_SLEEP_TIME, getSleepTime());
-
+                if (!StringUtils.isEmpty(ip) && StringUtils.isEmpty(port)) {
+                    showMessageDialog("请填写端口号！");
+                    return;
+                }
                 // 保存客户号
                 String clientCode = mEtClientCode.getText().toString();
                 if (!TextUtils.isEmpty(clientCode)) {
+                    if (clientCode.length() < 6) {
+                        showMessageDialog("客户号输入错误！！");
+                        return;
+                    }
                     SPUtils.putString(Constant.KEY_CLIENT_CODE, clientCode);
                 }
+
+                SPUtils.putString(Constant.KEY_IP, ip);
+                SPUtils.putString(Constant.KEY_PORT, port);
+                ApiService.clearIP();
+                RxBus.getDefault().post(new IpHostEvent(true));
+                // 保存待机时间
+                SPUtils.putLong(Constant.KEY_SLEEP_TIME, getSleepTime());
                 // 保存补光灯的开关状态
                 SPUtils.putBoolean(Constant.KEY_LIGNT, mCbLight.isChecked());
                 if (mCbLight.isChecked()) {
