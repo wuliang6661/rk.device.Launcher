@@ -110,7 +110,7 @@ public class NetUtils {
 		boolean success = false;
 		Process p = null;
 		try {
-			p = Runtime.getRuntime().exec("ping -c 1 -W 1" + ipAndAddress);
+			p = Runtime.getRuntime().exec("ping " + ipAndAddress);
 			int status = p.waitFor();
 			if (status == 0) {
 				success = true;
@@ -118,6 +118,7 @@ public class NetUtils {
 				success = false;
 			}
 		} catch (IOException | InterruptedException e) {
+			e.printStackTrace();
 			success = false;
 		} finally {
 			assert p != null;

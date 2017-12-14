@@ -45,7 +45,7 @@ public class ApiService {
             return mApiRetrofit.create(BaseApi.class);
         } else {
             StringBuilder builder = new StringBuilder();
-            builder.append("https://");
+            builder.append("http://");
             builder.append(IP);
             builder.append(":");
             builder.append(HOST);
