@@ -51,7 +51,6 @@ public class EyesCorrectActivity extends BaseCompatActivity implements View.OnCl
 
     private JniHandler mHandler = null;
     EyesCorrectDialogOneFra dialogOneFra;
-    WaitDialog dialog;
 
     private static boolean isBack = false;    //页面是否结束
     private static boolean isCallBack = true;   //收集照片是否完成
@@ -153,14 +152,14 @@ public class EyesCorrectActivity extends BaseCompatActivity implements View.OnCl
         mHandler.setEyesCallback(new JniHandler.OnEyesCallBack() {
             @Override
             public void initSuress() {
-                dialog.dismiss();
+                hintWaitProgress();
                 dialogOneFra.dismiss();
                 showDialogTwo();
             }
 
             @Override
             public void initError() {
-                dialog.dismiss();
+                hintWaitProgress();
                 T.showShort("棋盘格设置错误！请重新设置！");
             }
 
@@ -238,15 +237,6 @@ public class EyesCorrectActivity extends BaseCompatActivity implements View.OnCl
         }
     };
 
-
-    /**
-     * 显示进度条弹窗
-     */
-    private void showWaitProgress(String text) {
-        dialog = WaitDialog.newInstance();
-        dialog.setText(text);
-        dialog.show(getSupportFragmentManager(), "");
-    }
 
     @Override
     protected void onDestroy() {

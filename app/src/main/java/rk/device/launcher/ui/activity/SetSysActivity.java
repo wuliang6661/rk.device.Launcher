@@ -3,6 +3,8 @@ package rk.device.launcher.ui.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -29,7 +31,7 @@ import rk.device.launcher.global.Constant;
 import rk.device.launcher.utils.AppManager;
 import rk.device.launcher.utils.DrawableUtil;
 import rk.device.launcher.utils.EditUtil;
-import rk.device.launcher.utils.NetUtils;
+import rk.device.launcher.utils.NetWorkUtil;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.StringUtils;
 import rk.device.launcher.utils.uuid.DeviceUuidFactory;
@@ -63,6 +65,9 @@ public class SetSysActivity extends BaseCompatActivity {
     private ArrayList<SetDoorRvBean> mSleepTimeDataList;
 //	private ArrayList<SetDoorRvBean> mLightValueDataList;
 
+    private Thread thread;
+    private String mip, mport, mclientCode;
+
     @Override
     protected int getLayout() {
         return R.layout.activity_set_sys;
@@ -91,7 +96,7 @@ public class SetSysActivity extends BaseCompatActivity {
         // 读取保存的客户号
         String clientCode = SPUtils.getString(Constant.KEY_CLIENT_CODE);
         if (!TextUtils.isEmpty(clientCode)) {
-            mEtClientCode.setHint(clientCode);
+            mEtClientCode.setText(clientCode);
         }
         mEtClientCode.setSelection(mEtClientCode.getText().length());
 
@@ -122,56 +127,99 @@ public class SetSysActivity extends BaseCompatActivity {
             @Override
             public void onClick(View v) {
                 // 保存IP
-                String ip = mEtIP.getText().toString();
+                mip = mEtIP.getText().toString().trim();
                 // 保存端口号
-                String port = mEtPort.getText().toString();
-                if (!StringUtils.isEmpty(ip) || !StringUtils.isEmpty(port)) {
-                    if (!pingIpAddress(ip)) {
-                        showMessageDialog("服务器IP地址不可用！");
-                        return;
-                    }
-                }
-                if (!StringUtils.isEmpty(ip) && StringUtils.isEmpty(port)) {
+                mport = mEtPort.getText().toString().trim();
+                if (!StringUtils.isEmpty(mip) && StringUtils.isEmpty(mport)) {
                     showMessageDialog("请填写端口号！");
                     return;
                 }
-                // 保存客户号
-                String clientCode = mEtClientCode.getText().toString();
-                if (!TextUtils.isEmpty(clientCode)) {
-                    if (clientCode.length() < 6) {
+                mclientCode = mEtClientCode.getText().toString();
+                if (!TextUtils.isEmpty(mclientCode)) {
+                    if (mclientCode.length() < 6) {
                         showMessageDialog("客户号输入错误！！");
                         return;
                     }
-                    SPUtils.putString(Constant.KEY_CLIENT_CODE, clientCode);
                 }
-
-                SPUtils.putString(Constant.KEY_IP, ip);
-                SPUtils.putString(Constant.KEY_PORT, port);
-                ApiService.clearIP();
-                RxBus.getDefault().post(new IpHostEvent(true));
-                // 保存待机时间
-                SPUtils.putLong(Constant.KEY_SLEEP_TIME, getSleepTime());
-                // 保存补光灯的开关状态
-                SPUtils.putBoolean(Constant.KEY_LIGNT, mCbLight.isChecked());
-                if (mCbLight.isChecked()) {
-                    LedHelper.PER_ledToggle(1);
-                } else {
-                    LedHelper.PER_ledToggle(0);
+                if (!StringUtils.isEmpty(mip) || !StringUtils.isEmpty(mport)) {
+                    if (NetWorkUtil.isNetConnected(SetSysActivity.this)) {
+                        showWaitProgress("正在验证IP地址...");
+                        thread = new Thread(runnable);
+                        thread.start();
+                    } else {
+                        showMessageDialog("更换IP请先连接网络！");
+                    }
+                    return;
                 }
-
-                boolean isFirstSetting = SPUtils.getBoolean(Constant.IS_FIRST_SETTING, true);    //是否第一次进入设置
-                if (isFirstSetting) {
-                    SPUtils.putInt(Constant.SETTING_NUM, -1000);
-                    SPUtils.putBoolean(Constant.IS_FIRST_SETTING, false);
-                    Toast.makeText(SetSysActivity.this, "完成设置", Toast.LENGTH_LONG).show();
-                    AppManager.getAppManager().goBackMain();
-                } else {
-                    finish();
-                }
-
+                saveSession(mip, mport, mclientCode);
             }
         });
     }
+
+
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            if (!pingIpAddress(mip)) {
+                handler.sendEmptyMessage(0x11);
+            } else {
+                handler.sendEmptyMessage(0x22);
+                saveSession(mip, mport, mclientCode);
+            }
+        }
+    };
+
+
+    /**
+     * 处理保存并退出页面的操作
+     */
+    private void saveSession(String ip, String port, String clientCode) {
+        SPUtils.putString(Constant.KEY_IP, ip);
+        SPUtils.putString(Constant.KEY_PORT, port);
+        ApiService.clearIP();
+        RxBus.getDefault().post(new IpHostEvent(true));
+        // 保存客户号
+        SPUtils.putString(Constant.KEY_CLIENT_CODE, clientCode);
+        // 保存待机时间
+        SPUtils.putLong(Constant.KEY_SLEEP_TIME, getSleepTime());
+        // 保存补光灯的开关状态
+        SPUtils.putBoolean(Constant.KEY_LIGNT, mCbLight.isChecked());
+        if (mCbLight.isChecked()) {
+            LedHelper.PER_ledToggle(1);
+        } else {
+            LedHelper.PER_ledToggle(0);
+        }
+        boolean isFirstSetting = SPUtils.getBoolean(Constant.IS_FIRST_SETTING, true);    //是否第一次进入设置
+        if (isFirstSetting) {
+            SPUtils.putInt(Constant.SETTING_NUM, -1000);
+            SPUtils.putBoolean(Constant.IS_FIRST_SETTING, false);
+            Toast.makeText(SetSysActivity.this, "完成设置", Toast.LENGTH_LONG).show();
+            AppManager.getAppManager().goBackMain();
+        } else {
+            finish();
+        }
+    }
+
+
+    /**
+     * 处理界面变化
+     */
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 0x11:
+                    hintWaitProgress();
+                    showMessageDialog("服务器IP地址不可用！");
+                    break;
+                case 0x22:
+                    hintWaitProgress();
+                    break;
+            }
+        }
+    };
+
 
     private long getSleepTime() {
         for (SetDoorRvBean setDoorRvBean : mSleepTimeDataList) {

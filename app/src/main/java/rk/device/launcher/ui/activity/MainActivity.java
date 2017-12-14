@@ -35,6 +35,7 @@ import cvc.EventUtil;
 import rk.device.launcher.R;
 import rk.device.launcher.SurfaceHolderCaremaFont;
 import rk.device.launcher.api.ApiService;
+import rk.device.launcher.api.RxResultHelper;
 import rk.device.launcher.api.T;
 import rk.device.launcher.base.BaseCompatActivity;
 import rk.device.launcher.base.JniHandler;
@@ -66,6 +67,7 @@ import rk.device.launcher.utils.uuid.DeviceUuidFactory;
 import rk.device.launcher.widget.BatteryView;
 import rk.device.launcher.widget.DetectedFaceView;
 import rk.device.launcher.widget.UpdateManager;
+import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -127,6 +129,8 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 
     private boolean isNetWork = true;// 此状态保存上次网络是否连接，默认已连接
 
+    private boolean isIpError = false;    //IP是否错误
+
 
     @Override
     protected int getLayout() {
@@ -153,12 +157,12 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     protected void initData() {
         ShellUtils.upgradeRootPermission("/data/rk_backup");
         String declareContent = SPUtils.getString(Constant.KEY_FIRSTPAGE_CONTENT);
-	    if (!TextUtils.isEmpty(declareContent)) {
-		    mTvDeclare.setVisibility(View.VISIBLE);
-		    mTvDeclare.setText(String.format(getString(R.string.declare_content), declareContent));
-	    } else {
-		    mTvDeclare.setVisibility(View.GONE);
-	    }
+        if (!TextUtils.isEmpty(declareContent)) {
+            mTvDeclare.setVisibility(View.VISIBLE);
+            mTvDeclare.setText(String.format(getString(R.string.declare_content), declareContent));
+        } else {
+            mTvDeclare.setVisibility(View.GONE);
+        }
         //检测App更新
         UpdateManager.getUpdateManager().checkAppUpdate(this, getSupportFragmentManager(), false);
         initHandlerThread();
@@ -232,12 +236,12 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 //            if (mTvDeclare != null) {
 //                mTvDeclare.setText(setPageContentBean.content);
 //            }
-	        if (!TextUtils.isEmpty(setPageContentBean.content)) {
-		        mTvDeclare.setVisibility(View.VISIBLE);
-		        mTvDeclare.setText(String.format(getString(R.string.declare_content), setPageContentBean.content));
-	        } else {
-		        mTvDeclare.setVisibility(View.GONE);
-	        }
+            if (!TextUtils.isEmpty(setPageContentBean.content)) {
+                mTvDeclare.setVisibility(View.VISIBLE);
+                mTvDeclare.setText(String.format(getString(R.string.declare_content), setPageContentBean.content));
+            } else {
+                mTvDeclare.setVisibility(View.GONE);
+            }
         }, throwable -> {
 
         });
@@ -332,7 +336,14 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
                     AddressModel addressModel = JSON.parseObject(json, AddressModel.class);
                     Map<String, Object> params = new HashMap<>();
                     params.put("city", addressModel.city);
-                    return ApiService.weather(params);
+                    Observable<List<WeatherModel>> observable;
+                    try {
+                        observable = ApiService.weather(params);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        throw new RuntimeException("error throw ip");
+                    }
+                    return observable;
                 }).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<List<WeatherModel>>() {
                     @Override
@@ -343,11 +354,12 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
-                        showMessageDialog("服务器数据获取出错！\n\n请检查网络或IP地址是否可用！");
+                        isIpError = true;
                     }
 
                     @Override
                     public void onNext(List<WeatherModel> weatherModel) {
+                        isIpError = false;
                         showWeather(weatherModel);
                     }
                 })
@@ -363,7 +375,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     private void httpGetWeather(String area) {
         Map<String, Object> params = new HashMap<>();
         params.put("city", area);
-        ApiService.weather(params).subscribe(new Subscriber<List<WeatherModel>>() {
+        addSubscription(ApiService.weather(params).subscribe(new Subscriber<List<WeatherModel>>() {
             @Override
             public void onCompleted() {
 
@@ -378,7 +390,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
             public void onNext(List<WeatherModel> weatherModel) {
                 showWeather(weatherModel);
             }
-        });
+        }));
     }
 
     /**
@@ -428,7 +440,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
      * 获取关联设备的配置
      */
     public void getData() {
-        ApiService.deviceConfiguration(AppUtils.getAppVersionCode(this) + "", null).subscribe(new Subscriber<DeviceInfoBean>() {
+        addSubscription(ApiService.deviceConfiguration(AppUtils.getAppVersionCode(this) + "", null).subscribe(new Subscriber<DeviceInfoBean>() {
             @Override
             public void onCompleted() {
 
@@ -442,7 +454,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
             public void onNext(DeviceInfoBean s) {
                 modilePhone = s.getMobile();
             }
-        });
+        }));
     }
 
 
@@ -511,6 +523,12 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     protected void onResume() {
         super.onResume();
         tvPlaceName.setText(SPUtils.getString(Constant.DEVICE_NAME));
+        if (isIpError) {
+            temTv.setText("");
+            weatherTv.setText("");
+            modilePhone = "";
+            showMessageDialog("服务器数据获取出错！\n\n请检查网络或IP地址是否可用！");
+        }
     }
 
     /**

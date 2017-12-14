@@ -25,6 +25,7 @@ import rk.device.launcher.service.RKLauncherPushIntentService;
 import rk.device.launcher.service.RKLauncherPushService;
 import rk.device.launcher.ui.activity.SetNetWorkActivity;
 import rk.device.launcher.ui.fragment.BaseDialogFragment;
+import rk.device.launcher.ui.fragment.WaitDialog;
 import rk.device.launcher.utils.AppManager;
 import rx.Subscription;
 import rx.functions.Action1;
@@ -52,6 +53,8 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
      * 屏幕锁
      */
     private PowerManager.WakeLock wakeLock;
+
+    WaitDialog dialog;
 
 //    /**
 //     * 最大的屏幕亮度
@@ -299,6 +302,25 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
         if (hintDialog != null && hintDialog.getDialog() != null
                 && hintDialog.getDialog().isShowing()) {
             hintDialog.dismiss();
+        }
+    }
+
+    /**
+     * 显示进度条弹窗
+     */
+    public void showWaitProgress(String text) {
+        dialog = WaitDialog.newInstance();
+        dialog.setText(text);
+        dialog.show(getSupportFragmentManager(), "");
+    }
+
+
+    /**
+     * 隐藏进度条弹窗
+     */
+    public void hintWaitProgress() {
+        if (dialog != null && dialog.isVisible()) {
+            dialog.dismiss();
         }
     }
 

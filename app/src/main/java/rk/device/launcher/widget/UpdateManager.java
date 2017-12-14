@@ -167,7 +167,7 @@ public class UpdateManager {
             @Override
             public void onError(Throwable e) {
                 // 进度条对话框不显示 - 检测结果也不显示
-                if (mProDialog != null && !mProDialog.isShowing()) {
+                if (mProDialog != null) {
                     T.showShort("检测失败！请检查网络是否连接");
                     mProDialog.dismiss();
                     mProDialog = null;
