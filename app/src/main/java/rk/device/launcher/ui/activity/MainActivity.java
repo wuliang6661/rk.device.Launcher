@@ -155,7 +155,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         String declareContent = SPUtils.getString(Constant.KEY_FIRSTPAGE_CONTENT);
 	    if (!TextUtils.isEmpty(declareContent)) {
 		    mTvDeclare.setVisibility(View.VISIBLE);
-		    mTvDeclare.setText(String.format(getString(R.string.declare_content), declareContent));
+		    mTvDeclare.setText(String.format(getString(R.string.declare_content), declareContent, declareContent));
 	    } else {
 		    mTvDeclare.setVisibility(View.GONE);
 	    }
@@ -234,7 +234,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 //            }
 	        if (!TextUtils.isEmpty(setPageContentBean.content)) {
 		        mTvDeclare.setVisibility(View.VISIBLE);
-		        mTvDeclare.setText(String.format(getString(R.string.declare_content), setPageContentBean.content));
+		        mTvDeclare.setText(String.format(getString(R.string.declare_content), setPageContentBean.content, setPageContentBean.content));
 	        } else {
 		        mTvDeclare.setVisibility(View.GONE);
 	        }
