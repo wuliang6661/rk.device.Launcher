@@ -62,7 +62,7 @@ public class AutoObtainNetworkConfigFragment extends Fragment {
 
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-		String ip = NetUtils.getIP(getContext());
+		String ip = NetUtils.getEtherNetIP();
 		mTvIp.setText(ip);
 		IpConfiguration.IpAssignment mode = mEthernetManager.getConfiguration().getIpAssignment();
 
