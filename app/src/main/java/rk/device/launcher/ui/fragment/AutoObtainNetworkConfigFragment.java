@@ -1,6 +1,10 @@
 package rk.device.launcher.ui.fragment;
 
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.EthernetManager;
 import android.net.IpConfiguration;
 import android.net.LinkAddress;
@@ -21,7 +25,6 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import rk.device.launcher.R;
-import rk.device.launcher.utils.NetUtils;
 
 public class AutoObtainNetworkConfigFragment extends Fragment {
 
@@ -44,13 +47,59 @@ public class AutoObtainNetworkConfigFragment extends Fragment {
 		AutoObtainNetworkConfigFragment fragment = new AutoObtainNetworkConfigFragment();
 		return fragment;
 	}
-
+	
+	private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String action = intent.getAction();
+			// 接收到以太网状态改变的广播
+			if(EthernetManager.ETHERNET_STATE_CHANGED_ACTION.equals(action)) {
+				int EtherState = intent.getIntExtra(EthernetManager.EXTRA_ETHERNET_STATE, -1);
+				handleEtherStateChange(EtherState);
+			}
+		}
+	};
+	
+	private void handleEtherStateChange(int etherState) {
+		switch (etherState) {
+			case EthernetManager.ETHER_STATE_DISCONNECTED:
+				mEthHwAddress = nullIpInfo;
+				mEthIpAddress = nullIpInfo;
+				mEthNetmask = nullIpInfo;
+				mEthGateway = nullIpInfo;
+				mEthdns1 = nullIpInfo;
+				mEthdns2 = nullIpInfo;
+				break;
+			case EthernetManager.ETHER_STATE_CONNECTING:
+				mEthHwAddress = STATE_CONNECTING;
+				mEthIpAddress = STATE_CONNECTING;
+				mEthNetmask = STATE_CONNECTING;
+				mEthGateway = STATE_CONNECTING;
+				mEthdns1 = STATE_CONNECTING;
+				mEthdns2 = STATE_CONNECTING;
+				break;
+			case EthernetManager.ETHER_STATE_CONNECTED:
+				getEthInfo();
+				break;
+			default:
+				break;
+		}
+		refreshUI();
+	}
+	
+	private void refreshUI() {
+		mTvIp.setText(mEthIpAddress);
+		mTvNetMask.setText(mEthNetmask);
+		mTvDns.setText(mEthdns1);
+		mTvNetGate.setText(mEthGateway);
+	}
+	
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mEthernetManager = (EthernetManager) getContext().getSystemService("ethernet");
-
 	}
+	
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -62,22 +111,22 @@ public class AutoObtainNetworkConfigFragment extends Fragment {
 
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-		String ip = NetUtils.getEtherNetIP();
-		mTvIp.setText(ip);
+//		String ip = NetUtils.getEtherNetIP();
+//		mTvIp.setText(ip);
+		
+		getEthInfo();
+        refreshUI();
+		IntentFilter intentFilter = new IntentFilter(EthernetManager.ETHERNET_STATE_CHANGED_ACTION);
+		getContext().registerReceiver(mReceiver, intentFilter);
+	}
+	
+	public void getEthInfo() {
 		IpConfiguration.IpAssignment mode = mEthernetManager.getConfiguration().getIpAssignment();
-
-		if (mode == IpConfiguration.IpAssignment.DHCP) {
-			// getEth from dhcp
+		if (mode == IpConfiguration.IpAssignment.DHCP) { // getEth from dhcp
 			getEthInfoFromDhcp();
-		} else if (mode == IpConfiguration.IpAssignment.STATIC) {
-			// TODO: get static IP
+		} else if (mode == IpConfiguration.IpAssignment.STATIC) { // TODO: get static IP
 			getEthInfoFromStaticIp();
 		}
-		mTvNetMask.setText(mEthNetmask);
-		mTvDns.setText(mEthdns1);
-		mTvNetGate.setText(mEthGateway);
-
-
 	}
 
 
@@ -134,6 +183,7 @@ public class AutoObtainNetworkConfigFragment extends Fragment {
 	}
 
 	private final static String nullIpInfo = "0.0.0.0";
+	private final String STATE_CONNECTING = "正在获取...";
 	private static String mEthHwAddress = null;
 	private static String mEthIpAddress = null;
 	private static String mEthNetmask = null;
@@ -186,6 +236,7 @@ public class AutoObtainNetworkConfigFragment extends Fragment {
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
+		getContext().unregisterReceiver(mReceiver);
 		ButterKnife.unbind(this);
 	}
 
