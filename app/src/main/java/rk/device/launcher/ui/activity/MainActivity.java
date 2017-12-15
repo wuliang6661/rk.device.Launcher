@@ -35,7 +35,6 @@ import cvc.EventUtil;
 import rk.device.launcher.R;
 import rk.device.launcher.SurfaceHolderCaremaFont;
 import rk.device.launcher.api.ApiService;
-import rk.device.launcher.api.RxResultHelper;
 import rk.device.launcher.api.T;
 import rk.device.launcher.base.BaseCompatActivity;
 import rk.device.launcher.base.JniHandler;
@@ -672,8 +671,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
             public void onFailure(PutObjectRequest request, ClientException clientException,
                                   ServiceException serviceException) {
                 Log.i("oss-upload-fail", clientException.getMessage());
-                Log.i("oss-upload-fail",
-                        serviceException.getErrorCode() + ":" + serviceException.getRawMessage());
+                Log.i("oss-upload-fail", serviceException.getErrorCode() + ":" + serviceException.getRawMessage());
             }
         });
     }

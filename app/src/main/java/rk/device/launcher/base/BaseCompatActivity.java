@@ -56,25 +56,6 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
 
     WaitDialog dialog;
 
-//    /**
-//     * 最大的屏幕亮度
-//     */
-//    float maxLight;
-//    /**
-//     * 当前的亮度
-//     */
-//    float currentLight;
-//
-//    /**
-//     * 用来控制屏幕亮度
-//     */
-//    Handler handler;
-//
-//    /**
-//     * 延时时间
-//     */
-//    long DenyTime = 5 * 1000L;
-
     /**
      * 返回布局参数
      */
@@ -96,6 +77,7 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayout());
+//        getWindow().addFlags(WindowManager.LayoutParams.F);
         hideNavigationBar();
         ButterKnife.bind(this);
         AppManager.getAppManager().addActivity(this);
@@ -109,7 +91,6 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-//        startSleepTask();
         acquireWakeLock();
         PushManager.getInstance().initialize(getApplicationContext(), RKLauncherPushService.class);
         PushManager.getInstance().registerPushIntentService(getApplicationContext(), RKLauncherPushIntentService.class);
@@ -119,7 +100,6 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         releaseWakeLock();
-//        stopSleepTask();
     }
 
     @Override
@@ -159,71 +139,6 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
         }
 
     }
-
-//
-//    /**
-//     * 获取设备亮度
-//     */
-//    private void InitData() {
-//        handler = new Handler(Looper.getMainLooper());
-//        maxLight = GetLightness(this);
-//    }
-//
-//    /**
-//     * 设置亮度
-//     *
-//     * @param context
-//     * @param light
-//     */
-//    void SetLight(Activity context, int light) {
-//        Log.d("wuliang", "SetLight() called with: context = [" + context + "], light = [" + light + "]");
-//        currentLight = light;
-//        WindowManager.LayoutParams localLayoutParams = context.getWindow().getAttributes();
-//        localLayoutParams.screenBrightness = (light / 255.0F);
-//        context.getWindow().setAttributes(localLayoutParams);
-//    }
-//
-//    /**
-//     * 获取亮度
-//     *
-//     * @param context
-//     * @return
-//     */
-//    float GetLightness(Activity context) {
-//        WindowManager.LayoutParams localLayoutParams = context.getWindow().getAttributes();
-//        float light = localLayoutParams.screenBrightness;
-//        return light;
-//    }
-//
-//
-//    @Override
-//    public boolean dispatchTouchEvent(MotionEvent ev) {
-//        if (currentLight == 1) {
-//            startSleepTask();
-//        }
-//        return super.dispatchTouchEvent(ev);
-//    }
-//
-//    /**
-//     * 开启休眠任务
-//     */
-//    void startSleepTask() {
-//        SetLight(this, (int) maxLight);
-//        handler.removeCallbacks(sleepWindowTask);
-//        handler.postDelayed(sleepWindowTask, DenyTime);
-//    }
-//
-//    /**
-//     * 结束休眠任务
-//     */
-//    void stopSleepTask() {
-//        handler.removeCallbacks(sleepWindowTask);
-//    }
-//
-//    /**
-//     * 休眠任务
-//     */
-//    Runnable sleepWindowTask = () -> SetLight(BaseCompatActivity.this, 1);
 
 
     /**
