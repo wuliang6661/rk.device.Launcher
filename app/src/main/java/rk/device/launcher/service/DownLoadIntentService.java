@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.os.RecoverySystem;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -22,7 +23,6 @@ import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import peripherals.Sys;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.utils.AppUtils;
 import rk.device.launcher.utils.CloseUtils;
@@ -43,7 +43,6 @@ public class DownLoadIntentService extends IntentService {
 	private static final int IO_BUFFER_SIZE = 8 * 1024;
 	
 	
-	
 	public DownLoadIntentService() {
 		super("DownLoadIntentService");
 	}
@@ -57,7 +56,13 @@ public class DownLoadIntentService extends IntentService {
 					break;
 				case DOWNLOAD_ROM_OVER:
 					LogUtil.e(TAG, "开始安装rom了!!!");
-					Sys.rebootToRecovery();
+//					Sys.rebootToRecovery();
+					try {
+						File romFile = new File("/data/rk_backup/update.img");
+						RecoverySystem.installPackage(DownLoadIntentService.this, romFile);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 					break;
 			}
 		}
@@ -104,8 +109,8 @@ public class DownLoadIntentService extends IntentService {
 //			}
 			OkHttpClient client = new OkHttpClient();
 			Request request = new Request.Builder()
-			        .url(url)
-			        .build();
+			.url(url)
+			.build();
 			client.newCall(request).enqueue(new Callback() {
 				@Override
 				public void onFailure(Call call, IOException e) {
@@ -200,11 +205,11 @@ public class DownLoadIntentService extends IntentService {
 		if (!dir.exists()) {
 			dir.mkdirs();
 		}
-		final File downLoadRom = new File(dir, "update.rom");
+		final File downLoadRom = new File(dir, "update.img");
 		OkHttpClient client = new OkHttpClient();
 		Request request = new Request.Builder()
-		        .url(url)
-		        .build();
+		.url(url)
+		.build();
 		client.newCall(request).enqueue(new Callback() {
 			@Override
 			public void onFailure(Call call, IOException e) {

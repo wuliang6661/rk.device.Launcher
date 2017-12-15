@@ -154,11 +154,12 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 
     @Override
     protected void initData() {
-        ShellUtils.upgradeRootPermission("/data/rk_backup");
-        String declareContent = SPUtils.getString(Constant.KEY_FIRSTPAGE_CONTENT);
+	    boolean result = ShellUtils.upgradeRootPermission("/data/rk_backup");
+	    LogUtil.d(TAG, "result = " + result);
+	    String declareContent = SPUtils.getString(Constant.KEY_FIRSTPAGE_CONTENT);
 	    if (!TextUtils.isEmpty(declareContent)) {
 		    mTvDeclare.setVisibility(View.VISIBLE);
-		    mTvDeclare.setText(String.format(getString(R.string.declare_content), declareContent));
+		    mTvDeclare.setText(String.format(getString(R.string.declare_content), declareContent, declareContent));
 	    } else {
 		    mTvDeclare.setVisibility(View.GONE);
 	    }
@@ -237,7 +238,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 //            }
 	        if (!TextUtils.isEmpty(setPageContentBean.content)) {
 		        mTvDeclare.setVisibility(View.VISIBLE);
-		        mTvDeclare.setText(String.format(getString(R.string.declare_content), setPageContentBean.content));
+		        mTvDeclare.setText(String.format(getString(R.string.declare_content), setPageContentBean.content, setPageContentBean.content));
 	        } else {
 		        mTvDeclare.setVisibility(View.GONE);
 	        }
@@ -427,7 +428,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
                 if (!StringUtils.isEmpty(modilePhone)) {
                     showMessageDialog("联系电话: " + modilePhone);
                 }
-                break;
+	            break;
             case R.id.init_error:     //有外设初始化失败
                 initDialog.show(getSupportFragmentManager(), "");
                 break;
