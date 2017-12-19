@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import rk.device.launcher.R;
+import rk.device.launcher.api.T;
+import rk.device.launcher.utils.LogUtil;
 
 public class AutoObtainNetworkConfigFragment extends Fragment {
 
@@ -244,8 +246,10 @@ public class AutoObtainNetworkConfigFragment extends Fragment {
 		try {
 			mEthernetManager.setConfiguration(new IpConfiguration(IpConfiguration.IpAssignment.DHCP, IpConfiguration.ProxySettings.NONE, null, null));
 		} catch (Exception e) {
-			Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-			e.printStackTrace();
+			T.showShort(e.getMessage());
+			LogUtil.e(TAG, e.getMessage());
 		}
 	}
+	
+	private final String TAG = "AutoObtainNetworkConfigFragment";
 }
