@@ -15,6 +15,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import rk.device.launcher.R;
 import rk.device.launcher.global.LauncherApplication;
 import rk.device.launcher.utils.NetWorkUtil;
+import rk.device.launcher.utils.carema.utils.FileUtil;
 
 
 /**
@@ -30,13 +31,15 @@ public class RkRetrofit {
      * Api接口
      */
     Retrofit init_api(String baseUrl) {
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
         apiClient = new OkHttpClient
                 .Builder()
+                .cache(FileUtil.getCache())
                 .readTimeout(20000, TimeUnit.MILLISECONDS)
                 .connectTimeout(20000, TimeUnit.MILLISECONDS)
-                .addInterceptor(interceptor)
+                .addInterceptor(logging)
+                .addInterceptor(new CacheControlInterceptor())
                 .addNetworkInterceptor(new HttpCacheInterceptor())
                 .build();
 

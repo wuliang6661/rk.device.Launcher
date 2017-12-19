@@ -1,7 +1,9 @@
 package rk.device.launcher.ui.activity;
 
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -23,6 +25,7 @@ import rk.device.launcher.ui.fragment.WifiListFragment;
 import rk.device.launcher.utils.AndroidBug5497Workaround;
 import rk.device.launcher.utils.DrawableUtil;
 import rk.device.launcher.utils.KeyBoardHelper;
+import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.SPUtils;
 
 public class SetNetWorkActivity extends BaseCompatActivity implements View.OnClickListener, AndroidBug5497Workaround.KeyBoardChangeListener {
@@ -94,10 +97,29 @@ public class SetNetWorkActivity extends BaseCompatActivity implements View.OnCli
 					if (!fragment.saveIpConfig()) { // IP参数没有设置成功
 						return;
 					}
+					try {
+						boolean result = Settings.Global.putInt(getContentResolver(), Settings.Global.NETWORK_PREFERENCE, ConnectivityManager.TYPE_ETHERNET);
+					} catch (Exception e) {
+						LogUtil.e(TAG, e.getMessage());
+					}
+					
 				} else if (mCurrentFragment instanceof AutoObtainNetworkConfigFragment) {
 					AutoObtainNetworkConfigFragment fragment = (AutoObtainNetworkConfigFragment) mCurrentFragment;
-					// 设置IP获取方式为自动获取
-					fragment.setIPConfigDHCP();
+					
+					try {
+						// 设置IP获取方式为自动获取
+						fragment.setIPConfigDHCP();
+						boolean result = Settings.Global.putInt(getContentResolver(), Settings.Global.NETWORK_PREFERENCE, ConnectivityManager.TYPE_ETHERNET);
+					} catch (Exception e) {
+						LogUtil.e(TAG, e.getMessage());
+					}
+					
+				} else {
+					try {
+						boolean result = Settings.Global.putInt(getContentResolver(), Settings.Global.NETWORK_PREFERENCE, ConnectivityManager.TYPE_WIFI);
+					} catch (Exception e) {
+						LogUtil.e(TAG, e.getMessage());
+					}
 				}
 				//判断是否是第一次
 				boolean isFirst = (boolean) SPUtils.get(Constant.IS_FIRST_SETTING, true);

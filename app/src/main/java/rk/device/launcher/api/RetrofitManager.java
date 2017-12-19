@@ -11,6 +11,7 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
+import rk.device.launcher.utils.carema.utils.FileUtil;
 
 import static okhttp3.internal.platform.Platform.INFO;
 
@@ -64,6 +65,8 @@ public class RetrofitManager {
                 .readTimeout(20000, TimeUnit.MILLISECONDS)
                 .connectTimeout(20000, TimeUnit.MILLISECONDS)
                 .addInterceptor(logging)
+                .addInterceptor(new CacheControlInterceptor())
+                .cache(FileUtil.getCache())
 //		    .addInterceptor(new Interceptor() {
 //			    @Override
 //			    public Response intercept(Chain chain) throws IOException {

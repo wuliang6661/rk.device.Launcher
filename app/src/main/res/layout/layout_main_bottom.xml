@@ -70,7 +70,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
                                 android:singleLine="true"
-                                android:text="15:30"
+                                tools:text="15:30"
                                 android:textColor="@color/white"
                                 android:textSize="@dimen/sp_24" />
 
@@ -81,7 +81,7 @@
                                 android:layout_gravity="center_vertical"
                                 android:layout_marginLeft="23dp"
                                 android:singleLine="true"
-                                android:text="星期一"
+                                tools:text="星期一"
                                 android:textColor="@color/white"
                                 android:textSize="@dimen/sp_22" />
 
@@ -92,7 +92,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:singleLine="true"
-                            android:text="2017年11月11日"
+                            tools:text="2017年11月11日"
                             android:textColor="@color/white"
                             android:textSize="@dimen/sp_18" />
 
@@ -112,6 +112,7 @@
                         android:orientation="vertical">
 
                         <TextView
+                            tools:text="0~10℃"
                             android:id="@+id/tv_tem"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -124,6 +125,7 @@
                             android:orientation="horizontal">
 
                             <ImageView
+                                tools:visibility="visible"
                                 android:visibility="gone"
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"
@@ -131,6 +133,7 @@
                                 android:src="@drawable/sunny" />
 
                             <TextView
+                                tools:text="晴"
                                 android:id="@+id/tv_weather"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
