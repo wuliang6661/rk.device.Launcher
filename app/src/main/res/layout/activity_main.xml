@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ll_total"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/front_bg">
+    android:background="@drawable/main_bg"
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/ll_header"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="56dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/iv_signal"
-            android:layout_width="30dp"
-            android:layout_height="26dp"
-            android:layout_marginLeft="15dp"
+            android:layout_width="40dp"
+            android:layout_height="34dp"
+            android:layout_marginLeft="20dp"
             android:scaleType="centerInside"
             android:src="@drawable/icon_signal" />
 
@@ -29,17 +30,17 @@
 
         <ImageView
             android:id="@+id/init_error"
-            android:layout_width="30dp"
-            android:layout_height="25dp"
-            android:layout_marginRight="15dp"
+            android:layout_width="40dp"
+            android:layout_height="33dp"
+            android:layout_marginRight="20dp"
             android:src="@drawable/wanring" />
 
 
         <ImageView
             android:id="@+id/battry_plug"
-            android:layout_width="33dp"
-            android:layout_height="18dp"
-            android:layout_marginRight="10dp"
+            android:layout_width="44dp"
+            android:layout_height="24dp"
+            android:layout_marginRight="13dp"
             android:background="@drawable/plug"
             android:visibility="gone" />
 
@@ -48,22 +49,22 @@
             android:id="@+id/battry_num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="7dp"
+            android:layout_marginRight="9dp"
             android:text="97%"
             android:textColor="@color/white"
-            android:textSize="20dp" />
+            android:textSize="26dp" />
 
 
         <rk.device.launcher.widget.BatteryView
             android:id="@+id/battry_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="15dp" />
+            android:layout_marginRight="20dp" />
 
 
         <ImageView
             android:id="@+id/iv_setting"
-            android:layout_width="30dp"
+            android:layout_width="40dp"
             android:layout_height="match_parent"
             android:layout_marginBottom="@dimen/dp_5"
             android:layout_marginRight="@dimen/dp_15"
@@ -74,42 +75,38 @@
     </LinearLayout>
 
 
-    <include
-        android:id="@+id/rl_bottom"
-        layout="@layout/layout_main_bottom"
+    <TextView
+        android:id="@+id/tv_declare"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <ImageView
-        android:id="@+id/iv_arrow"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/dp_75"
-        android:src="@drawable/arrow_up"
-        android:visibility="visible" />
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/rl_bottom"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/ll_header"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="34dp"
+        android:ellipsize="marquee"
         android:focusable="true"
-        android:gravity="center"
+        android:focusableInTouchMode="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:paddingLeft="30dp"
+        android:singleLine="true"
+        android:textColor="@color/white"
+        android:textSize="33dp"
+        android:visibility="invisible"
+        tools:text="@string/declare"
+        tools:visibility="visible" />
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="472dp"
+        android:layout_marginTop="24dp"
+        android:focusable="true"
         android:focusableInTouchMode="true"
         android:visibility="visible">
 
         <FrameLayout
             android:id="@+id/frame_layout"
-            android:layout_width="532dp"
-            android:layout_height="400dp">
+            android:layout_width="626dp"
+            android:layout_height="472dp"
+            android:layout_centerInParent="true">
 
             <SurfaceView
                 android:id="@+id/camera_surfaceview"
@@ -127,28 +124,194 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-            <TextView
-                android:id="@+id/tv_declare"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:background="@drawable/declare_bg"
-                android:ellipsize="marquee"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:paddingBottom="14dp"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:paddingTop="21dp"
-                android:singleLine="true"
-                android:textColor="@color/white"
-                android:textSize="30dp"
-                android:visibility="gone"
-                tools:text="@string/declare"
-                tools:visibility="visible" />
         </FrameLayout>
+
+
+        <rk.device.launcher.widget.GifView
+            android:id="@+id/carema_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="266dp"
+        android:layout_marginLeft="34dp"
+        android:layout_marginRight="34dp"
+        android:layout_marginTop="22dp">
+
+
+        <rk.device.launcher.widget.GifView
+            android:id="@+id/device_name_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+
+        <TextView
+            android:id="@+id/tv_place_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="84dp"
+            android:text="@string/device_name"
+            android:textColor="@color/white"
+            android:textSize="60dp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="7dp"
+            android:layout_below="@+id/tv_place_name"
+            android:layout_marginTop="60dp"
+            android:background="@drawable/line_hori" />
+
+
+    </RelativeLayout>
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="16dp"
+        android:background="@drawable/time_above" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="221dp"
+        android:background="@drawable/time_bg">
+
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="bottom"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:singleLine="true"
+                        android:text="15:30"
+                        android:textColor="@color/white"
+                        android:textSize="40dp" />
+
+                    <TextView
+                        android:id="@+id/tv_week"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="30dp"
+                        android:singleLine="true"
+                        android:text="星期一"
+                        android:textColor="@color/white"
+                        android:textSize="33dp" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:singleLine="true"
+                    android:text="2017年11月11日"
+                    android:textColor="@color/white"
+                    android:textSize="26dp" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+
+        <ImageView
+            android:layout_width="2.6dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/line_ver" />
+
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_tem"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="40sp" />
+
+
+                <TextView
+                    android:id="@+id/tv_weather"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:textColor="@color/white"
+                    android:textSize="26dp" />
+
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="12dp"
+        android:background="@drawable/time_beow" />
+
+
+    <LinearLayout
+        android:id="@+id/rl_contact_manager"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@drawable/lianxi_wuguan"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+
+        <ImageView
+            android:layout_width="53dp"
+            android:layout_height="53dp"
+            android:background="@drawable/wuguan_img" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:text="联系物管"
+            android:textColor="@color/white"
+            android:textSize="40dp" />
 
     </LinearLayout>
 
-</RelativeLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@drawable/time_xia" />
+
+
+</LinearLayout>

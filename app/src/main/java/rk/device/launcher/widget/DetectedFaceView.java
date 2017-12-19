@@ -31,6 +31,7 @@ public class DetectedFaceView extends AppCompatImageView {
     private Drawable mFaceIndicator = null;
 
 
+    private int roomWidth;
     private int roomHeight;
     private float faceRegionW;
     private float faceRegionH;
@@ -63,7 +64,8 @@ public class DetectedFaceView extends AppCompatImageView {
     /**
      * 设置总体外部容器高度
      */
-    public void setRoomHeight(int height) {
+    public void setRoomHeight(int width, int height) {
+        this.roomWidth = width;
         this.roomHeight = height;
     }
 
@@ -83,8 +85,8 @@ public class DetectedFaceView extends AppCompatImageView {
             canvas.save();
             Log.i("faceView:", "mRect.left:" + mRect.left + ";mRect.top" + mRect.top
                     + ";mRect.right" + mRect.right + ";mRect.bottom" + mRect.bottom);
-            float width = faceRegionW / PREVIEW_WIDTH * ScreenUtil.getScreenWidth(mContext);
-            float left = ScreenUtil.getScreenWidth(mContext) - mRect.left / PREVIEW_WIDTH * ScreenUtil.getScreenWidth(mContext) - width;
+            float width = faceRegionW / PREVIEW_WIDTH * roomWidth;
+            float left = roomWidth - mRect.left / PREVIEW_WIDTH * roomWidth - width;
             float top = mRect.top / PREVIEW_HEIGHT * roomHeight;
             float buttom = top + (faceRegionH / PREVIEW_HEIGHT * roomHeight);
             float right = left + width;
