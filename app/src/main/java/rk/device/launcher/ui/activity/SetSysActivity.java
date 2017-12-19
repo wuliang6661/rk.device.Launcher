@@ -143,7 +143,7 @@ public class SetSysActivity extends BaseCompatActivity {
                 }
                 if (!StringUtils.isEmpty(mip) || !StringUtils.isEmpty(mport)) {
                     if (NetWorkUtil.isNetConnected(SetSysActivity.this)) {
-                        showWaitProgress("正在验证IP地址...");
+                        showWaitProgress("正在连接服务器...");
                         thread = new Thread(runnable);
                         thread.start();
                     } else {
@@ -294,7 +294,7 @@ public class SetSysActivity extends BaseCompatActivity {
      */
     private boolean pingIpAddress(String ipAddress) {
         try {
-            Process process = Runtime.getRuntime().exec("/system/bin/ping -c 1 -w 100 " + ipAddress);
+            Process process = Runtime.getRuntime().exec("/system/bin/ping -c 1 -w 10 " + ipAddress);
             int status = process.waitFor();
             if (status == 0) {
                 return true;

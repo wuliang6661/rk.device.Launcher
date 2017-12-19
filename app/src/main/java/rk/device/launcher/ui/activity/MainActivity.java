@@ -672,8 +672,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
             public void onFailure(PutObjectRequest request, ClientException clientException,
                                   ServiceException serviceException) {
                 Log.i("oss-upload-fail", clientException.getMessage());
-                Log.i("oss-upload-fail",
-                        serviceException.getErrorCode() + ":" + serviceException.getRawMessage());
+                Log.i("oss-upload-fail", serviceException.getErrorCode() + ":" + serviceException.getRawMessage());
             }
         });
     }
