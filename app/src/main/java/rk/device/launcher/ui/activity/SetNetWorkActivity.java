@@ -1,7 +1,9 @@
 package rk.device.launcher.ui.activity;
 
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -94,10 +96,17 @@ public class SetNetWorkActivity extends BaseCompatActivity implements View.OnCli
 					if (!fragment.saveIpConfig()) { // IP参数没有设置成功
 						return;
 					}
+					boolean result = Settings.Global.putInt(getContentResolver(), Settings.Global.NETWORK_PREFERENCE, ConnectivityManager.TYPE_ETHERNET);
+					
+					
 				} else if (mCurrentFragment instanceof AutoObtainNetworkConfigFragment) {
 					AutoObtainNetworkConfigFragment fragment = (AutoObtainNetworkConfigFragment) mCurrentFragment;
 					// 设置IP获取方式为自动获取
 					fragment.setIPConfigDHCP();
+					boolean result = Settings.Global.putInt(getContentResolver(), Settings.Global.NETWORK_PREFERENCE, ConnectivityManager.TYPE_ETHERNET);
+					
+				} else {
+					boolean result = Settings.Global.putInt(getContentResolver(), Settings.Global.NETWORK_PREFERENCE, ConnectivityManager.TYPE_WIFI);
 				}
 				//判断是否是第一次
 				boolean isFirst = (boolean) SPUtils.get(Constant.IS_FIRST_SETTING, true);

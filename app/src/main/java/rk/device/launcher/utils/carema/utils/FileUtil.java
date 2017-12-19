@@ -9,6 +9,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import okhttp3.Cache;
+import rk.device.launcher.utils.CommonUtils;
+
 public class FileUtil {
     private static final String TAG = "FileUtil";
     private static final File parentPath = Environment.getExternalStorageDirectory();
@@ -56,6 +59,12 @@ public class FileUtil {
         }
 
     }
+	
+	public static Cache getCache() {
+		File cacheFile = new File(CommonUtils.getContext().getCacheDir(), "rkcache");
+		Cache cache = new Cache(cacheFile, 1024 * 1024 * 10);// 设置缓存大小为10M
+		return cache;
+	}
 
 
 }
