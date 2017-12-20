@@ -168,7 +168,7 @@ public class ManualConfigFragment extends Fragment {
 		InetAddress gatewayAddr = getIPv4Address(this.mEthGateway);
 		InetAddress dnsAddr = getIPv4Address(this.mEthdns1);
 		if (inetAddr == null || gatewayAddr == null || dnsAddr == null) {
-			T.showShort("网络设置出错, 请重新设置");
+//			T.showShort("网络设置出错, 请重新设置");
 			return false;
 		}
 		if (inetAddr.getAddress().toString().isEmpty() || prefixLength == 0 || gatewayAddr.toString().isEmpty()

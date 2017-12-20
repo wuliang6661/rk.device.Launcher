@@ -50,6 +50,25 @@ public class WifiHelper {
 		}
 
 	}
+	
+	public boolean setWifiEnabled(boolean enable) {
+		boolean result = mWifiManager.setWifiEnabled(enable);
+		return result;
+	}
+	
+	public boolean isWifiEndabled() {
+		boolean isOpen = true;
+		int wifiState = mWifiManager.getWifiState();
+		
+		if (wifiState == WifiManager.WIFI_STATE_DISABLED
+		|| wifiState == WifiManager.WIFI_STATE_DISABLING
+		|| wifiState == WifiManager.WIFI_STATE_UNKNOWN
+		|| wifiState == WifiManager.WIFI_STATE_ENABLING) {
+			isOpen = false;
+		}
+		
+		return isOpen;
+	}
 
 	/**
 	 * 获取当前手机所连接的wifi信息

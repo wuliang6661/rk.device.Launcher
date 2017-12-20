@@ -95,12 +95,19 @@ public class SetNetWorkActivity extends BaseCompatActivity implements View.OnCli
 				if (mCurrentFragment instanceof ManualConfigFragment) {
 					ManualConfigFragment fragment = (ManualConfigFragment) mCurrentFragment;
 					if (!fragment.saveIpConfig()) { // IP参数没有设置成功
+						showMessageDialog("参数设置失败");
 						return;
 					}
 					try {
 						boolean result = Settings.Global.putInt(getContentResolver(), Settings.Global.NETWORK_PREFERENCE, ConnectivityManager.TYPE_ETHERNET);
+						if (!result) {
+							showMessageDialog("切换网络失败");
+							return;
+						}
 					} catch (Exception e) {
+						showMessageDialog("切换网络失败");
 						LogUtil.e(TAG, e.getMessage());
+						return;
 					}
 					
 				} else if (mCurrentFragment instanceof AutoObtainNetworkConfigFragment) {
@@ -110,15 +117,27 @@ public class SetNetWorkActivity extends BaseCompatActivity implements View.OnCli
 						// 设置IP获取方式为自动获取
 						fragment.setIPConfigDHCP();
 						boolean result = Settings.Global.putInt(getContentResolver(), Settings.Global.NETWORK_PREFERENCE, ConnectivityManager.TYPE_ETHERNET);
+						if (!result) {
+							showMessageDialog("切换网络失败");
+							return;
+						}
 					} catch (Exception e) {
+						showMessageDialog("切换网络失败");
 						LogUtil.e(TAG, e.getMessage());
+						return;
 					}
 					
 				} else {
 					try {
 						boolean result = Settings.Global.putInt(getContentResolver(), Settings.Global.NETWORK_PREFERENCE, ConnectivityManager.TYPE_WIFI);
+						if (!result) {
+							showMessageDialog("切换网络失败");
+							return;
+						}
 					} catch (Exception e) {
+						showMessageDialog("切换网络失败");
 						LogUtil.e(TAG, e.getMessage());
+						return;
 					}
 				}
 				//判断是否是第一次

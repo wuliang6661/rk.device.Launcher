@@ -17,6 +17,8 @@ import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 
 import java.util.ArrayList;
@@ -36,13 +38,15 @@ import rk.device.launcher.widget.itemdecoration.WifiListRvItemDecoration;
 import rx.Subscription;
 import rx.functions.Action1;
 
-public class WifiListFragment extends Fragment {
+public class WifiListFragment extends Fragment implements CompoundButton.OnCheckedChangeListener {
 	
 	
 	@Bind(R.id.rv)
 	RecyclerView mRv;
 	@Bind(R.id.ib_refresh)
 	ImageButton mIbRefresh;
+	@Bind(R.id.cb_switch)
+	CheckBox mCbSwitch;
 	private List<ScanResult> mScanResultList;
 	private WifiRvAdapter mWifiRvAdapter;
 	private WifiHelper mWifiHelper;
@@ -95,6 +99,8 @@ public class WifiListFragment extends Fragment {
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 //		mWifiManager = (WifiManager) getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 		mWifiHelper = new WifiHelper(getContext());
+		mCbSwitch.setChecked(mWifiHelper.isWifiEndabled());
+		mCbSwitch.setOnCheckedChangeListener(this);
 		mScanResultList = new ArrayList<>();
 //		mScanResultList = new ArrayList<>();
 //		for (ScanResult scanResult : scanResultList) {
@@ -328,5 +334,10 @@ public class WifiListFragment extends Fragment {
 	public void onDestroy() {
 		super.onDestroy();
 		mContext.unregisterReceiver(mWifiChangeBroadcaseReceiver);
+	}
+	
+	@Override
+	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+		mWifiHelper.setWifiEnabled(isChecked);
 	}
 }
