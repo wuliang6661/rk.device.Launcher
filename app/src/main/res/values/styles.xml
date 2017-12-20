@@ -127,4 +127,16 @@
 
 
     <string name="et_hint">0.0.0.0</string>
+
+
+    <style name="Theme.CustomDialog" parent="Theme.AppCompat.Dialog">
+        <!-- 下面这两个是最重要的 -->
+        <item name="android:windowIsFloating">true</item> <!-- 是否浮现在activity之上 (内容会居中显示并靠左右有距离)-->
+        <item name="android:windowNoTitle">true</item>              <!-- 设置title -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowFrame">@null</item>               <!-- 设置边框 -->
+        <item name="android:windowIsTranslucent">true</item>        <!-- 设置半透明 -->
+        <item name="android:windowFullscreen">true</item>           <!-- 设置全屏 -->
+    </style>
+
 </resources>

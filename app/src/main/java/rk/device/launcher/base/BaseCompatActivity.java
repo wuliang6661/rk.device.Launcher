@@ -6,10 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,6 +25,7 @@ import rk.device.launcher.bean.NetDismissBean;
 import rk.device.launcher.service.BlueToothsBroadcastReceiver;
 import rk.device.launcher.service.RKLauncherPushIntentService;
 import rk.device.launcher.service.RKLauncherPushService;
+import rk.device.launcher.service.SleepTaskServer;
 import rk.device.launcher.ui.activity.SetNetWorkActivity;
 import rk.device.launcher.ui.fragment.BaseDialogFragment;
 import rk.device.launcher.ui.fragment.WaitDialog;
@@ -80,6 +83,7 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
 //        getWindow().addFlags(WindowManager.LayoutParams.F);
         hideNavigationBar();
         ButterKnife.bind(this);
+        SleepTaskServer.getSleepHandler(this).sendEmptyMessage(0x11);
         AppManager.getAppManager().addActivity(this);
         setNetListener();
         makeFilters();
@@ -138,6 +142,13 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
             wakeLock = null;
         }
 
+    }
+
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        SleepTaskServer.getSleepHandler(this).sendEmptyMessage(0x11);
+        return super.dispatchTouchEvent(ev);
     }
 
 

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
@@ -29,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import cvc.CvcHelper;
 import cvc.CvcRect;
 import cvc.EventUtil;
@@ -48,6 +50,7 @@ import rk.device.launcher.event.IpHostEvent;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.global.LauncherApplication;
 import rk.device.launcher.service.ElectricBroadcastReceiver;
+import rk.device.launcher.service.NetBroadcastReceiver;
 import rk.device.launcher.service.NetChangeBroadcastReceiver;
 import rk.device.launcher.service.SocketService;
 import rk.device.launcher.ui.fragment.InitErrorDialogFragmen;
@@ -56,7 +59,6 @@ import rk.device.launcher.utils.AppUtils;
 import rk.device.launcher.utils.DateUtil;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.SPUtils;
-import rk.device.launcher.utils.ShellUtils;
 import rk.device.launcher.utils.StringUtils;
 import rk.device.launcher.utils.TimeUtils;
 import rk.device.launcher.utils.gps.GpsUtils;
@@ -65,6 +67,7 @@ import rk.device.launcher.utils.oss.OssUploadListener;
 import rk.device.launcher.utils.uuid.DeviceUuidFactory;
 import rk.device.launcher.widget.BatteryView;
 import rk.device.launcher.widget.DetectedFaceView;
+import rk.device.launcher.widget.GifView;
 import rk.device.launcher.widget.UpdateManager;
 import rx.Observable;
 import rx.Subscriber;
@@ -94,8 +97,6 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     ImageView mIvSignal;
     @Bind(R.id.iv_setting)
     ImageView settingTv;
-    @Bind(R.id.iv_arrow)
-    ImageView mIvArrow;
     @Bind(R.id.camera_surfaceview)
     SurfaceView surfaceview;
     @Bind(R.id.tv_tem)
@@ -110,20 +111,55 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     TextView tvPlaceName;
     @Bind(R.id.init_error)
     ImageView initError;
+    @Bind(R.id.carema_bg)
+    GifView caremaBg;
+    @Bind(R.id.device_name_bg)
+    GifView deviceNameBg;
 
-    int faceCount = 0;//记录摄像头采集的画面帧数,每5帧调取一次人脸识别
+    /**
+     * 记录每五帧调取一次人脸识别
+     */
+    int faceCount = 0;
+    /**
+     * JNI调用类
+     */
     private JniHandler mHandler = null;
+    /**
+     * 定时器，每一秒运行一次
+     */
     private static final int REFRESH_DELAY = 1000;
-    SurfaceHolderCaremaFont callbackFont;
-    Subscription mSubscription;
     private StaticHandler mStaticHandler = new StaticHandler();
+    /**
+     * 前置摄像头对象
+     */
+    SurfaceHolderCaremaFont callbackFont;
+    /**
+     * 所有rxbus接受管理对象
+     */
+    Subscription mSubscription;
+    /**
+     * UUID工具
+     */
     private DeviceUuidFactory uuidFactory = null;
     private String uUid;
+    /**
+     * 注册的通知和服务
+     */
     NetChangeBroadcastReceiver netChangeBroadcastRecever;
     ElectricBroadcastReceiver mBatteryReceiver;
+    NetBroadcastReceiver netOffReceiver;
+    /**
+     * 定位工具
+     */
     private GpsUtils gpsUtils = null;
-    private InputWifiPasswordDialogFragment dialogFragment = null;
+    /**
+     * 物管电话
+     */
     private String modilePhone;
+    /**
+     * 界面弹窗
+     */
+    private InputWifiPasswordDialogFragment dialogFragment = null;
     private InitErrorDialogFragmen initDialog;
 
     private boolean isNetWork = true;// 此状态保存上次网络是否连接，默认已连接
@@ -141,6 +177,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         initDialog = InitErrorDialogFragmen.newInstance();
         registerBatteryReceiver();
         registerNetReceiver();
+        registerNetOffReceiver();
         registerRxBus();
         registerIPHost();
         initLocation();
@@ -154,15 +191,15 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 
     @Override
     protected void initData() {
-	    boolean result = ShellUtils.upgradeRootPermission("/data/rk_backup");
-	    LogUtil.d(TAG, "result = " + result);
-	    String declareContent = SPUtils.getString(Constant.KEY_FIRSTPAGE_CONTENT);
-	    if (!TextUtils.isEmpty(declareContent)) {
-		    mTvDeclare.setVisibility(View.VISIBLE);
-		    mTvDeclare.setText(String.format(getString(R.string.declare_content), declareContent, declareContent));
-	    } else {
-		    mTvDeclare.setVisibility(View.GONE);
-	    }
+        caremaBg.setMovieResource(R.raw.camera_bg);
+        deviceNameBg.setMovieResource(R.raw.device_name_bg);
+        String declareContent = SPUtils.getString(Constant.KEY_FIRSTPAGE_CONTENT);
+        if (!TextUtils.isEmpty(declareContent)) {
+            mTvDeclare.setVisibility(View.VISIBLE);
+            mTvDeclare.setText(String.format(getString(R.string.declare_content), declareContent, declareContent));
+        } else {
+            mTvDeclare.setVisibility(View.INVISIBLE);
+        }
         //检测App更新
         UpdateManager.getUpdateManager().checkAppUpdate(this, getSupportFragmentManager(), false);
         initHandlerThread();
@@ -185,7 +222,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 
 
     /**
-     * 注册网络监听
+     * 注册网络变化监听
      */
     private void registerNetReceiver() {
         netChangeBroadcastRecever = new NetChangeBroadcastReceiver();
@@ -201,6 +238,22 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         netChangeBroadcastRecever.setCallBack(this);
         intentFilter.setPriority(1000); // 设置优先级，最高为1000
         registerReceiver(netChangeBroadcastRecever, intentFilter);
+    }
+
+
+    /**
+     * 注册网络断开监听
+     */
+    private void registerNetOffReceiver() {
+        netOffReceiver = new NetBroadcastReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        // "android.net.wifi.SCAN_RESULTS"
+        intentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
+        // "android.net.conn.CONNECTIVITY_CHANGE"
+        intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        // "android.net.wifi.STATE_CHANGE"
+        intentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
+        registerReceiver(netOffReceiver, intentFilter);
     }
 
 
@@ -236,12 +289,12 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 //            if (mTvDeclare != null) {
 //                mTvDeclare.setText(setPageContentBean.content);
 //            }
-	        if (!TextUtils.isEmpty(setPageContentBean.content)) {
-		        mTvDeclare.setVisibility(View.VISIBLE);
-		        mTvDeclare.setText(String.format(getString(R.string.declare_content), setPageContentBean.content, setPageContentBean.content));
-	        } else {
-		        mTvDeclare.setVisibility(View.GONE);
-	        }
+            if (!TextUtils.isEmpty(setPageContentBean.content)) {
+                mTvDeclare.setVisibility(View.VISIBLE);
+                mTvDeclare.setText(String.format(getString(R.string.declare_content), setPageContentBean.content, setPageContentBean.content));
+            } else {
+                mTvDeclare.setVisibility(View.INVISIBLE);
+            }
         }, throwable -> {
 
         });
@@ -280,7 +333,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 
             @Override
             public void callHeightAndWidth(int width, int height) {
-                faceView.setRoomHeight(height);
+                faceView.setRoomHeight(width, height);
             }
         });
     }
@@ -428,7 +481,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
                 if (!StringUtils.isEmpty(modilePhone)) {
                     showMessageDialog("联系电话: " + modilePhone);
                 }
-	            break;
+                break;
             case R.id.init_error:     //有外设初始化失败
                 initDialog.show(getSupportFragmentManager(), "");
                 break;
@@ -524,11 +577,15 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         super.onResume();
         tvPlaceName.setText(SPUtils.getString(Constant.DEVICE_NAME));
         if (isIpError) {
-            temTv.setText("");
-            weatherTv.setText("");
-            modilePhone = "";
             showMessageDialog("服务器数据获取出错！\n\n请检查网络或IP地址是否可用！");
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        caremaBg.setPaused(false);
+        deviceNameBg.setPaused(false);
     }
 
     /**
@@ -702,7 +759,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
             public void onNext(VerifyBean model) {
                 //加上isVerified是为了防止出现多次验证成功
                 if (model.isIsmatch()) {
-                    //                    SoundPlayUtils.play(3);//播放声音
+//                                        SoundPlayUtils.play(3);//播放声音
                     Log.i("wuliang", "face scusess!!!!");
                     Toast.makeText(MainActivity.this, "身份验证成功，请开门！", Toast.LENGTH_SHORT).show();
                     T.showShort("身份验证成功，请开门！");
@@ -714,6 +771,13 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
                 }
             }
         }));
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
     }
 
 
@@ -751,6 +815,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         }
         unregisterReceiver(mBatteryReceiver);
         unregisterReceiver(netChangeBroadcastRecever);
+        unregisterReceiver(netOffReceiver);
         mStaticHandler.removeCallbacksAndMessages(null);
         CvcHelper.CVC_deinit();
     }

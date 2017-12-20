@@ -28,6 +28,7 @@ import rk.device.launcher.base.utils.rxbus.RxBus;
 import rk.device.launcher.bean.SetDoorRvBean;
 import rk.device.launcher.event.IpHostEvent;
 import rk.device.launcher.global.Constant;
+import rk.device.launcher.service.SleepTaskServer;
 import rk.device.launcher.utils.AppManager;
 import rk.device.launcher.utils.DrawableUtil;
 import rk.device.launcher.utils.EditUtil;
@@ -182,6 +183,7 @@ public class SetSysActivity extends BaseCompatActivity {
         SPUtils.putString(Constant.KEY_CLIENT_CODE, clientCode);
         // 保存待机时间
         SPUtils.putLong(Constant.KEY_SLEEP_TIME, getSleepTime());
+        SleepTaskServer.getSleepHandler(this).sendEmptyMessage(0x44);
         // 保存补光灯的开关状态
         SPUtils.putBoolean(Constant.KEY_LIGNT, mCbLight.isChecked());
         if (mCbLight.isChecked()) {

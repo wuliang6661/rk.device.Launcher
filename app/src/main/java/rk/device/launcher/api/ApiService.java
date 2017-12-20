@@ -26,15 +26,12 @@ public class ApiService {
 
     private static volatile Retrofit mApiRetrofit;
 
-    private static String IP;
-    private static String HOST;
-
     /**
      * 动态分配IP地址
      **/
     private static BaseApi weatherFactorys() {
-        IP = SPUtils.getString(Constant.KEY_IP);
-        HOST = SPUtils.getString(Constant.KEY_PORT);
+        String IP = SPUtils.getString(Constant.KEY_IP);
+        String HOST = SPUtils.getString(Constant.KEY_PORT);
         if (StringUtils.isEmpty(IP) || StringUtils.isEmpty(HOST)) {
             if (mApiRetrofit == null) {
                 synchronized (Retrofit.class) {
@@ -77,9 +74,6 @@ public class ApiService {
 
     /**
      * 获取天气接口
-     *
-     * @param params
-     * @return
      */
     public static Observable<List<WeatherModel>> weather(Map<String, Object> params) {
         return weatherFactorys().weather(params).compose(RxResultHelper.httpRusult());
@@ -87,8 +81,6 @@ public class ApiService {
 
     /**
      * 访问外网, 根据IP地址获取地址
-     *
-     * @return
      */
     public static Observable<String> address(String format) {
         return createAddressAPI().getAddress(format);
@@ -111,9 +103,6 @@ public class ApiService {
 
     /**
      * 人脸识别
-     *
-     * @param params
-     * @return
      */
     public static Observable<VerifyBean> verifyFace(Map<String, Object> params) {
         return weatherFactorys().verify(params).compose(RxResultHelper.httpRusult());
