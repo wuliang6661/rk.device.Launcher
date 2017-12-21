@@ -94,7 +94,5 @@ public class UsbBroadCastReceiver extends BroadcastReceiver {
 				mOnDecryptedListener.onDecryptedFinished(picFileList);
 			}
 		}
-
-		
 	}
 }
