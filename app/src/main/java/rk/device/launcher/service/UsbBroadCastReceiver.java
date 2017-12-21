@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rk.device.launcher.utils.FileUtils;
+import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.carema.utils.FileUtil;
 
 import static android.content.Context.STORAGE_SERVICE;
@@ -49,8 +50,15 @@ public class UsbBroadCastReceiver extends BroadcastReceiver {
 	
 	private final String TAG = "UsbBroadCastReceiver";
 	
+	private String getFileName(File file) {
+		String name = file.getName();
+		String[] nameArr = name.split("\\.");
+		return nameArr.length >= 2 ? nameArr[0] : null;
+	}
+	
 	@Override
 	public void onReceive(Context context, Intent intent) {
+		LogUtil.d(TAG, "sdcard in");
 		// 当sd卡插上的时候
 		if (Intent.ACTION_MEDIA_MOUNTED.equals(intent.getAction())) {
 			// 外置tf卡的路径
@@ -66,12 +74,13 @@ public class UsbBroadCastReceiver extends BroadcastReceiver {
 			}
 			List<File> picFileList = new ArrayList<>();
 			for (File encryptedFile : encryptedFileList) {
-				// 获取全路径中的文件名
-				String fileName = FileUtils.getFileName(encryptedFile);
+				// 获取全路径中的文件名(不要.ao的后缀)
+//				String fileName = FileUtils.getFileName(encryptedFile);
+				String fileName = getFileName(encryptedFile);
 				String destDirPath = "/data/rk_backup/rk_ad";
 				File destDir = new File(destDirPath);
 				if (FileUtils.createOrExistsDir(destDir)) {
-					File decryptedFile = new File(destDir, fileName + ".jpeg");
+					File decryptedFile = new File(destDir,  fileName + ".jpeg");
 					// 成功复制
 					if (FileUtil.encryptFile(encryptedFile, decryptedFile)) {
 						picFileList.add(decryptedFile);
@@ -79,11 +88,13 @@ public class UsbBroadCastReceiver extends BroadcastReceiver {
 				}
 			}
 			// 复制完毕
+			LogUtil.d(TAG, "copy over");
 			Toast.makeText(context, "复制完毕", Toast.LENGTH_LONG).show();
 			if (mOnDecryptedListener != null && !picFileList.isEmpty()) {
 				mOnDecryptedListener.onDecryptedFinished(picFileList);
 			}
 		}
+		
 		
 	}
 }
