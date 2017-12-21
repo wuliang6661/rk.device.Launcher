@@ -62,36 +62,39 @@ public class UsbBroadCastReceiver extends BroadcastReceiver {
 		// 当sd卡插上的时候
 		if (Intent.ACTION_MEDIA_MOUNTED.equals(intent.getAction())) {
 			// 外置tf卡的路径
-//			String sdCardDirPath = "/mnt/external_sd";
-			String sdCardDirPath = getSecondaryStoragePath(context);
+			String sdCardDirPath = "/mnt/external_sd";
+//			String sdCardDirPath = getSecondaryStoragePath(context);
 			if (TextUtils.isEmpty(sdCardDirPath)) {
 				return;
 			}
-			File roombankerDir = new File(sdCardDirPath, "roombanker");
-			List<File> encryptedFileList = FileUtils.listFilesInDirWithFilter(roombankerDir, ".ao", true);
-			if (encryptedFileList == null || encryptedFileList.isEmpty()) {
-				return;
-			}
-			List<File> picFileList = new ArrayList<>();
-			for (File encryptedFile : encryptedFileList) {
-				// 获取全路径中的文件名(不要.ao的后缀)
+			File sdcardDir = new File(sdCardDirPath);
+			if (sdcardDir.exists()) {
+				File roombankerDir = new File(sdCardDirPath, "roombanker");
+				List<File> encryptedFileList = FileUtils.listFilesInDirWithFilter(roombankerDir, ".ao", true);
+				if (encryptedFileList == null || encryptedFileList.isEmpty()) {
+					return;
+				}
+				List<File> picFileList = new ArrayList<>();
+				for (File encryptedFile : encryptedFileList) {
+					// 获取全路径中的文件名(不要.ao的后缀)
 //				String fileName = FileUtils.getFileName(encryptedFile);
-				String fileName = getFileName(encryptedFile);
-				String destDirPath = "/data/rk_backup/rk_ad";
-				File destDir = new File(destDirPath);
-				if (FileUtils.createOrExistsDir(destDir)) {
-					File decryptedFile = new File(destDir,  fileName + ".jpeg");
-					// 成功复制
-					if (FileUtil.encryptFile(encryptedFile, decryptedFile)) {
-						picFileList.add(decryptedFile);
+					String fileName = getFileName(encryptedFile);
+					String destDirPath = "/data/rk_backup/rk_ad";
+					File destDir = new File(destDirPath);
+					if (FileUtils.createOrExistsDir(destDir)) {
+						File decryptedFile = new File(destDir,  fileName + ".jpeg");
+						// 成功复制
+						if (FileUtil.encryptFile(encryptedFile, decryptedFile)) {
+							picFileList.add(decryptedFile);
+						}
 					}
 				}
-			}
-			// 复制完毕
-			LogUtil.d(TAG, "copy over");
-			Toast.makeText(context, "复制完毕", Toast.LENGTH_LONG).show();
-			if (mOnDecryptedListener != null && !picFileList.isEmpty()) {
-				mOnDecryptedListener.onDecryptedFinished(picFileList);
+				// 复制完毕
+				LogUtil.d(TAG, "copy over");
+				Toast.makeText(context, "复制完毕", Toast.LENGTH_LONG).show();
+				if (mOnDecryptedListener != null && !picFileList.isEmpty()) {
+					mOnDecryptedListener.onDecryptedFinished(picFileList);
+				}
 			}
 		}
 
