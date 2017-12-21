@@ -1,46 +1,57 @@
 <LinearLayout
-    android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     tools:context="rk.device.launcher.ui.fragment.AutoObtainNetworkConfigFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/item_height">
+        android:layout_height="@dimen/item_height"
+        tools:background="@color/blue_2f6796">
 
         <TextView
-            android:padding="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
             android:background="@drawable/network_type_bg"
-            android:layout_centerVertical="true"
             android:gravity="center"
-            android:textColor="@color/white"
-            android:textSize="@dimen/normal_textsize_sp27"
+            android:padding="10dp"
             android:text="WIFI列表"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:textColor="@color/white"
+            android:textSize="@dimen/normal_textsize_sp27"/>
+
+        <CheckBox
+            android:id="@+id/cb_switch"
+            android:layout_width="50dp"
+            android:layout_height="33dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="25dp"
+            android:layout_toLeftOf="@+id/ib_refresh"
+            android:background="@drawable/selector_switch_button"
+            android:button="@null"/>
 
         <ImageButton
             android:id="@+id/ib_refresh"
-            android:background="@null"
-            android:layout_marginRight="27dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/refresh"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_marginRight="27dp"
+            android:background="@null"
+            android:src="@drawable/refresh"/>
 
     </RelativeLayout>
 
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv"
-        app:layoutManager="@string/linearlayoutmanager"
         android:layout_width="match_parent"
-        android:layout_height="400dp">
+        android:layout_height="400dp"
+        app:layoutManager="@string/linearlayoutmanager">
 
     </android.support.v7.widget.RecyclerView>
 

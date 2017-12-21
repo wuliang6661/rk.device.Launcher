@@ -4,12 +4,15 @@ import android.graphics.Bitmap;
 import android.os.Environment;
 import android.util.Log;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
 import okhttp3.Cache;
+import rk.device.launcher.utils.CloseUtils;
 import rk.device.launcher.utils.CommonUtils;
 
 public class FileUtil {
@@ -64,6 +67,38 @@ public class FileUtil {
 		File cacheFile = new File(CommonUtils.getContext().getCacheDir(), "rkcache");
 		Cache cache = new Cache(cacheFile, 1024 * 1024 * 10);// 设置缓存大小为10M
 		return cache;
+	}
+	
+	/**
+	 * 加密或者解密用的都是同一个函数
+	 * @param sourceFile
+	 * @param encryptedFile
+	 */
+	public static boolean encryptFile(File sourceFile, File encryptedFile) {
+		BufferedInputStream bis = null;
+		BufferedOutputStream bos = null;
+		try {
+			bis = new BufferedInputStream(new FileInputStream(sourceFile));
+			bos = new BufferedOutputStream(new FileOutputStream(encryptedFile));
+			int len;
+			byte[] buffer = new byte[1024 * 8];
+			// attention len是bis从文件中实际读到的字节数组的长度, 最后一次的时候是-1
+			// 倒数第二次的时候字节数组的长度是不足1024 * 8的
+			while ((len = bis.read(buffer)) != -1) {
+//                System.out.println("len = " + len);
+//                System.out.println("buffer.length = " + buffer.length);
+				for (int i = 0; i < len; i++) {
+					buffer[i] ^= 123;
+				}
+				bos.write(buffer, 0, len);
+			}
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			CloseUtils.closeIO(bis, bos);
+		}
+		return false;
 	}
 
 
