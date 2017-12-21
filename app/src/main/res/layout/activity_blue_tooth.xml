@@ -61,63 +61,91 @@
                 android:background="@color/blue_31598a" />
 
 
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/ll_connected_device"
-                style="@style/ll_set_item"
-                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height"
                 android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/dp_10"
-                    android:background="@drawable/network_type_bg"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:background="@drawable/network_config_bg"
                     android:gravity="center"
-                    android:padding="@dimen/dp_5"
+                    android:padding="10dp"
                     android:text="@string/device_matched"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/sp_18" />
+                    android:textSize="@dimen/normal_textsize_sp27" />
 
 
-                <rk.device.launcher.widget.MyListView
-                    android:id="@+id/list_view_connected"
+                <View
+                    android:id="@+id/line"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:scrollbars="none" />
+                    android:layout_height="@dimen/divider_height"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/blue_31598a" />
 
-            </LinearLayout>
+            </RelativeLayout>
 
-            <LinearLayout
+            <rk.device.launcher.widget.MyListView
+                android:id="@+id/list_view_connected"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none" />
+
+            <RelativeLayout
                 android:id="@+id/ll_searched_device"
-                style="@style/ll_set_item"
-                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height"
                 android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/dp_10"
-                    android:background="@drawable/network_type_bg"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:background="@drawable/network_config_bg"
                     android:gravity="center"
-                    android:padding="@dimen/dp_5"
+                    android:padding="10dp"
                     android:text="@string/device_search"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/sp_18" />
+                    android:textSize="@dimen/normal_textsize_sp27" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/divider_height"
+                    android:layout_alignParentBottom="true"
                     android:background="@color/blue_31598a" />
 
-                <rk.device.launcher.widget.MyListView
-                    android:id="@+id/list_view_searched"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/blue_seach"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:divider="@color/blue_31598a"
-                    android:dividerHeight="@dimen/divider_height"
-                    android:scrollbars="none" />
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/dp_20"
+                    android:background="@drawable/shape_bluetooth_cancel"
+                    android:paddingBottom="@dimen/dp_5"
+                    android:paddingLeft="@dimen/dp_20"
+                    android:paddingRight="@dimen/dp_20"
+                    android:paddingTop="@dimen/dp_5"
+                    android:text="@string/blue_seach"
+                    android:textColor="@color/white"
+                    android:textSize="27sp"
+                    android:visibility="visible" />
 
-            </LinearLayout>
+
+            </RelativeLayout>
+
+            <rk.device.launcher.widget.MyListView
+                android:id="@+id/list_view_searched"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@color/blue_31598a"
+                android:dividerHeight="@dimen/divider_height"
+                android:scrollbars="none" />
 
         </LinearLayout>
     </ScrollView>

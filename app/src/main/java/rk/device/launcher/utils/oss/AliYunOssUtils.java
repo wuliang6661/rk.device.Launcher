@@ -28,13 +28,13 @@ import rk.device.launcher.Config;
  */
 
 public class AliYunOssUtils {
-    private static String         endpoint   = "http://oss-cn-hangzhou.aliyuncs.com";
-    private static String         testBucket = "rkfaceclouds";
-    private static String         testObject = "rkface/";
-    private static Context        mContext;
+    private static String endpoint = "http://oss-cn-hangzhou.aliyuncs.com";
+    private static String testBucket = "rkfaceclouds";
+    private static String testObject = "rkface/";
+    private static Context mContext;
     private OSS mOss;
     private static AliYunOssUtils mAliYunOss = null;
-    private String                filePath   = "";
+    private String filePath = "";
 
     public AliYunOssUtils(Context context) {
         mContext = context;
@@ -75,13 +75,14 @@ public class AliYunOssUtils {
 
     /**
      * 直接上传二进制数据，使用阻塞的同步接口
+     *
      * @param uploadData
      * @param mListener
      */
     public void putObjectFromByteArray(byte[] uploadData, OssUploadListener mListener) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
         Date curDate = new Date(System.currentTimeMillis());//获取当前时间
-        String str = formatter.format(curDate)+"test";
+        String str = formatter.format(curDate);
         String fileName = str + "/" + System.currentTimeMillis() + getRandomString(6) + ".jpg";
         filePath = "http://" + testBucket + ".oss-cn-hangzhou.aliyuncs.com/" + fileName;
         // 构造上传请求
@@ -112,6 +113,7 @@ public class AliYunOssUtils {
                         }
                         if (serviceException != null) {
                             // 服务异常
+                            serviceException.printStackTrace();
                         }
                     }
                 });
@@ -119,7 +121,7 @@ public class AliYunOssUtils {
 
     /**
      * 随机数函数
-     * 
+     *
      * @param length
      * @return
      */

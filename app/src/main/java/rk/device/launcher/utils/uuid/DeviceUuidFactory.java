@@ -1,5 +1,5 @@
 package rk.device.launcher.utils.uuid;
- /**
+/**
  * Created by Arron zhou
  */
 
@@ -7,7 +7,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Environment;
 import android.provider.Settings;
-import android.telephony.TelephonyManager;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.UUID;
+
+import rk.device.launcher.utils.DeviceUtils;
 
 
 public class DeviceUuidFactory {
@@ -38,7 +40,8 @@ public class DeviceUuidFactory {
                         if (recoverDeviceUuidFromSD() != null) {
                             uuid = UUID.fromString(recoverDeviceUuidFromSD());
                         } else {
-                            final String androidId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+                            final String androidId = DeviceUtils.getMacAddress();
+                            Log.d("deviceId", androidId);
                             try {
                                 if (!"9774d56d682e549c".equals(androidId)) {
                                     uuid = UUID.nameUUIDFromBytes(androidId.getBytes("utf8"));
@@ -48,7 +51,9 @@ public class DeviceUuidFactory {
                                         e.printStackTrace();
                                     }
                                 } else {
-                                    final String deviceId = ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
+//                                    final String deviceId = ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE)).getM();
+                                    String deviceId = DeviceUtils.getMacAddress();
+                                    Log.d("deviceId", deviceId);
                                     uuid = deviceId != null ? UUID.nameUUIDFromBytes(deviceId.getBytes("utf8")) : UUID.randomUUID();
                                     try {
                                         saveDeviceUuidToSD(EncryptUtils.encryptDES(uuid.toString(), KEY));
@@ -72,6 +77,7 @@ public class DeviceUuidFactory {
             String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath();
             File dir = new File(dirPath);
             File uuidFile = new File(dir, DEVICE_UUID_FILE_NAME);
+            Log.d("wuliang", uuidFile.getAbsolutePath());
             if (!dir.exists() || !uuidFile.exists()) {
                 return null;
             }
@@ -94,6 +100,7 @@ public class DeviceUuidFactory {
     private static void saveDeviceUuidToSD(String uuid) {
         String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath();
         File targetFile = new File(dirPath, DEVICE_UUID_FILE_NAME);
+        Log.d("wuliang", targetFile.getAbsolutePath());
         if (targetFile != null) {
             if (targetFile.exists()) {
 

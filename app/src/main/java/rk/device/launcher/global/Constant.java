@@ -45,7 +45,7 @@ public interface Constant {
     /**
      * 关联设备(存储方式为 设备ID_name)
      * <p>
-     * sp取值value为int
+     * sp取值value为String  值为 ID_NAME
      */
     String DEVICE_TYPE = "DEVICE_TYPE";
     /**

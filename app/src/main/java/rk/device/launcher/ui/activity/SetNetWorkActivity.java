@@ -18,6 +18,8 @@ import android.widget.TextView;
 import butterknife.Bind;
 import rk.device.launcher.R;
 import rk.device.launcher.base.BaseCompatActivity;
+import rk.device.launcher.base.utils.rxbus.RxBus;
+import rk.device.launcher.event.IpHostEvent;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.ui.fragment.AutoObtainNetworkConfigFragment;
 import rk.device.launcher.ui.fragment.ManualConfigFragment;
@@ -121,6 +123,7 @@ public class SetNetWorkActivity extends BaseCompatActivity implements View.OnCli
 						LogUtil.e(TAG, e.getMessage());
 					}
 				}
+				RxBus.getDefault().post(new IpHostEvent(true));
 				//判断是否是第一次
 				boolean isFirst = (boolean) SPUtils.get(Constant.IS_FIRST_SETTING, true);
 				if (isFirst) {

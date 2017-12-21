@@ -1,38 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="100dp"
     android:gravity="center_vertical"
     android:orientation="horizontal">
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/dp_10"
+        android:layout_width="25dp"
+        android:layout_height="30dp"
+        android:layout_margin="20dp"
         android:src="@mipmap/blue_tooth" />
 
     <TextView
         android:id="@+id/tv_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginRight="20dp"
         android:layout_weight="1"
-        android:textColor="@color/white" />
+        android:lines="1"
+        android:text="@string/edit_hint"
+        android:textColor="@color/white"
+        android:textSize="27sp" />
 
     <TextView
         android:id="@+id/tv_cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dp_5"
-        android:layout_marginRight="@dimen/dp_10"
+        android:layout_marginRight="@dimen/dp_20"
         android:background="@drawable/shape_bluetooth_cancel"
         android:paddingBottom="@dimen/dp_5"
         android:paddingLeft="@dimen/dp_10"
         android:paddingRight="@dimen/dp_10"
         android:paddingTop="@dimen/dp_5"
         android:text="@string/cancel_match"
-        android:visibility="gone"
         android:textColor="@color/white"
-        android:textSize="@dimen/sp_16" />
+        android:textSize="27sp"
+        android:visibility="gone" />
 
 
 </LinearLayout>

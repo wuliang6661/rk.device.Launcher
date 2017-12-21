@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import butterknife.Bind;
 import rk.device.launcher.R;
@@ -156,6 +155,7 @@ public class SetDoorGuardActivity extends BaseCompatActivity implements View.OnC
                     @Override
                     public void onError(Throwable e) {
                         mTvConnectedDevice.setText("蓝牙锁");
+                        deviceName = "1_蓝牙锁";
                     }
 
                     @Override

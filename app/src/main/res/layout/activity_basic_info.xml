@@ -30,7 +30,7 @@
                 android:layout_weight="1"
                 android:background="@null"
                 android:gravity="right"
-                android:maxLength="20"
+                android:maxLength="10"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_27"
                 tools:text="航空母舰" />
@@ -55,8 +55,8 @@
 
             <CheckBox
                 android:id="@+id/checkbox_voice"
-                android:checked="true"
-                style="@style/style_check_box" />
+                style="@style/style_check_box"
+                android:checked="true" />
 
         </LinearLayout>
 
@@ -106,10 +106,12 @@
                 android:id="@+id/tv_blue_tooth_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:layout_weight="1"
                 android:gravity="right"
                 android:textColor="@color/white"
-                android:textSize="@dimen/sp_18" />
+                android:textSize="27sp" />
 
             <ImageView style="@style/more_tag" />
 

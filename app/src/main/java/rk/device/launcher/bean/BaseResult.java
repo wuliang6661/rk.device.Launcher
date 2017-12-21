@@ -5,17 +5,17 @@ package rk.device.launcher.bean;
  */
 
 public class BaseResult<T> {
-    private int resuslt;
+    private int result;
     private int code;
     private String message;
     private T data;
 
-    public int getResuslt() {
-        return resuslt;
+    public int getResult() {
+        return result;
     }
 
-    public void setResuslt(int resuslt) {
-        this.resuslt = resuslt;
+    public void setResult(int result) {
+        this.result = result;
     }
 
     public int getCode() {

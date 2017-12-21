@@ -124,6 +124,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
+
         </FrameLayout>
 
 
@@ -131,6 +132,40 @@
             android:id="@+id/carema_bg"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
+
+        <LinearLayout
+            android:id="@+id/suress_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:background="@drawable/suress"
+                android:scaleType="fitXY" />
+
+
+            <TextView
+                android:id="@+id/suress_text"
+                android:layout_width="357dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="41dp"
+                android:gravity="center"
+                android:maxLines="2"
+                android:textColor="#06fffc"
+                android:textSize="40dp" />
+
+        </LinearLayout>
+
+
+        <ImageView
+            android:id="@+id/bitmap"
+            android:layout_width="200dp"
+            android:layout_height="200dp" />
 
     </RelativeLayout>
 
@@ -154,7 +189,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:layout_marginTop="84dp"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:gravity="center"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:singleLine="true"
             android:text="@string/device_name"
             android:textColor="@color/white"
             android:textSize="60dp"

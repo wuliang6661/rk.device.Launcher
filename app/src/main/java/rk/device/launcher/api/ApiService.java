@@ -4,6 +4,7 @@ package rk.device.launcher.api;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.RequestBody;
 import retrofit2.Retrofit;
 import rk.device.launcher.Config;
 import rk.device.launcher.bean.DeviceInfoBean;

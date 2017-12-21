@@ -6,19 +6,48 @@ package rk.device.launcher.bean;
 
 public class VerifyBean {
 
+
     /**
-     * ismatch : false
-     * session_id :
-     * errormsg : ERROR_PERSON_NOT_EXISTED
-     * errorcode : -1303
-     * confidence : 0
+     * msg : 欢迎回家
+     * image : http://rkfaceclouds.oss-cn-hangzhou.aliyuncs.com/20171220/1513767301523.jpg
+     * isrepeat : true
+     * ismatch : true
+     * confidence : 100
+     * name : 程永飞
+     * reqImage : http://rkfaceclouds.oss-cn-hangzhou.aliyuncs.com/20171220/1513767301523.jpg
      */
 
+    private String msg;
+    private String image;
+    private boolean isrepeat;
     private boolean ismatch;
-    private String session_id;
-    private String errormsg;
-    private int errorcode;
     private int confidence;
+    private String name;
+    private String reqImage;
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public boolean isIsrepeat() {
+        return isrepeat;
+    }
+
+    public void setIsrepeat(boolean isrepeat) {
+        this.isrepeat = isrepeat;
+    }
 
     public boolean isIsmatch() {
         return ismatch;
@@ -26,30 +55,6 @@ public class VerifyBean {
 
     public void setIsmatch(boolean ismatch) {
         this.ismatch = ismatch;
-    }
-
-    public String getSession_id() {
-        return session_id;
-    }
-
-    public void setSession_id(String session_id) {
-        this.session_id = session_id;
-    }
-
-    public String getErrormsg() {
-        return errormsg;
-    }
-
-    public void setErrormsg(String errormsg) {
-        this.errormsg = errormsg;
-    }
-
-    public int getErrorcode() {
-        return errorcode;
-    }
-
-    public void setErrorcode(int errorcode) {
-        this.errorcode = errorcode;
     }
 
     public int getConfidence() {
@@ -60,4 +65,19 @@ public class VerifyBean {
         this.confidence = confidence;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getReqImage() {
+        return reqImage;
+    }
+
+    public void setReqImage(String reqImage) {
+        this.reqImage = reqImage;
+    }
 }

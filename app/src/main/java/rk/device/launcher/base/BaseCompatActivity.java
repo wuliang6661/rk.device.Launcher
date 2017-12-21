@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +26,7 @@ import rk.device.launcher.service.RKLauncherPushIntentService;
 import rk.device.launcher.service.RKLauncherPushService;
 import rk.device.launcher.service.SleepTaskServer;
 import rk.device.launcher.ui.activity.SetNetWorkActivity;
+import rk.device.launcher.ui.activity.SleepActivity;
 import rk.device.launcher.ui.fragment.BaseDialogFragment;
 import rk.device.launcher.ui.fragment.WaitDialog;
 import rk.device.launcher.utils.AppManager;
@@ -141,12 +141,17 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
             wakeLock.release();
             wakeLock = null;
         }
-
     }
 
 
+    /**
+     * 有人点击重新开始休眠
+     */
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (this instanceof SleepActivity) {
+            return super.dispatchTouchEvent(ev);
+        }
         SleepTaskServer.getSleepHandler(this).sendEmptyMessage(0x11);
         return super.dispatchTouchEvent(ev);
     }
@@ -199,6 +204,9 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
      * 显示提示弹窗
      */
     protected BaseDialogFragment showMessageDialog(String message) {
+        if (hintDialog != null && hintDialog.isVisible()) {
+            return null;
+        }
         hintDialog = BaseDialogFragment.newInstance();
         hintDialog.setMessage(message);
         hintDialog.setCancleable(true);
@@ -211,6 +219,9 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
      * 显示需要自定义的提示弹窗
      */
     protected BaseDialogFragment showMessageDialog(String message, String right, View.OnClickListener listener) {
+        if (hintDialog != null && hintDialog.isVisible()) {
+            return null;
+        }
         hintDialog = BaseDialogFragment.newInstance();
         hintDialog.setMessage(message);
         hintDialog.setCancleable(true);
@@ -259,8 +270,7 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
             @Override
             public void call(NetDismissBean netDismissBean) {
                 if (netDismissBean.isConnect()) {
-                    if (hintDialog != null && hintDialog.getDialog() != null
-                            && hintDialog.getDialog().isShowing()) {
+                    if (hintDialog != null && hintDialog.isVisible()) {
                         hintDialog.dismiss();
                     }
                 } else {
@@ -281,16 +291,24 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
      * 显示断网提示
      */
     private BaseDialogFragment showNetConnect() {
-        hintDialog = BaseDialogFragment.newInstance();
-        hintDialog.setCancleable(false);
-        hintDialog.setMessage("网络已断开，请重新连接");
-        hintDialog.setLeftButton("取消", view -> hintDialog.dismiss());
-        hintDialog.setRightButton("去设置", view -> {
-            BaseCompatActivity.this.gotoActivity(SetNetWorkActivity.class, false);
-            hintDialog.dismiss();
-        });
-        hintDialog.show(getSupportFragmentManager(), "");
-        return hintDialog;
+        synchronized (hintDialog) {
+            if (hintDialog != null && hintDialog.isVisible()) {
+                return null;
+            }
+            Log.d("wuliang","net dialog show!!");
+            hintDialog = BaseDialogFragment.newInstance();
+            hintDialog.setCancleable(false);
+            hintDialog.setMessage("网络已断开，请重新连接");
+            hintDialog.setLeftButton("取消", view -> {
+                hintDialog.dismiss();
+            });
+            hintDialog.setRightButton("去设置", view -> {
+                BaseCompatActivity.this.gotoActivity(SetNetWorkActivity.class, false);
+                hintDialog.dismiss();
+            });
+            hintDialog.show(getSupportFragmentManager(), "");
+            return hintDialog;
+        }
     }
 
 

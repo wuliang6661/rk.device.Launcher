@@ -75,11 +75,12 @@ public class SleepTaskServer extends Handler {
      */
     void startSleepTask() {
         if (DenyTime == -1) {
+            removeCallbacks(sleepWindowTask);
             return;
         }
         removeCallbacks(sleepWindowTask);
         postDelayed(sleepWindowTask, DenyTime);
-        Log.d("wuliang","sleep reStart!!");
+        Log.d("wuliang", "sleep reStart!!");
     }
 
     /**
@@ -87,7 +88,7 @@ public class SleepTaskServer extends Handler {
      */
     void stopSleepTask() {
         removeCallbacks(sleepWindowTask);
-        Log.d("wuliang","sleep stop!!");
+        Log.d("wuliang", "sleep stop!!");
     }
 
 

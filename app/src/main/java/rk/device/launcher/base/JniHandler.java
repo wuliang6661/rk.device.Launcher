@@ -10,7 +10,6 @@ import cvc.CvcHelper;
 import cvc.CvcRect;
 import cvc.EventUtil;
 import peripherals.LedHelper;
-import peripherals.MdHelper;
 import peripherals.NfcHelper;
 
 /**
@@ -38,6 +37,9 @@ public class JniHandler extends Handler {
     private int LedStatus = 1;
     private int MdStatus = 1;
     private int NfcStatus = 1;
+
+    private static final int faceThreshold = 10;    //默认设置活体检测真人概率为50则返回人脸
+
 
     @Override
     public void handleMessage(Message msg) {
@@ -77,15 +79,19 @@ public class JniHandler extends Handler {
         if (LedStatus != 0) {
             LedStatus = LedHelper.PER_ledInit();
         }
-        if (MdStatus != 0) {
-            MdStatus = MdHelper.PER_mdInit();
-        }
+//        if (MdStatus != 0) {
+//            MdStatus = MdHelper.PER_mdInit();
+//        }
         if (NfcStatus != 0) {
             NfcStatus = NfcHelper.PER_nfcInit();
         }
-        Log.i("wuliang", "cvcStatus == " + cvcStatus + "LedStatus == " + LedStatus + "MdStatus == "+ MdStatus + "NfcStatus == " + NfcStatus) ;
+        Log.i("wuliang", "cvcStatus == " + cvcStatus + "LedStatus == " + LedStatus + "MdStatus == " + MdStatus + "NfcStatus == " + NfcStatus);
         if (cvcStatus == 0 && LedStatus == 0 && NfcStatus == 0 && MdStatus == 0) {
             Log.i("wuliang", "all device init surecc!!!!");
+        }
+        int faceSuress = CvcHelper.CVC_setLivingFaceThreshold(faceThreshold);
+        if (faceSuress == 0) {
+            Log.i("wuliang", "faceThreshold suress  " + faceThreshold);
         }
         if (initListener != null) {
             initListener.initCallBack(cvcStatus, LedStatus, MdStatus, NfcStatus);
@@ -123,9 +129,11 @@ public class JniHandler extends Handler {
         int resultCode = CvcHelper.CVC_determineLivingFace(possibilityCode, faces, length);
         if (0 == resultCode) {
             Log.i("cvc=====possibilitycode", possibilityCode[0] + "");
-            if (possibilityCode[0] >= 50) {   //50%以上的概率是真人
-                if (onBioAssay != null) {
-                    onBioAssay.setOnBioAssay(possibilityCode, faces, length);
+            if (length[0] > 0) {
+                if (possibilityCode[0] >= faceThreshold) {   //50%以上的概率是真人
+                    if (onBioAssay != null) {
+                        onBioAssay.setOnBioAssay(possibilityCode, faces, length);
+                    }
                 }
             }
         }

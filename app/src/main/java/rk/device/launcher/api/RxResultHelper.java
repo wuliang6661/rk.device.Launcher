@@ -21,7 +21,7 @@ public class RxResultHelper {
                     @Override
                     public Observable<T> call(BaseResult<T> mDYResponse) {
                         Log.d(TAG, "call() called with: mDYResponse = [" + mDYResponse + "]");
-                        if (mDYResponse.getResuslt() == 200) {
+                        if (mDYResponse.getResult() == 200) {
                             return createData(mDYResponse.getData());
                         } else {
                             Log.e("wuliang", "请求报错啦！");

@@ -1,11 +1,13 @@
 package rk.device.launcher.ui.activity;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.inuker.bluetooth.library.BluetoothClient;
 import com.inuker.bluetooth.library.search.SearchRequest;
@@ -38,11 +40,13 @@ public class BlueToothActivity extends BaseCompatActivity
     @Bind(R.id.checkbox_open)
     CheckBox openCheckBox;
     @Bind(R.id.ll_connected_device)
-    LinearLayout connectedDeviceLL;
+    RelativeLayout connectedDeviceLL;
     @Bind(R.id.ll_searched_device)
-    LinearLayout searchedDeviceLL;
+    RelativeLayout searchedDeviceLL;
     @Bind(R.id.list_view_searched)
     MyListView searchedListView;
+    @Bind(R.id.blue_seach)
+    TextView blueSeach;
 
     private BluetoothClient mClient = MoreManager.getBluetoothClient();
 
@@ -74,6 +78,12 @@ public class BlueToothActivity extends BaseCompatActivity
                 BlueToothModel item = dataList.get(position);
                 RxBus.getDefault().post(new BlueToothEvent(item.getAddress(), item.getName()));
                 finish();
+            }
+        });
+        blueSeach.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                searchBlueTooth();
             }
         });
     }
@@ -142,7 +152,7 @@ public class BlueToothActivity extends BaseCompatActivity
 
             @Override
             public void onSearchCanceled() {
-
+                Log.d("wuliang", "blue cancle!");
             }
         });
     }
@@ -162,6 +172,4 @@ public class BlueToothActivity extends BaseCompatActivity
                 break;
         }
     }
-
-
 }

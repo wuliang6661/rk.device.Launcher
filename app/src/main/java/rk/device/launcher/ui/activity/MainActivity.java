@@ -2,9 +2,9 @@ package rk.device.launcher.ui.activity;
 
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
@@ -16,8 +16,8 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.sdk.android.oss.ClientException;
@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import cvc.CvcHelper;
 import cvc.CvcRect;
 import cvc.EventUtil;
@@ -56,9 +55,11 @@ import rk.device.launcher.service.SocketService;
 import rk.device.launcher.ui.fragment.InitErrorDialogFragmen;
 import rk.device.launcher.ui.fragment.InputWifiPasswordDialogFragment;
 import rk.device.launcher.utils.AppUtils;
+import rk.device.launcher.utils.BitmapUtil;
 import rk.device.launcher.utils.DateUtil;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.SPUtils;
+import rk.device.launcher.utils.SoundPlayUtils;
 import rk.device.launcher.utils.StringUtils;
 import rk.device.launcher.utils.TimeUtils;
 import rk.device.launcher.utils.gps.GpsUtils;
@@ -115,7 +116,15 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     GifView caremaBg;
     @Bind(R.id.device_name_bg)
     GifView deviceNameBg;
+    @Bind(R.id.suress_text)
+    TextView suressText;
+    @Bind(R.id.suress_layout)
+    LinearLayout suressLayout;
 
+    /**
+     * 是否开启人脸框
+     */
+    private static final boolean isFaceCode = false;
     /**
      * 记录每五帧调取一次人脸识别
      */
@@ -175,6 +184,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     @Override
     public void initView() {
         initDialog = InitErrorDialogFragmen.newInstance();
+        SoundPlayUtils.init(this);
         registerBatteryReceiver();
         registerNetReceiver();
         registerNetOffReceiver();
@@ -201,7 +211,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
             mTvDeclare.setVisibility(View.INVISIBLE);
         }
         //检测App更新
-        UpdateManager.getUpdateManager().checkAppUpdate(this, getSupportFragmentManager(), false);
+//        UpdateManager.getUpdateManager().checkAppUpdate(this, getSupportFragmentManager(), false);
         initHandlerThread();
     }
 
@@ -422,8 +432,6 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 
     /**
      * 天气Api
-     *
-     * @param area
      */
     private void httpGetWeather(String area) {
         Map<String, Object> params = new HashMap<>();
@@ -515,6 +523,9 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
      * 初始设置流程加载
      */
     private void settingLoad() {
+        if (dialogFragment != null && dialogFragment.isVisible()) {
+            return;
+        }
         boolean isHideInput;
         final String password = SPUtils.getString(Constant.KEY_PASSWORD);
         String message;
@@ -649,15 +660,18 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     @Override
     public void setOnBioFace(CvcRect cvcRect1, int[] rectWidth, int[] rectHeight) {
         Log.d(TAG, "setOnBioFace() called with: cvcRect1 = [" + cvcRect1 + "], rectWidth = [" + rectWidth + "], rectHeight = [" + rectHeight + "]");
+        Message msg = new Message();
+        msg.what = EventUtil.CVC_LIVINGFACE;
+        mHandler.sendMessage(msg);
+        if (!isFaceCode) {
+            return;
+        }
         runOnUiThread(() -> {
             //T.showShort("检测到人脸");
             if (faceView != null) {
                 faceView.setFaces(cvcRect1, cvcRect1.w, cvcRect1.h, rectWidth[0], rectHeight[0]);
             }
         });
-        Message msg = new Message();
-        msg.what = EventUtil.CVC_LIVINGFACE;
-        mHandler.sendMessage(msg);
     }
 
     /**
@@ -679,7 +693,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
      */
     @Override
     public void initCallBack(int cvcStatus, int LedStatus, int MdStatus, int NfcStatus) {
-        if (cvcStatus == 0 && LedStatus == 0 && MdStatus == 0 && NfcStatus == 0) {
+        if (cvcStatus == 0 && LedStatus == 0 && NfcStatus == 0) {
             initError.setVisibility(View.GONE);
             if (initDialog != null && initDialog.isVisible()) {
                 initDialog.dismiss();
@@ -703,20 +717,42 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
                     }
                     break;
                 case 0x22:
-                    T.showShort("真人概率大于50%，开始认证人脸！");
+//                    T.showShort("真人概率大于50%，开始认证人脸！");
+                    break;
+                case 0x33:
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            byte[] result = (byte[]) msg.obj;
+                            ImageView bitmap = (ImageView) findViewById(R.id.bitmap);
+                            Bitmap bitmap1 = BitmapUtil.Bytes2Bimap(result);
+                            bitmap.setImageBitmap(bitmap1);
+                        }
+                    });
                     break;
             }
         }
     };
 
+    int faceSuress = 0;   //活体检测通过次数，每5次请求一下人脸识别
 
     /**
      * 人脸数据上传到阿里云进行识别
      */
     private void httpUploadPic(byte[] result) {
+        Message message = new Message();
+        message.what = 0x33;
+        message.obj = result;
+        UIHandler.handleMessage(message);
+        faceSuress++;
+        if (faceSuress % 5 != 0) {
+            return;
+        }
+        faceSuress = 0;
         AliYunOssUtils.getInstance(this).putObjectFromByteArray(result, new OssUploadListener() {
             @Override
             public void onSuccess(String filePath) {
+                Log.d("wuliang", "aliyun face suress!!");
                 //自定义人脸识别post数据
                 if (uuidFactory == null) {
                     uuidFactory = new DeviceUuidFactory(MainActivity.this);
@@ -738,7 +774,12 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
      * 判断返回数据是否成功，成功则开门
      */
     private void httpFaceVerifyPath(String filePath, String uuid) {
-        String myType = String.valueOf(SPUtils.getInt(Constant.DEVICE_TYPE));
+        String spDevice = SPUtils.getString(Constant.DEVICE_TYPE);
+        String myType = "1";   //默认是1
+        if (!StringUtils.isEmpty(spDevice)) {
+            String[] device = spDevice.split("_");
+            myType = device[0];
+        }
         Map<String, Object> params = new HashMap<>();
         params.put("image_url", filePath);
         params.put("uuid", uuid);
@@ -752,32 +793,36 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 
             @Override
             public void onError(Throwable e) {
-
+                e.printStackTrace();
             }
 
             @Override
             public void onNext(VerifyBean model) {
-                //加上isVerified是为了防止出现多次验证成功
-                if (model.isIsmatch()) {
-//                                        SoundPlayUtils.play(3);//播放声音
-                    Log.i("wuliang", "face scusess!!!!");
-                    Toast.makeText(MainActivity.this, "身份验证成功，请开门！", Toast.LENGTH_SHORT).show();
-                    T.showShort("身份验证成功，请开门！");
-                } else {
-                    //                    SoundPlayUtils.play(1);//播放声音
-                    //                        SoundPlayUtils.play(2);//播放声音
-                    Log.i("wuliang", "face no  no   no!!!!");
-                    Toast.makeText(MainActivity.this, "身份验证错误！", Toast.LENGTH_SHORT).show();
+                if (!model.isIsrepeat()) {
+                    if (model.isIsmatch()) {
+//                        SoundPlayUtils.play(3);//播放声音
+                        Log.i("wuliang", "face scusess!!!!");
+                        showSuress(model.getName());
+                    } else {
+                        Log.i("wuliang", "face no  no   no!!!!");
+                    }
                 }
             }
         }));
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
+    /**
+     * 身份验证成功，文字显示
+     */
+    private void showSuress(String text) {
+        suressText.setText("欢迎" + text + "回家");
+        suressLayout.setVisibility(View.VISIBLE);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                suressLayout.setVisibility(View.GONE);
+            }
+        }, 2000);
     }
 
 
