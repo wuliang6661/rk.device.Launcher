@@ -168,6 +168,11 @@
             android:name=".ui.activity.SleepActivity"
             android:screenOrientation="portrait" />
 
+        <!-- 摄像头预览界面 -->
+        <activity
+            android:name=".ui.activity.CaremaActivity"
+            android:screenOrientation="portrait" />
+
         <!-- 个推 -->
         <service
             android:name=".service.RKLauncherPushService"
@@ -191,12 +196,12 @@
         <activity android:name=".ui.activity.TimeZoneListActivity"></activity>
         <receiver
             android:name=".service.UsbBroadCastReceiver"
-            android:exported="false"
-            >
+            android:exported="false">
             <intent-filter android:priority="1000">
-                <action android:name="android.intent.action.MEDIA_MOUNTED"/>
+                <action android:name="android.intent.action.MEDIA_MOUNTED" />
                 <action android:name="android.intent.action.MEDIA_EJECT" />
-                <data android:scheme="file"/>
+
+                <data android:scheme="file" />
             </intent-filter>
         </receiver>
     </application>

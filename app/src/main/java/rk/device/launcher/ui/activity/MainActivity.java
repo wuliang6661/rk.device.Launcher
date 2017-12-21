@@ -2,7 +2,6 @@ package rk.device.launcher.ui.activity;
 
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
@@ -55,7 +54,6 @@ import rk.device.launcher.service.SocketService;
 import rk.device.launcher.ui.fragment.InitErrorDialogFragmen;
 import rk.device.launcher.ui.fragment.InputWifiPasswordDialogFragment;
 import rk.device.launcher.utils.AppUtils;
-import rk.device.launcher.utils.BitmapUtil;
 import rk.device.launcher.utils.DateUtil;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.SPUtils;
@@ -137,7 +135,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
      * 定时器，每一秒运行一次
      */
     private static final int REFRESH_DELAY = 1000;
-    private StaticHandler mStaticHandler = new StaticHandler();
+    private Handler mStaticHandler = new Handler();
     /**
      * 前置摄像头对象
      */
@@ -720,15 +718,15 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 //                    T.showShort("真人概率大于50%，开始认证人脸！");
                     break;
                 case 0x33:
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            byte[] result = (byte[]) msg.obj;
-                            ImageView bitmap = (ImageView) findViewById(R.id.bitmap);
-                            Bitmap bitmap1 = BitmapUtil.Bytes2Bimap(result);
-                            bitmap.setImageBitmap(bitmap1);
-                        }
-                    });
+//                    runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            byte[] result = (byte[]) msg.obj;
+//                            ImageView bitmap = (ImageView) findViewById(R.id.bitmap);
+//                            Bitmap bitmap1 = BitmapUtil.Bytes2Bimap(result);
+//                            bitmap.setImageBitmap(bitmap1);
+//                        }
+//                    });
                     break;
             }
         }
@@ -826,13 +824,6 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     }
 
 
-    private static class StaticHandler extends Handler {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-        }
-    }
-
     // todo 内存泄漏这里需要处理
     private final Runnable mRefreshTimeRunnable = new Runnable() {
         @Override
@@ -843,7 +834,6 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
             mStaticHandler.postDelayed(this, REFRESH_DELAY);
         }
     };
-
 
     @Override
     protected void onStop() {

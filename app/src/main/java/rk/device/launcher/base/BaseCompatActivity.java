@@ -274,15 +274,15 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
                         hintDialog.dismiss();
                     }
                 } else {
-                    if (hintDialog != null && hintDialog.getDialog() != null
-                            && hintDialog.getDialog().isShowing()) {
+                    if (hintDialog != null && hintDialog.isVisible()) {
+
                     } else {
                         BaseCompatActivity.this.showNetConnect();
                     }
                 }
             }
         }, throwable -> {        //处理异常
-
+            throwable.printStackTrace();
         });
     }
 
@@ -291,20 +291,22 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
      * 显示断网提示
      */
     private BaseDialogFragment showNetConnect() {
-        synchronized (hintDialog) {
-            if (hintDialog != null && hintDialog.isVisible()) {
+        synchronized (this) {
+            if (hintDialog != null) {
                 return null;
             }
-            Log.d("wuliang","net dialog show!!");
+            Log.d("wuliang", "net dialog show!!");
             hintDialog = BaseDialogFragment.newInstance();
             hintDialog.setCancleable(false);
             hintDialog.setMessage("网络已断开，请重新连接");
             hintDialog.setLeftButton("取消", view -> {
                 hintDialog.dismiss();
+                hintDialog = null;
             });
             hintDialog.setRightButton("去设置", view -> {
                 BaseCompatActivity.this.gotoActivity(SetNetWorkActivity.class, false);
                 hintDialog.dismiss();
+                hintDialog = null;
             });
             hintDialog.show(getSupportFragmentManager(), "");
             return hintDialog;
