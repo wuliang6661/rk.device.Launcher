@@ -104,12 +104,12 @@ public class SetNetWorkActivity extends BaseCompatActivity implements View.OnCli
 						boolean result = Settings.Global.putInt(getContentResolver(), Settings.Global.NETWORK_PREFERENCE, ConnectivityManager.TYPE_ETHERNET);
 						if (!result) {
 							showMessageDialog("切换网络失败");
-							return;
+//							return;
 						}
 					} catch (Exception e) {
 						showMessageDialog("切换网络失败");
 						LogUtil.e(TAG, e.getMessage());
-						return;
+//						return;
 					}
 					
 				} else if (mCurrentFragment instanceof AutoObtainNetworkConfigFragment) {
@@ -121,12 +121,12 @@ public class SetNetWorkActivity extends BaseCompatActivity implements View.OnCli
 						boolean result = Settings.Global.putInt(getContentResolver(), Settings.Global.NETWORK_PREFERENCE, ConnectivityManager.TYPE_ETHERNET);
 						if (!result) {
 							showMessageDialog("切换网络失败");
-							return;
+//							return;
 						}
 					} catch (Exception e) {
 						showMessageDialog("切换网络失败");
 						LogUtil.e(TAG, e.getMessage());
-						return;
+//						return;
 					}
 					
 				} else {
@@ -134,12 +134,12 @@ public class SetNetWorkActivity extends BaseCompatActivity implements View.OnCli
 						boolean result = Settings.Global.putInt(getContentResolver(), Settings.Global.NETWORK_PREFERENCE, ConnectivityManager.TYPE_WIFI);
 						if (!result) {
 							showMessageDialog("切换网络失败");
-							return;
+//							return;
 						}
 					} catch (Exception e) {
 						showMessageDialog("切换网络失败");
 						LogUtil.e(TAG, e.getMessage());
-						return;
+//						return;
 					}
 				}
 				RxBus.getDefault().post(new IpHostEvent(true));
