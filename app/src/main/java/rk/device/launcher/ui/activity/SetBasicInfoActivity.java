@@ -62,7 +62,7 @@ public class SetBasicInfoActivity extends BaseCompatActivity implements View.OnC
     @Override
     protected void initView() {
         registerRxBus();
-        setOnClick(R.id.ll_set_time, R.id.ll_set_blue_tooth, R.id.btn_finish_setting, R.id.eyes_verify);
+        setOnClick(R.id.ll_set_time, R.id.ll_set_blue_tooth, R.id.btn_finish_setting, R.id.eyes_verify, R.id.carema_ceshi);
         goBack();
     }
 
@@ -85,7 +85,7 @@ public class SetBasicInfoActivity extends BaseCompatActivity implements View.OnC
                     @Override
                     public void onNext(TimeEvent timeEvent) {
                         try {
-	                        int realMonth = timeEvent.month + 1;
+                            int realMonth = timeEvent.month + 1;
                             Calendar c = Calendar.getInstance();
                             c.set(Calendar.YEAR, timeEvent.year);
                             c.set(Calendar.MONTH, timeEvent.month);
@@ -95,7 +95,7 @@ public class SetBasicInfoActivity extends BaseCompatActivity implements View.OnC
                             c.set(Calendar.SECOND, 0);
                             c.set(Calendar.MILLISECOND, 0);
                             when_time = c.getTimeInMillis();
-	                        timeTv.setText(
+                            timeTv.setText(
                                     timeEvent.year + "-" + realMonth + "-" + timeEvent.day
                                             + " " + timeEvent.hour + ":" + timeEvent.minute);
                         } catch (Exception e) {
@@ -173,6 +173,9 @@ public class SetBasicInfoActivity extends BaseCompatActivity implements View.OnC
                     return;
                 }
                 connectDevice(deviceName);
+                break;
+            case R.id.carema_ceshi:
+                gotoActivity(CaremaActivity.class, false);
                 break;
         }
     }

@@ -8,8 +8,8 @@ android {
         applicationId "rk.device.launcher"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 2
-        versionName "2.0"
+        versionCode 1
+        versionName "1.0.1"
         multiDexEnabled true
         manifestPlaceholders = [
                 GETUI_APP_ID : "5DpFkkQOg3AmrJQLsCqiz9",
@@ -63,6 +63,12 @@ android {
     }
 }
 
+allprojects {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+}
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -89,4 +95,5 @@ dependencies {
     // 个推
     compile 'com.getui:sdk:2.11.1.0'
     compile 'cat.ereza:customactivityoncrash:1.5.0'
+    compile 'com.github.donkingliang:CustomBanner:1.1.0'
 }

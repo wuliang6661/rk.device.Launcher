@@ -44,12 +44,22 @@ public class BaseDialogFragment extends DialogFragment {
     private View.OnClickListener rightListener;
 
 
+    private static BaseDialogFragment dialogFragment;
+
     /**
      * 获取dialog对象
      */
     public static BaseDialogFragment newInstance() {
-        BaseDialogFragment dialogFragment = new BaseDialogFragment();
+        if (dialogFragment != null) {
+            return dialogFragment;
+        }
+        dialogFragment = new BaseDialogFragment();
         return dialogFragment;
+    }
+
+
+    private BaseDialogFragment() {
+        super();
     }
 
     @Nullable
