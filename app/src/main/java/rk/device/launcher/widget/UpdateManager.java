@@ -39,6 +39,7 @@ import rk.device.launcher.R;
 import rk.device.launcher.api.ApiService;
 import rk.device.launcher.api.T;
 import rk.device.launcher.bean.VersionBean;
+import rk.device.launcher.ui.fragment.CheckUpdateDialogFragment;
 import rk.device.launcher.utils.AppUtils;
 import rk.device.launcher.utils.PackageUtils;
 import rk.device.launcher.widget.dialog.BaseDialogFragment;
@@ -73,7 +74,7 @@ public class UpdateManager {
     // 下载对话框
     private Dialog downloadDialog;
     // '已经是最新' 或者 '无法获取最新版本' 的对话框
-    private Dialog latestOrFailDialog;
+    private CheckUpdateDialogFragment latestOrFailDialog;
     // 进度条
     private ProgressBar mProgress;
     // 显示下载数值
@@ -208,18 +209,31 @@ public class UpdateManager {
             latestOrFailDialog.dismiss();
             latestOrFailDialog = null;
         }
-        Builder builder = new Builder(mContext);
-        builder.setTitle("系统提示");
+//        Builder builder = new Builder(mContext);
+//        builder.setTitle("系统提示");
+//        if (dialogType == DIALOG_TYPE_LATEST) {
+//            builder.setMessage("您当前已经是最新版本");
+//        } else if (dialogType == DIALOG_TYPE_FAIL) {
+//            builder.setMessage("无法获取版本更新信息");
+//        }
+//        builder.setPositiveButton(mContext.getString(R.string.confirm), null);
+//        latestOrFailDialog = builder.create();
+//        Window window = latestOrFailDialog.getWindow();
+//        latestOrFailDialog.show();
+//        window.setGravity(Gravity.CENTER);
+	    latestOrFailDialog = new CheckUpdateDialogFragment();
+	    latestOrFailDialog.setTitle("系统提示");
         if (dialogType == DIALOG_TYPE_LATEST) {
-            builder.setMessage("您当前已经是最新版本");
+	        latestOrFailDialog.setMessage("您当前已经是最新版本");
         } else if (dialogType == DIALOG_TYPE_FAIL) {
-            builder.setMessage("无法获取版本更新信息");
+	        latestOrFailDialog.setMessage("无法获取版本更新信息");
         }
-        builder.setPositiveButton(mContext.getString(R.string.confirm), null);
-        latestOrFailDialog = builder.create();
-        Window window = latestOrFailDialog.getWindow();
-        latestOrFailDialog.show();
-        window.setGravity(Gravity.CENTER);
+	    latestOrFailDialog.setPositiveButton("确定");
+	    FragmentManager fragmentManager = mWeakReference.get();
+	    if (fragmentManager != null) {
+		    latestOrFailDialog.show(fragmentManager, null);
+	    }
+	    
     }
 
     /**
