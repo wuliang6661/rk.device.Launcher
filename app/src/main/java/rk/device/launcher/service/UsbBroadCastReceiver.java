@@ -89,7 +89,7 @@ public class UsbBroadCastReceiver extends BroadcastReceiver {
 						}
 					}
 				}
-				// 复制完毕
+				// 复制完毕 修改call分支
 				LogUtil.d(TAG, "复制完毕");
 				Toast.makeText(context, "复制完毕", Toast.LENGTH_LONG).show();
 				if (mOnDecryptedListener != null && !picFileList.isEmpty()) {
