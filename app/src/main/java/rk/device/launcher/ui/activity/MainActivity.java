@@ -781,7 +781,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
             myType = device[0];
         }
         Map<String, Object> params = new HashMap<>();
-        params.put("image_url", "http://rkfaceclouds.oss-cn-hangzhou.aliyuncs.com/20171220/1513767301523.jpg");
+        params.put("image_url", filePath);
         params.put("uuid", uuid);
         params.put("type", myType);
         addSubscription(ApiService.verifyFace(params).subscribe(new Subscriber<VerifyBean>() {
