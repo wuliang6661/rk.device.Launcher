@@ -1,5 +1,9 @@
 package rk.device.launcher.global;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import rk.device.launcher.BuildConfig;
 
 /**
@@ -14,7 +18,10 @@ public interface Constant {
     String LOG_TAG = "launcher";
     boolean isDebug = BuildConfig.DEBUG;
 
-
+    /**
+     * 休眠图片保存
+     */
+    List<File> imageFils = new ArrayList<>();
     /**
      * 缓存在本地的初始引导设置顺序
      * <p>

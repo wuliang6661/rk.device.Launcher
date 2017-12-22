@@ -55,6 +55,9 @@ public class JniHandler extends Handler {
             case EventUtil.START_CORRECT:     //开始校准
                 startCallPicture();
                 break;
+            case EventUtil.STOP_CORRECT:
+                stopCallPicture();
+                break;
             case EventUtil.START_CALIBRATION:    //摄像头校准完成
                 eyesFinish();
                 break;
@@ -175,6 +178,15 @@ public class JniHandler extends Handler {
             }
         }
     }
+
+
+    /**
+     * 停止收集照片
+     */
+    private void stopCallPicture() {
+        callBack = null;
+    }
+
 
     /**
      * 摄像头校准完成

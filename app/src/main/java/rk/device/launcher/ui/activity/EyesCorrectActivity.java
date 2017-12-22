@@ -21,7 +21,6 @@ import rk.device.launcher.base.JniHandler;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.ui.fragment.EyesCorrectDialog;
 import rk.device.launcher.ui.fragment.EyesCorrectDialogOneFra;
-import rk.device.launcher.ui.fragment.WaitDialog;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.widget.BackCameraSurfaceView;
 
@@ -52,9 +51,6 @@ public class EyesCorrectActivity extends BaseCompatActivity implements View.OnCl
     private JniHandler mHandler = null;
     EyesCorrectDialogOneFra dialogOneFra;
 
-    private static boolean isBack = false;    //页面是否结束
-    private static boolean isCallBack = true;   //收集照片是否完成
-
 
     @Override
     protected int getLayout() {
@@ -64,7 +60,6 @@ public class EyesCorrectActivity extends BaseCompatActivity implements View.OnCl
     @Override
     protected void initView() {
         setTitle("摄像头校准");
-        isBack = false;
         openCarmea();
         HandlerThread thread = new HandlerThread("new_thread");
         thread.start();
@@ -91,11 +86,7 @@ public class EyesCorrectActivity extends BaseCompatActivity implements View.OnCl
             public void callMessage(int line, int lie, int countNum) {
                 EyesCorrectActivity.this.CountNum = countNum;
                 allNum.setText(String.valueOf("/" + countNum));
-                if (isCallBack) {
-                    setCorrectWAndH(line, lie);
-                } else {
-                    T.showShort("上一次收集照片尚未完成，请稍后重新开始...");
-                }
+                setCorrectWAndH(line, lie);
             }
 
             @Override
@@ -167,17 +158,15 @@ public class EyesCorrectActivity extends BaseCompatActivity implements View.OnCl
             public void picluerNextSuress() {
                 haveCount++;
                 UIhandler.sendEmptyMessage(0x11);
-                isCallBack = true;
                 if (haveCount >= CountNum) {
                     UIhandler.sendEmptyMessage(0x22);
                     Message msg = new Message();
                     msg.what = EventUtil.START_CALIBRATION;
                     mHandler.sendMessageDelayed(msg, 10);
                 } else {
-                    if (isBack || dialogOneFra.isVisible()) {
+                    if (dialogOneFra.isVisible()) {
                         return;
                     }
-                    isCallBack = false;
                     Message msg = new Message();
                     msg.what = EventUtil.START_CORRECT;
                     mHandler.sendMessageDelayed(msg, 10);
@@ -186,11 +175,9 @@ public class EyesCorrectActivity extends BaseCompatActivity implements View.OnCl
 
             @Override
             public void picluerNextError() {
-                isCallBack = true;
-                if (isBack || dialogOneFra.isVisible()) {
+                if (dialogOneFra.isVisible()) {
                     return;
                 }
-                isCallBack = false;
                 Message msg = new Message();
                 msg.what = EventUtil.START_CORRECT;
                 mHandler.sendMessageDelayed(msg, 10);
@@ -199,7 +186,6 @@ public class EyesCorrectActivity extends BaseCompatActivity implements View.OnCl
             @Override
             public void pictureFinnish() {
                 T.showShort("校准完成！");
-                isBack = true;
                 finish();
             }
         });
@@ -212,7 +198,9 @@ public class EyesCorrectActivity extends BaseCompatActivity implements View.OnCl
             case R.id.iv_back:
                 showMessageDialog("校准照片未满" + CountNum + "张，\n\n确认退出后此次校准失败", "确定", view1 -> {
                     dissmissMessageDialog();
-                    isBack = true;
+                    Message msg = new Message();
+                    msg.what = EventUtil.STOP_CORRECT;
+                    mHandler.sendMessageDelayed(msg, 10);
                     finish();
                 });
                 break;
