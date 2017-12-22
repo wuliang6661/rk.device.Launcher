@@ -70,7 +70,6 @@ public class UsbBroadCastReceiver extends BroadcastReceiver {
                 List<File> picFileList = new ArrayList<>();
                 for (File encryptedFile : encryptedFileList) {
                     // 获取全路径中的文件名(不要.ao的后缀)
-//				String fileName = FileUtils.getFileName(encryptedFile);
                     String fileName = getFileName(encryptedFile);
                     String destDirPath = "/data/rk_backup/rk_ad";
                     File destDir = new File(destDirPath);
