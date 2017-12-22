@@ -38,7 +38,7 @@ public class JniHandler extends Handler {
     private int MdStatus = 1;
     private int NfcStatus = 1;
 
-    private static final int faceThreshold = 50;    //默认设置活体检测真人概率为50则返回人脸
+    private static final int faceThreshold = 10;    //默认设置活体检测真人概率为50则返回人脸
 
 
     @Override

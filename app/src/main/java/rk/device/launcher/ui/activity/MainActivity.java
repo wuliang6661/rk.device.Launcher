@@ -2,6 +2,7 @@ package rk.device.launcher.ui.activity;
 
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
@@ -54,6 +55,7 @@ import rk.device.launcher.service.SocketService;
 import rk.device.launcher.ui.fragment.InitErrorDialogFragmen;
 import rk.device.launcher.ui.fragment.InputWifiPasswordDialogFragment;
 import rk.device.launcher.utils.AppUtils;
+import rk.device.launcher.utils.BitmapUtil;
 import rk.device.launcher.utils.DateUtil;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.SPUtils;
@@ -718,15 +720,15 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
 //                    T.showShort("真人概率大于50%，开始认证人脸！");
                     break;
                 case 0x33:
-//                    runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            byte[] result = (byte[]) msg.obj;
-//                            ImageView bitmap = (ImageView) findViewById(R.id.bitmap);
-//                            Bitmap bitmap1 = BitmapUtil.Bytes2Bimap(result);
-//                            bitmap.setImageBitmap(bitmap1);
-//                        }
-//                    });
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            byte[] result = (byte[]) msg.obj;
+                            ImageView bitmap = (ImageView) findViewById(R.id.bitmap);
+                            Bitmap bitmap1 = BitmapUtil.Bytes2Bimap(result);
+                            bitmap.setImageBitmap(bitmap1);
+                        }
+                    });
                     break;
             }
         }
@@ -743,7 +745,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         message.obj = result;
         UIHandler.handleMessage(message);
         faceSuress++;
-        if (faceSuress % 5 != 0) {
+        if (faceSuress % 2 != 0) {
             return;
         }
         faceSuress = 0;
@@ -779,7 +781,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
             myType = device[0];
         }
         Map<String, Object> params = new HashMap<>();
-        params.put("image_url", filePath);
+        params.put("image_url", "http://rkfaceclouds.oss-cn-hangzhou.aliyuncs.com/20171220/1513767301523.jpg");
         params.put("uuid", uuid);
         params.put("type", myType);
         addSubscription(ApiService.verifyFace(params).subscribe(new Subscriber<VerifyBean>() {
