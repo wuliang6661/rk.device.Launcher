@@ -58,7 +58,7 @@ public class UsbBroadCastReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		LogUtil.d(TAG, "sdcard in");
+		LogUtil.d(TAG, "收到sd卡插入的广播");
 		// 当sd卡插上的时候
 		if (Intent.ACTION_MEDIA_MOUNTED.equals(intent.getAction())) {
 			// 外置tf卡的路径
@@ -90,7 +90,7 @@ public class UsbBroadCastReceiver extends BroadcastReceiver {
 					}
 				}
 				// 复制完毕
-				LogUtil.d(TAG, "copy over");
+				LogUtil.d(TAG, "复制完毕");
 				Toast.makeText(context, "复制完毕", Toast.LENGTH_LONG).show();
 				if (mOnDecryptedListener != null && !picFileList.isEmpty()) {
 					mOnDecryptedListener.onDecryptedFinished(picFileList);
