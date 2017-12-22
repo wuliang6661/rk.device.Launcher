@@ -97,7 +97,5 @@ public class UsbBroadCastReceiver extends BroadcastReceiver {
 				}
 			}
 		}
-
-		
 	}
 }
