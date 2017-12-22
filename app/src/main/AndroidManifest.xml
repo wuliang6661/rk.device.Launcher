@@ -196,9 +196,8 @@
         <activity android:name=".ui.activity.TimeZoneListActivity"></activity>
         <receiver
             android:name=".service.UsbBroadCastReceiver"
-            android:exported="false">
+            >
             <intent-filter android:priority="1000">
-                <action android:name="android.intent.action.MEDIA_EJECT" />
                 <action android:name="android.intent.action.MEDIA_MOUNTED"/>
                 <action android:name="android.intent.action.MEDIA_CHECKING"/>
                 <action android:name="android.intent.action.MEDIA_SCANNER_STARTED"/>
