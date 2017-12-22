@@ -81,6 +81,7 @@ public class UsbBroadCastReceiver extends BroadcastReceiver {
 					String fileName = getFileName(encryptedFile);
 					String destDirPath = "/data/rk_backup/rk_ad";
 					File destDir = new File(destDirPath);
+					// fixme 子线程
 					if (FileUtils.createOrExistsDir(destDir)) {
 						File decryptedFile = new File(destDir,  fileName + ".jpeg");
 						// 成功复制
