@@ -219,10 +219,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
      * 初始化所有JNI外设
      */
     private void initHandlerThread() {
-        HandlerThread thread = new HandlerThread("new_thread");
-        thread.start();
-        Looper looper = thread.getLooper();
-        mHandler = new JniHandler(looper);
+        mHandler = JniHandler.getInstance();
         mHandler.setOnInitListener(this);
         Message msg = new Message();
         msg.what = EventUtil.INIT_JNI;

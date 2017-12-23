@@ -19,10 +19,6 @@ public interface Constant {
     boolean isDebug = BuildConfig.DEBUG;
 
     /**
-     * 休眠图片保存
-     */
-    List<File> imageFils = new ArrayList<>();
-    /**
      * 缓存在本地的初始引导设置顺序
      * <p>
      * sp取值value为int

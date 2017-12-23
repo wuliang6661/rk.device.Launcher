@@ -2,6 +2,7 @@ package rk.device.launcher.base;
 
 import android.hardware.Camera;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
@@ -38,7 +39,29 @@ public class JniHandler extends Handler {
     private int MdStatus = 1;
     private int NfcStatus = 1;
 
+    private boolean isStopCorrect = false;
+
     private static final int faceThreshold = 10;    //默认设置活体检测真人概率为50则返回人脸
+
+    private static JniHandler jniHandler;
+
+
+    /**
+     * 全局单例获取此类对象
+     */
+    public static JniHandler getInstance() {
+        if (jniHandler == null) {
+            synchronized (JniHandler.class) {
+                if (jniHandler == null) {
+                    HandlerThread thread = new HandlerThread("new_thread");
+                    thread.start();
+                    Looper looper = thread.getLooper();
+                    jniHandler = new JniHandler(looper);
+                }
+            }
+        }
+        return jniHandler;
+    }
 
 
     @Override
@@ -55,7 +78,7 @@ public class JniHandler extends Handler {
             case EventUtil.START_CORRECT:     //开始校准
                 startCallPicture();
                 break;
-            case EventUtil.STOP_CORRECT:
+            case EventUtil.STOP_CORRECT:    //中断校准
                 stopCallPicture();
                 break;
             case EventUtil.START_CALIBRATION:    //摄像头校准完成
@@ -147,13 +170,21 @@ public class JniHandler extends Handler {
      * 摄像头校准初始化
      */
     private void initEyes(int width, int height) {
+        Log.i("wuliang", "isStopCorrecrt = " + isStopCorrect);
+        if (isStopCorrect) {
+            if (callBack != null) {
+                callBack.initError("请稍等片刻再初始化，程序正在加载中...");
+            }
+            return;
+        }
         int stutas = CvcHelper.CVC_calibratorInit(width, height);
         if (stutas != 0) {
             Log.i("CVC_calibratorInit", "初始化校准失败" + stutas);
             if (callBack != null) {
-                callBack.initError();
+                callBack.initError("棋盘格设置错误！请重新设置！");
             }
         } else {
+            Log.i("CVC_calibratorInit", "初始化校准成功" + stutas);
             if (callBack != null) {
                 callBack.initSuress();
             }
@@ -164,7 +195,13 @@ public class JniHandler extends Handler {
      * 开始收集照片
      */
     private void startCallPicture() {
+        Log.d("wuliang", "isStopCorrecrt = " + isStopCorrect);
         //设置完宽高，采集棋盘格
+        if (isStopCorrect) {
+            Log.i("wuliang", "cvc eyes stop!!");
+            isStopCorrect = false;
+            return;
+        }
         int ret = CvcHelper.CVC_calibratorCollectImage();
         if (ret == 0) {
             Log.i("CVC_calibratorCollect", "识别成功，下一张开始。。。");
@@ -179,14 +216,12 @@ public class JniHandler extends Handler {
         }
     }
 
-
     /**
      * 停止收集照片
      */
     private void stopCallPicture() {
-        callBack = null;
+        isStopCorrect = true;
     }
-
 
     /**
      * 摄像头校准完成
@@ -202,7 +237,8 @@ public class JniHandler extends Handler {
     }
 
 
-    public JniHandler(Looper looper) {
+    private JniHandler(Looper looper) {
+
         super(looper);
     }
 
@@ -264,7 +300,7 @@ public class JniHandler extends Handler {
         /**
          * 初始话棋盘格失败
          */
-        void initError();
+        void initError(String message);
 
         /**
          * 校准成功，开始下一张

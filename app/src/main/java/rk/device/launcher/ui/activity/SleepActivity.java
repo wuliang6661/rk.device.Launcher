@@ -3,6 +3,8 @@ package rk.device.launcher.ui.activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import android.widget.RelativeLayout;
 import com.donkingliang.banner.CustomBanner;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.Bind;
@@ -68,8 +71,11 @@ public class SleepActivity extends BaseCompatActivity {
      * 判断是否已接收到图片，显示最新的图片
      */
     private void isHaveLunBo() {
-        if (!Constant.imageFils.isEmpty()) {
-            setLunBoSleep(Constant.imageFils);
+        String destDirPath = "/data/rk_backup/rk_ad";
+        File destDir = new File(destDirPath);
+        if (destDir.exists()) {
+            File fa[] = destDir.listFiles();
+            setLunBoSleep(Arrays.asList(fa));
         }
     }
 
@@ -78,8 +84,6 @@ public class SleepActivity extends BaseCompatActivity {
      */
     private void registerBus() {
         addSubscription(RxBus.getDefault().toObserverable(SleepImageEvent.class).subscribe(sleepImageEvent -> {
-            Constant.imageFils.clear();
-            Constant.imageFils.addAll(sleepImageEvent.getFileList());
             setLunBoSleep(sleepImageEvent.getFileList());
         }, throwable -> throwable.printStackTrace()));
     }
@@ -89,6 +93,11 @@ public class SleepActivity extends BaseCompatActivity {
      * 设置图片轮播
      */
     private void setLunBoSleep(List<File> imageFils) {
+        if (imageFils.size() == 1) {
+            Drawable drawable = new BitmapDrawable(BitmapFactory.decodeFile(imageFils.get(0).getAbsolutePath()));
+            advertisingImg.setBackground(drawable);
+            return;
+        }
         mBanner.setPages(new CustomBanner.ViewCreator<File>() {
             @Override
             public View createView(Context context, int position) {

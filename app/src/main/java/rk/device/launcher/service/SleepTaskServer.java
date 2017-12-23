@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.ui.activity.SleepActivity;
@@ -24,7 +23,7 @@ public class SleepTaskServer extends Handler {
     /**
      * 延时时间
      */
-    long DenyTime = 30 * 1000L;    //默认30秒的待机时间
+    private long DenyTime = 30 * 1000L;    //默认30秒的待机时间
 
 
     private Context context;
@@ -73,29 +72,27 @@ public class SleepTaskServer extends Handler {
     /**
      * 开启休眠任务
      */
-    void startSleepTask() {
+    private void startSleepTask() {
         if (DenyTime == -1) {
             removeCallbacks(sleepWindowTask);
             return;
         }
         removeCallbacks(sleepWindowTask);
         postDelayed(sleepWindowTask, DenyTime);
-        Log.d("wuliang", "sleep reStart!!");
     }
 
     /**
      * 结束休眠任务
      */
-    void stopSleepTask() {
+    private void stopSleepTask() {
         removeCallbacks(sleepWindowTask);
-        Log.d("wuliang", "sleep stop!!");
     }
 
 
     /**
      * 休眠任务
      */
-    Runnable sleepWindowTask = new Runnable() {
+    private Runnable sleepWindowTask = new Runnable() {
 
         @Override
         public void run() {

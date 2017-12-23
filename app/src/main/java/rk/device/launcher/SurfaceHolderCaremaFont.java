@@ -49,6 +49,8 @@ public class SurfaceHolderCaremaFont implements SurfaceHolder.Callback {
                     parameters = camera1.getParameters();
                     parameters.setPictureFormat(PixelFormat.JPEG);
                     parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);// 1连续对焦
+//                    parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_FIXED);
+                    Log.d("wuliang", "carema (FACING_BACK) FocusMode is " + parameters.getFocusMode());
                     parameters.setPictureSize(640, 480);
                     parameters.setPreviewSize(width, height);
                     camera1.setParameters(parameters);

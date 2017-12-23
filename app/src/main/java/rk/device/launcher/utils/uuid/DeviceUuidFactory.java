@@ -41,7 +41,6 @@ public class DeviceUuidFactory {
                             uuid = UUID.fromString(recoverDeviceUuidFromSD());
                         } else {
                             final String androidId = DeviceUtils.getMacAddress();
-                            Log.d("deviceId", androidId);
                             try {
                                 if (!"9774d56d682e549c".equals(androidId)) {
                                     uuid = UUID.nameUUIDFromBytes(androidId.getBytes("utf8"));
@@ -53,7 +52,6 @@ public class DeviceUuidFactory {
                                 } else {
 //                                    final String deviceId = ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE)).getM();
                                     String deviceId = DeviceUtils.getMacAddress();
-                                    Log.d("deviceId", deviceId);
                                     uuid = deviceId != null ? UUID.nameUUIDFromBytes(deviceId.getBytes("utf8")) : UUID.randomUUID();
                                     try {
                                         saveDeviceUuidToSD(EncryptUtils.encryptDES(uuid.toString(), KEY));

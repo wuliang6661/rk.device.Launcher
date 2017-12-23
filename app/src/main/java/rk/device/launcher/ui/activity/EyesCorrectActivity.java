@@ -1,9 +1,8 @@
 package rk.device.launcher.ui.activity;
 
 import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -61,10 +60,8 @@ public class EyesCorrectActivity extends BaseCompatActivity implements View.OnCl
     protected void initView() {
         setTitle("摄像头校准");
         openCarmea();
-        HandlerThread thread = new HandlerThread("new_thread");
-        thread.start();
-        Looper looper = thread.getLooper();
-        mHandler = new JniHandler(looper);
+
+        mHandler = JniHandler.getInstance();
     }
 
     @Override
@@ -107,7 +104,7 @@ public class EyesCorrectActivity extends BaseCompatActivity implements View.OnCl
         dialog.setonCallBack(() -> {
             Message msg = new Message();
             msg.what = EventUtil.START_CORRECT;
-            mHandler.sendMessageDelayed(msg, 10);
+            mHandler.sendMessage(msg);
         });
         dialog.show(getSupportFragmentManager(), "");
     }
@@ -132,7 +129,7 @@ public class EyesCorrectActivity extends BaseCompatActivity implements View.OnCl
         msg.what = EventUtil.START_CVC;
         msg.arg1 = lie;
         msg.arg2 = line;
-        mHandler.sendMessageDelayed(msg, 10);
+        mHandler.sendMessage(msg);
     }
 
 
@@ -143,44 +140,47 @@ public class EyesCorrectActivity extends BaseCompatActivity implements View.OnCl
         mHandler.setEyesCallback(new JniHandler.OnEyesCallBack() {
             @Override
             public void initSuress() {
-                hintWaitProgress();
-                dialogOneFra.dismiss();
-                showDialogTwo();
+                runOnUiThread(() -> {
+                    hintWaitProgress();
+                    dialogOneFra.dismiss();
+                    showDialogTwo();
+                });
             }
 
             @Override
-            public void initError() {
-                hintWaitProgress();
-                T.showShort("棋盘格设置错误！请重新设置！");
+            public void initError(String message) {
+                runOnUiThread(() -> {
+                    hintWaitProgress();
+                    T.showShort(message);
+                });
             }
 
             @Override
             public void picluerNextSuress() {
+                Log.i("wuliang", "next!");
                 haveCount++;
                 UIhandler.sendEmptyMessage(0x11);
                 if (haveCount >= CountNum) {
                     UIhandler.sendEmptyMessage(0x22);
                     Message msg = new Message();
                     msg.what = EventUtil.START_CALIBRATION;
-                    mHandler.sendMessageDelayed(msg, 10);
+                    mHandler.sendMessage(msg);
                 } else {
                     if (dialogOneFra.isVisible()) {
                         return;
                     }
                     Message msg = new Message();
                     msg.what = EventUtil.START_CORRECT;
-                    mHandler.sendMessageDelayed(msg, 10);
+                    mHandler.sendMessage(msg);
                 }
             }
 
             @Override
             public void picluerNextError() {
-                if (dialogOneFra.isVisible()) {
-                    return;
-                }
+                Log.i("wuliang", "error!");
                 Message msg = new Message();
                 msg.what = EventUtil.START_CORRECT;
-                mHandler.sendMessageDelayed(msg, 10);
+                mHandler.sendMessage(msg);
             }
 
             @Override
@@ -200,7 +200,7 @@ public class EyesCorrectActivity extends BaseCompatActivity implements View.OnCl
                     dissmissMessageDialog();
                     Message msg = new Message();
                     msg.what = EventUtil.STOP_CORRECT;
-                    mHandler.sendMessageDelayed(msg, 10);
+                    mHandler.sendMessage(msg);
                     finish();
                 });
                 break;
