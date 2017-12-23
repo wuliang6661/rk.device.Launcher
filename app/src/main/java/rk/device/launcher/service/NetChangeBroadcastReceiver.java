@@ -44,15 +44,11 @@ public class NetChangeBroadcastReceiver extends BroadcastReceiver {
         }
     }
 	
-	private final String TAG = "NetChangeBroadcastReceiver";
-
-
     /**
      * 判断网络状态并返回结果
      */
     private void setNetworkStutas(NetworkInfo info) {
         if (info == null) {
-            LogUtil.d(TAG, "没有可用的网络连接");
             if (callBack != null) {
                 callBack.onCallMessage(false, 0, 0);
             }

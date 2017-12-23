@@ -231,7 +231,11 @@ public class JniHandler extends Handler {
         if (stas == 0) {
             Log.i("CVC_calibratorStereo", "校准结束");
             if (callBack != null) {
-                callBack.pictureFinnish();
+                callBack.pictureFinnish(true);
+            }
+        } else {
+            if (callBack != null) {
+                callBack.pictureFinnish(false);
             }
         }
     }
@@ -316,6 +320,7 @@ public class JniHandler extends Handler {
         /**
          * 校准完成
          */
-        void pictureFinnish();
+        void pictureFinnish(boolean isSuress);
+
     }
 }

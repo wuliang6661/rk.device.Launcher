@@ -6,8 +6,6 @@ import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.Looper;
 import android.os.Message;
 import android.text.InputType;
 import android.text.TextUtils;

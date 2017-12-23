@@ -184,9 +184,13 @@ public class EyesCorrectActivity extends BaseCompatActivity implements View.OnCl
             }
 
             @Override
-            public void pictureFinnish() {
-                T.showShort("校准完成！");
-                finish();
+            public void pictureFinnish(boolean isSuress) {
+                if (isSuress) {
+                    T.showShort("校准完成！");
+                    finish();
+                } else {
+                    runOnUiThread(() -> showMessageDialog("校准失败！请重新校准！"));
+                }
             }
         });
     }
