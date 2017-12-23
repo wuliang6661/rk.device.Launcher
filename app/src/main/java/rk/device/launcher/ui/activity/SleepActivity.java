@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -20,15 +19,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import rk.device.launcher.R;
 import rk.device.launcher.base.BaseCompatActivity;
 import rk.device.launcher.base.utils.rxbus.RxBus;
 import rk.device.launcher.event.SleepImageEvent;
-import rk.device.launcher.global.Constant;
 import rk.device.launcher.service.SleepTaskServer;
-import rk.device.launcher.utils.BitmapUtil;
-import rx.functions.Action1;
 
 /**
  * Created by wuliang on 2017/12/19.
