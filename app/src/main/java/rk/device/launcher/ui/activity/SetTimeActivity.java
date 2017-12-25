@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.text.BidiFormatter;
 import android.text.TextDirectionHeuristics;
 import android.text.TextUtils;
-import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -22,18 +21,15 @@ import java.util.TimeZone;
 
 import butterknife.Bind;
 import rk.device.launcher.R;
-import rk.device.launcher.base.BaseCompatActivity;
-import rk.device.launcher.base.utils.rxbus.RxBus;
-import rk.device.launcher.event.TimeEvent;
+import rk.device.launcher.base.BaseActivity;
+import rk.device.launcher.utils.rxjava.RxBus;
+import rk.device.launcher.bean.event.TimeEvent;
 import rk.device.launcher.ui.fragment.SetDateDialogFragment;
 import rk.device.launcher.ui.fragment.SetTimeDialogFragment;
 import rk.device.launcher.utils.DateUtil;
 import rk.device.launcher.utils.DrawableUtil;
 
-import static com.android.internal.R.id.date;
-import static com.igexin.sdk.GTServiceManager.context;
-
-public class SetTimeActivity extends BaseCompatActivity {
+public class SetTimeActivity extends BaseActivity {
 	
 	@Bind(R.id.iv_back)
 	ImageView mIvBack;

@@ -12,9 +12,9 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import rk.device.launcher.R;
 import rk.device.launcher.adapter.SetDoorSelectListRvAdapter;
-import rk.device.launcher.base.BaseCompatActivity;
-import rk.device.launcher.bean.DeviceInfoBean;
-import rk.device.launcher.bean.SetDoorRvBean;
+import rk.device.launcher.base.BaseActivity;
+import rk.device.launcher.bean.DeviceInfoBO;
+import rk.device.launcher.bean.SetDoorRvBO;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.StringUtils;
@@ -22,7 +22,7 @@ import rk.device.launcher.widget.itemdecoration.WifiListRvItemDecoration;
 import rk.device.launcher.widget.lgrecycleadapter.LGRecycleViewAdapter;
 import rk.device.launcher.widget.lgrecycleadapter.LGViewHolder;
 
-public class SelectItemListActivity extends BaseCompatActivity {
+public class SelectItemListActivity extends BaseActivity {
 
     @Bind(R.id.iv_back)
     ImageView mIvBack;
@@ -32,7 +32,7 @@ public class SelectItemListActivity extends BaseCompatActivity {
     RecyclerView mRv;
     public static final String KEY_CHECKED_INDEX = "key_checked_index";
 
-    DeviceInfoBean infoBean;      //设备类型
+    DeviceInfoBO infoBean;      //设备类型
 
     int type = 1;
 
@@ -49,7 +49,7 @@ public class SelectItemListActivity extends BaseCompatActivity {
         type = bundle.getInt("code", -1000);
         switch (type) {
             case 1:                       //关联设备
-                infoBean = (DeviceInfoBean) bundle.getSerializable("data");
+                infoBean = (DeviceInfoBO) bundle.getSerializable("data");
                 selectPosition = bundle.getInt("position", Integer.MAX_VALUE);
                 setTitle(bundle.getString("title", "设置"));
                 break;
@@ -75,14 +75,14 @@ public class SelectItemListActivity extends BaseCompatActivity {
      * 设置关联设备数据
      */
     private void setDeviceTypeAdapter() {
-        LGRecycleViewAdapter<DeviceInfoBean.TlistBean> adapter = new LGRecycleViewAdapter<DeviceInfoBean.TlistBean>(infoBean.getTlist()) {
+        LGRecycleViewAdapter<DeviceInfoBO.TlistBean> adapter = new LGRecycleViewAdapter<DeviceInfoBO.TlistBean>(infoBean.getTlist()) {
             @Override
             public int getLayoutId(int viewType) {
                 return R.layout.item_select_item_list;
             }
 
             @Override
-            public void convert(LGViewHolder holder, DeviceInfoBean.TlistBean tlistBean, int position) {
+            public void convert(LGViewHolder holder, DeviceInfoBO.TlistBean tlistBean, int position) {
                 if (selectPosition == position) {
                     holder.getView(R.id.iv_check).setVisibility(View.VISIBLE);
                 } else {
@@ -122,7 +122,7 @@ public class SelectItemListActivity extends BaseCompatActivity {
     }
 
 
-    private ArrayList<SetDoorRvBean> mDataList;
+    private ArrayList<SetDoorRvBO> mDataList;
     private SetDoorSelectListRvAdapter mSetDoorSelectListRvAdapter;
 
 

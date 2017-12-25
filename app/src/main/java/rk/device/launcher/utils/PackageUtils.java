@@ -3,7 +3,7 @@ package rk.device.launcher.utils;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
-import rk.device.launcher.global.LauncherApplication;
+import rk.device.launcher.base.LauncherApplication;
 
 /**
  * Created by hanbin on 2017/7/15.

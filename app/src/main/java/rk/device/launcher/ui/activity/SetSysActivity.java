@@ -23,10 +23,10 @@ import butterknife.OnClick;
 import peripherals.LedHelper;
 import rk.device.launcher.R;
 import rk.device.launcher.api.ApiService;
-import rk.device.launcher.base.BaseCompatActivity;
-import rk.device.launcher.base.utils.rxbus.RxBus;
-import rk.device.launcher.bean.SetDoorRvBean;
-import rk.device.launcher.event.IpHostEvent;
+import rk.device.launcher.base.BaseActivity;
+import rk.device.launcher.bean.SetDoorRvBO;
+import rk.device.launcher.utils.rxjava.RxBus;
+import rk.device.launcher.bean.event.IpHostEvent;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.service.SleepTaskServer;
 import rk.device.launcher.utils.AppManager;
@@ -40,7 +40,7 @@ import rk.device.launcher.utils.uuid.DeviceUuidFactory;
 /**
  * 系统设置
  */
-public class SetSysActivity extends BaseCompatActivity {
+public class SetSysActivity extends BaseActivity {
 
     @Bind(R.id.iv_back)
     ImageView mIvBack;
@@ -63,8 +63,8 @@ public class SetSysActivity extends BaseCompatActivity {
     @Bind(R.id.et_port)
     EditText mEtPort;
 
-    private ArrayList<SetDoorRvBean> mSleepTimeDataList;
-//	private ArrayList<SetDoorRvBean> mLightValueDataList;
+    private ArrayList<SetDoorRvBO> mSleepTimeDataList;
+//	private ArrayList<SetDoorRvBO> mLightValueDataList;
 
     private Thread thread;
     private String mip, mport, mclientCode;
@@ -83,12 +83,12 @@ public class SetSysActivity extends BaseCompatActivity {
     @Override
     protected void initData() {
         mSleepTimeDataList = new ArrayList<>();
-        mSleepTimeDataList.add(new SetDoorRvBean("30秒", 30000));
-        mSleepTimeDataList.add(new SetDoorRvBean("1分钟", 60000));
-        mSleepTimeDataList.add(new SetDoorRvBean("2分钟", 120000));
-        mSleepTimeDataList.add(new SetDoorRvBean("5分钟", 300000));
-        mSleepTimeDataList.add(new SetDoorRvBean("10分钟", 600000));
-        mSleepTimeDataList.add(new SetDoorRvBean("不休眠", -1));
+        mSleepTimeDataList.add(new SetDoorRvBO("30秒", 30000));
+        mSleepTimeDataList.add(new SetDoorRvBO("1分钟", 60000));
+        mSleepTimeDataList.add(new SetDoorRvBO("2分钟", 120000));
+        mSleepTimeDataList.add(new SetDoorRvBO("5分钟", 300000));
+        mSleepTimeDataList.add(new SetDoorRvBO("10分钟", 600000));
+        mSleepTimeDataList.add(new SetDoorRvBO("不休眠", -1));
 
         // 读取保存的待机时间
         // 没有设置待机时间的话, 默认是30秒
@@ -224,7 +224,7 @@ public class SetSysActivity extends BaseCompatActivity {
 
 
     private long getSleepTime() {
-        for (SetDoorRvBean setDoorRvBean : mSleepTimeDataList) {
+        for (SetDoorRvBO setDoorRvBean : mSleepTimeDataList) {
             if (setDoorRvBean.isChecked) {
                 return setDoorRvBean.sleepTime;
             }
@@ -233,7 +233,7 @@ public class SetSysActivity extends BaseCompatActivity {
     }
 
     private void setSleepTimeText(long sleepTime) {
-        for (SetDoorRvBean setDoorRvBean : mSleepTimeDataList) {
+        for (SetDoorRvBO setDoorRvBean : mSleepTimeDataList) {
             if (setDoorRvBean.sleepTime == sleepTime) {
                 setDoorRvBean.isChecked = true;
                 mTvSleepTime.setText(setDoorRvBean.text);
@@ -280,10 +280,10 @@ public class SetSysActivity extends BaseCompatActivity {
         switch (requestCode) {
             case 0:
                 if (checkIndex > -1) {
-                    for (SetDoorRvBean setDoorRvBean : mSleepTimeDataList) {
+                    for (SetDoorRvBO setDoorRvBean : mSleepTimeDataList) {
                         setDoorRvBean.isChecked = false;
                     }
-                    SetDoorRvBean checkedBean = mSleepTimeDataList.get(checkIndex);
+                    SetDoorRvBO checkedBean = mSleepTimeDataList.get(checkIndex);
                     checkedBean.isChecked = true;
                     mTvSleepTime.setText(checkedBean.text);
                 }

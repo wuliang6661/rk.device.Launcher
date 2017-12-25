@@ -13,8 +13,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import rk.device.launcher.base.utils.rxbus.RxBus;
-import rk.device.launcher.event.SleepImageEvent;
+import rk.device.launcher.utils.rxjava.RxBus;
+import rk.device.launcher.bean.event.SleepImageEvent;
 import rk.device.launcher.utils.FileUtils;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.carema.utils.FileUtil;

@@ -3,20 +3,18 @@ package rk.device.launcher.api;
 import java.util.List;
 import java.util.Map;
 
-import okhttp3.RequestBody;
 import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
-import retrofit2.http.Part;
 import retrofit2.http.QueryMap;
 import rk.device.launcher.bean.BaseResult;
-import rk.device.launcher.bean.DeviceInfoBean;
-import rk.device.launcher.bean.VerifyBean;
-import rk.device.launcher.bean.VersionBean;
-import rk.device.launcher.bean.WeatherModel;
+import rk.device.launcher.bean.DeviceInfoBO;
+import rk.device.launcher.bean.VerifyBO;
+import rk.device.launcher.bean.VersionBO;
+import rk.device.launcher.bean.WeatherBO;
 import rx.Observable;
 
 /**
@@ -31,22 +29,22 @@ public interface BaseApi {
      */
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     @GET(ApiName.WEATHER)
-    Observable<BaseResult<List<WeatherModel>>> weather(@QueryMap Map<String, Object> params);
+    Observable<BaseResult<List<WeatherBO>>> weather(@QueryMap Map<String, Object> params);
 
     /**
      * 检查app是否有更新
      */
     @FormUrlEncoded
     @POST(ApiName.UPDATE)
-    Observable<BaseResult<VersionBean>> updateApp(@Field("ver") String ver); //版本号
+    Observable<BaseResult<VersionBO>> updateApp(@Field("ver") String ver); //版本号
 
     /**
      * 获取配置接口
      */
     @FormUrlEncoded
     @POST("/public/rest/face/config")
-    Observable<BaseResult<DeviceInfoBean>> deviceConfiguration(@Field("ver") String ver, //版本号
-                                                               @Field("cid") String cid); //客户号Id
+    Observable<BaseResult<DeviceInfoBO>> deviceConfiguration(@Field("ver") String ver, //版本号
+                                                             @Field("cid") String cid); //客户号Id
 
     /**
      * 人脸验证
@@ -56,6 +54,6 @@ public interface BaseApi {
      */
     @FormUrlEncoded
     @POST(ApiName.VERIFY)
-    Observable<BaseResult<VerifyBean>> verify(@FieldMap Map<String, Object> params);
+    Observable<BaseResult<VerifyBO>> verify(@FieldMap Map<String, Object> params);
 
 }

@@ -4,13 +4,12 @@ package rk.device.launcher.api;
 import java.util.List;
 import java.util.Map;
 
-import okhttp3.RequestBody;
 import retrofit2.Retrofit;
-import rk.device.launcher.Config;
-import rk.device.launcher.bean.DeviceInfoBean;
-import rk.device.launcher.bean.VerifyBean;
-import rk.device.launcher.bean.VersionBean;
-import rk.device.launcher.bean.WeatherModel;
+import rk.device.launcher.global.Config;
+import rk.device.launcher.bean.DeviceInfoBO;
+import rk.device.launcher.bean.VerifyBO;
+import rk.device.launcher.bean.VersionBO;
+import rk.device.launcher.bean.WeatherBO;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.StringUtils;
@@ -76,7 +75,7 @@ public class ApiService {
     /**
      * 获取天气接口
      */
-    public static Observable<List<WeatherModel>> weather(Map<String, Object> params) {
+    public static Observable<List<WeatherBO>> weather(Map<String, Object> params) {
         return weatherFactorys().weather(params).compose(RxResultHelper.httpRusult());
     }
 
@@ -90,14 +89,14 @@ public class ApiService {
     /**
      * 检测App是否更新
      */
-    public static Observable<VersionBean> updateApp(String verCode) {
+    public static Observable<VersionBO> updateApp(String verCode) {
         return weatherFactorys().updateApp(verCode).compose(RxResultHelper.httpRusult());
     }
 
     /**
      * 获取配置接口
      */
-    public static Observable<DeviceInfoBean> deviceConfiguration(String verCode, String cid) {
+    public static Observable<DeviceInfoBO> deviceConfiguration(String verCode, String cid) {
         return weatherFactorys().deviceConfiguration(verCode, cid)
                 .compose(RxResultHelper.httpRusult());
     }
@@ -105,7 +104,7 @@ public class ApiService {
     /**
      * 人脸识别
      */
-    public static Observable<VerifyBean> verifyFace(Map<String, Object> params) {
+    public static Observable<VerifyBO> verifyFace(Map<String, Object> params) {
         return weatherFactorys().verify(params).compose(RxResultHelper.httpRusult());
     }
 

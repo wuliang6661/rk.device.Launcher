@@ -17,9 +17,9 @@ import android.widget.TextView;
 
 import butterknife.Bind;
 import rk.device.launcher.R;
-import rk.device.launcher.base.BaseCompatActivity;
-import rk.device.launcher.base.utils.rxbus.RxBus;
-import rk.device.launcher.event.IpHostEvent;
+import rk.device.launcher.base.BaseActivity;
+import rk.device.launcher.utils.rxjava.RxBus;
+import rk.device.launcher.bean.event.IpHostEvent;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.ui.fragment.AutoObtainNetworkConfigFragment;
 import rk.device.launcher.ui.fragment.ManualConfigFragment;
@@ -30,7 +30,7 @@ import rk.device.launcher.utils.KeyBoardHelper;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.SPUtils;
 
-public class SetNetWorkActivity extends BaseCompatActivity implements View.OnClickListener, AndroidBug5497Workaround.KeyBoardChangeListener {
+public class SetNetWorkActivity extends BaseActivity implements View.OnClickListener, AndroidBug5497Workaround.KeyBoardChangeListener {
 	
 	@Bind(R.id.iv_back)
 	ImageView mIvBack;

@@ -7,9 +7,9 @@ import android.widget.TextView;
 
 import butterknife.Bind;
 import rk.device.launcher.R;
-import rk.device.launcher.base.BaseCompatActivity;
+import rk.device.launcher.base.BaseActivity;
 
-public class RecoveryActivity extends BaseCompatActivity {
+public class RecoveryActivity extends BaseActivity {
 
     @Bind(R.id.iv)
     ImageView mIv;

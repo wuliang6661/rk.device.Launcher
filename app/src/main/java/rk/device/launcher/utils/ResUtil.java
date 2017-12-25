@@ -4,7 +4,7 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 
-import rk.device.launcher.global.LauncherApplication;
+import rk.device.launcher.base.LauncherApplication;
 
 
 /**

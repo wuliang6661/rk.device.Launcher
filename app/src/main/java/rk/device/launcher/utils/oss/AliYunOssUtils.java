@@ -21,7 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
 
-import rk.device.launcher.Config;
+import rk.device.launcher.global.Config;
 
 /**
  * Created by tech60 on 2017/7/13.

@@ -10,8 +10,8 @@ import android.widget.TextView;
 import butterknife.Bind;
 import rk.device.launcher.R;
 import rk.device.launcher.api.ApiService;
-import rk.device.launcher.base.BaseCompatActivity;
-import rk.device.launcher.bean.DeviceInfoBean;
+import rk.device.launcher.base.BaseActivity;
+import rk.device.launcher.bean.DeviceInfoBO;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.utils.AppUtils;
 import rk.device.launcher.utils.SPUtils;
@@ -23,7 +23,7 @@ import rx.Subscriber;
  * <p>
  * 门禁设置
  */
-public class SetDoorGuardActivity extends BaseCompatActivity implements View.OnClickListener {
+public class SetDoorGuardActivity extends BaseActivity implements View.OnClickListener {
 
     @Bind(R.id.ll_connected_device)
     LinearLayout mLlConnectedDevice;
@@ -56,7 +56,7 @@ public class SetDoorGuardActivity extends BaseCompatActivity implements View.OnC
     @Bind(R.id.btn_finish_setting)
     Button mBtnFinishSetting;
 
-    DeviceInfoBean device; //关联设备数据
+    DeviceInfoBO device; //关联设备数据
 
     private String deviceName;    //选中的关联设备数据
     private int selectPosition = Integer.MAX_VALUE;
@@ -146,7 +146,7 @@ public class SetDoorGuardActivity extends BaseCompatActivity implements View.OnC
      * 获取关联设备的配置
      */
     public void getData() {
-        addSubscription(ApiService.deviceConfiguration(AppUtils.getAppVersionCode(this) + "", null).subscribe(new Subscriber<DeviceInfoBean>() {
+        addSubscription(ApiService.deviceConfiguration(AppUtils.getAppVersionCode(this) + "", null).subscribe(new Subscriber<DeviceInfoBO>() {
                     @Override
                     public void onCompleted() {
 
@@ -159,7 +159,7 @@ public class SetDoorGuardActivity extends BaseCompatActivity implements View.OnC
                     }
 
                     @Override
-                    public void onNext(DeviceInfoBean s) {
+                    public void onNext(DeviceInfoBO s) {
                         device = s;
                     }
                 })

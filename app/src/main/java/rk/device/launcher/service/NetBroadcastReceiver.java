@@ -7,8 +7,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
-import rk.device.launcher.base.utils.rxbus.RxBus;
-import rk.device.launcher.bean.NetDismissBean;
+import rk.device.launcher.utils.rxjava.RxBus;
+import rk.device.launcher.bean.NetDismissBO;
 
 /**
  * Created by wuliang on 2017/11/24.
@@ -37,21 +37,21 @@ public class NetBroadcastReceiver extends BroadcastReceiver {
                         if (listener != null) {
                             listener.isConnect(true);
                         }
-						RxBus.getDefault().post(new NetDismissBean(true));
+						RxBus.getDefault().post(new NetDismissBO(true));
                         Log.i("TAG", "网络连上");
                     }
                 } else {
                     if (listener != null) {
                         listener.isConnect(false);
                     }
-					RxBus.getDefault().post(new NetDismissBean(false));
+					RxBus.getDefault().post(new NetDismissBO(false));
                     Log.i("TAG", "网络断开");
                 }
             } else {
                 if (listener != null) {
                     listener.isConnect(false);
                 }
-				RxBus.getDefault().post(new NetDismissBean(false));
+				RxBus.getDefault().post(new NetDismissBO(false));
                 Log.i("TAG", "网络断开");
             }
         }

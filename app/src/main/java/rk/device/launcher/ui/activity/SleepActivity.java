@@ -20,9 +20,9 @@ import java.util.List;
 
 import butterknife.Bind;
 import rk.device.launcher.R;
-import rk.device.launcher.base.BaseCompatActivity;
-import rk.device.launcher.base.utils.rxbus.RxBus;
-import rk.device.launcher.event.SleepImageEvent;
+import rk.device.launcher.base.BaseActivity;
+import rk.device.launcher.utils.rxjava.RxBus;
+import rk.device.launcher.bean.event.SleepImageEvent;
 import rk.device.launcher.service.SleepTaskServer;
 
 /**
@@ -31,7 +31,7 @@ import rk.device.launcher.service.SleepTaskServer;
  * 休眠时显示的activity
  */
 
-public class SleepActivity extends BaseCompatActivity {
+public class SleepActivity extends BaseActivity {
 
 
     @Bind(R.id.advertising_img)

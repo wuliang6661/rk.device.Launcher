@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import butterknife.Bind;
 import rk.device.launcher.R;
-import rk.device.launcher.base.BaseCompatActivity;
+import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.utils.AppUtils;
 import rk.device.launcher.utils.QRCodeUtils;
 import rk.device.launcher.utils.ScreenUtil;
@@ -19,7 +19,7 @@ import rk.device.launcher.utils.ScreenUtil;
  * 关于设备页面
  */
 
-public class SystemInfoActivity extends BaseCompatActivity implements View.OnClickListener {
+public class SystemInfoActivity extends BaseActivity implements View.OnClickListener {
 
 
     @Bind(R.id.iv_qrcode)

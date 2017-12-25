@@ -5,8 +5,8 @@ import android.view.SurfaceView;
 
 import butterknife.Bind;
 import rk.device.launcher.R;
-import rk.device.launcher.SurfaceHolderCaremaFont;
-import rk.device.launcher.base.BaseCompatActivity;
+import rk.device.launcher.widget.carema.SurfaceHolderCaremaFont;
+import rk.device.launcher.base.BaseActivity;
 
 /**
  * Created by wuliang on 2017/12/21.
@@ -14,7 +14,7 @@ import rk.device.launcher.base.BaseCompatActivity;
  * 测试摄像头页面
  */
 
-public class CaremaActivity extends BaseCompatActivity {
+public class CaremaActivity extends BaseActivity {
 
 
     @Bind(R.id.camera_surfaceview)

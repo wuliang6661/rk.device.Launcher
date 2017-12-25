@@ -18,13 +18,13 @@ import java.util.Date;
 import butterknife.Bind;
 import rk.device.launcher.R;
 import rk.device.launcher.api.T;
-import rk.device.launcher.base.BaseCompatActivity;
-import rk.device.launcher.base.utils.rxbus.RxBus;
-import rk.device.launcher.event.BlueToothEvent;
-import rk.device.launcher.event.HomeInfoEvent;
-import rk.device.launcher.event.TimeEvent;
+import rk.device.launcher.base.BaseActivity;
+import rk.device.launcher.utils.rxjava.RxBus;
+import rk.device.launcher.bean.event.BlueToothEvent;
+import rk.device.launcher.bean.event.HomeInfoEvent;
+import rk.device.launcher.bean.event.TimeEvent;
 import rk.device.launcher.global.Constant;
-import rk.device.launcher.tools.MoreManager;
+import rk.device.launcher.utils.bluetools.MoreManager;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.StringUtils;
 import rk.device.launcher.utils.TimeUtils;
@@ -36,7 +36,7 @@ import static rk.device.launcher.utils.SPUtils.get;
  * 基础设置 Created by hanbin on 2017/11/24.
  */
 
-public class SetBasicInfoActivity extends BaseCompatActivity implements View.OnClickListener {
+public class SetBasicInfoActivity extends BaseActivity implements View.OnClickListener {
 
     private long when_time = 0;
 

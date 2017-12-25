@@ -13,7 +13,7 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import rk.device.launcher.R;
-import rk.device.launcher.global.LauncherApplication;
+import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.utils.NetWorkUtil;
 import rk.device.launcher.utils.carema.utils.FileUtil;
 

@@ -19,14 +19,7 @@ android {
         ndk {
             abiFilters "armeabi", "armeabi-v7a"
         }
-//        externalNativeBuild {
-//            cmake {
-//                cppFlags "-frtti -fexceptions"
-//            }
-//        }
-//        jackOptions {
-//            enabled true
-//        }
+
         javaCompileOptions {
             annotationProcessorOptions {
                 includeCompileClasspath = true
@@ -36,6 +29,10 @@ android {
 
     dexOptions {
         javaMaxHeapSize "4g"
+    }
+
+    sourceSets.main {
+        jniLibs.srcDirs = ['libs']
     }
 
     buildTypes {

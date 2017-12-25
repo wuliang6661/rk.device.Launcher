@@ -10,9 +10,9 @@ import com.igexin.sdk.PushManager;
 import com.igexin.sdk.message.GTCmdMessage;
 import com.igexin.sdk.message.GTTransmitMessage;
 
-import rk.device.launcher.base.utils.rxbus.RxBus;
-import rk.device.launcher.bean.PushMessageModel;
-import rk.device.launcher.bean.SetPageContentBean;
+import rk.device.launcher.utils.rxjava.RxBus;
+import rk.device.launcher.bean.PushMessageBO;
+import rk.device.launcher.bean.SetPageContentBO;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.utils.SPUtils;
 
@@ -37,13 +37,13 @@ public class RKLauncherPushIntentService extends GTIntentService {
 		} else {
 			String playLoad = new String(payload);
 			Log.d(TAG, "receiver payload = " + playLoad);
-			PushMessageModel pushMessageModel = JSON.parseObject(playLoad, PushMessageModel.class);
+			PushMessageBO pushMessageModel = JSON.parseObject(playLoad, PushMessageBO.class);
 			if (pushMessageModel == null) {
 				Log.e(TAG, "pushMessageModel = null");
 				return;
 			}
 			String msgtype = pushMessageModel.msgtype;
-			PushMessageModel.Data data = pushMessageModel.data;
+			PushMessageBO.Data data = pushMessageModel.data;
 			switch (msgtype) {
 				case "update": // 升级消息
 					Log.d(TAG, "file = " + data.file);
@@ -59,7 +59,7 @@ public class RKLauncherPushIntentService extends GTIntentService {
 							return;
 						}
 						SPUtils.putString(Constant.KEY_FIRSTPAGE_CONTENT, data.content);
-						RxBus.getDefault().post(new SetPageContentBean(data.content));
+						RxBus.getDefault().post(new SetPageContentBO(data.content));
 					}
 					break;
 				case "ad": // 广告通知

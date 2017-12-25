@@ -32,20 +32,20 @@ import cvc.CvcHelper;
 import cvc.CvcRect;
 import cvc.EventUtil;
 import rk.device.launcher.R;
-import rk.device.launcher.SurfaceHolderCaremaFont;
+import rk.device.launcher.widget.carema.SurfaceHolderCaremaFont;
 import rk.device.launcher.api.ApiService;
 import rk.device.launcher.api.T;
-import rk.device.launcher.base.BaseCompatActivity;
+import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.base.JniHandler;
-import rk.device.launcher.base.utils.rxbus.RxBus;
-import rk.device.launcher.bean.AddressModel;
-import rk.device.launcher.bean.DeviceInfoBean;
-import rk.device.launcher.bean.SetPageContentBean;
-import rk.device.launcher.bean.VerifyBean;
-import rk.device.launcher.bean.WeatherModel;
-import rk.device.launcher.event.IpHostEvent;
+import rk.device.launcher.utils.rxjava.RxBus;
+import rk.device.launcher.bean.AddressBO;
+import rk.device.launcher.bean.DeviceInfoBO;
+import rk.device.launcher.bean.SetPageContentBO;
+import rk.device.launcher.bean.VerifyBO;
+import rk.device.launcher.bean.WeatherBO;
+import rk.device.launcher.bean.event.IpHostEvent;
 import rk.device.launcher.global.Constant;
-import rk.device.launcher.global.LauncherApplication;
+import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.service.ElectricBroadcastReceiver;
 import rk.device.launcher.service.NetBroadcastReceiver;
 import rk.device.launcher.service.NetChangeBroadcastReceiver;
@@ -65,7 +65,7 @@ import rk.device.launcher.utils.oss.AliYunOssUtils;
 import rk.device.launcher.utils.oss.OssUploadListener;
 import rk.device.launcher.utils.uuid.DeviceUuidFactory;
 import rk.device.launcher.widget.BatteryView;
-import rk.device.launcher.widget.DetectedFaceView;
+import rk.device.launcher.widget.carema.DetectedFaceView;
 import rk.device.launcher.widget.GifView;
 import rx.Observable;
 import rx.Subscriber;
@@ -74,7 +74,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 
-public class MainActivity extends BaseCompatActivity implements View.OnClickListener,
+public class MainActivity extends BaseActivity implements View.OnClickListener,
         ElectricBroadcastReceiver.CallBack, NetChangeBroadcastReceiver.CallBack, JniHandler.OnBioAssay, JniHandler.OnInitListener {
 
     private static final String TAG = "MainActivity";
@@ -289,7 +289,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
      * 接收推送通知的公告并显示
      */
     private void registerRxBus() {
-        mSubscription = RxBus.getDefault().toObserverable(SetPageContentBean.class).subscribe(setPageContentBean -> {
+        mSubscription = RxBus.getDefault().toObserverable(SetPageContentBO.class).subscribe(setPageContentBean -> {
 //            if (mTvDeclare != null) {
 //                mTvDeclare.setText(setPageContentBean.content);
 //            }
@@ -390,10 +390,10 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
                     int start = s.indexOf("{");
                     int end = s.indexOf("}");
                     String json = s.substring(start, end + 1);
-                    AddressModel addressModel = JSON.parseObject(json, AddressModel.class);
+                    AddressBO addressModel = JSON.parseObject(json, AddressBO.class);
                     Map<String, Object> params = new HashMap<>();
                     params.put("city", addressModel.city);
-                    Observable<List<WeatherModel>> observable;
+                    Observable<List<WeatherBO>> observable;
                     try {
                         observable = ApiService.weather(params);
                     } catch (Exception e) {
@@ -402,7 +402,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
                     }
                     return observable;
                 }).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<WeatherModel>>() {
+                .subscribe(new Subscriber<List<WeatherBO>>() {
                     @Override
                     public void onCompleted() {
 
@@ -415,7 +415,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
                     }
 
                     @Override
-                    public void onNext(List<WeatherModel> weatherModel) {
+                    public void onNext(List<WeatherBO> weatherModel) {
                         isIpError = false;
                         showWeather(weatherModel);
                     }
@@ -430,7 +430,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     private void httpGetWeather(String area) {
         Map<String, Object> params = new HashMap<>();
         params.put("city", area);
-        addSubscription(ApiService.weather(params).subscribe(new Subscriber<List<WeatherModel>>() {
+        addSubscription(ApiService.weather(params).subscribe(new Subscriber<List<WeatherBO>>() {
             @Override
             public void onCompleted() {
 
@@ -442,7 +442,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
             }
 
             @Override
-            public void onNext(List<WeatherModel> weatherModel) {
+            public void onNext(List<WeatherBO> weatherModel) {
                 showWeather(weatherModel);
             }
         }));
@@ -451,9 +451,9 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
     /**
      * 显示天气
      */
-    private void showWeather(List<WeatherModel> weatherModel) {
+    private void showWeather(List<WeatherBO> weatherModel) {
         if (weatherModel.size() > 0 && weatherModel.get(0).getDaily().size() > 0) {
-            WeatherModel.DailyBean detailBean = weatherModel.get(0).getDaily()
+            WeatherBO.DailyBean detailBean = weatherModel.get(0).getDaily()
                     .get(0);
             temTv.setText(detailBean.getLow() + "~" + detailBean.getHigh() + "℃");
             //判断当前时间是晚上还是白天来显示天气
@@ -495,7 +495,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
      * 获取关联设备的配置
      */
     public void getData() {
-        addSubscription(ApiService.deviceConfiguration(AppUtils.getAppVersionCode(this) + "", null).subscribe(new Subscriber<DeviceInfoBean>() {
+        addSubscription(ApiService.deviceConfiguration(AppUtils.getAppVersionCode(this) + "", null).subscribe(new Subscriber<DeviceInfoBO>() {
             @Override
             public void onCompleted() {
 
@@ -506,7 +506,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
             }
 
             @Override
-            public void onNext(DeviceInfoBean s) {
+            public void onNext(DeviceInfoBO s) {
                 modilePhone = s.getMobile();
             }
         }));
@@ -779,7 +779,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         params.put("image_url", filePath);
         params.put("uuid", uuid);
         params.put("type", myType);
-        addSubscription(ApiService.verifyFace(params).subscribe(new Subscriber<VerifyBean>() {
+        addSubscription(ApiService.verifyFace(params).subscribe(new Subscriber<VerifyBO>() {
 
             @Override
             public void onCompleted() {
@@ -792,7 +792,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
             }
 
             @Override
-            public void onNext(VerifyBean model) {
+            public void onNext(VerifyBO model) {
                 if (!model.isIsrepeat()) {
                     if (model.isIsmatch()) {
 //                        SoundPlayUtils.play(3);//播放声音

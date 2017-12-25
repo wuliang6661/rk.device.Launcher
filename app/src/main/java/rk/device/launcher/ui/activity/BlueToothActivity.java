@@ -20,11 +20,11 @@ import java.util.List;
 import butterknife.Bind;
 import rk.device.launcher.R;
 import rk.device.launcher.api.T;
-import rk.device.launcher.base.BaseCompatActivity;
-import rk.device.launcher.base.utils.rxbus.RxBus;
-import rk.device.launcher.bean.BlueToothModel;
-import rk.device.launcher.event.BlueToothEvent;
-import rk.device.launcher.tools.MoreManager;
+import rk.device.launcher.base.BaseActivity;
+import rk.device.launcher.utils.rxjava.RxBus;
+import rk.device.launcher.bean.BlueToothBO;
+import rk.device.launcher.bean.event.BlueToothEvent;
+import rk.device.launcher.utils.bluetools.MoreManager;
 import rk.device.launcher.utils.adapter.CommonAdapter;
 import rk.device.launcher.utils.adapter.ViewHolder;
 import rk.device.launcher.widget.MyListView;
@@ -32,7 +32,7 @@ import rk.device.launcher.widget.MyListView;
 /**
  * 蓝牙 Created by hanbin on 2017/11/24.
  */
-public class BlueToothActivity extends BaseCompatActivity
+public class BlueToothActivity extends BaseActivity
         implements CheckBox.OnCheckedChangeListener {
 
     @Bind(R.id.checkbox_blue)
@@ -50,8 +50,8 @@ public class BlueToothActivity extends BaseCompatActivity
 
     private BluetoothClient mClient = MoreManager.getBluetoothClient();
 
-    private CommonAdapter<BlueToothModel> mAdapter = null;
-    private List<BlueToothModel> dataList = new ArrayList<>();
+    private CommonAdapter<BlueToothBO> mAdapter = null;
+    private List<BlueToothBO> dataList = new ArrayList<>();
     private List<String> addressList = new ArrayList<>();
 
     @Override
@@ -64,10 +64,10 @@ public class BlueToothActivity extends BaseCompatActivity
         goBack();
         blueCheckBox.setOnCheckedChangeListener(this);
         openCheckBox.setOnCheckedChangeListener(this);
-        mAdapter = new CommonAdapter<BlueToothModel>(this, dataList,
+        mAdapter = new CommonAdapter<BlueToothBO>(this, dataList,
                 R.layout.item_layout_bluetooth) {
             @Override
-            public void convert(ViewHolder helper, BlueToothModel item) {
+            public void convert(ViewHolder helper, BlueToothBO item) {
                 helper.setText(R.id.tv_name, item.getName());
             }
         };
@@ -75,7 +75,7 @@ public class BlueToothActivity extends BaseCompatActivity
         searchedListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                BlueToothModel item = dataList.get(position);
+                BlueToothBO item = dataList.get(position);
                 RxBus.getDefault().post(new BlueToothEvent(item.getAddress(), item.getName()));
                 finish();
             }
@@ -131,7 +131,7 @@ public class BlueToothActivity extends BaseCompatActivity
 
             @Override
             public void onDeviceFounded(SearchResult device) {
-                BlueToothModel model = new BlueToothModel();
+                BlueToothBO model = new BlueToothBO();
                 model.setAddress(device.getAddress());
                 model.setName((TextUtils.isEmpty(device.getName()) || device.getName() == null
                         || device.getName().equals("NULL")) ? device.getAddress()

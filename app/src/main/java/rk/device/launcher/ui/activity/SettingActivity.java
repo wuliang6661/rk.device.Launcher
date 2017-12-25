@@ -4,10 +4,8 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.provider.Settings;
 import android.service.persistentdata.PersistentDataBlockManager;
-import android.support.annotation.Nullable;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -17,9 +15,8 @@ import android.widget.TextView;
 import com.android.internal.os.storage.ExternalStorageFormatter;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import rk.device.launcher.R;
-import rk.device.launcher.base.BaseCompatActivity;
+import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.ui.fragment.RecoveryDialogFragment;
 import rk.device.launcher.utils.SettingUtils;
 
@@ -27,7 +24,7 @@ import rk.device.launcher.utils.SettingUtils;
  * Created by mundane on 2017/11/9 上午10:56
  */
 
-public class SettingActivity extends BaseCompatActivity {
+public class SettingActivity extends BaseActivity {
 	
 	
 	@Bind(R.id.ll_set_time)

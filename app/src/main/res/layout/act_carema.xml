@@ -27,7 +27,7 @@
         android:layout_height="480dp"
         android:layout_weight="1">
 
-        <rk.device.launcher.widget.BackCameraSurfaceView
+        <rk.device.launcher.widget.carema.BackCameraSurfaceView
             android:id="@+id/back_surfaceview"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

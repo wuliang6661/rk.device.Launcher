@@ -13,25 +13,25 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import rk.device.launcher.R;
-import rk.device.launcher.bean.SetDoorRvBean;
+import rk.device.launcher.bean.SetDoorRvBO;
 
 /**
  * Created by mundane on 2017/11/14 下午2:58
  */
 public class SetDoorSelectListRvAdapter extends RecyclerView.Adapter<SetDoorSelectListRvAdapter.ViewHolder> {
 
-	private List<SetDoorRvBean> mDataList;
+	private List<SetDoorRvBO> mDataList;
 	private Integer mLastCheckedPosition;
 
-	public SetDoorSelectListRvAdapter(List<SetDoorRvBean> list, int lastCheckedPosition) {
+	public SetDoorSelectListRvAdapter(List<SetDoorRvBO> list, int lastCheckedPosition) {
 		mDataList = list;
 		mLastCheckedPosition = new Integer(lastCheckedPosition);
 	}
 
-	public SetDoorSelectListRvAdapter(List<SetDoorRvBean> dataList) {
+	public SetDoorSelectListRvAdapter(List<SetDoorRvBO> dataList) {
 		mDataList = dataList;
 		for (int i = 0; i < dataList.size(); i++) {
-			SetDoorRvBean setDoorRvBean = dataList.get(i);
+			SetDoorRvBO setDoorRvBean = dataList.get(i);
 			if (setDoorRvBean.isChecked) {
 				mLastCheckedPosition = new Integer(i);
 			}
@@ -60,7 +60,7 @@ public class SetDoorSelectListRvAdapter extends RecyclerView.Adapter<SetDoorSele
 
 	@Override
 	public void onBindViewHolder(ViewHolder holder, final int position) {
-		SetDoorRvBean setDoorRvBean = mDataList.get(position);
+		SetDoorRvBO setDoorRvBean = mDataList.get(position);
 //		if (setDoorRvBean.isChecked) {
 //			mLastCheckedPosition = position;
 //		}
@@ -98,7 +98,7 @@ public class SetDoorSelectListRvAdapter extends RecyclerView.Adapter<SetDoorSele
 			ButterKnife.bind(this, itemView);
 		}
 
-		public void bind(SetDoorRvBean bean) {
+		public void bind(SetDoorRvBO bean) {
 			ivCheck.setVisibility(bean.isChecked ? View.VISIBLE : View.INVISIBLE);
 
 			tvName.setText(bean.text);

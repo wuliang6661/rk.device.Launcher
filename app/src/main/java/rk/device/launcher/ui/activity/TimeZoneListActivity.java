@@ -27,11 +27,11 @@ import java.util.TimeZone;
 import butterknife.Bind;
 import rk.device.launcher.R;
 import rk.device.launcher.adapter.TimeZoneRvAdapter;
-import rk.device.launcher.base.BaseCompatActivity;
+import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.widget.itemdecoration.WifiListRvItemDecoration;
 
 
-public class TimeZoneListActivity extends BaseCompatActivity implements TimeZoneRvAdapter.OnItemClickListerner {
+public class TimeZoneListActivity extends BaseActivity implements TimeZoneRvAdapter.OnItemClickListerner {
 	
 	private static final String TAG = "TimeZoneListActivity";
 	@Bind(R.id.iv_back)

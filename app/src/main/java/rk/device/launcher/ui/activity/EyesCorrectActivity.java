@@ -13,15 +13,15 @@ import butterknife.Bind;
 import cvc.EventUtil;
 import peripherals.LedHelper;
 import rk.device.launcher.R;
-import rk.device.launcher.SurfaceHolderCaremaFont;
+import rk.device.launcher.widget.carema.SurfaceHolderCaremaFont;
 import rk.device.launcher.api.T;
-import rk.device.launcher.base.BaseCompatActivity;
+import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.base.JniHandler;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.ui.fragment.EyesCorrectDialog;
 import rk.device.launcher.ui.fragment.EyesCorrectDialogOneFra;
 import rk.device.launcher.utils.SPUtils;
-import rk.device.launcher.widget.BackCameraSurfaceView;
+import rk.device.launcher.widget.carema.BackCameraSurfaceView;
 
 /**
  * Created by wuliang on 2017/12/7.
@@ -29,7 +29,7 @@ import rk.device.launcher.widget.BackCameraSurfaceView;
  * 双目校准界面
  */
 
-public class EyesCorrectActivity extends BaseCompatActivity implements View.OnClickListener {
+public class EyesCorrectActivity extends BaseActivity implements View.OnClickListener {
 
 
     @Bind(R.id.surfaceview)

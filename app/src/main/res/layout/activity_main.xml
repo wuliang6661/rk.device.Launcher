@@ -113,13 +113,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-            <rk.device.launcher.widget.BackCameraSurfaceView
+            <rk.device.launcher.widget.carema.BackCameraSurfaceView
                 android:id="@+id/camera_surfaceview1"
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
                 android:visibility="visible" />
 
-            <rk.device.launcher.widget.DetectedFaceView
+            <rk.device.launcher.widget.carema.DetectedFaceView
                 android:id="@+id/face_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />

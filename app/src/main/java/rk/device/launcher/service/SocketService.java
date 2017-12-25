@@ -20,7 +20,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import rk.device.launcher.global.Constant;
-import rk.device.launcher.global.LauncherApplication;
+import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.utils.CloseUtils;
 import rk.device.launcher.utils.DeviceUtils;
 import rk.device.launcher.utils.LogUtil;

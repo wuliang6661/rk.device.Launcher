@@ -29,8 +29,8 @@ import butterknife.ButterKnife;
 import rk.device.launcher.R;
 import rk.device.launcher.adapter.WifiRvAdapter;
 import rk.device.launcher.api.T;
-import rk.device.launcher.base.utils.rxbus.RxBus;
-import rk.device.launcher.bean.NetDismissBean;
+import rk.device.launcher.utils.rxjava.RxBus;
+import rk.device.launcher.bean.NetDismissBO;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.NetUtils;
 import rk.device.launcher.utils.WifiHelper;
@@ -74,9 +74,9 @@ public class WifiListFragment extends Fragment implements CompoundButton.OnCheck
 		super.onCreate(savedInstanceState);
 		updateWifiList();
 		registerWifiReceiver();
-		mSubscription = RxBus.getDefault().toObserverable(NetDismissBean.class).subscribe(new Action1<NetDismissBean>() {
+		mSubscription = RxBus.getDefault().toObserverable(NetDismissBO.class).subscribe(new Action1<NetDismissBO>() {
 			@Override
-			public void call(NetDismissBean netDismissBean) {
+			public void call(NetDismissBO netDismissBean) {
 				if (netDismissBean.isConnect()) {
 					updateWifiList();
 				}
@@ -104,7 +104,7 @@ public class WifiListFragment extends Fragment implements CompoundButton.OnCheck
 		mScanResultList = new ArrayList<>();
 //		mScanResultList = new ArrayList<>();
 //		for (ScanResult scanResult : scanResultList) {
-//			mScanResultList.add(new ScanResultWrappedBean(scanResult));
+//			mScanResultList.add(new ScanResultWrappedBO(scanResult));
 //		}
 		
 		mWifiRvAdapter = new WifiRvAdapter(mScanResultList, mWifiHelper);
