@@ -1,5 +1,9 @@
 package rk.device.launcher.global;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import rk.device.launcher.BuildConfig;
 
 /**
@@ -13,7 +17,6 @@ public interface Constant {
     String KEY_PASSWORD = "KEY_PASSWORD";
     String LOG_TAG = "launcher";
     boolean isDebug = BuildConfig.DEBUG;
-
 
     /**
      * 缓存在本地的初始引导设置顺序

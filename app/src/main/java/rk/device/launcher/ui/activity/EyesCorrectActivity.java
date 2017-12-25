@@ -1,9 +1,8 @@
 package rk.device.launcher.ui.activity;
 
 import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -21,7 +20,6 @@ import rk.device.launcher.base.JniHandler;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.ui.fragment.EyesCorrectDialog;
 import rk.device.launcher.ui.fragment.EyesCorrectDialogOneFra;
-import rk.device.launcher.ui.fragment.WaitDialog;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.widget.BackCameraSurfaceView;
 
@@ -52,9 +50,6 @@ public class EyesCorrectActivity extends BaseCompatActivity implements View.OnCl
     private JniHandler mHandler = null;
     EyesCorrectDialogOneFra dialogOneFra;
 
-    private static boolean isBack = false;    //页面是否结束
-    private static boolean isCallBack = true;   //收集照片是否完成
-
 
     @Override
     protected int getLayout() {
@@ -64,12 +59,9 @@ public class EyesCorrectActivity extends BaseCompatActivity implements View.OnCl
     @Override
     protected void initView() {
         setTitle("摄像头校准");
-        isBack = false;
         openCarmea();
-        HandlerThread thread = new HandlerThread("new_thread");
-        thread.start();
-        Looper looper = thread.getLooper();
-        mHandler = new JniHandler(looper);
+
+        mHandler = JniHandler.getInstance();
     }
 
     @Override
@@ -91,11 +83,7 @@ public class EyesCorrectActivity extends BaseCompatActivity implements View.OnCl
             public void callMessage(int line, int lie, int countNum) {
                 EyesCorrectActivity.this.CountNum = countNum;
                 allNum.setText(String.valueOf("/" + countNum));
-                if (isCallBack) {
-                    setCorrectWAndH(line, lie);
-                } else {
-                    T.showShort("上一次收集照片尚未完成，请稍后重新开始...");
-                }
+                setCorrectWAndH(line, lie);
             }
 
             @Override
@@ -116,7 +104,7 @@ public class EyesCorrectActivity extends BaseCompatActivity implements View.OnCl
         dialog.setonCallBack(() -> {
             Message msg = new Message();
             msg.what = EventUtil.START_CORRECT;
-            mHandler.sendMessageDelayed(msg, 10);
+            mHandler.sendMessage(msg);
         });
         dialog.show(getSupportFragmentManager(), "");
     }
@@ -141,7 +129,7 @@ public class EyesCorrectActivity extends BaseCompatActivity implements View.OnCl
         msg.what = EventUtil.START_CVC;
         msg.arg1 = lie;
         msg.arg2 = line;
-        mHandler.sendMessageDelayed(msg, 10);
+        mHandler.sendMessage(msg);
     }
 
 
@@ -152,55 +140,57 @@ public class EyesCorrectActivity extends BaseCompatActivity implements View.OnCl
         mHandler.setEyesCallback(new JniHandler.OnEyesCallBack() {
             @Override
             public void initSuress() {
-                hintWaitProgress();
-                dialogOneFra.dismiss();
-                showDialogTwo();
+                runOnUiThread(() -> {
+                    hintWaitProgress();
+                    dialogOneFra.dismiss();
+                    showDialogTwo();
+                });
             }
 
             @Override
-            public void initError() {
-                hintWaitProgress();
-                T.showShort("棋盘格设置错误！请重新设置！");
+            public void initError(String message) {
+                runOnUiThread(() -> {
+                    hintWaitProgress();
+                    T.showShort(message);
+                });
             }
 
             @Override
             public void picluerNextSuress() {
+                Log.i("wuliang", "next!");
                 haveCount++;
                 UIhandler.sendEmptyMessage(0x11);
-                isCallBack = true;
                 if (haveCount >= CountNum) {
                     UIhandler.sendEmptyMessage(0x22);
                     Message msg = new Message();
                     msg.what = EventUtil.START_CALIBRATION;
-                    mHandler.sendMessageDelayed(msg, 10);
+                    mHandler.sendMessage(msg);
                 } else {
-                    if (isBack || dialogOneFra.isVisible()) {
+                    if (dialogOneFra.isVisible()) {
                         return;
                     }
-                    isCallBack = false;
                     Message msg = new Message();
                     msg.what = EventUtil.START_CORRECT;
-                    mHandler.sendMessageDelayed(msg, 10);
+                    mHandler.sendMessage(msg);
                 }
             }
 
             @Override
             public void picluerNextError() {
-                isCallBack = true;
-                if (isBack || dialogOneFra.isVisible()) {
-                    return;
-                }
-                isCallBack = false;
+                Log.i("wuliang", "error!");
                 Message msg = new Message();
                 msg.what = EventUtil.START_CORRECT;
-                mHandler.sendMessageDelayed(msg, 10);
+                mHandler.sendMessage(msg);
             }
 
             @Override
-            public void pictureFinnish() {
-                T.showShort("校准完成！");
-                isBack = true;
-                finish();
+            public void pictureFinnish(boolean isSuress) {
+                if (isSuress) {
+                    T.showShort("校准完成！");
+                    finish();
+                } else {
+                    runOnUiThread(() -> showMessageDialog("校准失败！请重新校准！"));
+                }
             }
         });
     }
@@ -212,7 +202,9 @@ public class EyesCorrectActivity extends BaseCompatActivity implements View.OnCl
             case R.id.iv_back:
                 showMessageDialog("校准照片未满" + CountNum + "张，\n\n确认退出后此次校准失败", "确定", view1 -> {
                     dissmissMessageDialog();
-                    isBack = true;
+                    Message msg = new Message();
+                    msg.what = EventUtil.STOP_CORRECT;
+                    mHandler.sendMessage(msg);
                     finish();
                 });
                 break;

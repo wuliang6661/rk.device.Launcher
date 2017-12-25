@@ -127,7 +127,6 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
 
     private void acquireWakeLock() {
         if (wakeLock == null) {
-            Log.d("wuliang", "Acquiring wake lock");
             PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
             wakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, this.getClass().getCanonicalName());
             wakeLock.acquire();
@@ -256,7 +255,9 @@ public abstract class BaseCompatActivity extends AppCompatActivity {
      * 隐藏进度条弹窗
      */
     public void hintWaitProgress() {
-        if (dialog != null && dialog.isVisible()) {
+        if (dialog != null && dialog.getDialog() != null
+                && dialog.getDialog().isShowing()) {
+            Log.d("wuliang", "隐藏转转弹窗");
             dialog.dismiss();
         }
     }

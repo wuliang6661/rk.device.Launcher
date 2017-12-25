@@ -19,6 +19,12 @@ public class EventUtil {
     public static final int START_CORRECT = 2;
 
     /**
+     * 中断校验
+     */
+    public static final int STOP_CORRECT = 6;
+
+
+    /**
      * 摄像头校准完成
      */
 
@@ -34,7 +40,6 @@ public class EventUtil {
      * 活体检测
      */
     public static final int CVC_LIVINGFACE = 5;
-
 
 
 }

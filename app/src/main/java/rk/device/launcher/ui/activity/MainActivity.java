@@ -6,8 +6,6 @@ import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.Looper;
 import android.os.Message;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -69,7 +67,6 @@ import rk.device.launcher.utils.uuid.DeviceUuidFactory;
 import rk.device.launcher.widget.BatteryView;
 import rk.device.launcher.widget.DetectedFaceView;
 import rk.device.launcher.widget.GifView;
-import rk.device.launcher.widget.UpdateManager;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
@@ -220,10 +217,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
      * 初始化所有JNI外设
      */
     private void initHandlerThread() {
-        HandlerThread thread = new HandlerThread("new_thread");
-        thread.start();
-        Looper looper = thread.getLooper();
-        mHandler = new JniHandler(looper);
+        mHandler = JniHandler.getInstance();
         mHandler.setOnInitListener(this);
         Message msg = new Message();
         msg.what = EventUtil.INIT_JNI;
@@ -632,7 +626,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
             initLocation();
             getData();
             //检测App更新
-            UpdateManager.getUpdateManager().checkAppUpdate(this, getSupportFragmentManager(), false);
+//            UpdateManager.getUpdateManager().checkAppUpdate(this, getSupportFragmentManager(), false);
         }
         isNetWork = true;
         if (WifiorNetStatus == 0) {
@@ -740,6 +734,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
      * 人脸数据上传到阿里云进行识别
      */
     private void httpUploadPic(byte[] result) {
+        Log.d("wuliang", "start aliFace " + TimeUtils.getTime());
         Message message = new Message();
         message.what = 0x33;
         message.obj = result;
@@ -752,7 +747,7 @@ public class MainActivity extends BaseCompatActivity implements View.OnClickList
         AliYunOssUtils.getInstance(this).putObjectFromByteArray(result, new OssUploadListener() {
             @Override
             public void onSuccess(String filePath) {
-                Log.d("wuliang", "aliyun face suress!!");
+                Log.d("wuliang", "end aliFace " + TimeUtils.getTime());
                 //自定义人脸识别post数据
                 if (uuidFactory == null) {
                     uuidFactory = new DeviceUuidFactory(MainActivity.this);

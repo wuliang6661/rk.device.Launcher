@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.os.Build;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -12,10 +11,8 @@ import butterknife.Bind;
 import rk.device.launcher.R;
 import rk.device.launcher.base.BaseCompatActivity;
 import rk.device.launcher.utils.AppUtils;
-import rk.device.launcher.utils.NetWorkUtil;
 import rk.device.launcher.utils.QRCodeUtils;
 import rk.device.launcher.utils.ScreenUtil;
-import rk.device.launcher.widget.UpdateManager;
 
 
 /**
@@ -27,8 +24,8 @@ public class SystemInfoActivity extends BaseCompatActivity implements View.OnCli
 
     @Bind(R.id.iv_qrcode)
     ImageView mIvQrcode;
-    @Bind(R.id.btn_check_update)
-    Button mBtnCheckUpdate;
+    //    @Bind(R.id.btn_check_update)
+//    Button mBtnCheckUpdate;
     @Bind(R.id.version_name)
     TextView versionName;
     @Bind(R.id.version_code)
@@ -53,13 +50,13 @@ public class SystemInfoActivity extends BaseCompatActivity implements View.OnCli
 
     @Override
     protected void initData() {
-        mBtnCheckUpdate.setBackgroundResource(R.drawable.shape_btn_round_corner);
+//        mBtnCheckUpdate.setBackgroundResource(R.drawable.shape_btn_round_corner);
 
         mIvQrcode.post(() -> {
             Bitmap qrCodeBitmap = QRCodeUtils.createQRCode("http://mj.roombanker.cn", mIvQrcode.getWidth(), mIvQrcode.getHeight());
             mIvQrcode.setImageBitmap(qrCodeBitmap);
         });
-        mBtnCheckUpdate.setOnClickListener(this);
+//        mBtnCheckUpdate.setOnClickListener(this);
     }
 
 
@@ -77,10 +74,10 @@ public class SystemInfoActivity extends BaseCompatActivity implements View.OnCli
 
     @Override
     public void onClick(View view) {
-        if (NetWorkUtil.isNetConnected(this)) {
-            UpdateManager.getUpdateManager().checkAppUpdate(this, getSupportFragmentManager(), true);
-        } else {
-            showMessageDialog("当前网络未连接!");
-        }
+//        if (NetWorkUtil.isNetConnected(this)) {
+//            UpdateManager.getUpdateManager().checkAppUpdate(this, getSupportFragmentManager(), true);
+//        } else {
+//            showMessageDialog("当前网络未连接!");
+//        }
     }
 }
