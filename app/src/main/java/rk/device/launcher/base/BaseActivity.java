@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,10 +15,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.igexin.sdk.PushManager;
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import butterknife.ButterKnife;
 import rk.device.launcher.R;
-import rk.device.launcher.utils.rxjava.RxBus;
+import rk.device.launcher.api.ApiService;
 import rk.device.launcher.bean.NetDismissBO;
 import rk.device.launcher.service.BlueToothsBroadcastReceiver;
 import rk.device.launcher.service.RKLauncherPushIntentService;
@@ -30,6 +30,7 @@ import rk.device.launcher.ui.activity.SleepActivity;
 import rk.device.launcher.ui.fragment.BaseDialogFragment;
 import rk.device.launcher.ui.fragment.WaitDialog;
 import rk.device.launcher.utils.AppManager;
+import rk.device.launcher.utils.rxjava.RxBus;
 import rx.Subscription;
 import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
@@ -42,7 +43,7 @@ import rx.subscriptions.CompositeSubscription;
  * 同时存放所有界面需要的公共方法
  */
 
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends RxAppCompatActivity {
 
     private CompositeSubscription mCompositeSubscription;
 
@@ -87,6 +88,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         AppManager.getAppManager().addActivity(this);
         setNetListener();
         makeFilters();
+        ApiService.setActivity(this);
         initView();
         initData();
 //        InitData();

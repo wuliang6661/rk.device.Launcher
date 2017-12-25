@@ -1,10 +1,13 @@
 package rk.device.launcher.api;
 
 
+import com.trello.rxlifecycle.ActivityEvent;
+
 import java.util.List;
 import java.util.Map;
 
 import retrofit2.Retrofit;
+import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.global.Config;
 import rk.device.launcher.bean.DeviceInfoBO;
 import rk.device.launcher.bean.VerifyBO;
@@ -25,6 +28,7 @@ public class ApiService {
 
 
     private static volatile Retrofit mApiRetrofit;
+    private static BaseActivity activity;
 
     /**
      * 动态分配IP地址
@@ -59,6 +63,12 @@ public class ApiService {
     }
 
 
+    public static void setActivity(BaseActivity activity){
+        ApiService.activity = activity;
+    }
+
+
+
     /**
      * 切換IP和端口之后需清空请求对象
      */
@@ -76,7 +86,7 @@ public class ApiService {
      * 获取天气接口
      */
     public static Observable<List<WeatherBO>> weather(Map<String, Object> params) {
-        return weatherFactorys().weather(params).compose(RxResultHelper.httpRusult());
+        return weatherFactorys().weather(params).compose(RxResultHelper.httpRusult()).compose(activity.bindUntilEvent(ActivityEvent.DESTROY));
     }
 
     /**

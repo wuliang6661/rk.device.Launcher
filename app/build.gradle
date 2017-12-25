@@ -79,6 +79,7 @@ dependencies {
     //RxJava相关依赖库
     compile 'io.reactivex:rxjava:1.1.6'
     compile 'io.reactivex:rxandroid:1.2.1'
+    compile 'com.trello:rxlifecycle-components:0.6.1'
     //retrofit
     compile 'com.squareup.retrofit2:retrofit:2.0.0-beta3'
     compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta4'
