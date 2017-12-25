@@ -1,6 +1,5 @@
 package rk.device.launcher.ui.main;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
@@ -26,7 +25,6 @@ import rk.device.launcher.mvp.BasePresenterImpl;
 import rk.device.launcher.service.ElectricBroadcastReceiver;
 import rk.device.launcher.service.NetBroadcastReceiver;
 import rk.device.launcher.service.NetChangeBroadcastReceiver;
-import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.gps.GpsUtils;
 import rx.Observable;
@@ -108,7 +106,7 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
     /**
      * 获取地理位置
      */
-    private void initLocation(BaseActivity activity) {
+    void initLocation(BaseActivity activity) {
         if (gpsUtils == null) {
             gpsUtils = new GpsUtils(mView.getContext());
         }
@@ -189,6 +187,7 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
             @Override
             public void onNext(List<WeatherBO> weatherModel) {
 //                showWeather(weatherModel);
+
             }
         });
     }

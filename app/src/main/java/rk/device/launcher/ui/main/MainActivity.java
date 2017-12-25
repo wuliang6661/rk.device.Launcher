@@ -11,12 +11,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.Date;
+import java.util.List;
+
 import butterknife.Bind;
 import rk.device.launcher.R;
 import rk.device.launcher.api.T;
 import rk.device.launcher.base.JniHandler;
 import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.bean.SetPageContentBO;
+import rk.device.launcher.bean.WeatherBO;
 import rk.device.launcher.bean.event.IpHostEvent;
 import rk.device.launcher.mvp.MVPBaseActivity;
 import rk.device.launcher.service.ElectricBroadcastReceiver;
@@ -24,6 +28,7 @@ import rk.device.launcher.service.NetChangeBroadcastReceiver;
 import rk.device.launcher.service.SocketService;
 import rk.device.launcher.ui.fragment.InitErrorDialogFragmen;
 import rk.device.launcher.utils.SoundPlayUtils;
+import rk.device.launcher.utils.TimeUtils;
 import rk.device.launcher.utils.rxjava.RxBus;
 import rk.device.launcher.widget.BatteryView;
 import rk.device.launcher.widget.GifView;
@@ -37,7 +42,8 @@ import rk.device.launcher.widget.carema.DetectedFaceView;
  */
 
 public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresenter> implements
-        MainContract.View, JniHandler.OnInitListener, View.OnClickListener, ElectricBroadcastReceiver.CallBack, NetChangeBroadcastReceiver.CallBack {
+        MainContract.View, JniHandler.OnInitListener, View.OnClickListener, ElectricBroadcastReceiver.CallBack,
+        NetChangeBroadcastReceiver.CallBack {
 
 
     @Bind(R.id.battry_num)
@@ -116,6 +122,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
         mPresenter.registerNetOffReceiver();
         registerRxBus();
         registerIPHost();
+        mPresenter.initLocation(this);
     }
 
 
@@ -230,7 +237,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
      */
     private void registerIPHost() {
         RxBus.getDefault().toObserverable(IpHostEvent.class).subscribe(ipHostEvent -> {
-//            initLocation();
+            mPresenter.initLocation(this);
 //            getData();
         }, throwable -> {
 
@@ -238,4 +245,22 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
     }
 
 
+    /**
+     * 显示天气
+     */
+    @Override
+    public void showWeather(List<WeatherBO> weatherModel) {
+        if (weatherModel.size() > 0 && weatherModel.get(0).getDaily().size() > 0) {
+            WeatherBO.DailyBean detailBean = weatherModel.get(0).getDaily()
+                    .get(0);
+            temTv.setText(detailBean.getLow() + "~" + detailBean.getHigh() + "℃");
+            //判断当前时间是晚上还是白天来显示天气
+            if (TimeUtils.getHour(new Date(System.currentTimeMillis())) > 6
+                    && TimeUtils.getHour(new Date(System.currentTimeMillis())) < 18) {
+                weatherTv.setText(detailBean.getText_day());
+            } else {
+                weatherTv.setText(detailBean.getText_night());
+            }
+        }
+    }
 }
