@@ -75,13 +75,13 @@ public class UsbBroadCastReceiver extends BroadcastReceiver {
 					return;
 				}
 				List<File> picFileList = new ArrayList<>();
+				// fixme 子线程
 				for (File encryptedFile : encryptedFileList) {
 					// 获取全路径中的文件名(不要.ao的后缀)
 //				String fileName = FileUtils.getFileName(encryptedFile);
 					String fileName = getFileName(encryptedFile);
 					String destDirPath = "/data/rk_backup/rk_ad";
 					File destDir = new File(destDirPath);
-					// fixme 子线程
 					if (FileUtils.createOrExistsDir(destDir)) {
 						File decryptedFile = new File(destDir,  fileName + ".jpeg");
 						// 成功复制
