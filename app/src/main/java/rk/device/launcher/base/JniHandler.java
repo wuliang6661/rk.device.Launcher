@@ -41,7 +41,7 @@ public class JniHandler extends Handler {
 
     private boolean isStopCorrect = false;
 
-    private static final int faceThreshold = 10;    //默认设置活体检测真人概率为50则返回人脸
+    private static final int faceThreshold = 0;    //默认设置活体检测真人概率为50则返回人脸
 
     private static JniHandler jniHandler;
 

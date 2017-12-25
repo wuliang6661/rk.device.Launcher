@@ -131,5 +131,4 @@ class BlueToothUtils {
         Log.i("wuliang", Arrays.toString(suns));
         return suns;
     }
-
 }
