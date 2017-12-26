@@ -62,7 +62,7 @@ public class SetBasicInfoActivity extends BaseActivity implements View.OnClickLi
     @Override
     protected void initView() {
         registerRxBus();
-        setOnClick(R.id.ll_set_time, R.id.ll_set_blue_tooth, R.id.btn_finish_setting, R.id.eyes_verify, R.id.carema_ceshi);
+        setOnClick(R.id.ll_set_time, R.id.ll_set_blue_tooth, R.id.btn_finish_setting, R.id.eyes_verify);
         goBack();
     }
 
@@ -173,9 +173,6 @@ public class SetBasicInfoActivity extends BaseActivity implements View.OnClickLi
                     return;
                 }
                 connectDevice(deviceName);
-                break;
-            case R.id.carema_ceshi:
-                gotoActivity(CaremaActivity.class, false);
                 break;
         }
     }

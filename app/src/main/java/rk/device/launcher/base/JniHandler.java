@@ -12,6 +12,7 @@ import cvc.CvcRect;
 import cvc.EventUtil;
 import peripherals.LedHelper;
 import peripherals.NfcHelper;
+import peripherals.NumberpadHelper;
 
 /**
  * Created by wuliang on 2017/11/28.
@@ -119,6 +120,8 @@ public class JniHandler extends Handler {
         if (faceSuress == 0) {
             Log.i("wuliang", "faceThreshold suress  " + faceThreshold);
         }
+        int callsuress = NumberpadHelper.PER_numberpadInit();
+        Log.i("wuliang", "call  " + callsuress);
         if (initListener != null) {
             initListener.initCallBack(cvcStatus, LedStatus, MdStatus, NfcStatus);
         }

@@ -714,15 +714,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
 //                    T.showShort("真人概率大于50%，开始认证人脸！");
                     break;
                 case 0x33:
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            byte[] result = (byte[]) msg.obj;
-                            ImageView bitmap = (ImageView) findViewById(R.id.bitmap);
-                            Bitmap bitmap1 = BitmapUtil.Bytes2Bimap(result);
-                            bitmap.setImageBitmap(bitmap1);
-                        }
-                    });
+//                    runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            byte[] result = (byte[]) msg.obj;
+//                            ImageView bitmap = (ImageView) findViewById(R.id.bitmap);
+//                            Bitmap bitmap1 = BitmapUtil.Bytes2Bimap(result);
+//                            bitmap.setImageBitmap(bitmap1);
+//                        }
+//                    });
                     break;
             }
         }
@@ -735,10 +735,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
      */
     private void httpUploadPic(byte[] result) {
         Log.d("wuliang", "start aliFace " + TimeUtils.getTime());
-        Message message = new Message();
-        message.what = 0x33;
-        message.obj = result;
-        UIHandler.handleMessage(message);
+//        Message message = new Message();
+//        message.what = 0x33;
+//        message.obj = result;
+//        UIHandler.handleMessage(message);
         faceSuress++;
         if (faceSuress % 2 != 0) {
             return;

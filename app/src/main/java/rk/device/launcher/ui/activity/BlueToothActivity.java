@@ -25,8 +25,8 @@ import rk.device.launcher.utils.rxjava.RxBus;
 import rk.device.launcher.bean.BlueToothBO;
 import rk.device.launcher.bean.event.BlueToothEvent;
 import rk.device.launcher.utils.bluetools.MoreManager;
-import rk.device.launcher.utils.adapter.CommonAdapter;
-import rk.device.launcher.utils.adapter.ViewHolder;
+import rk.device.launcher.widget.adapter.CommonAdapter;
+import rk.device.launcher.widget.adapter.ViewHolder;
 import rk.device.launcher.widget.MyListView;
 
 /**

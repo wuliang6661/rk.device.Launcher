@@ -161,10 +161,10 @@
 
         </LinearLayout>
 
-         <ImageView
+         <!--<ImageView
              android:id="@+id/bitmap"
              android:layout_width="200dp"
-             android:layout_height="200dp" />
+             android:layout_height="200dp" />-->
 
     </RelativeLayout>
 

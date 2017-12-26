@@ -1,4 +1,4 @@
-package rk.device.launcher.utils.adapter;
+package rk.device.launcher.widget.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;

@@ -31,7 +31,7 @@ public class RKLauncherPushIntentService extends GTIntentService {
 		String messageId = msg.getMessageId();
 		byte[] payload = msg.getPayload();
 		boolean result = PushManager.getInstance().sendFeedbackMessage(context, taskId, messageId, 90001);
-		Log.d(TAG, "call sendFeedbackMessage = " + (result ? "success" : "failed"));
+		Log.d(TAG, "call_button sendFeedbackMessage = " + (result ? "success" : "failed"));
 		if (payload == null) {
 			Log.e(TAG, "receiver payload = null");
 		} else {

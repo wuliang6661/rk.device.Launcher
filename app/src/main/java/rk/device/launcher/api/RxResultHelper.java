@@ -20,7 +20,7 @@ public class RxResultHelper {
                 new Func1<BaseResult<T>, Observable<T>>() {
                     @Override
                     public Observable<T> call(BaseResult<T> mDYResponse) {
-                        Log.d(TAG, "call() called with: mDYResponse = [" + mDYResponse + "]");
+                        Log.d(TAG, "call_button() called with: mDYResponse = [" + mDYResponse + "]");
                         if (mDYResponse.getResult() == 200) {
                             return createData(mDYResponse.getData());
                         } else {
