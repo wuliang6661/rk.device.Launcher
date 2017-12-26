@@ -50,11 +50,7 @@ public class BaseDialogFragment extends DialogFragment {
      * 获取dialog对象
      */
     public static BaseDialogFragment newInstance() {
-        if (dialogFragment != null) {
-            return dialogFragment;
-        }
-        dialogFragment = new BaseDialogFragment();
-        return dialogFragment;
+        return new BaseDialogFragment();
     }
 
 

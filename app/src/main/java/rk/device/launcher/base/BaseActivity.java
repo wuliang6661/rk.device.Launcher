@@ -8,6 +8,9 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -205,13 +208,16 @@ public abstract class BaseActivity extends RxAppCompatActivity {
      * 显示提示弹窗
      */
     protected BaseDialogFragment showMessageDialog(String message) {
-        if (hintDialog != null && hintDialog.isVisible()) {
+        if (hintDialog != null && hintDialog.getDialog() != null
+                && hintDialog.getDialog().isShowing()) {
             return null;
         }
         hintDialog = BaseDialogFragment.newInstance();
         hintDialog.setMessage(message);
         hintDialog.setCancleable(true);
-        hintDialog.show(getSupportFragmentManager(), "hint");
+        if (!hintDialog.isAdded()) {
+            showDialog(hintDialog);
+        }
         return hintDialog;
     }
 
@@ -220,7 +226,8 @@ public abstract class BaseActivity extends RxAppCompatActivity {
      * 显示需要自定义的提示弹窗
      */
     protected BaseDialogFragment showMessageDialog(String message, String right, View.OnClickListener listener) {
-        if (hintDialog != null && hintDialog.isVisible()) {
+        if (hintDialog != null && hintDialog.getDialog() != null
+                && hintDialog.getDialog().isShowing()) {
             return null;
         }
         hintDialog = BaseDialogFragment.newInstance();
@@ -228,7 +235,9 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         hintDialog.setCancleable(true);
         hintDialog.setLeftButton("取消", view -> hintDialog.dismiss());
         hintDialog.setRightButton(right, listener);
-        hintDialog.show(getSupportFragmentManager(), "hint");
+        if (!hintDialog.isAdded()) {
+            showDialog(hintDialog);
+        }
         return hintDialog;
     }
 
@@ -311,9 +320,18 @@ public abstract class BaseActivity extends RxAppCompatActivity {
                 hintDialog.dismiss();
                 hintDialog = null;
             });
-            hintDialog.show(getSupportFragmentManager(), "");
+            if (!hintDialog.isAdded()) {
+                showDialog(hintDialog);
+            }
             return hintDialog;
         }
+    }
+
+    private void showDialog(DialogFragment fragmentA) {
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction ft = manager.beginTransaction();
+        ft.add(fragmentA, "fragment_name");
+        ft.commit();
     }
 
 

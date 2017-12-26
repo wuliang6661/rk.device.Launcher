@@ -103,6 +103,8 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
+        android:persistent="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
@@ -113,8 +115,11 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.HOME" />
             </intent-filter>
         </activity>
+
         <!-- 设置页面 -->
         <activity
             android:name=".ui.activity.SettingActivity"
@@ -194,15 +199,14 @@
         </receiver>
 
         <activity android:name=".ui.activity.TimeZoneListActivity"></activity>
-        <receiver
-            android:name=".service.UsbBroadCastReceiver"
-            >
+        <receiver android:name=".service.UsbBroadCastReceiver">
             <intent-filter android:priority="1000">
-                <action android:name="android.intent.action.MEDIA_MOUNTED"/>
-                <action android:name="android.intent.action.MEDIA_CHECKING"/>
-                <action android:name="android.intent.action.MEDIA_SCANNER_STARTED"/>
-                <action android:name="android.intent.action.MEDIA_SCANNER_FINISHED"/>
-                <action android:name="android.intent.action.MEDIA_SCANNER_SCAN_FILE"/>
+                <action android:name="android.intent.action.MEDIA_MOUNTED" />
+                <action android:name="android.intent.action.MEDIA_CHECKING" />
+                <action android:name="android.intent.action.MEDIA_SCANNER_STARTED" />
+                <action android:name="android.intent.action.MEDIA_SCANNER_FINISHED" />
+                <action android:name="android.intent.action.MEDIA_SCANNER_SCAN_FILE" />
+
                 <data android:scheme="file" />
             </intent-filter>
         </receiver>
