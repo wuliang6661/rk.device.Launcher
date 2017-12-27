@@ -34,8 +34,8 @@ public class DbManager {
 
 	public UserDao getUserDao() {
 		MyOpenHelper helper = new MyOpenHelper(CommonUtils.getContext(), DB_NAME);
-//		Database db = helper.getWritableDb();
-		Database db = helper.getEncryptedWritableDb(DB_PASSWORD);
+//		Database db = helper.getEncryptedWritableDb(DB_PASSWORD);
+		Database db = helper.getWritableDb();
 		return new DaoMaster(db).newSession().getUserDao();
 	}
 	
