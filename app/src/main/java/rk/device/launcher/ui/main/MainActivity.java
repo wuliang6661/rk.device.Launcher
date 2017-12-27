@@ -193,6 +193,8 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
     protected void onStart() {
         super.onStart();
         mStaticHandler.post(mRefreshTimeRunnable);
+        caremaBg.setPaused(false);
+        deviceNameBg.setPaused(false);
     }
 
 
@@ -210,6 +212,8 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
     protected void onStop() {
         mStaticHandler.removeCallbacksAndMessages(null);
         super.onStop();
+        caremaBg.setPaused(true);
+        deviceNameBg.setPaused(true);
     }
 
 
@@ -482,7 +486,6 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
             mPresenter.initLocation(this);
             mPresenter.getData();
         }, throwable -> {
-
         });
     }
 

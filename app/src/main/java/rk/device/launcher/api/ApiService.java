@@ -63,10 +63,9 @@ public class ApiService {
     }
 
 
-    public static void setActivity(BaseActivity activity){
+    public static void setActivity(BaseActivity activity) {
         ApiService.activity = activity;
     }
-
 
 
     /**
@@ -93,14 +92,14 @@ public class ApiService {
      * 访问外网, 根据IP地址获取地址
      */
     public static Observable<String> address(String format) {
-        return createAddressAPI().getAddress(format);
+        return createAddressAPI().getAddress(format).compose(activity.bindUntilEvent(ActivityEvent.DESTROY));
     }
 
     /**
      * 检测App是否更新
      */
     public static Observable<VersionBO> updateApp(String verCode) {
-        return weatherFactorys().updateApp(verCode).compose(RxResultHelper.httpRusult());
+        return weatherFactorys().updateApp(verCode).compose(RxResultHelper.httpRusult()).compose(activity.bindUntilEvent(ActivityEvent.DESTROY));
     }
 
     /**
@@ -115,7 +114,7 @@ public class ApiService {
      * 人脸识别
      */
     public static Observable<VerifyBO> verifyFace(Map<String, Object> params) {
-        return weatherFactorys().verify(params).compose(RxResultHelper.httpRusult());
+        return weatherFactorys().verify(params).compose(RxResultHelper.httpRusult()).compose(activity.bindUntilEvent(ActivityEvent.DESTROY));
     }
 
 }
