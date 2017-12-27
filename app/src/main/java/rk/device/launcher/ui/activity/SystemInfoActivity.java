@@ -3,6 +3,8 @@ package rk.device.launcher.ui.activity;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.os.Build;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -42,13 +44,19 @@ public class SystemInfoActivity extends BaseActivity implements View.OnClickList
     }
 
     @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        initView();
+        initData();
+    }
+
+
     protected void initView() {
         goBack();
         setTitle("关于设备");
         invition();
     }
 
-    @Override
     protected void initData() {
 //        mBtnCheckUpdate.setBackgroundResource(R.drawable.shape_btn_round_corner);
 

@@ -20,6 +20,9 @@ public class MainContract {
 
         void showWeather(List<WeatherBO> weatherModel);
 
+        void setAnimationIp(String AnimationIp);
+
+        void showSuress(String text);
 
     }
 
@@ -28,7 +31,6 @@ public class MainContract {
         JniHandler initJni();
 
         ElectricBroadcastReceiver registerBatteryReceiver();
-
 
         NetChangeBroadcastReceiver registerNetReceiver();
 

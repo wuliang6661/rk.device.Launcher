@@ -5,8 +5,12 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.Message;
+import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.sdk.android.oss.ClientException;
+import com.alibaba.sdk.android.oss.ServiceException;
+import com.alibaba.sdk.android.oss.model.PutObjectRequest;
 import com.trello.rxlifecycle.ActivityEvent;
 
 import java.util.HashMap;
@@ -19,14 +23,22 @@ import rk.device.launcher.api.T;
 import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.base.JniHandler;
 import rk.device.launcher.bean.AddressBO;
+import rk.device.launcher.bean.DeviceInfoBO;
+import rk.device.launcher.bean.VerifyBO;
 import rk.device.launcher.bean.WeatherBO;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.mvp.BasePresenterImpl;
 import rk.device.launcher.service.ElectricBroadcastReceiver;
 import rk.device.launcher.service.NetBroadcastReceiver;
 import rk.device.launcher.service.NetChangeBroadcastReceiver;
+import rk.device.launcher.utils.AppUtils;
 import rk.device.launcher.utils.SPUtils;
+import rk.device.launcher.utils.StringUtils;
+import rk.device.launcher.utils.TimeUtils;
 import rk.device.launcher.utils.gps.GpsUtils;
+import rk.device.launcher.utils.oss.AliYunOssUtils;
+import rk.device.launcher.utils.oss.OssUploadListener;
+import rk.device.launcher.utils.uuid.DeviceUuidFactory;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -40,7 +52,14 @@ import rx.schedulers.Schedulers;
 public class MainPresenter extends BasePresenterImpl<MainContract.View> implements MainContract.Presenter {
 
 
-    GpsUtils gpsUtils;
+    private GpsUtils gpsUtils;
+
+    /**
+     * UUID工具
+     */
+    private DeviceUuidFactory uuidFactory = null;
+    private String uUid;
+
 
     /**
      * 初始化jni
@@ -160,7 +179,7 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
                                @Override
                                public void onNext(List<WeatherBO> weatherModel) {
 //                                   isIpError = false;
-//                                   showWeather(weatherModel);
+                                   mView.showWeather(weatherModel);
                                }
                            }
                 );
@@ -186,10 +205,104 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
 
             @Override
             public void onNext(List<WeatherBO> weatherModel) {
-//                showWeather(weatherModel);
-
+                mView.showWeather(weatherModel);
             }
         });
     }
 
+
+    /**
+     * 获取配置接口
+     */
+    void getData() {
+        ApiService.deviceConfiguration(AppUtils.getAppVersionCode(mView.getContext()) + "", null).subscribe(new Subscriber<DeviceInfoBO>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+            }
+
+            @Override
+            public void onNext(DeviceInfoBO s) {
+                mView.setAnimationIp(s.getMobile());
+            }
+        });
+    }
+
+
+    private int faceSuress = 0;   //活体检测通过次数，每5次请求一下人脸识别
+
+    /**
+     * 人脸数据上传到阿里云进行识别
+     */
+    void httpUploadPic(byte[] result) {
+        faceSuress++;
+        if (faceSuress % 2 != 0) {
+            return;
+        }
+        faceSuress = 0;
+        AliYunOssUtils.getInstance(mView.getContext()).putObjectFromByteArray(result, new OssUploadListener() {
+            @Override
+            public void onSuccess(String filePath) {
+                Log.d("wuliang", "end aliFace " + TimeUtils.getTime());
+                //自定义人脸识别post数据
+                if (uuidFactory == null) {
+                    uuidFactory = new DeviceUuidFactory(mView.getContext());
+                }
+                uUid = uuidFactory.getUuid() + "";
+                httpFaceVerifyPath(filePath, uUid);
+            }
+
+            @Override
+            public void onFailure(PutObjectRequest request, ClientException clientException,
+                                  ServiceException serviceException) {
+                Log.i("oss-upload-fail", clientException.getMessage());
+                Log.i("oss-upload-fail", serviceException.getErrorCode() + ":" + serviceException.getRawMessage());
+            }
+        });
+    }
+
+    /**
+     * 判断返回数据是否成功，成功则开门
+     */
+    private void httpFaceVerifyPath(String filePath, String uuid) {
+        String spDevice = SPUtils.getString(Constant.DEVICE_TYPE);
+        String myType = "1";   //默认是1
+        if (!StringUtils.isEmpty(spDevice)) {
+            String[] device = spDevice.split("_");
+            myType = device[0];
+        }
+        Map<String, Object> params = new HashMap<>();
+        params.put("image_url", filePath);
+        params.put("uuid", uuid);
+        params.put("type", myType);
+        ApiService.verifyFace(params).subscribe(new Subscriber<VerifyBO>() {
+
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onNext(VerifyBO model) {
+                if (!model.isIsrepeat()) {
+                    if (model.isIsmatch()) {
+//                        SoundPlayUtils.play(3);//播放声音
+                        Log.i("wuliang", "face scusess!!!!");
+                        mView.showSuress(model.getName());
+                    } else {
+                        Log.i("wuliang", "face no  no   no!!!!");
+                    }
+                }
+            }
+        });
+    }
 }

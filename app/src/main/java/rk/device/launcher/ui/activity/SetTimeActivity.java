@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.text.BidiFormatter;
 import android.text.TextDirectionHeuristics;
 import android.text.TextUtils;
@@ -61,8 +62,14 @@ public class SetTimeActivity extends BaseActivity {
 	protected int getLayout() {
 		return R.layout.activity_set_time;
 	}
-	
+
 	@Override
+	protected void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		initView();
+		initData();
+	}
+	
 	protected void initView() {
 		setTitle("时间设置");
 		goBack();
@@ -81,7 +88,6 @@ public class SetTimeActivity extends BaseActivity {
 //		mTvTime.setText(DateUtil.formatDate(date, "HH:mm"));
 	}
 	
-	@Override
 	protected void initData() {
 		setListener();
 	}
@@ -213,8 +219,4 @@ public class SetTimeActivity extends BaseActivity {
 		return gmtString + " " + zoneNameString;
 	}
 	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-	}
 }

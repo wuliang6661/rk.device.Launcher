@@ -1,7 +1,9 @@
 package rk.device.launcher.ui.activity;
 
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -56,7 +58,14 @@ public class EyesCorrectActivity extends BaseActivity implements View.OnClickLis
         return R.layout.act_eyes_correct;
     }
 
+
     @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        initView();
+        initData();
+    }
+
     protected void initView() {
         setTitle("摄像头校准");
         openCarmea();
@@ -64,7 +73,6 @@ public class EyesCorrectActivity extends BaseActivity implements View.OnClickLis
         mHandler = JniHandler.getInstance();
     }
 
-    @Override
     protected void initData() {
         ivBack.setOnClickListener(this);
         setCorectListener();

@@ -1,5 +1,7 @@
 package rk.device.launcher.ui.activity;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -60,6 +62,12 @@ public class BlueToothActivity extends BaseActivity
     }
 
     @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        initView();
+        initData();
+    }
+
     protected void initView() {
         goBack();
         blueCheckBox.setOnCheckedChangeListener(this);
@@ -107,7 +115,6 @@ public class BlueToothActivity extends BaseActivity
         searchBlueTooth();
     }
 
-    @Override
     protected void initData() {
         setTitle(getString(R.string.blue_tooth));
         //判断蓝牙是否打开

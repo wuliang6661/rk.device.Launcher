@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
-import rk.device.launcher.ui.activity.MainActivity;
+import rk.device.launcher.ui.main.MainActivity;
 
 public class UpdateBroadcastReceiver extends BroadcastReceiver {
 	

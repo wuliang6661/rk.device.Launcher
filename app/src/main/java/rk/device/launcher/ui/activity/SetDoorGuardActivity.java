@@ -2,6 +2,7 @@ package rk.device.launcher.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -66,14 +67,20 @@ public class SetDoorGuardActivity extends BaseActivity implements View.OnClickLi
         return R.layout.activity_set_door_guard;
     }
 
+
     @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        initView();
+        initData();
+    }
+
     protected void initView() {
         goBack();
         setTitle("门禁设置");
         mBtnFinishSetting.setBackgroundResource(R.drawable.shape_btn_finish_setting);
     }
 
-    @Override
     protected void initData() {
         setSettingData();
         mBtnFinishSetting.setOnClickListener(this);

@@ -4,8 +4,10 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.service.persistentdata.PersistentDataBlockManager;
+import android.support.annotation.Nullable;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -73,14 +75,20 @@ public class SettingActivity extends BaseActivity {
 	protected int getLayout() {
 		return R.layout.activity_setting;
 	}
-	
+
+
 	@Override
+	protected void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		initView();
+		initData();
+	}
+	
 	protected void initView() {
 		goBack();
 		setTitle("设置");
 	}
 	
-	@Override
 	protected void initData() {
 		processOnTouchListener(mLlSetTime, mIvSetTime, mTvSetTime, R.drawable.basic_setting_normal, R.drawable.basic_setting_pressed);
 		processOnTouchListener(mLlSetNet, mIvSetNetwork, mTvSetNetwork, R.drawable.set_network_normal, R.drawable.set_network_pressed);

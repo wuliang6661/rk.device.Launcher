@@ -1,6 +1,8 @@
 package rk.device.launcher.ui.call;
 
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -27,7 +29,7 @@ import rk.device.launcher.widget.lgrecycleadapter.LGViewHolder;
  */
 
 public class CallActivity extends MVPBaseActivity<CallContract.View, CallPresenter>
-        implements CallContract.View,View.OnClickListener {
+        implements CallContract.View, View.OnClickListener {
 
     @Bind(R.id.edit_text)
     TextView editText;
@@ -50,6 +52,13 @@ public class CallActivity extends MVPBaseActivity<CallContract.View, CallPresent
     }
 
     @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        initView();
+        initData();
+    }
+
+
     protected void initView() {
         goBack();
         setTitle("拨号通话");
@@ -57,7 +66,6 @@ public class CallActivity extends MVPBaseActivity<CallContract.View, CallPresent
         recycle.setLayoutManager(manager);
     }
 
-    @Override
     protected void initData() {
         setData();
         setAdapter();
@@ -65,7 +73,6 @@ public class CallActivity extends MVPBaseActivity<CallContract.View, CallPresent
         clearDan.setOnClickListener(this);
         clear.setOnClickListener(this);
     }
-
 
 
     /**
@@ -106,8 +113,10 @@ public class CallActivity extends MVPBaseActivity<CallContract.View, CallPresent
         adapter.setOnItemClickListener(R.id.call_layout, new LGRecycleViewAdapter.ItemClickListener() {
             @Override
             public void onItemClicked(View view, int position) {
-                commitText.append(callbutton.get(position));
-                editText.setText(commitText.toString());
+                if (commitText.length() < 4) {
+                    commitText.append(callbutton.get(position));
+                    editText.setText(commitText.toString());
+                }
             }
         });
         recycle.setAdapter(adapter);

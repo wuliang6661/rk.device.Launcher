@@ -1,7 +1,9 @@
 package rk.device.launcher.ui.activity;
 
 import android.graphics.drawable.AnimationDrawable;
+import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,7 +24,14 @@ public class RecoveryActivity extends BaseActivity {
         return R.layout.activity_recovery;
     }
 
+
     @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        initView();
+        initData();
+    }
+
     protected void initView() {
         ((AnimationDrawable) mIv.getBackground()).start();
         mHandler = new Handler();
@@ -36,7 +45,6 @@ public class RecoveryActivity extends BaseActivity {
         }, 3000);
     }
 
-    @Override
     protected void initData() {
 
     }

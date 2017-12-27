@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.Nullable;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
@@ -177,7 +179,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
         return R.layout.activity_main;
     }
 
+
     @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        initView();
+        initData();
+    }
+
     public void initView() {
         initDialog = InitErrorDialogFragmen.newInstance();
         SoundPlayUtils.init(this);
@@ -195,7 +204,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
     }
 
 
-    @Override
     protected void initData() {
         caremaBg.setMovieResource(R.raw.camera_bg);
         deviceNameBg.setMovieResource(R.raw.device_name_bg);

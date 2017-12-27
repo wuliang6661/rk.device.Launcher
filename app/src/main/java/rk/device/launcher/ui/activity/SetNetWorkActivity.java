@@ -63,8 +63,8 @@ public class SetNetWorkActivity extends BaseActivity implements View.OnClickList
 	protected int getLayout() {
 		return R.layout.activity_set_net_work;
 	}
-	
-	@Override
+
+
 	protected void initView() {
 		goBack();
 		setTitle("网络设置");
@@ -75,6 +75,8 @@ public class SetNetWorkActivity extends BaseActivity implements View.OnClickList
 		super.onCreate(savedInstanceState);
 		mAndroidBug5497Workaround = new AndroidBug5497Workaround(this);
 		mAndroidBug5497Workaround.setKeyBoardChangeListener(this);
+		initView();
+		initData();
 	}
 	
 	@Override
@@ -83,7 +85,6 @@ public class SetNetWorkActivity extends BaseActivity implements View.OnClickList
 		super.onDestroy();
 	}
 	
-	@Override
 	protected void initData() {
 		mFragmentManager = getSupportFragmentManager();
 		mLlAuto.setOnClickListener(this);

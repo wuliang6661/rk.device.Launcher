@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -47,7 +49,15 @@ public class SleepActivity extends BaseActivity {
         return R.layout.act_sleep;
     }
 
+
     @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        initView();
+        initData();
+    }
+
+
     protected void initView() {
         getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);//需要添加的语句
         SleepTaskServer.getSleepHandler(SleepActivity.this).sendEmptyMessage(0x22);
@@ -55,7 +65,6 @@ public class SleepActivity extends BaseActivity {
         registerBus();
     }
 
-    @Override
     protected void initData() {
         advertisingImg.setOnClickListener(view -> {
             finish();

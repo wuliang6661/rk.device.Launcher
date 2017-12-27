@@ -69,17 +69,6 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     protected abstract int getLayout();
 
 
-    /**
-     * 初始化界面布局
-     */
-    protected abstract void initView();
-
-    /**
-     * 处理业务逻辑
-     */
-    protected abstract void initData();
-
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,9 +81,6 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         setNetListener();
         makeFilters();
         ApiService.setActivity(this);
-        initView();
-        initData();
-//        InitData();
     }
 
     @Override

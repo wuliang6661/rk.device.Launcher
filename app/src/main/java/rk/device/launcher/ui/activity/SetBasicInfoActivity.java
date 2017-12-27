@@ -1,6 +1,8 @@
 package rk.device.launcher.ui.activity;
 
+import android.os.Bundle;
 import android.os.SystemClock;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
@@ -59,7 +61,14 @@ public class SetBasicInfoActivity extends BaseActivity implements View.OnClickLi
         return R.layout.activity_basic_info;
     }
 
+
     @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        initView();
+        initData();
+    }
+
     protected void initView() {
         registerRxBus();
         setOnClick(R.id.ll_set_time, R.id.ll_set_blue_tooth, R.id.btn_finish_setting, R.id.eyes_verify);
@@ -123,7 +132,6 @@ public class SetBasicInfoActivity extends BaseActivity implements View.OnClickLi
                 }));
     }
 
-    @Override
     protected void initData() {
         setTitle(getString(R.string.basic_settting));
         isVoice = (boolean) get(Constant.DEVICE_MP3, true);

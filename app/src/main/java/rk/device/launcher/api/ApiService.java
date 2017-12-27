@@ -108,7 +108,7 @@ public class ApiService {
      */
     public static Observable<DeviceInfoBO> deviceConfiguration(String verCode, String cid) {
         return weatherFactorys().deviceConfiguration(verCode, cid)
-                .compose(RxResultHelper.httpRusult());
+                .compose(RxResultHelper.httpRusult()).compose(activity.bindUntilEvent(ActivityEvent.DESTROY));
     }
 
     /**

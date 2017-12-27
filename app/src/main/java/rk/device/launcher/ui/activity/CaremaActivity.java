@@ -1,5 +1,7 @@
 package rk.device.launcher.ui.activity;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -26,13 +28,18 @@ public class CaremaActivity extends BaseActivity {
     }
 
     @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        initView();
+        initData();
+    }
+
     protected void initView() {
         goBack();
         setTitle("摄像头效果预览");
 
     }
 
-    @Override
     protected void initData() {
         initSurfaceViewOne();
     }
