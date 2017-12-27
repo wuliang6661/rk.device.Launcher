@@ -2,7 +2,6 @@ package rk.device.launcher.ui.activity;
 
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
@@ -32,12 +31,11 @@ import cvc.CvcHelper;
 import cvc.CvcRect;
 import cvc.EventUtil;
 import rk.device.launcher.R;
-import rk.device.launcher.widget.carema.SurfaceHolderCaremaFont;
 import rk.device.launcher.api.ApiService;
 import rk.device.launcher.api.T;
 import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.base.JniHandler;
-import rk.device.launcher.utils.rxjava.RxBus;
+import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.bean.AddressBO;
 import rk.device.launcher.bean.DeviceInfoBO;
 import rk.device.launcher.bean.SetPageContentBO;
@@ -45,15 +43,14 @@ import rk.device.launcher.bean.VerifyBO;
 import rk.device.launcher.bean.WeatherBO;
 import rk.device.launcher.bean.event.IpHostEvent;
 import rk.device.launcher.global.Constant;
-import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.service.ElectricBroadcastReceiver;
 import rk.device.launcher.service.NetBroadcastReceiver;
 import rk.device.launcher.service.NetChangeBroadcastReceiver;
 import rk.device.launcher.service.SocketService;
+import rk.device.launcher.ui.call.CallActivity;
 import rk.device.launcher.ui.fragment.InitErrorDialogFragmen;
 import rk.device.launcher.ui.fragment.InputWifiPasswordDialogFragment;
 import rk.device.launcher.utils.AppUtils;
-import rk.device.launcher.utils.BitmapUtil;
 import rk.device.launcher.utils.DateUtil;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.SPUtils;
@@ -63,10 +60,12 @@ import rk.device.launcher.utils.TimeUtils;
 import rk.device.launcher.utils.gps.GpsUtils;
 import rk.device.launcher.utils.oss.AliYunOssUtils;
 import rk.device.launcher.utils.oss.OssUploadListener;
+import rk.device.launcher.utils.rxjava.RxBus;
 import rk.device.launcher.utils.uuid.DeviceUuidFactory;
 import rk.device.launcher.widget.BatteryView;
-import rk.device.launcher.widget.carema.DetectedFaceView;
 import rk.device.launcher.widget.GifView;
+import rk.device.launcher.widget.carema.DetectedFaceView;
+import rk.device.launcher.widget.carema.SurfaceHolderCaremaFont;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
@@ -189,7 +188,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
         registerIPHost();
         initLocation();
         settingTv.setOnClickListener(this);
-        setOnClick(R.id.rl_contact_manager, R.id.init_error);
+        setOnClick(R.id.rl_contact_manager, R.id.init_error, R.id.num_pass_layout, R.id.call_layout, R.id.qr_code_layout, R.id.liuyan_layout);
         initSurfaceViewOne();
         getData();
         startService(new Intent(this, SocketService.class));
@@ -486,6 +485,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
                 break;
             case R.id.init_error:     //有外设初始化失败
                 initDialog.show(getSupportFragmentManager(), "");
+                break;
+            case R.id.num_pass_layout:    //密码开门
+
+                break;
+            case R.id.call_layout:    //拨号
+                gotoActivity(CallActivity.class, false);
+                break;
+            case R.id.qr_code_layout:    //二维码
+
+                break;
+            case R.id.liuyan_layout:    //留言
+
                 break;
         }
     }

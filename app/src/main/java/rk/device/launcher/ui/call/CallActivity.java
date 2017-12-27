@@ -26,7 +26,8 @@ import rk.device.launcher.widget.lgrecycleadapter.LGViewHolder;
  * 拨号界面
  */
 
-public class CallActivity extends MVPBaseActivity<CallContract.View, CallPresenter> implements CallContract.View,View.OnClickListener {
+public class CallActivity extends MVPBaseActivity<CallContract.View, CallPresenter>
+        implements CallContract.View,View.OnClickListener {
 
     @Bind(R.id.edit_text)
     TextView editText;
@@ -138,5 +139,4 @@ public class CallActivity extends MVPBaseActivity<CallContract.View, CallPresent
                 break;
         }
     }
-
 }

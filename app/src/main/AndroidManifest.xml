@@ -178,6 +178,12 @@
             android:name=".ui.activity.CaremaActivity"
             android:screenOrientation="portrait" />
 
+        <!-- 拨号界面 -->
+        <activity
+            android:name=".ui.call.CallActivity"
+            android:screenOrientation="portrait" />
+
+
         <!-- 个推 -->
         <service
             android:name=".service.RKLauncherPushService"

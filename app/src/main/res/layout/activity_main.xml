@@ -161,10 +161,10 @@
 
         </LinearLayout>
 
-         <!--<ImageView
-             android:id="@+id/bitmap"
-             android:layout_width="200dp"
-             android:layout_height="200dp" />-->
+        <!--<ImageView
+            android:id="@+id/bitmap"
+            android:layout_width="200dp"
+            android:layout_height="200dp" />-->
 
     </RelativeLayout>
 
@@ -325,35 +325,151 @@
 
 
     <LinearLayout
-        android:id="@+id/rl_contact_manager"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:background="@drawable/lianxi_wuguan"
+        android:layout_height="110dp"
+        android:layout_marginLeft="34dp"
+        android:layout_marginRight="34dp"
         android:gravity="center"
         android:orientation="horizontal">
 
 
-        <ImageView
-            android:layout_width="53dp"
-            android:layout_height="53dp"
-            android:background="@drawable/wuguan_img" />
+        <LinearLayout
+            android:id="@+id/num_pass_layout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="15dp"
+            android:layout_weight="1"
+            android:background="@drawable/main_buttom_bg"
+            android:gravity="center"
+            android:orientation="vertical">
 
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="24dp"
-            android:text="联系物管"
-            android:textColor="@color/white"
-            android:textSize="40dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/num_password"
+                android:textColor="@color/white"
+                android:textSize="20dp" />
 
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="15dp"
+                android:src="@drawable/password" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/call_layout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="15dp"
+            android:layout_weight="1"
+            android:background="@drawable/main_buttom_bg"
+            android:gravity="center"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/call"
+                android:textColor="@color/white"
+                android:textSize="20dp" />
+
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="15dp"
+                android:src="@drawable/call_white" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/qr_code_layout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="15dp"
+            android:layout_weight="1"
+            android:background="@drawable/main_buttom_bg"
+            android:gravity="center"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/qr_code"
+                android:textColor="@color/white"
+                android:textSize="20dp" />
+
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="15dp"
+                android:src="@drawable/qr_code" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/liuyan_layout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="15dp"
+            android:layout_weight="1"
+            android:background="@drawable/main_buttom_bg"
+            android:gravity="center"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/liuyan"
+                android:textColor="@color/white"
+                android:textSize="20dp" />
+
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="15dp"
+                android:src="@drawable/liuyan" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/rl_contact_manager"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/main_buttom_bg"
+            android:gravity="center"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/call_wuguan"
+                android:textColor="@color/white"
+                android:textSize="20dp" />
+
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="15dp"
+                android:src="@drawable/call_wuguan" />
+
+        </LinearLayout>
     </LinearLayout>
-
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:background="@drawable/time_xia" />
-
 
 </LinearLayout>

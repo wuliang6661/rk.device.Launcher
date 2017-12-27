@@ -44,4 +44,10 @@
     <string name="anima_hint">拍照过程中多变化角度，能加\n快校准速度，操作如下图所示</string>
     <string name="jiaozhun_wait">正在校准，需要几分钟左右，请稍后...</string>
 
+    <string name="num_password">密码开门</string>
+    <string name="call">拨号</string>
+    <string name="qr_code">二维码</string>
+    <string name="liuyan">留言</string>
+    <string name="call_wuguan">联系物管</string>
+
 </resources>
