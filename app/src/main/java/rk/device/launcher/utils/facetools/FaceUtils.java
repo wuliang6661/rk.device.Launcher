@@ -137,6 +137,7 @@ public class FaceUtils {
      * 注册人脸追踪引擎
      */
     private void registerFaceT() {
+        mFTengine = new AFT_FSDKEngine();
         AFT_FSDKError err = mFTengine.AFT_FSDK_InitialFaceEngine(FaceUtils.appid, FaceUtils.ft_key, AFT_FSDKEngine.AFT_OPF_0_HIGHER_EXT, 16, 5);
         Log.d(TAG, "AFT_FSDK_InitialFaceEngine =" + err.getCode());
     }
