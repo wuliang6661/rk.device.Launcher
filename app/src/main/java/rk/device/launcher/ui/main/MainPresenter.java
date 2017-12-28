@@ -186,7 +186,6 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
 
                                @Override
                                public void onError(Throwable e) {
-                                   e.printStackTrace();
 //                                   isIpError = true;
                                }
 

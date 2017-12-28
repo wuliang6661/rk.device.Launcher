@@ -31,6 +31,7 @@ import java.util.Date;
 import java.util.List;
 
 import rk.device.launcher.utils.FileUtils;
+import rk.device.launcher.utils.MD5;
 
 /**
  * Created by wuliang on 2017/12/28.
@@ -79,7 +80,7 @@ public class FaceUtils {
     /**
      * 人脸追踪的人脸集合
      */
-    List<AFT_FSDKFace> mFTresult;
+    private List<AFT_FSDKFace> mFTresult;
 
     private Context mContext;
 
@@ -178,7 +179,7 @@ public class FaceUtils {
      * 保存人脸到本地，并返回人脸Id
      */
     public String saveFace(String personName, AFR_FSDKFace face) {
-        String name = personName + "_" + new Date().getTime();
+        String name = MD5.strToMd5Low32(personName + "_" + System.currentTimeMillis());
         try {
             //check if already registered.
             boolean add = true;
@@ -350,10 +351,12 @@ public class FaceUtils {
     /***********************************************人脸识别(追踪到人脸并识别)**********************************************************/
 
 
-    byte[] mImageNV21 = null;
-    AFT_FSDKFace mAFT_FSDKFace = null;
+    private byte[] mImageNV21 = null;
+    private AFT_FSDKFace mAFT_FSDKFace = null;
 
     private int mWidth, mHeight;
+
+    private FRAbsLoop loop;
 
 
     public void setCaremaSize(int width, int height) {
@@ -388,11 +391,24 @@ public class FaceUtils {
     }
 
     /**
-     * 人脸识别引擎线程
+     * 启动人脸识别引擎
      */
-    class FRAbsLoop extends AbsLoop {
+    public void startFaceFR() {
+        loop = new FRAbsLoop();
+        loop.start();
+    }
 
-        AFR_FSDKFace result = new AFR_FSDKFace();
+    /**
+     * 停止人脸识别引擎
+     */
+    public void stopFaceFR() {
+        loop.shutdown();
+    }
+
+
+    private class FRAbsLoop extends AbsLoop {
+
+        private AFR_FSDKFace result = new AFR_FSDKFace();
 
         @Override
         public void setup() {
@@ -438,6 +454,16 @@ public class FaceUtils {
         public void over() {
 
         }
+    }
+
+
+    /**
+     * 注销所有人脸识别引擎
+     */
+    public void destory() {
+        mFDengine.AFD_FSDK_UninitialFaceEngine();
+        mFREngine.AFR_FSDK_UninitialEngine();
+        mFTengine.AFT_FSDK_UninitialFaceEngine();
     }
 
 
