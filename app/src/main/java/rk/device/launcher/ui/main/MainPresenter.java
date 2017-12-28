@@ -60,6 +60,10 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
     private DeviceUuidFactory uuidFactory = null;
     private String uUid;
 
+    ElectricBroadcastReceiver mBatteryReceiver;
+    NetChangeBroadcastReceiver netChangeBroadcastRecever;
+    NetBroadcastReceiver netOffReceiver;
+
 
     /**
      * 初始化jni
@@ -79,7 +83,7 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
     @Override
     public ElectricBroadcastReceiver registerBatteryReceiver() {
         IntentFilter intentFilter = new IntentFilter();
-        ElectricBroadcastReceiver mBatteryReceiver = new ElectricBroadcastReceiver();
+        mBatteryReceiver = new ElectricBroadcastReceiver();
         intentFilter.addAction(Intent.ACTION_BATTERY_CHANGED);
         mView.getContext().registerReceiver(mBatteryReceiver, intentFilter);
         return mBatteryReceiver;
@@ -90,7 +94,7 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
      * 注册网络变化监听
      */
     public NetChangeBroadcastReceiver registerNetReceiver() {
-        NetChangeBroadcastReceiver netChangeBroadcastRecever = new NetChangeBroadcastReceiver();
+        netChangeBroadcastRecever = new NetChangeBroadcastReceiver();
         IntentFilter intentFilter = new IntentFilter();
         // "android.net.wifi.SCAN_RESULTS"
         intentFilter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
@@ -110,7 +114,7 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
      * 注册网络断开监听
      */
     public void registerNetOffReceiver() {
-        NetBroadcastReceiver netOffReceiver = new NetBroadcastReceiver();
+        netOffReceiver = new NetBroadcastReceiver();
         IntentFilter intentFilter = new IntentFilter();
         // "android.net.wifi.SCAN_RESULTS"
         intentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
@@ -119,6 +123,16 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
         // "android.net.wifi.STATE_CHANGE"
         intentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
         mView.getContext().registerReceiver(netOffReceiver, intentFilter);
+    }
+
+
+    /**
+     * 注销各类服务
+     */
+    public void unRegisterReceiver() {
+        mView.getContext().unregisterReceiver(mBatteryReceiver);
+        mView.getContext().unregisterReceiver(netChangeBroadcastRecever);
+        mView.getContext().unregisterReceiver(netOffReceiver);
     }
 
 
@@ -146,7 +160,7 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
      * 定位不可用，通过IP获取地址
      */
     private void getIPLocation(BaseActivity activity) {
-        ApiService.address("js").compose(activity.bindUntilEvent(ActivityEvent.DESTROY)).subscribeOn(Schedulers.io())
+        ApiService.address("js").subscribeOn(Schedulers.io())
                 .flatMap(s -> {
                     int start = s.indexOf("{");
                     int end = s.indexOf("}");
@@ -172,7 +186,6 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
 
                                @Override
                                public void onError(Throwable e) {
-                                   e.printStackTrace();
 //                                   isIpError = true;
                                }
 

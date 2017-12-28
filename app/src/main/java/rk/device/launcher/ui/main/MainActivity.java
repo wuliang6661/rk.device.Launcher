@@ -220,11 +220,9 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        unregisterReceiver(mBatteryReceiver);
-//        unregisterReceiver(netChangeBroadcastRecever);
-//        unregisterReceiver(netOffReceiver);
         mStaticHandler.removeCallbacksAndMessages(null);
         CvcHelper.CVC_deinit();
+        mPresenter.unRegisterReceiver();
     }
 
 

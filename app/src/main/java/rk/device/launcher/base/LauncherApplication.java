@@ -7,6 +7,7 @@ import cat.ereza.customactivityoncrash.CustomActivityOnCrash;
 import rk.device.launcher.R;
 import rk.device.launcher.utils.STUtils;
 import rk.device.launcher.utils.Utils;
+import rk.device.launcher.utils.verify.FaceUtils;
 
 /**
  * Created by wuliang on 2017/11/11 下午3:49
@@ -39,6 +40,8 @@ public class LauncherApplication extends Application {
         CustomActivityOnCrash.setDefaultErrorActivityDrawable(R.mipmap.ic_launcher);
         Utils.init(this);
         STUtils.init(this);
+        FaceUtils.getInstance().init(this);
+        FaceUtils.getInstance().loadFaces();
     }
 
     /**

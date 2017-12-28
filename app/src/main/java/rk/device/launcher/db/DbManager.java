@@ -2,8 +2,8 @@ package rk.device.launcher.db;
 
 import org.greenrobot.greendao.database.Database;
 
-import rk.device.launcher.db.entity.DaoMaster;
-import rk.device.launcher.db.entity.UserDao;
+import rk.device.launcher.db.dao.DaoMaster;
+import rk.device.launcher.db.dao.UserDao;
 import rk.device.launcher.utils.CommonUtils;
 
 
