@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/topbar" />
+
+    <TextView
+        android:id="@+id/tv_add"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_btn_finish_setting"
+        android:gravity="center"
+        android:padding="@dimen/dp_10"
+        android:text="录入"
+        android:textColor="@color/white" />
+
+    <TextView
+        android:id="@+id/tv_verify"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_10"
+        android:background="@drawable/shape_btn_finish_setting"
+        android:gravity="center"
+        android:padding="@dimen/dp_10"
+        android:text="验证"
+        android:textColor="@color/white" />
+
+    <TextView
+        android:id="@+id/tv_find"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_10"
+        android:background="@drawable/shape_btn_finish_setting"
+        android:gravity="center"
+        android:padding="@dimen/dp_10"
+        android:text="查找"
+        android:textColor="@color/white" />
+
+    <TextView
+        android:id="@+id/tv_modify"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_10"
+        android:background="@drawable/shape_btn_finish_setting"
+        android:gravity="center"
+        android:padding="@dimen/dp_10"
+        android:text="修改"
+        android:textColor="@color/white" />
+
+    <TextView
+        android:id="@+id/tv_delete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_10"
+        android:background="@drawable/shape_btn_finish_setting"
+        android:gravity="center"
+        android:padding="@dimen/dp_10"
+        android:text="删除"
+        android:textColor="@color/white" />
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="@dimen/dp_10"
+        android:scrollbars="vertical" />
+
+
+</LinearLayout>
