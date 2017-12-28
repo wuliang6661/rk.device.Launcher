@@ -5,7 +5,8 @@ import android.app.Activity;
 
 import java.util.Stack;
 
-import rk.device.launcher.ui.activity.MainActivity;
+import rk.device.launcher.ui.main.MainActivity;
+
 
 /**
  * 作者 by wuliang 时间 16/10/31.

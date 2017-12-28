@@ -7,7 +7,7 @@ import cat.ereza.customactivityoncrash.CustomActivityOnCrash;
 import rk.device.launcher.R;
 import rk.device.launcher.utils.STUtils;
 import rk.device.launcher.utils.Utils;
-import rk.device.launcher.utils.facetools.FaceUtils;
+import rk.device.launcher.utils.verify.FaceUtils;
 
 /**
  * Created by wuliang on 2017/11/11 下午3:49

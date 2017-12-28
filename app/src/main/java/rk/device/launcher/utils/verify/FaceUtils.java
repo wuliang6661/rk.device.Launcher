@@ -1,4 +1,4 @@
-package rk.device.launcher.utils.facetools;
+package rk.device.launcher.utils.verify;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -42,7 +42,7 @@ public class FaceUtils {
 
     private static final String TAG = "FaceUtils";
 
-    private static final String facePath = "/data/rk_backup/face/";
+    private static final String facePath = "/data/rk_backup/face";
 
 
     private static String appid = "7p9bytNNtUW7h4i6QTMeJsWpGZG6zxbcuupyTEwc5Tpi";
@@ -293,6 +293,10 @@ public class FaceUtils {
             return false;
         }
         try {
+            File file = new File(facePath + "/face.txt");
+            if (!file.exists()) {
+                return false;
+            }
             FileInputStream fs = new FileInputStream(facePath + "/face.txt");
             ExtInputStream bos = new ExtInputStream(fs);
             //load version
