@@ -32,8 +32,14 @@ public class MoreManager {
     private static BlueToothEvent mEvent;
     private static BleGattProfile mProfile;
 
+//    private static final String serviceUuid = "00005500-d102-11e1-9b23-00025b00a5a5";
+//    private static final String characterUuid = "00005501-d102-11e1-9b23-00025b00a5a5";
+
     private static final String serviceUuid = "00005500-d102-11e1-9b23-00025b00a5a5";
     private static final String characterUuid = "00005501-d102-11e1-9b23-00025b00a5a5";
+
+    private static final String sendCharacterUuid = "00005502-d102-11e1-9b23-00025b00a5a5";
+
 
     /**
      * 获取单例的蓝牙连接对象
@@ -105,7 +111,7 @@ public class MoreManager {
 
     private void writeContent(UUID uuid, List<BleGattCharacter> characters, byte[] data) {
         for (int i = 0; i < characters.size(); i++) {
-            if (String.valueOf(characters.get(i).getUuid()).equals(characterUuid)) {
+            if (String.valueOf(characters.get(i).getUuid()).equals(sendCharacterUuid)) {
                 UUID characUuid = characters.get(i).getUuid();
                 List<byte[]> list = cutData(data);
                 cut = list.size();
@@ -206,6 +212,4 @@ public class MoreManager {
             }
         });
     }
-
-
 }

@@ -13,9 +13,9 @@ android {
         versionName "1.0.1"
         multiDexEnabled true
         manifestPlaceholders = [
-                GETUI_APP_ID : "5DpFkkQOg3AmrJQLsCqiz9",
-                GETUI_APP_KEY : "n6oiAhf5pX84P0AWXKjWc8",
-                GETUI_APP_SECRET : "AeYuQZx1zd6TUDi0E2Rdv3"
+                GETUI_APP_ID    : "5DpFkkQOg3AmrJQLsCqiz9",
+                GETUI_APP_KEY   : "n6oiAhf5pX84P0AWXKjWc8",
+                GETUI_APP_SECRET: "AeYuQZx1zd6TUDi0E2Rdv3"
         ]
         ndk {
             abiFilters "armeabi", "armeabi-v7a"
@@ -106,4 +106,6 @@ dependencies {
     compile 'net.zetetic:android-database-sqlcipher:3.5.8@aar'
     // 数据库
     compile 'org.greenrobot:greendao:3.2.2'
+    //图片数据格式转换，人脸识别
+    compile 'com.guo.android_extend:android-extend:1.0.1'
 }

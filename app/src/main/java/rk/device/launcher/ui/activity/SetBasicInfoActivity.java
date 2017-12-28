@@ -234,7 +234,7 @@ public class SetBasicInfoActivity extends BaseActivity implements View.OnClickLi
         }
         //判断是否是第一次
         boolean isFirst = (boolean) SPUtils.get(Constant.IS_FIRST_SETTING, true);
-//                    syncBlueTime();
+        syncBlueTime();
         if (isFirst) {
             SPUtils.put(Constant.SETTING_NUM, Constant.SETTING_TYPE2);
             gotoActivity(SetNetWorkActivity.class, true);

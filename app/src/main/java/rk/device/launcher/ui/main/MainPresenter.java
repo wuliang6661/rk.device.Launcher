@@ -146,7 +146,7 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
      * 定位不可用，通过IP获取地址
      */
     private void getIPLocation(BaseActivity activity) {
-        ApiService.address("js").compose(activity.bindUntilEvent(ActivityEvent.DESTROY)).subscribeOn(Schedulers.io())
+        ApiService.address("js").subscribeOn(Schedulers.io())
                 .flatMap(s -> {
                     int start = s.indexOf("{");
                     int end = s.indexOf("}");
