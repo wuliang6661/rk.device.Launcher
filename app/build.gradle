@@ -70,8 +70,8 @@ allprojects {
 //  greendao配置
 greendao {
     schemaVersion 1 //版本号，升级时可配置
-    //    daoPackage 'com.mundane.examassistant.db.dao'  // 生成的dao文件所在的包名
-    //    targetGenDir 'src/main/java'  // 生成目录
+    daoPackage 'rk.device.launcher.db.dao'  // 生成的dao文件所在的包名
+    targetGenDir 'src/main/java'  // 生成目录
 }
 
 dependencies {

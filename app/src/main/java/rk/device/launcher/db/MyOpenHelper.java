@@ -3,7 +3,7 @@ package rk.device.launcher.db;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-import rk.device.launcher.db.entity.DaoMaster;
+import rk.device.launcher.db.dao.DaoMaster;
 
 
 /**

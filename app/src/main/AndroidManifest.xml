@@ -183,6 +183,11 @@
             android:name=".ui.call.CallActivity"
             android:screenOrientation="portrait" />
 
+        <!--指纹-->
+        <activity
+            android:name=".ui.finger.FingerActivity"
+            android:screenOrientation="portrait" />
+
 
         <!-- 个推 -->
         <service

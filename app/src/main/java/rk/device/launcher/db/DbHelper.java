@@ -1,13 +1,11 @@
 package rk.device.launcher.db;
 
-
 import org.greenrobot.greendao.query.Query;
 
 import java.util.List;
 
+import rk.device.launcher.db.dao.UserDao;
 import rk.device.launcher.db.entity.User;
-import rk.device.launcher.db.entity.UserDao;
-
 
 /**
  * @author : mundane
@@ -74,5 +72,27 @@ public class DbHelper {
         return query.list();
     }
 
+    /**
+     * 通过NFC CardNum 获取当前记录
+     * 
+     * @param cardNum
+     * @return
+     */
+    public static List<User> queryByNFCCard(String cardNum) {
+        Query<User> query = getUserDao().queryBuilder().where(UserDao.Properties.CardNo.eq(cardNum))
+                .build();
+        return query.list();
+    }
 
+    /**
+     * 通过指纹ID 获取当前记录
+     * 
+     * @param fingerId
+     * @return
+     */
+    public static List<User> queryByFinger(int fingerId) {
+        Query<User> query = getUserDao().queryBuilder()
+                .where(UserDao.Properties.FingerID.eq(fingerId)).build();
+        return query.list();
+    }
 }
