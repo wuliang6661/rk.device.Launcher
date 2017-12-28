@@ -1,9 +1,5 @@
 package rk.device.launcher.global;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 import rk.device.launcher.BuildConfig;
 
 /**
@@ -100,6 +96,34 @@ public interface Constant {
     String KEY_FIRSTPAGE_CONTENT = "key_firstpage_content";
 
     String KEY_ADDRESS = "key_address";
+
+    /**
+     * RSA加密公钥
+     */
+    String PUCLIC_KEY = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQClYIdKTRqCXdaYlcc5O+gS3EgI\r" +
+            "4RWwu4VmOtYeGlCUvZQZJnYPiTqceyDCgwHUbPgb5Ww3minIdzaRNGvUIk4LSJh9\r" +
+            "tMiEeGcQidGL0VOzTHktkGI5I4XrlziWcFjkEbxwtlkK2e7iwc8Srw6Cc1GpYr89\r" +
+            "wtBccN1ttDWNQR4zRwIDAQAB\r";
+
+    /**
+     * RSA解密私钥
+     */
+    String PRIVATE_KEY = "MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBAKVgh0pNGoJd1piV\r" +
+            "xzk76BLcSAjhFbC7hWY61h4aUJS9lBkmdg+JOpx7IMKDAdRs+BvlbDeaKch3NpE0\r" +
+            "a9QiTgtImH20yIR4ZxCJ0YvRU7NMeS2QYjkjheuXOJZwWOQRvHC2WQrZ7uLBzxKv\r" +
+            "DoJzUalivz3C0Fxw3W20NY1BHjNHAgMBAAECgYBgNS2/jed0G/8xuUCzDSTPhBLs\r" +
+            "B3XE4PKULHpP/OMQBNHZZ8Sa+Sx9yCugvPIdkF8ua2NvXWIdWy0FgEeSm3pmqlXf\r" +
+            "dwmYqupwOHxZVmgO3Q+Xi7yAhNAjDLQY9BjO+CXFjzzPDFSy4f2nyMhQYAZ+qd4t\r" +
+            "bbjJ2JXRusNdddsJcQJBANiu/RczzpyvuDmW1aV32mcujDJ4949LPbf94XBMR7NW\r" +
+            "13uLHRG8hMjfL6HRFoTuzFwt2QRdk2g4WlyRS7kwxIsCQQDDYlbbsnHLvdLZJjFr\r" +
+            "RnrKQW1jGDB5kWRlOy3qPe3PZfMeIXTN9aVNr1IwP8ORTYiDd4UwgDDDyEjhZ2uf\r" +
+            "iFe1AkAYhBwAnwz2b29BnM5JbXkZiYu1PjiMTvAJvEDgitDl+qJgyQmd8x12+MGT\r" +
+            "5mtM2RPoLgvK0aeW+CFJLetKZbknAkBC/gn4JHQ+PqT4Dc9uD+l0RgDCtH2SgVai\r" +
+            "GyuAIKHUtgkpMKGDKRH31ABjSMm+nY4MPcPuQFX4G0lZ+AL/3VjtAkBDiQCJVVzl\r" +
+            "RUyLuF0eO9+p1Rzvtso1evNqn8YeovHbyRIkkfsec/sBTIM2IfPCU/v2AtYjUYK/\r" +
+            "EEV4MTbisRoQ\r";
+
+
 
 
 }
