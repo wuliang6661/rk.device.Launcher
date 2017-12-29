@@ -12,7 +12,7 @@ import org.greenrobot.greendao.annotation.Generated;
 @Entity
 public class User {
     @Id(autoincrement = true)
-    public Long   id;
+    public Long id;
 
     @NotNull
     @Index(unique = true)
@@ -21,6 +21,12 @@ public class User {
     @NotNull
     public String name;        // 用户名称
 
+
+    /**
+     * 1:  开门权限，只能开门
+     * 2:  巡更权限，向服务器发送一条上报消息，代表已巡更
+     * 3:  管理员权限，可以开门、巡更、或进入设置页面更改设置
+     */
     @NotNull
     public String popedomType; // 权限类型
 
@@ -30,15 +36,15 @@ public class User {
 
     public String faceID;
 
-    public int    passWord;
+    public int passWord;
 
-    public long   startTime;
+    public long startTime;
 
-    public long   endTime;
+    public long endTime;
 
     public String fingerCode;
 
-    public int    uploadStatus;
+    public int uploadStatus;
 
     @Generated(hash = 1246737531)
     public User(Long id, @NotNull String uniqueId, @NotNull String name,
