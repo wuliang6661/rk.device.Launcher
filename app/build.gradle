@@ -102,8 +102,6 @@ dependencies {
     compile 'com.getui:sdk:2.11.1.0'
     compile 'cat.ereza:customactivityoncrash:1.5.0'
     compile 'com.github.donkingliang:CustomBanner:1.1.0'
-    // 数据库加密
-    compile 'net.zetetic:android-database-sqlcipher:3.5.8@aar'
     // 数据库
     compile 'org.greenrobot:greendao:3.2.2'
     //图片数据格式转换，人脸识别

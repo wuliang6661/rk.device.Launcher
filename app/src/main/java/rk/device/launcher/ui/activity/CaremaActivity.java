@@ -4,7 +4,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.io.File;
 
@@ -22,6 +24,8 @@ public class CaremaActivity extends BaseActivity {
 
     @Bind(R.id.image)
     ImageView image;
+    @Bind(R.id.hint_text)
+    TextView hintText;
 
 
 //    @Bind(R.id.camera_surfaceview)
@@ -49,10 +53,13 @@ public class CaremaActivity extends BaseActivity {
         String path = "/data/rk_backup/stereo_calibration.jpg";
         File file = new File(path);
         if (file.exists()) {
+            image.setVisibility(View.VISIBLE);
+            hintText.setVisibility(View.GONE);
             Bitmap bitmap = BitmapFactory.decodeFile(path);
             image.setImageBitmap(bitmap);
         } else {
-            showMessageDialog("文件不存在！");
+            image.setVisibility(View.GONE);
+            hintText.setVisibility(View.VISIBLE);
         }
     }
 
