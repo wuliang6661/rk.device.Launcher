@@ -186,7 +186,9 @@
         <!--指纹-->
         <activity
             android:name=".ui.finger.FingerActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait">
+
+        </activity>
 
         <!-- 密码开门界面 -->
         <activity

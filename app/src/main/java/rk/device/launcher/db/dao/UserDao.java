@@ -31,7 +31,7 @@ public class UserDao extends AbstractDao<User, Long> {
         public final static Property CardNo = new Property(4, String.class, "cardNo", false, "CARD_NO");
         public final static Property FingerID = new Property(5, String.class, "fingerID", false, "FINGER_ID");
         public final static Property FaceID = new Property(6, String.class, "faceID", false, "FACE_ID");
-        public final static Property PassWord = new Property(7, String.class, "passWord", false, "PASS_WORD");
+        public final static Property PassWord = new Property(7, int.class, "passWord", false, "PASS_WORD");
         public final static Property StartTime = new Property(8, long.class, "startTime", false, "START_TIME");
         public final static Property EndTime = new Property(9, long.class, "endTime", false, "END_TIME");
         public final static Property FingerCode = new Property(10, String.class, "fingerCode", false, "FINGER_CODE");
@@ -58,7 +58,7 @@ public class UserDao extends AbstractDao<User, Long> {
                 "\"CARD_NO\" TEXT," + // 4: cardNo
                 "\"FINGER_ID\" TEXT," + // 5: fingerID
                 "\"FACE_ID\" TEXT," + // 6: faceID
-                "\"PASS_WORD\" TEXT," + // 7: passWord
+                "\"PASS_WORD\" INTEGER NOT NULL ," + // 7: passWord
                 "\"START_TIME\" INTEGER NOT NULL ," + // 8: startTime
                 "\"END_TIME\" INTEGER NOT NULL ," + // 9: endTime
                 "\"FINGER_CODE\" TEXT," + // 10: fingerCode
@@ -100,11 +100,7 @@ public class UserDao extends AbstractDao<User, Long> {
         if (faceID != null) {
             stmt.bindString(7, faceID);
         }
- 
-        String passWord = entity.getPassWord();
-        if (passWord != null) {
-            stmt.bindString(8, passWord);
-        }
+        stmt.bindLong(8, entity.getPassWord());
         stmt.bindLong(9, entity.getStartTime());
         stmt.bindLong(10, entity.getEndTime());
  
@@ -141,11 +137,7 @@ public class UserDao extends AbstractDao<User, Long> {
         if (faceID != null) {
             stmt.bindString(7, faceID);
         }
- 
-        String passWord = entity.getPassWord();
-        if (passWord != null) {
-            stmt.bindString(8, passWord);
-        }
+        stmt.bindLong(8, entity.getPassWord());
         stmt.bindLong(9, entity.getStartTime());
         stmt.bindLong(10, entity.getEndTime());
  
@@ -171,7 +163,7 @@ public class UserDao extends AbstractDao<User, Long> {
             cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // cardNo
             cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // fingerID
             cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // faceID
-            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // passWord
+            cursor.getInt(offset + 7), // passWord
             cursor.getLong(offset + 8), // startTime
             cursor.getLong(offset + 9), // endTime
             cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10), // fingerCode
@@ -189,7 +181,7 @@ public class UserDao extends AbstractDao<User, Long> {
         entity.setCardNo(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
         entity.setFingerID(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
         entity.setFaceID(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
-        entity.setPassWord(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
+        entity.setPassWord(cursor.getInt(offset + 7));
         entity.setStartTime(cursor.getLong(offset + 8));
         entity.setEndTime(cursor.getLong(offset + 9));
         entity.setFingerCode(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));

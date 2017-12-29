@@ -12,17 +12,17 @@ import org.greenrobot.greendao.annotation.Generated;
 @Entity
 public class User {
     @Id(autoincrement = true)
-    public Long id;
+    public Long   id;
 
     @NotNull
     @Index(unique = true)
-    public String uniqueId; // 这就是那个唯一标识id
+    public String uniqueId;    // 这就是那个唯一标识id
 
     @NotNull
-    public String name;
+    public String name;        // 用户名称
 
     @NotNull
-    public String popedomType;
+    public String popedomType; // 权限类型
 
     public String cardNo;
 
@@ -30,21 +30,20 @@ public class User {
 
     public String faceID;
 
-    public String passWord;
+    public int    passWord;
 
-    public long startTime;
+    public long   startTime;
 
-    public long endTime;
+    public long   endTime;
 
     public String fingerCode;
 
-    public int uploadStatus;
+    public int    uploadStatus;
 
-    @Generated(hash = 893369335)
+    @Generated(hash = 1246737531)
     public User(Long id, @NotNull String uniqueId, @NotNull String name,
-            @NotNull String popedomType, String cardNo, String fingerID,
-            String faceID, String passWord, long startTime, long endTime,
-            String fingerCode, int uploadStatus) {
+                @NotNull String popedomType, String cardNo, String fingerID, String faceID,
+                int passWord, long startTime, long endTime, String fingerCode, int uploadStatus) {
         this.id = id;
         this.uniqueId = uniqueId;
         this.name = name;
@@ -119,11 +118,11 @@ public class User {
         this.faceID = faceID;
     }
 
-    public String getPassWord() {
+    public int getPassWord() {
         return this.passWord;
     }
 
-    public void setPassWord(String passWord) {
+    public void setPassWord(int passWord) {
         this.passWord = passWord;
     }
 
@@ -158,6 +157,5 @@ public class User {
     public void setUploadStatus(int uploadStatus) {
         this.uploadStatus = uploadStatus;
     }
-
 
 }

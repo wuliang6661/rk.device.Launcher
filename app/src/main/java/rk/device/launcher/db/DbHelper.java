@@ -1,11 +1,14 @@
 package rk.device.launcher.db;
 
+import android.text.TextUtils;
+
 import org.greenrobot.greendao.query.Query;
 
 import java.util.List;
 
 import rk.device.launcher.db.dao.UserDao;
 import rk.device.launcher.db.entity.User;
+import rk.device.launcher.global.Constant;
 
 /**
  * @author : mundane
@@ -33,8 +36,14 @@ public class DbHelper {
         getUserDao().deleteAll();
     }
 
-    public static void insert(User user) {
-        getUserDao().insert(user);
+    /**
+     * 此处需要返回insert之后的反馈，不然无法知道是否insert成功
+     * 
+     * @param user
+     * @return
+     */
+    public static long insert(User user) {
+        return getUserDao().insert(user);
     }
 
     public static void insertInTx(User... users) {
@@ -96,6 +105,27 @@ public class DbHelper {
         return query.list();
     }
 
+    /**
+     * 插入一条数据
+     * 
+     * @param user
+     * @return
+     */
+    public static long insertUser(User user) {
+        //名称为空
+        if (TextUtils.isEmpty(user.getName())) {
+            return Constant.NULL_NAME;
+        }
+        //权限类型为空
+        if (TextUtils.isEmpty(user.getPopedomType())) {
+            return Constant.NULL_POPEDOMTYPE;
+        }
+        //唯一标识
+        if (TextUtils.isEmpty(user.getUniqueId())) {
+            return Constant.NULL_UNIQUEID;
+        }
+        return getUserDao().insert(user);
+    }
 
     /**
      * 查询数字密码是否可开门
@@ -103,9 +133,8 @@ public class DbHelper {
     public static List<User> queryByPassword(String password) {
         UserDao userDao = DbHelper.getUserDao();
         // where里面是可变参数
-        Query<User> query = userDao.queryBuilder()
-                .where(UserDao.Properties.PassWord.eq(password), UserDao.Properties.PopedomType.eq(1))
-                .build();
+        Query<User> query = userDao.queryBuilder().where(UserDao.Properties.PassWord.eq(password),
+                UserDao.Properties.PopedomType.eq(1)).build();
         return query.list();
     }
 }
