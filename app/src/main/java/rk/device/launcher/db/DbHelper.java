@@ -106,7 +106,7 @@ public class DbHelper {
     }
 
     /**
-     * 插入一条数据
+     * 插入或更新一条数据
      * 
      * @param user
      * @return
@@ -124,7 +124,12 @@ public class DbHelper {
         if (TextUtils.isEmpty(user.getUniqueId())) {
             return Constant.NULL_UNIQUEID;
         }
-        return getUserDao().insert(user);
+        if (user.getId() == null) {
+            return getUserDao().insert(user);
+        } else {
+            getUserDao().update(user);
+            return Constant.UPDATE_SUCCESS;
+        }
     }
 
     /**

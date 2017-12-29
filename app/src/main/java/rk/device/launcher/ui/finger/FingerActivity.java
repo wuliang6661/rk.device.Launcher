@@ -2,8 +2,10 @@ package rk.device.launcher.ui.finger;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -29,6 +31,8 @@ public class FingerActivity extends MVPBaseActivity<FingerContract.View, FingerP
 
     @Bind(R.id.listView)
     ListView                    mListView;
+    @Bind(R.id.et_nfc)
+    EditText                    nfcEt;
     private CommonAdapter<User> mAdapter = null;
     private List<User>          dataList = new ArrayList<>();
 
@@ -45,12 +49,13 @@ public class FingerActivity extends MVPBaseActivity<FingerContract.View, FingerP
     }
 
     private void initView() {
-        setOnClick(R.id.tv_add, R.id.tv_verify, R.id.tv_find, R.id.tv_modify, R.id.tv_delete);
+        setOnClick(R.id.tv_add_open, R.id.tv_add_patrol, R.id.tv_add_admin, R.id.tv_verify,
+                R.id.tv_find, R.id.tv_modify, R.id.tv_delete);
         mAdapter = new CommonAdapter<User>(this, dataList, R.layout.item_finger) {
             @Override
             public void convert(ViewHolder helper, User item) {
                 helper.setText(R.id.tv_name, item.getName());
-                helper.setText(R.id.tv_unique_id, item.getUniqueId());
+                helper.setText(R.id.tv_unique_id, item.getCardNo());
             }
         };
         mListView.setAdapter(mAdapter);
@@ -63,9 +68,14 @@ public class FingerActivity extends MVPBaseActivity<FingerContract.View, FingerP
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.tv_add:
+            case R.id.tv_add_open:
+                String nfc = nfcEt.getText().toString().trim();
+                if (TextUtils.isEmpty(nfc)) {
+                    T.showShort("请录入卡");
+                    break;
+                }
                 User user = new User();
-                user.setCardNo("123456");
+                user.setCardNo(nfc);
                 user.setEndTime(System.currentTimeMillis() + 10000000);
                 user.setStartTime(System.currentTimeMillis());
                 user.setUniqueId(String.valueOf(System.currentTimeMillis()));
@@ -95,27 +105,114 @@ public class FingerActivity extends MVPBaseActivity<FingerContract.View, FingerP
                         break;
                 }
                 break;
+            case R.id.tv_add_patrol:
+                nfc = nfcEt.getText().toString().trim();
+                if (TextUtils.isEmpty(nfc)) {
+                    T.showShort("请录入卡");
+                    break;
+                }
+                user = new User();
+                user.setCardNo(nfc);
+                user.setEndTime(System.currentTimeMillis() + 10000000);
+                user.setStartTime(System.currentTimeMillis());
+                user.setUniqueId(String.valueOf(System.currentTimeMillis()));
+                user.setPopedomType("2");
+                user.setFingerID("123123");
+                user.setFingerCode("123code");
+                user.setName("hanbin");
+                user.setPassWord(67341);
+                result = DbHelper.insertUser(user);
+                Log.i(getClass().getName(), "result:" + result);
+                switch ((int) result) {
+                    case Constant.NULL_NAME:
+                        T.showShort("请输入用户名称");
+                        break;
+                    case Constant.NULL_POPEDOMTYPE:
+                        T.showShort("请选择权限类型");
+                        break;
+                    case Constant.NULL_UNIQUEID:
+                        T.showShort("请设置用户唯一标识");
+                        break;
+                    default:
+                        if (result > 0) {
+                            T.showShort("插入成功");
+                        } else {
+                            T.showShort("插入失败");
+                        }
+                        break;
+                }
+                break;
+            case R.id.tv_add_admin:
+                nfc = nfcEt.getText().toString().trim();
+                if (TextUtils.isEmpty(nfc)) {
+                    T.showShort("请录入卡");
+                    break;
+                }
+                user = new User();
+                user.setCardNo(nfc);
+                user.setEndTime(System.currentTimeMillis() + 10000000);
+                user.setStartTime(System.currentTimeMillis());
+                user.setUniqueId(String.valueOf(System.currentTimeMillis()));
+                user.setPopedomType("3");
+                user.setFingerID("123123");
+                user.setFingerCode("123code");
+                user.setName("hanbin");
+                user.setPassWord(67341);
+                result = DbHelper.insertUser(user);
+                Log.i(getClass().getName(), "result:" + result);
+                switch ((int) result) {
+                    case Constant.NULL_NAME:
+                        T.showShort("请输入用户名称");
+                        break;
+                    case Constant.NULL_POPEDOMTYPE:
+                        T.showShort("请选择权限类型");
+                        break;
+                    case Constant.NULL_UNIQUEID:
+                        T.showShort("请设置用户唯一标识");
+                        break;
+                    default:
+                        if (result > 0) {
+                            T.showShort("插入成功");
+                        } else {
+                            T.showShort("插入失败");
+                        }
+                        break;
+                }
+                break;
             case R.id.tv_verify:
-                if (VerifyUtils.getInstance().verifyByNfc("123456")) {
-                    T.showShort("验证成功");
-                } else {
-                    T.showShort("验证失败");
+                nfc = nfcEt.getText().toString().trim();
+                switch (VerifyUtils.getInstance().verifyByNfc(nfc)) {
+                    case Constant.USER_TYPE_OPEN_ONLY://只能开门
+                        T.showShort("open door only.");
+                        break;
+                    case Constant.USER_TYPE_PATROL_ONLY://巡更
+                        T.showShort("patrol only.");
+                        break;
+                    case Constant.USER_TYPE_ADMINISTRATOR://管理员，都可以
+                        T.showShort("I'm an administrator.");
+                        break;
                 }
                 break;
             case R.id.tv_find:
-                List<User> userList = DbHelper.queryByNFCCard("123456");
+                nfc = nfcEt.getText().toString().trim();
+                List<User> userList = DbHelper.queryByNFCCard(nfc);
+                dataList.clear();
                 if (userList.size() > 0) {
-                    dataList.clear();
                     dataList.addAll(userList);
-                    mAdapter.notifyDataSetChanged();
                 }
+                mAdapter.notifyDataSetChanged();
                 T.showShort("size:" + userList.size());
                 break;
             case R.id.tv_modify:
 
                 break;
             case R.id.tv_delete:
-
+                nfc = nfcEt.getText().toString().trim();
+                userList = DbHelper.queryByNFCCard(nfc);
+                if (userList.size() > 0) {
+                    T.showShort("删除成功" + userList.get(0).getName());
+                    DbHelper.delete(userList.get(0));
+                }
                 break;
         }
     }
