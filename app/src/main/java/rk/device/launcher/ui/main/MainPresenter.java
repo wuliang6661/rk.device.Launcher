@@ -60,9 +60,9 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
     private DeviceUuidFactory uuidFactory = null;
     private String uUid;
 
-    ElectricBroadcastReceiver mBatteryReceiver;
-    NetChangeBroadcastReceiver netChangeBroadcastRecever;
-    NetBroadcastReceiver netOffReceiver;
+    private ElectricBroadcastReceiver mBatteryReceiver;
+    private NetChangeBroadcastReceiver netChangeBroadcastRecever;
+    private NetBroadcastReceiver netOffReceiver;
 
 
     /**
@@ -129,7 +129,7 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
     /**
      * 注销各类服务
      */
-    public void unRegisterReceiver() {
+    void unRegisterReceiver() {
         mView.getContext().unregisterReceiver(mBatteryReceiver);
         mView.getContext().unregisterReceiver(netChangeBroadcastRecever);
         mView.getContext().unregisterReceiver(netOffReceiver);

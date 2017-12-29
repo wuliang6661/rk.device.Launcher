@@ -1,4 +1,4 @@
-package rk.device.launcher.ui.call;
+package rk.device.launcher.ui.numpassword;
 
 
 import android.os.Bundle;
@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -16,21 +15,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
-import peripherals.NumberpadHelper;
 import rk.device.launcher.R;
+import rk.device.launcher.db.DbHelper;
+import rk.device.launcher.db.entity.User;
 import rk.device.launcher.mvp.MVPBaseActivity;
 import rk.device.launcher.widget.lgrecycleadapter.LGRecycleViewAdapter;
 import rk.device.launcher.widget.lgrecycleadapter.LGViewHolder;
 
 
 /**
- * Created by wuliang on 2017/12/22.
+ * MVPPlugin
  * <p>
- * 拨号界面
+ * 密码开门
  */
 
-public class CallActivity extends MVPBaseActivity<CallContract.View, CallPresenter>
-        implements CallContract.View, View.OnClickListener {
+public class NumpasswordActivity extends MVPBaseActivity<NumpasswordContract.View, NumpasswordPresenter>
+        implements NumpasswordContract.View, View.OnClickListener {
 
     @Bind(R.id.edit_text)
     TextView editText;
@@ -38,10 +38,16 @@ public class CallActivity extends MVPBaseActivity<CallContract.View, CallPresent
     ImageView clear;
     @Bind(R.id.recycle)
     RecyclerView recycle;
+    @Bind(R.id.commit_img)
+    ImageView commitImg;
+    @Bind(R.id.commit_text)
+    TextView commit;
     @Bind(R.id.call_commit)
     RelativeLayout callCommit;
     @Bind(R.id.clear_dan)
     ImageView clearDan;
+    @Bind(R.id.hint_text)
+    TextView hintText;
 
     List<String> callbutton;
     StringBuilder commitText;
@@ -55,6 +61,7 @@ public class CallActivity extends MVPBaseActivity<CallContract.View, CallPresent
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         initView();
         initData();
     }
@@ -62,7 +69,13 @@ public class CallActivity extends MVPBaseActivity<CallContract.View, CallPresent
 
     protected void initView() {
         goBack();
-        setTitle("拨号通话");
+        setTitle("密码开门");
+        editText.setHint("请输入公共密码或户室密码");
+        hintText.setText(String.valueOf("参考：户室密码1508#123456（“户室号” + “#” + “户室密码”）"));
+        editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
+        commit.setVisibility(View.VISIBLE);
+        commitImg.setVisibility(View.GONE);
+        clearDan.setVisibility(View.GONE);
         GridLayoutManager manager = new GridLayoutManager(this, 3);
         recycle.setLayoutManager(manager);
     }
@@ -111,14 +124,9 @@ public class CallActivity extends MVPBaseActivity<CallContract.View, CallPresent
                 holder.setText(R.id.call_text, s);
             }
         };
-        adapter.setOnItemClickListener(R.id.call_layout, new LGRecycleViewAdapter.ItemClickListener() {
-            @Override
-            public void onItemClicked(View view, int position) {
-                if (commitText.length() < 4) {
-                    commitText.append(callbutton.get(position));
-                    editText.setText(commitText.toString());
-                }
-            }
+        adapter.setOnItemClickListener(R.id.call_layout, (view, position) -> {
+            commitText.append(callbutton.get(position));
+            editText.setText(commitText.toString());
         });
         recycle.setAdapter(adapter);
     }
@@ -127,14 +135,6 @@ public class CallActivity extends MVPBaseActivity<CallContract.View, CallPresent
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.call_commit:
-                if (commitText.length() != 4) {
-                    showMessageDialog("输入的房间号必须为4位！");
-                } else {
-                    int suress = NumberpadHelper.PER_numberpadPress(commitText.toString());
-                    Log.d("wuliang", "call_button " + commitText.toString() + "  code = " + suress);
-                }
-                break;
             case R.id.clear_dan:
                 if (commitText.length() != 0) {
                     commitText.deleteCharAt(commitText.length() - 1);
@@ -145,6 +145,14 @@ public class CallActivity extends MVPBaseActivity<CallContract.View, CallPresent
                 if (commitText.length() != 0) {
                     commitText.delete(0, commitText.length());
                     editText.setText(commitText.toString());
+                }
+                break;
+            case R.id.call_commit:    //确定密码
+                List<User> users = DbHelper.queryByPassword(commitText.toString());
+                if (users.isEmpty()) {
+                    showMessageDialog("密码错误，请重新输入");
+                } else {
+                    mPresenter.openDoor();
                 }
                 break;
         }

@@ -11,152 +11,153 @@ import org.greenrobot.greendao.annotation.Generated;
  */
 @Entity
 public class User {
-	@Id(autoincrement = true)
-	public Long id;
-	
-	@NotNull
-	@Index(unique = true)
-	public String uniqueId; // 这就是那个唯一标识id
-	
-	@NotNull
-	public String name;
-	
-	@NotNull
-	public String popedomType;
-	
-	public String cardNo;
-	
-	public String fingerID;
-	
-	public String faceID;
-	
-	public int passWord;
-	
-	public long startTime;
-	
-	public long endTime;
-	
-	public String fingerCode;
-	
-	public int uploadStatus;
+    @Id(autoincrement = true)
+    public Long id;
 
-	@Generated(hash = 1246737531)
-	public User(Long id, @NotNull String uniqueId, @NotNull String name,
-			@NotNull String popedomType, String cardNo, String fingerID, String faceID,
-			int passWord, long startTime, long endTime, String fingerCode,
-			int uploadStatus) {
-		this.id = id;
-		this.uniqueId = uniqueId;
-		this.name = name;
-		this.popedomType = popedomType;
-		this.cardNo = cardNo;
-		this.fingerID = fingerID;
-		this.faceID = faceID;
-		this.passWord = passWord;
-		this.startTime = startTime;
-		this.endTime = endTime;
-		this.fingerCode = fingerCode;
-		this.uploadStatus = uploadStatus;
-	}
+    @NotNull
+    @Index(unique = true)
+    public String uniqueId; // 这就是那个唯一标识id
 
-	@Generated(hash = 586692638)
-	public User() {
-	}
+    @NotNull
+    public String name;
 
-	public Long getId() {
-		return this.id;
-	}
+    @NotNull
+    public String popedomType;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public String cardNo;
 
-	public String getUniqueId() {
-		return this.uniqueId;
-	}
+    public String fingerID;
 
-	public void setUniqueId(String uniqueId) {
-		this.uniqueId = uniqueId;
-	}
+    public String faceID;
 
-	public String getName() {
-		return this.name;
-	}
+    public String passWord;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public long startTime;
 
-	public String getPopedomType() {
-		return this.popedomType;
-	}
+    public long endTime;
 
-	public void setPopedomType(String popedomType) {
-		this.popedomType = popedomType;
-	}
+    public String fingerCode;
 
-	public String getCardNo() {
-		return this.cardNo;
-	}
+    public int uploadStatus;
 
-	public void setCardNo(String cardNo) {
-		this.cardNo = cardNo;
-	}
+    @Generated(hash = 893369335)
+    public User(Long id, @NotNull String uniqueId, @NotNull String name,
+            @NotNull String popedomType, String cardNo, String fingerID,
+            String faceID, String passWord, long startTime, long endTime,
+            String fingerCode, int uploadStatus) {
+        this.id = id;
+        this.uniqueId = uniqueId;
+        this.name = name;
+        this.popedomType = popedomType;
+        this.cardNo = cardNo;
+        this.fingerID = fingerID;
+        this.faceID = faceID;
+        this.passWord = passWord;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.fingerCode = fingerCode;
+        this.uploadStatus = uploadStatus;
+    }
 
-	public String getFingerID() {
-		return this.fingerID;
-	}
+    @Generated(hash = 586692638)
+    public User() {
+    }
 
-	public void setFingerID(String fingerID) {
-		this.fingerID = fingerID;
-	}
+    public Long getId() {
+        return this.id;
+    }
 
-	public String getFaceID() {
-		return this.faceID;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setFaceID(String faceID) {
-		this.faceID = faceID;
-	}
+    public String getUniqueId() {
+        return this.uniqueId;
+    }
 
-	public int getPassWord() {
-		return this.passWord;
-	}
+    public void setUniqueId(String uniqueId) {
+        this.uniqueId = uniqueId;
+    }
 
-	public void setPassWord(int passWord) {
-		this.passWord = passWord;
-	}
+    public String getName() {
+        return this.name;
+    }
 
-	public long getStartTime() {
-		return this.startTime;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setStartTime(long startTime) {
-		this.startTime = startTime;
-	}
+    public String getPopedomType() {
+        return this.popedomType;
+    }
 
-	public long getEndTime() {
-		return this.endTime;
-	}
+    public void setPopedomType(String popedomType) {
+        this.popedomType = popedomType;
+    }
 
-	public void setEndTime(long endTime) {
-		this.endTime = endTime;
-	}
+    public String getCardNo() {
+        return this.cardNo;
+    }
 
-	public String getFingerCode() {
-		return this.fingerCode;
-	}
+    public void setCardNo(String cardNo) {
+        this.cardNo = cardNo;
+    }
 
-	public void setFingerCode(String fingerCode) {
-		this.fingerCode = fingerCode;
-	}
+    public String getFingerID() {
+        return this.fingerID;
+    }
 
-	public int getUploadStatus() {
-		return this.uploadStatus;
-	}
+    public void setFingerID(String fingerID) {
+        this.fingerID = fingerID;
+    }
 
-	public void setUploadStatus(int uploadStatus) {
-		this.uploadStatus = uploadStatus;
-	}
+    public String getFaceID() {
+        return this.faceID;
+    }
+
+    public void setFaceID(String faceID) {
+        this.faceID = faceID;
+    }
+
+    public String getPassWord() {
+        return this.passWord;
+    }
+
+    public void setPassWord(String passWord) {
+        this.passWord = passWord;
+    }
+
+    public long getStartTime() {
+        return this.startTime;
+    }
+
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
+    }
+
+    public long getEndTime() {
+        return this.endTime;
+    }
+
+    public void setEndTime(long endTime) {
+        this.endTime = endTime;
+    }
+
+    public String getFingerCode() {
+        return this.fingerCode;
+    }
+
+    public void setFingerCode(String fingerCode) {
+        this.fingerCode = fingerCode;
+    }
+
+    public int getUploadStatus() {
+        return this.uploadStatus;
+    }
+
+    public void setUploadStatus(int uploadStatus) {
+        this.uploadStatus = uploadStatus;
+    }
+
 
 }

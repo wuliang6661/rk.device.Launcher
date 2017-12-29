@@ -27,7 +27,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import rk.device.launcher.utils.FileUtils;
@@ -98,6 +97,7 @@ public class FaceUtils {
 
 
     private FaceUtils() {
+        loop = null;
     }
 
     /**
@@ -353,9 +353,7 @@ public class FaceUtils {
 
     private byte[] mImageNV21 = null;
     private AFT_FSDKFace mAFT_FSDKFace = null;
-
     private int mWidth, mHeight;
-
     private FRAbsLoop loop;
 
 
@@ -452,7 +450,6 @@ public class FaceUtils {
 
         @Override
         public void over() {
-
         }
     }
 
@@ -465,6 +462,4 @@ public class FaceUtils {
         mFREngine.AFR_FSDK_UninitialEngine();
         mFTengine.AFT_FSDK_UninitialFaceEngine();
     }
-
-
 }
