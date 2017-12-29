@@ -1,10 +1,12 @@
 package rk.device.launcher.db.entity;
 
 import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Index;
 import org.greenrobot.greendao.annotation.NotNull;
-import org.greenrobot.greendao.annotation.Generated;
+
+import rk.device.launcher.utils.encrypt.AESOperator;
 
 /**
  * Created by mundane on 2017/12/27 下午3:00
@@ -12,14 +14,14 @@ import org.greenrobot.greendao.annotation.Generated;
 @Entity
 public class User {
     @Id(autoincrement = true)
-    public Long id;
+    private Long id;
 
     @NotNull
     @Index(unique = true)
-    public String uniqueId;    // 这就是那个唯一标识id
+    private String uniqueId;    // 这就是那个唯一标识id
 
     @NotNull
-    public String name;        // 用户名称
+    private String name;        // 用户名称
 
 
     /**
@@ -28,28 +30,29 @@ public class User {
      * 3:  管理员权限，可以开门、巡更、或进入设置页面更改设置
      */
     @NotNull
-    public String popedomType; // 权限类型
+    private String popedomType; // 权限类型
 
-    public String cardNo;
+    private String cardNo;
 
-    public String fingerID;
+    private String fingerID;
 
-    public String faceID;
+    private String faceID;
 
-    public int passWord;
+    private int passWord;
 
-    public long startTime;
+    private long startTime;
 
-    public long endTime;
+    private long endTime;
 
-    public String fingerCode;
+    private String fingerCode;
 
-    public int uploadStatus;
+    private int uploadStatus;
 
     @Generated(hash = 1246737531)
     public User(Long id, @NotNull String uniqueId, @NotNull String name,
-                @NotNull String popedomType, String cardNo, String fingerID, String faceID,
-                int passWord, long startTime, long endTime, String fingerCode, int uploadStatus) {
+            @NotNull String popedomType, String cardNo, String fingerID,
+            String faceID, int passWord, long startTime, long endTime,
+            String fingerCode, int uploadStatus) {
         this.id = id;
         this.uniqueId = uniqueId;
         this.name = name;
@@ -85,11 +88,13 @@ public class User {
     }
 
     public String getName() {
-        return this.name;
+        String decodeName = AESOperator.decode(this.name);
+        return decodeName;
     }
 
     public void setName(String name) {
-        this.name = name;
+        String encodeName = AESOperator.encode(name);
+        this.name = encodeName;
     }
 
     public String getPopedomType() {
@@ -149,11 +154,13 @@ public class User {
     }
 
     public String getFingerCode() {
-        return this.fingerCode;
+        String decodeFingerCode = AESOperator.decode(this.fingerCode);
+        return decodeFingerCode;
     }
 
     public void setFingerCode(String fingerCode) {
-        this.fingerCode = fingerCode;
+        String encodeFingerCode = AESOperator.encode(fingerCode);
+        this.fingerCode = encodeFingerCode;
     }
 
     public int getUploadStatus() {
@@ -163,5 +170,6 @@ public class User {
     public void setUploadStatus(int uploadStatus) {
         this.uploadStatus = uploadStatus;
     }
+
 
 }
