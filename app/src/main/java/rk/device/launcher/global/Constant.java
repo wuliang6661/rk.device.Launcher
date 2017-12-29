@@ -1,9 +1,5 @@
 package rk.device.launcher.global;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 import rk.device.launcher.BuildConfig;
 
 /**
@@ -100,6 +96,9 @@ public interface Constant {
     String KEY_FIRSTPAGE_CONTENT = "key_firstpage_content";
 
     String KEY_ADDRESS = "key_address";
+
+
+
 
 
 }
