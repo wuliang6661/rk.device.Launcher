@@ -148,6 +148,32 @@
             android:layout_height="@dimen/divider_height"
             android:background="@color/blue_31598a" />
 
+        <LinearLayout
+            android:id="@+id/ceshi"
+            style="@style/ll_set_item">
+
+            <TextView
+                style="@style/tv_set_label"
+                android:text="双目校验效果查看" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_18" />
+
+            <ImageView style="@style/more_tag" />
+
+        </LinearLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_height"
+            android:background="@color/blue_31598a" />
+
         <Button
             android:id="@+id/btn_finish_setting"
             style="@style/btn_finish"

@@ -83,7 +83,7 @@ public class DbHelper {
 
     /**
      * 通过NFC CardNum 获取当前记录
-     * 
+     *
      * @param cardNum
      * @return
      */
@@ -95,7 +95,7 @@ public class DbHelper {
 
     /**
      * 通过指纹ID 获取当前记录
-     * 
+     *
      * @param fingerId
      * @return
      */
@@ -125,5 +125,16 @@ public class DbHelper {
             return Constant.NULL_UNIQUEID;
         }
         return getUserDao().insert(user);
+    }
+
+    /**
+     * 查询数字密码是否可开门
+     */
+    public static List<User> queryByPassword(String password) {
+        UserDao userDao = DbHelper.getUserDao();
+        // where里面是可变参数
+        Query<User> query = userDao.queryBuilder().where(UserDao.Properties.PassWord.eq(password),
+                UserDao.Properties.PopedomType.eq(1)).build();
+        return query.list();
     }
 }

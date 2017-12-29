@@ -42,6 +42,7 @@ import rk.device.launcher.ui.activity.SettingActivity;
 import rk.device.launcher.ui.call.CallActivity;
 import rk.device.launcher.ui.fragment.InitErrorDialogFragmen;
 import rk.device.launcher.ui.fragment.InputWifiPasswordDialogFragment;
+import rk.device.launcher.ui.numpassword.NumpasswordActivity;
 import rk.device.launcher.utils.DateUtil;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.SoundPlayUtils;
@@ -220,11 +221,9 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        unregisterReceiver(mBatteryReceiver);
-//        unregisterReceiver(netChangeBroadcastRecever);
-//        unregisterReceiver(netOffReceiver);
         mStaticHandler.removeCallbacksAndMessages(null);
         CvcHelper.CVC_deinit();
+        mPresenter.unRegisterReceiver();
     }
 
 
@@ -331,7 +330,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
                 initDialog.show(getSupportFragmentManager(), "");
                 break;
             case R.id.num_pass_layout:    //密码开门
-
+                gotoActivity(NumpasswordActivity.class, false);
                 break;
             case R.id.call_layout:    //拨号
                 gotoActivity(CallActivity.class, false);

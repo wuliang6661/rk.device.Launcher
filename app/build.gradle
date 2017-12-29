@@ -106,4 +106,6 @@ dependencies {
     compile 'net.zetetic:android-database-sqlcipher:3.5.8@aar'
     // 数据库
     compile 'org.greenrobot:greendao:3.2.2'
+    //图片数据格式转换，人脸识别
+    compile 'com.guo.android_extend:android-extend:1.0.1'
 }

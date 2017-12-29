@@ -101,4 +101,5 @@ public interface Constant {
     int     NULL_NAME             = -1001;                  //用户名称为空
     int     NULL_POPEDOMTYPE      = -1002;                  //权限类型为空
     int     NULL_UNIQUEID         = -1003;                  //唯一标识为空
+
 }

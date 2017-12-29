@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -21,15 +20,15 @@ import butterknife.Bind;
 import rk.device.launcher.R;
 import rk.device.launcher.api.T;
 import rk.device.launcher.base.BaseActivity;
-import rk.device.launcher.utils.rxjava.RxBus;
 import rk.device.launcher.bean.event.BlueToothEvent;
 import rk.device.launcher.bean.event.HomeInfoEvent;
 import rk.device.launcher.bean.event.TimeEvent;
 import rk.device.launcher.global.Constant;
-import rk.device.launcher.utils.bluetools.MoreManager;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.StringUtils;
 import rk.device.launcher.utils.TimeUtils;
+import rk.device.launcher.utils.bluetools.MoreManager;
+import rk.device.launcher.utils.rxjava.RxBus;
 import rx.Subscriber;
 
 import static rk.device.launcher.utils.SPUtils.get;
@@ -71,7 +70,7 @@ public class SetBasicInfoActivity extends BaseActivity implements View.OnClickLi
 
     protected void initView() {
         registerRxBus();
-        setOnClick(R.id.ll_set_time, R.id.ll_set_blue_tooth, R.id.btn_finish_setting, R.id.eyes_verify);
+        setOnClick(R.id.ll_set_time, R.id.ll_set_blue_tooth, R.id.btn_finish_setting, R.id.eyes_verify, R.id.ceshi);
         goBack();
     }
 
@@ -146,12 +145,7 @@ public class SetBasicInfoActivity extends BaseActivity implements View.OnClickLi
             blueEvent = new BlueToothEvent(mac, name);
         }
         voiceCheckBox.setChecked(isVoice);
-        voiceCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                isVoice = isChecked;
-            }
-        });
+        voiceCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> isVoice = isChecked);
     }
 
 
@@ -181,6 +175,9 @@ public class SetBasicInfoActivity extends BaseActivity implements View.OnClickLi
                     return;
                 }
                 connectDevice(deviceName);
+                break;
+            case R.id.ceshi:
+                gotoActivity(CaremaActivity.class, false);
                 break;
         }
     }
@@ -234,7 +231,7 @@ public class SetBasicInfoActivity extends BaseActivity implements View.OnClickLi
         }
         //判断是否是第一次
         boolean isFirst = (boolean) SPUtils.get(Constant.IS_FIRST_SETTING, true);
-//                    syncBlueTime();
+//        syncBlueTime();
         if (isFirst) {
             SPUtils.put(Constant.SETTING_NUM, Constant.SETTING_TYPE2);
             gotoActivity(SetNetWorkActivity.class, true);

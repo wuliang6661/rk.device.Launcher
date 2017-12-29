@@ -190,6 +190,11 @@
             </intent-filter>
         </activity>
 
+        <!-- 密码开门界面 -->
+        <activity
+            android:name=".ui.numpassword.NumpasswordActivity"
+            android:screenOrientation="portrait" />
+
 
         <!-- 个推 -->
         <service

@@ -47,6 +47,7 @@
 
 
     <TextView
+        android:id="@+id/hint_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="46dp"
@@ -91,15 +92,24 @@
 
 
                 <ImageView
+                    android:id="@+id/commit_img"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:layout_centerInParent="true"
                     android:src="@drawable/call_commit" />
 
 
+                <TextView
+                    android:id="@+id/commit_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="确定"
+                    android:textColor="@color/white"
+                    android:textSize="50dp"
+                    android:visibility="gone" />
+
             </RelativeLayout>
-
-
         </LinearLayout>
 
 
