@@ -21,8 +21,10 @@ public class SurfaceHolderCaremaFont implements SurfaceHolder.Callback {
 
     private static Camera camera;
     Camera.Parameters parameters;
-
     CallBack callBack;
+
+    private int width = 0;
+    private int height = 0;
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
@@ -39,6 +41,8 @@ public class SurfaceHolderCaremaFont implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+        this.width = width;
+        this.height = height;
         Log.d(TAG, "width = [" + width + "], height = [" + height + "]");
         if (callBack != null) {
             callBack.callHeightAndWidth(width, height);
@@ -84,7 +88,7 @@ public class SurfaceHolderCaremaFont implements SurfaceHolder.Callback {
             camera.startPreview();
             camera.setPreviewCallback((data, camera1) -> {
                 if (callBack != null) {
-                    callBack.callMessage();
+                    callBack.callMessage(data, width, height);
                 }
             });
         }
@@ -101,7 +105,7 @@ public class SurfaceHolderCaremaFont implements SurfaceHolder.Callback {
         /**
          * 摄像头打开之后每一帧数据的回调
          */
-        void callMessage();
+        void callMessage(byte[] data, int width, int height);
 
         /**
          * 返回SurfaceHolder的宽高

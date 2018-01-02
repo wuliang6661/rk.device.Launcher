@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rk.device.launcher.utils.FileUtils;
-import rk.device.launcher.utils.MD5;
 
 /**
  * Created by wuliang on 2017/12/28.
@@ -179,7 +178,9 @@ public class FaceUtils {
      * 保存人脸到本地，并返回人脸Id
      */
     public String saveFace(String personName, AFR_FSDKFace face) {
-        String name = MD5.strToMd5Low32(personName + "_" + System.currentTimeMillis());
+        Log.d("wuliang", "保存人脸");
+//        String name = MD5.strToMd5Low32(personName + "_" + System.currentTimeMillis());
+        String name = personName;
         try {
             //check if already registered.
             boolean add = true;
@@ -366,10 +367,10 @@ public class FaceUtils {
     /**
      * 人脸追踪
      */
-    public void caremeDataToFace(byte[] data, int width, int height) {
+    public Rect[] caremeDataToFace(byte[] data, int width, int height) {
         AFT_FSDKError err = mFTengine.AFT_FSDK_FaceFeatureDetect(data, width, height, AFT_FSDKEngine.CP_PAF_NV21, mFTresult);
-        Log.d(TAG, "AFT_FSDK_FaceFeatureDetect =" + err.getCode());
-        Log.d(TAG, "Face=" + mFTresult.size());
+//        Log.d(TAG, "AFT_FSDK_FaceFeatureDetect =" + err.getCode());
+//        Log.d(TAG, "Face=" + mFTresult.size());
         for (AFT_FSDKFace face : mFTresult) {
             Log.d(TAG, "Face:" + face.toString());
         }
@@ -386,6 +387,7 @@ public class FaceUtils {
         }
         //clear result.
         mFTresult.clear();
+        return rects;
     }
 
     /**
@@ -410,7 +412,6 @@ public class FaceUtils {
 
         @Override
         public void setup() {
-
         }
 
         @Override
@@ -436,10 +437,10 @@ public class FaceUtils {
 
                 if (max > 0.6f) {
                     //fr success.
-                    final float max_score = max;
-                    Log.d(TAG, "fit Score:" + max + ", NAME:" + name);
-                    final String mNameShow = name;
-
+                    Log.d("wuliang", "fit Score:" + max + ", NAME:" + name);
+                    if (featureFace != null) {
+                        featureFace.faceSuress(name, max);
+                    }
                 } else {
                     final String mNameShow = "未识别";
 
@@ -451,6 +452,23 @@ public class FaceUtils {
         @Override
         public void over() {
         }
+    }
+
+
+    private FeatureFace featureFace;
+
+    /**
+     * 设置人脸识别完成回调
+     */
+    public void setFaceFeature(FeatureFace faceFeature) {
+        this.featureFace = faceFeature;
+    }
+
+
+    public interface FeatureFace {
+
+        void faceSuress(String name, float max_score);
+
     }
 
 

@@ -2,18 +2,26 @@ package rk.device.launcher.ui.main;
 
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.ImageFormat;
+import android.graphics.Rect;
+import android.hardware.Camera;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.text.InputType;
 import android.text.TextUtils;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.guo.android_extend.tools.CameraHelper;
+import com.guo.android_extend.widget.CameraFrameData;
+import com.guo.android_extend.widget.CameraGLSurfaceView;
+import com.guo.android_extend.widget.CameraSurfaceView;
 
 import java.util.Date;
 import java.util.List;
@@ -50,6 +58,7 @@ import rk.device.launcher.utils.SoundPlayUtils;
 import rk.device.launcher.utils.StringUtils;
 import rk.device.launcher.utils.TimeUtils;
 import rk.device.launcher.utils.rxjava.RxBus;
+import rk.device.launcher.utils.verify.FaceUtils;
 import rk.device.launcher.widget.BatteryView;
 import rk.device.launcher.widget.GifView;
 import rk.device.launcher.widget.carema.DetectedFaceView;
@@ -64,7 +73,7 @@ import rk.device.launcher.widget.carema.SurfaceHolderCaremaFont;
 
 public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresenter> implements
         MainContract.View, JniHandler.OnInitListener, JniHandler.OnBioAssay, View.OnClickListener, ElectricBroadcastReceiver.CallBack,
-        NetChangeBroadcastReceiver.CallBack {
+        NetChangeBroadcastReceiver.CallBack, CameraSurfaceView.OnCameraListener, View.OnTouchListener, Camera.AutoFocusCallback {
 
 
     @Bind(R.id.battry_num)
@@ -83,8 +92,8 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
     ImageView mIvSignal;
     @Bind(R.id.iv_setting)
     ImageView settingTv;
-    @Bind(R.id.camera_surfaceview)
-    SurfaceView surfaceview;
+    //    @Bind(R.id.camera_surfaceview)
+//    SurfaceView surfaceview;
     @Bind(R.id.tv_tem)
     TextView temTv;
     @Bind(R.id.tv_weather)
@@ -105,8 +114,13 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
     TextView suressText;
     @Bind(R.id.suress_layout)
     LinearLayout suressLayout;
+    @Bind(R.id.surfaceView)
+    CameraSurfaceView surfaceView;
+    @Bind(R.id.glsurfaceView)
+    CameraGLSurfaceView glsurfaceView;
 
     JniHandler mHandler;
+
     private boolean isNetWork = true;// 此状态保存上次网络是否连接，默认已连接
     private InitErrorDialogFragmen initDialog;
     private InputWifiPasswordDialogFragment dialogFragment = null;
@@ -143,6 +157,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
 
         invition();
         register();
+        mPresenter.registerFace();
     }
 
     /**
@@ -243,11 +258,15 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
      * 初始化摄像头显示
      */
     private void initSurfaceViewOne() {
-        SurfaceHolder surfaceholder = surfaceview.getHolder();
-        surfaceholder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-        callbackFont = new SurfaceHolderCaremaFont();
-        openCamera();
-        surfaceholder.addCallback(callbackFont);
+//        SurfaceHolder surfaceholder = surfaceview.getHolder();
+//        surfaceholder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+//        callbackFont = new SurfaceHolderCaremaFont();
+//        openCamera();
+//        surfaceholder.addCallback(callbackFont);
+
+        surfaceView.setOnCameraListener(this);
+        surfaceView.setupGLSurafceView(glsurfaceView, true, true, 0);
+        surfaceView.debug_print_fps(false, false);
     }
 
     /**
@@ -256,7 +275,10 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
     private void openCamera() {
         callbackFont.setCallBack(new SurfaceHolderCaremaFont.CallBack() {
             @Override
-            public void callMessage() {
+            public void callMessage(byte[] data, int width, int height) {
+//                if (width != 0 && height != 0) {
+//                    FaceUtils.getInstance().caremeDataToFace(data, width, height);
+//                }
                 faceCount++;
                 if (faceCount % 5 != 0) {
                     return;
@@ -550,9 +572,14 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
      * 身份验证成功，文字显示
      */
     public void showSuress(String text) {
-        suressText.setText("欢迎" + text + "回家");
-        suressLayout.setVisibility(View.VISIBLE);
-        new Handler().postDelayed(() -> suressLayout.setVisibility(View.GONE), 2000);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                suressText.setText("欢迎" + text + "回家");
+                suressLayout.setVisibility(View.VISIBLE);
+                new Handler().postDelayed(() -> suressLayout.setVisibility(View.GONE), 2000);
+            }
+        });
     }
 
 
@@ -566,4 +593,64 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
             mStaticHandler.postDelayed(this, REFRESH_DELAY);
         }
     };
+
+    private static final String TAG = "MainActivity";
+
+    @Override
+    public Camera setupCamera() {
+        // TODO Auto-generated method stub
+        mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
+        try {
+            Camera.Parameters parameters = mCamera.getParameters();
+            parameters.setPreviewSize(640, 480);
+            parameters.setPreviewFormat(ImageFormat.NV21);
+            mCamera.setParameters(parameters);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (mCamera != null) {
+            int mWidth = mCamera.getParameters().getPreviewSize().width;
+            int mHeight = mCamera.getParameters().getPreviewSize().height;
+            FaceUtils.getInstance().setCaremaSize(mWidth, mHeight);
+        }
+        return mCamera;
+    }
+
+    private Camera mCamera;
+
+    @Override
+    public void setupChanged(int format, int width, int height) {
+
+    }
+
+    @Override
+    public boolean startPreviewLater() {
+        return false;
+    }
+
+    @Override
+    public Object onPreview(byte[] data, int width, int height, int format, long timestamp) {
+        return FaceUtils.getInstance().caremeDataToFace(data, width, height);
+    }
+
+    @Override
+    public void onBeforeRender(CameraFrameData data) {
+
+    }
+
+    @Override
+    public void onAfterRender(CameraFrameData data) {
+        glsurfaceView.getGLES2Render().draw_rect((Rect[]) data.getParams(), Color.GREEN, 2);
+    }
+
+    @Override
+    public void onAutoFocus(boolean b, Camera camera) {
+
+    }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        CameraHelper.touchFocus(mCamera, motionEvent, view, this);
+        return false;
+    }
 }

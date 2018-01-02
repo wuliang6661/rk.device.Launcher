@@ -25,8 +25,6 @@ public class SurfaceHolderCaremaBack implements SurfaceHolder.Callback {
     private static Camera camera;
     Camera.Parameters parameters;
 
-    SurfaceHolderCaremaFont.CallBack callBack;
-
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         try {
@@ -43,9 +41,6 @@ public class SurfaceHolderCaremaBack implements SurfaceHolder.Callback {
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         Log.d(TAG, "width = [" + width + "], height = [" + height + "]");
-        if (callBack != null) {
-            callBack.callHeightAndWidth(width, height);
-        }
         if (null != camera) {
             camera.autoFocus((success, camera1) -> {
                 if (success) {
@@ -87,9 +82,6 @@ public class SurfaceHolderCaremaBack implements SurfaceHolder.Callback {
             // 启动摄像头预览
             camera.startPreview();
             camera.setPreviewCallback((data, camera1) -> {
-                if (callBack != null) {
-                    callBack.callMessage();
-                }
             });
         }
     }
