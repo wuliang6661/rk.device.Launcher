@@ -77,7 +77,7 @@ public class DbHelper {
     }
 
     // 根据条件查询, 这里只是举个例子
-    public static List<User> query() {
+    private static List<User> query() {
 
         UserDao userDao = DbHelper.getUserDao();
         // where里面是可变参数
