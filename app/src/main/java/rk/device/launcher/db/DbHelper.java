@@ -107,7 +107,7 @@ public class DbHelper {
      */
     public static List<User> queryByFinger(int fingerId) {
         Query<User> query = getUserDao().queryBuilder()
-                .where(UserDao.Properties.FingerID.eq(fingerId)).build();
+                .where(UserDao.Properties.FingerID1.eq(fingerId)).build();
         return query.list();
     }
 
