@@ -98,6 +98,8 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.RESTART_PACKAGES" />
 
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
     <application
         android:name=".base.LauncherApplication"
         android:allowBackup="true"
@@ -112,6 +114,13 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
 
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.HOME" />
+            </intent-filter>
         </activity>
 
         <!-- 设置页面 -->
@@ -180,19 +189,16 @@
         <!--指纹-->
         <activity
             android:name=".ui.finger.FingerActivity"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.HOME" />
-            </intent-filter>
-        </activity>
+            android:screenOrientation="portrait" />
 
         <!-- 密码开门界面 -->
         <activity
             android:name=".ui.numpassword.NumpasswordActivity"
+            android:screenOrientation="portrait" />
+
+        <!-- 留言开门界面 -->
+        <activity
+            android:name=".ui.bbs.BbsActivity"
             android:screenOrientation="portrait" />
 
 
