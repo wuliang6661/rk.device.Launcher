@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/shape_normal_bg"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/toorbar"
+        layout="@layout/topbar" />
+
+
+    <TextView
+        android:id="@+id/bbs_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toorbar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:text="@string/bbs"
+        android:textColor="#338eff"
+        android:textSize="20dp" />
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/bbs_text" />
+
+
+    <RelativeLayout
+        android:id="@+id/call_commit"
+        android:layout_width="152dp"
+        android:layout_height="152dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="60dp"
+        android:background="@drawable/call_button">
+
+
+        <TextView
+            android:id="@+id/commit_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="留言"
+            android:textColor="@color/white"
+            android:textSize="50dp"
+            android:visibility="visible" />
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

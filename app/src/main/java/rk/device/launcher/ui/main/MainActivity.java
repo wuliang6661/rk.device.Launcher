@@ -39,6 +39,7 @@ import rk.device.launcher.ui.activity.SetDoorGuardActivity;
 import rk.device.launcher.ui.activity.SetNetWorkActivity;
 import rk.device.launcher.ui.activity.SetSysActivity;
 import rk.device.launcher.ui.activity.SettingActivity;
+import rk.device.launcher.ui.bbs.BbsActivity;
 import rk.device.launcher.ui.call.CallActivity;
 import rk.device.launcher.ui.fragment.InitErrorDialogFragmen;
 import rk.device.launcher.ui.fragment.InputWifiPasswordDialogFragment;
@@ -339,7 +340,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
 
                 break;
             case R.id.liuyan_layout:    //留言
-
+                gotoActivity(BbsActivity.class, false);
                 break;
         }
     }

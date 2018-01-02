@@ -50,4 +50,6 @@
     <string name="liuyan">留言</string>
     <string name="call_wuguan">联系物管</string>
 
+    <string name="bbs">按住留言按钮开始留言，松开按钮发送留言，上划取消发送</string>
+
 </resources>

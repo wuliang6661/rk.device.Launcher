@@ -72,7 +72,7 @@ public class NumpasswordActivity extends MVPBaseActivity<NumpasswordContract.Vie
         setTitle("密码开门");
         editText.setHint("请输入公共密码或户室密码");
         hintText.setText(String.valueOf("参考：户室密码1508#123456（“户室号” + “#” + “户室密码”）"));
-        editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
+        editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(6)});
         commit.setVisibility(View.VISIBLE);
         commitImg.setVisibility(View.GONE);
         clearDan.setVisibility(View.GONE);
@@ -125,8 +125,10 @@ public class NumpasswordActivity extends MVPBaseActivity<NumpasswordContract.Vie
             }
         };
         adapter.setOnItemClickListener(R.id.call_layout, (view, position) -> {
-            commitText.append(callbutton.get(position));
-            editText.setText(commitText.toString());
+            if (commitText.length() < 6) {
+                commitText.append(callbutton.get(position));
+                editText.setText(commitText.toString());
+            }
         });
         recycle.setAdapter(adapter);
     }
