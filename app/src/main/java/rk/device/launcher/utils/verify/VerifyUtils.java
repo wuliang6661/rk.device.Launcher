@@ -35,12 +35,12 @@ public class VerifyUtils {
      * @param nfcCard
      * @return
      */
-    public boolean verifyByNfc(String nfcCard) {
+    public String verifyByNfc(String nfcCard) {
         List<User> userList = DbHelper.queryByNFCCard(nfcCard);
         if (userList.size() > 0) {
-            return true;
+            return userList.get(0).getPopedomType();
         }
-        return false;
+        return "";
     }
 
     /**
@@ -56,7 +56,5 @@ public class VerifyUtils {
         }
         return false;
     }
-
-
 
 }

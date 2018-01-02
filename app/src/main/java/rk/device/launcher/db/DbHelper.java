@@ -42,8 +42,14 @@ public class DbHelper {
      * @param user
      * @return
      */
-    public static long insert(User user) {
-        return getUserDao().insert(user);
+    public static boolean insert(User user) {
+        try {
+            long rowId = getUserDao().insert(user);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public static void insertInTx(User... users) {
@@ -101,12 +107,12 @@ public class DbHelper {
      */
     public static List<User> queryByFinger(int fingerId) {
         Query<User> query = getUserDao().queryBuilder()
-                .where(UserDao.Properties.FingerID.eq(fingerId)).build();
+                .where(UserDao.Properties.FingerID1.eq(fingerId)).build();
         return query.list();
     }
 
     /**
-     * 插入一条数据
+     * 插入或更新一条数据
      * 
      * @param user
      * @return
@@ -124,7 +130,12 @@ public class DbHelper {
         if (TextUtils.isEmpty(user.getUniqueId())) {
             return Constant.NULL_UNIQUEID;
         }
-        return getUserDao().insert(user);
+        if (user.getId() == null) {
+            return getUserDao().insert(user);
+        } else {
+            getUserDao().update(user);
+            return Constant.UPDATE_SUCCESS;
+        }
     }
 
     /**
