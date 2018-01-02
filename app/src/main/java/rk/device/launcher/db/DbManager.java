@@ -2,7 +2,6 @@ package rk.device.launcher.db;
 
 import org.greenrobot.greendao.database.Database;
 
-import rk.device.launcher.db.dao.AuthorizationDao;
 import rk.device.launcher.db.dao.DaoMaster;
 import rk.device.launcher.db.dao.DaoSession;
 import rk.device.launcher.db.dao.RecordDao;
@@ -43,9 +42,6 @@ public class DbManager {
         return getDaoSession().getRecordDao();
     }
 
-    public AuthorizationDao getAuthorizationDao() {
-        return getDaoSession().getAuthorizationDao();
-    }
 
     private DaoSession getDaoSession() {
         MyOpenHelper helper = new MyOpenHelper(CommonUtils.getContext(), DB_NAME);
