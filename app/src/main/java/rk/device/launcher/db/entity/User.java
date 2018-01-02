@@ -1,10 +1,12 @@
 package rk.device.launcher.db.entity;
 
 import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Index;
 import org.greenrobot.greendao.annotation.NotNull;
-import org.greenrobot.greendao.annotation.Generated;
+
+import rk.device.launcher.utils.encrypt.AESOperator;
 
 /**
  * Created by mundane on 2017/12/27 下午3:00
@@ -99,13 +101,14 @@ public class User {
     }
 
     public String getName() {
-        return this.name;
+        String decodeName = AESOperator.decode(this.name);
+        return decodeName;
     }
 
     public void setName(String name) {
-        this.name = name;
+        String encodeName = AESOperator.encode(name);
+        this.name = encodeName;
     }
-
     public String getPopedomType() {
         return this.popedomType;
     }
@@ -179,13 +182,14 @@ public class User {
     }
 
     public String getFingerCode() {
-        return this.fingerCode;
+        String decodeFingerCode = AESOperator.decode(this.fingerCode);
+        return decodeFingerCode;
     }
 
     public void setFingerCode(String fingerCode) {
-        this.fingerCode = fingerCode;
+        String encodeFingerCode = AESOperator.encode(fingerCode);
+        this.fingerCode = encodeFingerCode;
     }
-
     public int getUploadStatus() {
         return this.uploadStatus;
     }
