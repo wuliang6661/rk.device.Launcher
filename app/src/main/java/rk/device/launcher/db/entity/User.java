@@ -10,6 +10,7 @@ import rk.device.launcher.utils.encrypt.AESOperator;
 
 /**
  * Created by mundane on 2017/12/27 下午3:00
+ * 授权信息数据表
  */
 @Entity
 public class User {
