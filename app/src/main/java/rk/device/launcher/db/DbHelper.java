@@ -42,8 +42,14 @@ public class DbHelper {
      * @param user
      * @return
      */
-    public static long insert(User user) {
-        return getUserDao().insert(user);
+    public static boolean insert(User user) {
+        try {
+            long rowId = getUserDao().insert(user);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public static void insertInTx(User... users) {
