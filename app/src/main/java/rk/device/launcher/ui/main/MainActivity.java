@@ -225,10 +225,10 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         mStaticHandler.removeCallbacksAndMessages(null);
         CvcHelper.CVC_deinit();
-        mPresenter.unRegisterReceiver();
+        mPresenter.unRegisterReceiver(this);
+        super.onDestroy();
     }
 
 
@@ -556,13 +556,10 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
      * 身份验证成功，文字显示
      */
     public void showSuress(String text) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                suressText.setText("欢迎" + text + "回家");
-                suressLayout.setVisibility(View.VISIBLE);
-                new Handler().postDelayed(() -> suressLayout.setVisibility(View.GONE), 2000);
-            }
+        runOnUiThread(() -> {
+            suressText.setText("欢迎" + text + "回家");
+            suressLayout.setVisibility(View.VISIBLE);
+            new Handler().postDelayed(() -> suressLayout.setVisibility(View.GONE), 2000);
         });
     }
 

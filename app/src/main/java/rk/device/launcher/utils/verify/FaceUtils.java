@@ -51,7 +51,6 @@ public class FaceUtils {
 
     private static final String facePath = "/data/rk_backup/face";
 
-
     private static String appid = "7p9bytNNtUW7h4i6QTMeJsWpGZG6zxbcuupyTEwc5Tpi";
     private static String ft_key = "56nNWR9uZaSZC4NidCkvtTcY88X3aAmTcNvoMoGeTMqn";
     private static String fd_key = "56nNWR9uZaSZC4NidCkvtTcfHXnDU7JVhDtvVWjUUyNS";
@@ -101,8 +100,8 @@ public class FaceUtils {
     /**
      * 年龄和性别检测
      */
-    List<ASAE_FSDKAge> ages = new ArrayList<>();
-    List<ASGE_FSDKGender> genders = new ArrayList<>();
+    private List<ASAE_FSDKAge> ages = new ArrayList<>();
+    private List<ASGE_FSDKGender> genders = new ArrayList<>();
 
 
     public static FaceUtils getInstance() {
@@ -395,19 +394,11 @@ public class FaceUtils {
         public String getmName() {
             return mName;
         }
-
-        public List<AFR_FSDKFace> getmFaceList() {
-            return mFaceList;
-        }
     }
 
 
     public List<FaceRegist> getmRegister() {
         return mRegister;
-    }
-
-    public void setmRegister(List<FaceRegist> mRegister) {
-        this.mRegister = mRegister;
     }
 
     /***********************************************人脸识别(追踪到人脸并识别)**********************************************************/
@@ -554,5 +545,7 @@ public class FaceUtils {
         mFDengine.AFD_FSDK_UninitialFaceEngine();
         mFREngine.AFR_FSDK_UninitialEngine();
         mFTengine.AFT_FSDK_UninitialFaceEngine();
+        mAgeEngine.ASAE_FSDK_UninitAgeEngine();
+        mGenderEngine.ASGE_FSDK_UninitGenderEngine();
     }
 }

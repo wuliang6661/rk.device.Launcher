@@ -1,5 +1,6 @@
 package rk.device.launcher.ui.main;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
@@ -133,13 +134,10 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
     /**
      * 注销各类服务
      */
-    void unRegisterReceiver() {
-        if (mView == null) {
-            return;
-        }
-        mView.getContext().unregisterReceiver(mBatteryReceiver);
-        mView.getContext().unregisterReceiver(netChangeBroadcastRecever);
-        mView.getContext().unregisterReceiver(netOffReceiver);
+    void unRegisterReceiver(Activity activity) {
+        activity.unregisterReceiver(mBatteryReceiver);
+        activity.unregisterReceiver(netChangeBroadcastRecever);
+        activity.unregisterReceiver(netOffReceiver);
     }
 
 
@@ -327,17 +325,10 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
     }
 
     /**
-     * 注册两张人脸照片进入人脸库（测试）
+     * 启动人脸检测
      */
     void registerFace() {
-//        Bitmap aa = BitmapFactory.decodeFile("/data/rk_backup/11.jpg");
-//        Bitmap bb = BitmapFactory.decodeFile("/data/rk_backup/22.jpg");
         FaceUtils faceUtils = FaceUtils.getInstance();
-//        AFR_FSDKFace aa_face = faceUtils.bitmapToFace(aa);
-//        AFR_FSDKFace bb_face = faceUtils.bitmapToFace(bb);
-//
-//        faceUtils.saveFace("一鸣", aa_face);
-//        faceUtils.saveFace("吴亮", bb_face);
         faceUtils.startFaceFR();
         faceUtils.setFaceFeature((name, max_score) -> mView.showSuress(name));
     }
