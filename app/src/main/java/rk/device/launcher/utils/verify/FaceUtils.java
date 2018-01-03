@@ -339,7 +339,7 @@ public class FaceUtils {
     }
 
 
-    private class FaceRegist {
+    public class FaceRegist {
         String mName;
         List<AFR_FSDKFace> mFaceList;
 
@@ -347,6 +347,31 @@ public class FaceUtils {
             mName = name;
             mFaceList = new ArrayList<>();
         }
+
+        public String getmName() {
+            return mName;
+        }
+
+        public void setmName(String mName) {
+            this.mName = mName;
+        }
+
+        public List<AFR_FSDKFace> getmFaceList() {
+            return mFaceList;
+        }
+
+        public void setmFaceList(List<AFR_FSDKFace> mFaceList) {
+            this.mFaceList = mFaceList;
+        }
+    }
+
+
+    public List<FaceRegist> getmRegister() {
+        return mRegister;
+    }
+
+    public void setmRegister(List<FaceRegist> mRegister) {
+        this.mRegister = mRegister;
     }
 
     /***********************************************人脸识别(追踪到人脸并识别)**********************************************************/

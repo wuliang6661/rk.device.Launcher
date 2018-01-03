@@ -327,14 +327,14 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
      * 注册两张人脸照片进入人脸库（测试）
      */
     void registerFace() {
-        Bitmap aa = BitmapFactory.decodeFile("/data/rk_backup/11.jpg");
-        Bitmap bb = BitmapFactory.decodeFile("/data/rk_backup/22.jpg");
+//        Bitmap aa = BitmapFactory.decodeFile("/data/rk_backup/11.jpg");
+//        Bitmap bb = BitmapFactory.decodeFile("/data/rk_backup/22.jpg");
         FaceUtils faceUtils = FaceUtils.getInstance();
-        AFR_FSDKFace aa_face = faceUtils.bitmapToFace(aa);
-        AFR_FSDKFace bb_face = faceUtils.bitmapToFace(bb);
-
-        faceUtils.saveFace("一鸣", aa_face);
-        faceUtils.saveFace("吴亮", bb_face);
+//        AFR_FSDKFace aa_face = faceUtils.bitmapToFace(aa);
+//        AFR_FSDKFace bb_face = faceUtils.bitmapToFace(bb);
+//
+//        faceUtils.saveFace("一鸣", aa_face);
+//        faceUtils.saveFace("吴亮", bb_face);
         faceUtils.startFaceFR();
         faceUtils.setFaceFeature((name, max_score) -> mView.showSuress(name));
     }

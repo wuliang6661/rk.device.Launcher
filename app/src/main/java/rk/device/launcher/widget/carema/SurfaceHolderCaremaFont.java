@@ -1,11 +1,14 @@
 package rk.device.launcher.widget.carema;
 
+import android.graphics.ImageFormat;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
 import java.io.IOException;
+
+import rk.device.launcher.utils.verify.FaceUtils;
 
 /**
  * 此类和后置摄像头一起主管全局所有的摄像头开启,保证摄像头对象公用
@@ -19,18 +22,22 @@ public class SurfaceHolderCaremaFont implements SurfaceHolder.Callback {
 
     private static final String TAG = "SurfaceHolderCallbackFo";
 
-    private static Camera camera;
+    public static Camera camera;
     Camera.Parameters parameters;
     CallBack callBack;
 
-    private int width = 0;
-    private int height = 0;
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         try {
             if (camera != null) {
                 camera.setPreviewDisplay(holder);
+                setFaceSize();
+                camera.setPreviewCallback((data, camera1) -> {
+                    if (callBack != null) {
+                        callBack.callMessage(data, camera.getParameters().getPreviewSize().width, camera.getParameters().getPreviewSize().height);
+                    }
+                });
                 return;
             }
             openCamera(holder);
@@ -41,8 +48,6 @@ public class SurfaceHolderCaremaFont implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        this.width = width;
-        this.height = height;
         Log.d(TAG, "width = [" + width + "], height = [" + height + "]");
         if (callBack != null) {
             callBack.callHeightAndWidth(width, height);
@@ -52,6 +57,7 @@ public class SurfaceHolderCaremaFont implements SurfaceHolder.Callback {
                 if (success) {
                     parameters = camera1.getParameters();
                     parameters.setPictureFormat(PixelFormat.JPEG);
+                    parameters.setPreviewFormat(ImageFormat.NV21);
                     parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);// 1连续对焦
 //                    parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_FIXED);
                     Log.d("wuliang", "carema (FACING_BACK) FocusMode is " + parameters.getFocusMode());
@@ -86,12 +92,23 @@ public class SurfaceHolderCaremaFont implements SurfaceHolder.Callback {
             camera.setPreviewDisplay(holder);
             // 启动摄像头预览
             camera.startPreview();
+            setFaceSize();
             camera.setPreviewCallback((data, camera1) -> {
                 if (callBack != null) {
-                    callBack.callMessage(data, width, height);
+                    callBack.callMessage(data, camera.getParameters().getPreviewSize().width, camera.getParameters().getPreviewSize().height);
                 }
             });
         }
+    }
+
+
+    /**
+     * 为人脸识别初始化宽高
+     */
+    private void setFaceSize() {
+        int mWidth = camera.getParameters().getPreviewSize().width;
+        int mHeight = camera.getParameters().getPreviewSize().height;
+        FaceUtils.getInstance().setCaremaSize(mWidth, mHeight);
     }
 
 

@@ -202,6 +202,12 @@
             android:screenOrientation="portrait" />
 
 
+        <!-- 录入人脸界面 -->
+        <activity
+            android:name=".ui.faceadd.FaceAddActivity"
+            android:screenOrientation="portrait" />
+
+
         <!-- 个推 -->
         <service
             android:name=".service.RKLauncherPushService"

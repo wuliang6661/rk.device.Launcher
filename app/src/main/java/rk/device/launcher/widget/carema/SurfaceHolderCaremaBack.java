@@ -1,5 +1,6 @@
 package rk.device.launcher.widget.carema;
 
+import android.graphics.ImageFormat;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
 import android.os.Build;
@@ -46,6 +47,7 @@ public class SurfaceHolderCaremaBack implements SurfaceHolder.Callback {
                 if (success) {
                     parameters = camera1.getParameters();
                     parameters.setPictureFormat(PixelFormat.JPEG);
+                    parameters.setPreviewFormat(ImageFormat.NV21);
                     parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);// 1连续对焦
 //                    parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_FIXED);
                     Log.d("wuliang", "carema (FACING_FRONT) FocusMode is " + parameters.getFocusMode());

@@ -2,9 +2,7 @@ package rk.device.launcher.ui.main;
 
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.ImageFormat;
-import android.graphics.Rect;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,6 +11,8 @@ import android.support.annotation.Nullable;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.MotionEvent;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,7 +20,6 @@ import android.widget.TextView;
 
 import com.guo.android_extend.tools.CameraHelper;
 import com.guo.android_extend.widget.CameraFrameData;
-import com.guo.android_extend.widget.CameraGLSurfaceView;
 import com.guo.android_extend.widget.CameraSurfaceView;
 
 import java.util.Date;
@@ -49,6 +48,7 @@ import rk.device.launcher.ui.activity.SetSysActivity;
 import rk.device.launcher.ui.activity.SettingActivity;
 import rk.device.launcher.ui.bbs.BbsActivity;
 import rk.device.launcher.ui.call.CallActivity;
+import rk.device.launcher.ui.faceadd.FaceAddActivity;
 import rk.device.launcher.ui.fragment.InitErrorDialogFragmen;
 import rk.device.launcher.ui.fragment.InputWifiPasswordDialogFragment;
 import rk.device.launcher.ui.numpassword.NumpasswordActivity;
@@ -92,8 +92,8 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
     ImageView mIvSignal;
     @Bind(R.id.iv_setting)
     ImageView settingTv;
-    //    @Bind(R.id.camera_surfaceview)
-//    SurfaceView surfaceview;
+    @Bind(R.id.camera_surfaceview)
+    SurfaceView surfaceview;
     @Bind(R.id.tv_tem)
     TextView temTv;
     @Bind(R.id.tv_weather)
@@ -114,10 +114,10 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
     TextView suressText;
     @Bind(R.id.suress_layout)
     LinearLayout suressLayout;
-    @Bind(R.id.surfaceView)
-    CameraSurfaceView surfaceView;
-    @Bind(R.id.glsurfaceView)
-    CameraGLSurfaceView glsurfaceView;
+//    @Bind(R.id.surfaceView)
+//    CameraSurfaceView surfaceView;
+//    @Bind(R.id.glsurfaceView)
+//    CameraGLSurfaceView glsurfaceView;
 
     JniHandler mHandler;
 
@@ -258,15 +258,16 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
      * 初始化摄像头显示
      */
     private void initSurfaceViewOne() {
-//        SurfaceHolder surfaceholder = surfaceview.getHolder();
-//        surfaceholder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-//        callbackFont = new SurfaceHolderCaremaFont();
-//        openCamera();
-//        surfaceholder.addCallback(callbackFont);
+        SurfaceHolder surfaceholder = surfaceview.getHolder();
+        surfaceholder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+        callbackFont = new SurfaceHolderCaremaFont();
+        openCamera();
+        surfaceholder.addCallback(callbackFont);
 
-        surfaceView.setOnCameraListener(this);
-        surfaceView.setupGLSurafceView(glsurfaceView, true, true, 0);
-        surfaceView.debug_print_fps(false, false);
+//        surfaceView.setOnCameraListener(this);
+//        glsurfaceView.setOnTouchListener(this);
+//        surfaceView.setupGLSurafceView(glsurfaceView, true, true, 0);
+//        surfaceView.debug_print_fps(false, false);
     }
 
     /**
@@ -276,18 +277,18 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
         callbackFont.setCallBack(new SurfaceHolderCaremaFont.CallBack() {
             @Override
             public void callMessage(byte[] data, int width, int height) {
-//                if (width != 0 && height != 0) {
-//                    FaceUtils.getInstance().caremeDataToFace(data, width, height);
-//                }
-                faceCount++;
-                if (faceCount % 5 != 0) {
-                    return;
+                if (width != 0 && height != 0) {
+                    FaceUtils.getInstance().caremeDataToFace(data, width, height);
                 }
-                Message message = new Message();
-                message.what = EventUtil.CVC_DETECTFACE;
-                mHandler.setOnBioAssay(MainActivity.this);
-                mHandler.sendMessage(message);
-                faceCount = faceCount == 25 ? 0 : faceCount;
+//                faceCount++;
+//                if (faceCount % 5 != 0) {
+//                    return;
+//                }
+//                Message message = new Message();
+//                message.what = EventUtil.CVC_DETECTFACE;
+//                mHandler.setOnBioAssay(MainActivity.this);
+//                mHandler.sendMessage(message);
+//                faceCount = faceCount == 25 ? 0 : faceCount;
             }
 
             @Override
@@ -359,7 +360,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
                 gotoActivity(CallActivity.class, false);
                 break;
             case R.id.qr_code_layout:    //二维码
-
+                gotoActivity(FaceAddActivity.class, false);
                 break;
             case R.id.liuyan_layout:    //留言
                 gotoActivity(BbsActivity.class, false);
@@ -599,24 +600,23 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
     @Override
     public Camera setupCamera() {
         // TODO Auto-generated method stub
-        mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
+        SurfaceHolderCaremaFont.camera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
         try {
-            Camera.Parameters parameters = mCamera.getParameters();
+            Camera.Parameters parameters = SurfaceHolderCaremaFont.camera.getParameters();
             parameters.setPreviewSize(640, 480);
             parameters.setPreviewFormat(ImageFormat.NV21);
-            mCamera.setParameters(parameters);
+            SurfaceHolderCaremaFont.camera.setParameters(parameters);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (mCamera != null) {
-            int mWidth = mCamera.getParameters().getPreviewSize().width;
-            int mHeight = mCamera.getParameters().getPreviewSize().height;
+        if (SurfaceHolderCaremaFont.camera != null) {
+            int mWidth = SurfaceHolderCaremaFont.camera.getParameters().getPreviewSize().width;
+            int mHeight = SurfaceHolderCaremaFont.camera.getParameters().getPreviewSize().height;
             FaceUtils.getInstance().setCaremaSize(mWidth, mHeight);
         }
-        return mCamera;
+        return SurfaceHolderCaremaFont.camera;
     }
 
-    private Camera mCamera;
 
     @Override
     public void setupChanged(int format, int width, int height) {
@@ -640,7 +640,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
 
     @Override
     public void onAfterRender(CameraFrameData data) {
-        glsurfaceView.getGLES2Render().draw_rect((Rect[]) data.getParams(), Color.GREEN, 2);
+//        glsurfaceView.getGLES2Render().draw_rect((Rect[]) data.getParams(), Color.GREEN, 2);
     }
 
     @Override
@@ -650,7 +650,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
-        CameraHelper.touchFocus(mCamera, motionEvent, view, this);
+        CameraHelper.touchFocus(SurfaceHolderCaremaFont.camera, motionEvent, view, this);
         return false;
     }
 }
