@@ -1,10 +1,7 @@
 package rk.device.launcher.ui.faceadd;
 
 
-import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.Rect;
-import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -72,7 +69,6 @@ public class FaceAddActivity extends MVPBaseActivity<FaceAddContract.View, FaceA
         recycle.setLayoutManager(manager);
 
         initCrema();
-        setAdapter();
         cremaFace.setOnClickListener(this);
         saveFace.setOnClickListener(this);
     }
@@ -97,15 +93,14 @@ public class FaceAddActivity extends MVPBaseActivity<FaceAddContract.View, FaceA
             }
         });
         surfaceholder.addCallback(callbackFont);
-
-//        SurfaceHolderCaremaFont.camera.setPreviewCallback(new Camera.PreviewCallback() {
-//            @Override
-//            public void onPreviewFrame(byte[] bytes, Camera camera) {
-//                mData = bytes;
-//            }
-//        });
     }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setAdapter();
+    }
 
     /**
      * 显示已录入的人脸
@@ -121,12 +116,6 @@ public class FaceAddActivity extends MVPBaseActivity<FaceAddContract.View, FaceA
             @Override
             public void convert(LGViewHolder holder, FaceUtils.FaceRegist faceRegist, int position) {
                 holder.setText(R.id.textView1, faceRegist.getmName());
-                ImageView face_Img = (ImageView) holder.getView(R.id.imageView1);
-                if (faceRegist.getmFaceList() == null || faceRegist.getmFaceList().size() == 0) {
-
-                } else {
-                    face_Img.setImageBitmap(BitmapUtil.byteToBitmap(faceRegist.getmFaceList().get(0).getFeatureData(), 640, 480));
-                }
             }
         };
         recycle.setAdapter(adapter);

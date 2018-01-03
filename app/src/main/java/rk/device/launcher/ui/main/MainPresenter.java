@@ -134,6 +134,9 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
      * 注销各类服务
      */
     void unRegisterReceiver() {
+        if (mView == null) {
+            return;
+        }
         mView.getContext().unregisterReceiver(mBatteryReceiver);
         mView.getContext().unregisterReceiver(netChangeBroadcastRecever);
         mView.getContext().unregisterReceiver(netOffReceiver);
