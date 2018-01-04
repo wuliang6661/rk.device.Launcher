@@ -41,10 +41,10 @@ import rk.device.launcher.ui.activity.SetSysActivity;
 import rk.device.launcher.ui.activity.SettingActivity;
 import rk.device.launcher.ui.bbs.BbsActivity;
 import rk.device.launcher.ui.call.CallActivity;
+import rk.device.launcher.ui.faceadd.FaceAddActivity;
 import rk.device.launcher.ui.fragment.InitErrorDialogFragmen;
 import rk.device.launcher.ui.fragment.InputWifiPasswordDialogFragment;
 import rk.device.launcher.ui.numpassword.NumpasswordActivity;
-import rk.device.launcher.ui.qrcode.QrcodeActivity;
 import rk.device.launcher.utils.DateUtil;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.SoundPlayUtils;
@@ -153,6 +153,8 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
      * 初始化界面
      */
     private void invition() {
+        caremaBg.setMovieResource(R.raw.camera_bg);
+        deviceNameBg.setMovieResource(R.raw.device_name_bg);
         initDialog = InitErrorDialogFragmen.newInstance();
         SoundPlayUtils.init(this);
         settingTv.setOnClickListener(this);
@@ -197,8 +199,6 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
     protected void onStart() {
         super.onStart();
         mStaticHandler.post(mRefreshTimeRunnable);
-        caremaBg.setMovieResource(R.raw.camera_bg);
-        deviceNameBg.setMovieResource(R.raw.device_name_bg);
         caremaBg.setPaused(false);
         deviceNameBg.setPaused(false);
     }
@@ -343,8 +343,9 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
                 gotoActivity(CallActivity.class, false);
                 break;
             case R.id.qr_code_layout:    //二维码
-                gotoActivity(QrcodeActivity.class, false);
+//                gotoActivity(QrcodeActivity.class, false);
 //                gotoActivity(CaptureActivity.class, false);
+                gotoActivity(FaceAddActivity.class, false);
                 break;
             case R.id.liuyan_layout:    //留言
                 gotoActivity(BbsActivity.class, false);
