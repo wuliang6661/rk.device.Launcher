@@ -111,7 +111,13 @@
             android:name=".ui.main.MainActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.HOME" />
+            </intent-filter>
         </activity>
 
         <!-- 设置页面 -->
@@ -180,16 +186,12 @@
         <!--指纹-->
         <activity
             android:name=".ui.finger.FingerActivity"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:screenOrientation="portrait" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.HOME" />
-            </intent-filter>
-        </activity>
-
+        <!--添加指纹-->
+        <activity android:name=".ui.fingeradd.FingeraddActivity" />
+        <!--新增NFC-->
+        <activity android:name=".ui.nfcadd.NfcaddActivity" />
         <!-- 密码开门界面 -->
         <activity
             android:name=".ui.numpassword.NumpasswordActivity"
@@ -207,6 +209,7 @@
             android:name=".service.DownLoadIntentService"
             android:exported="false" />
         <service android:name=".service.SocketService" />
+        <service android:name=".service.VerifyService" />
 
         <receiver android:name=".service.UpdateBroadcastReceiver">
             <intent-filter>
