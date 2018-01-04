@@ -41,7 +41,6 @@ import rk.device.launcher.ui.activity.SetSysActivity;
 import rk.device.launcher.ui.activity.SettingActivity;
 import rk.device.launcher.ui.bbs.BbsActivity;
 import rk.device.launcher.ui.call.CallActivity;
-import rk.device.launcher.ui.faceadd.FaceAddActivity;
 import rk.device.launcher.ui.fragment.InitErrorDialogFragmen;
 import rk.device.launcher.ui.fragment.InputWifiPasswordDialogFragment;
 import rk.device.launcher.ui.numpassword.NumpasswordActivity;
@@ -115,6 +114,8 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
     private InitErrorDialogFragmen initDialog;
     private InputWifiPasswordDialogFragment dialogFragment = null;
     SurfaceHolderCaremaFont callbackFont;
+    private static final int REQUEST_CODE = 0x11;
+
 
     /**
      * 记录每五帧调取一次人脸识别
@@ -345,8 +346,9 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
                 break;
             case R.id.qr_code_layout:    //二维码
 //                gotoActivity(QrcodeActivity.class, false);
-//                gotoActivity(CaptureActivity.class, false);
-                gotoActivity(FaceAddActivity.class, false);
+                Intent intent = new Intent(this, CaptureActivity.class);
+                startActivityForResult(intent, REQUEST_CODE);
+//                gotoActivity(FaceAddActivity.class, false);
                 break;
             case R.id.liuyan_layout:    //留言
                 gotoActivity(BbsActivity.class, false);
@@ -354,6 +356,17 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            Bundle bundle = data.getExtras();
+            String scanResult = bundle.getString("result");
+            if (!TextUtils.isEmpty(scanResult)) {
+                T.showShort(scanResult);
+            }
+        }
+    }
 
     /**
      * 初始设置流程加载
