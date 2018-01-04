@@ -56,6 +56,7 @@ import rk.device.launcher.widget.BatteryView;
 import rk.device.launcher.widget.GifView;
 import rk.device.launcher.widget.carema.DetectedFaceView;
 import rk.device.launcher.widget.carema.SurfaceHolderCaremaFont;
+import rk.device.launcher.zxing.decode.CaptureActivity;
 
 
 /**
