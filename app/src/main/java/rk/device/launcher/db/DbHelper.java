@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import org.greenrobot.greendao.query.Query;
 
 import java.util.List;
+import java.util.UUID;
 
 import rk.device.launcher.db.dao.UserDao;
 import rk.device.launcher.db.entity.User;
@@ -38,7 +39,7 @@ public class DbHelper {
 
     /**
      * 此处需要返回insert之后的反馈，不然无法知道是否insert成功
-     * 
+     *
      * @param user
      * @return
      */
@@ -113,7 +114,7 @@ public class DbHelper {
 
     /**
      * 插入或更新一条数据
-     * 
+     *
      * @param user
      * @return
      */
@@ -126,11 +127,12 @@ public class DbHelper {
         if (TextUtils.isEmpty(user.getPopedomType())) {
             return Constant.NULL_POPEDOMTYPE;
         }
-        //唯一标识
-        if (TextUtils.isEmpty(user.getUniqueId())) {
-            return Constant.NULL_UNIQUEID;
-        }
+//        //唯一标识
+//        if (TextUtils.isEmpty(user.getUniqueId())) {
+//            return Constant.NULL_UNIQUEID;
+//        }
         if (user.getId() == null) {
+            user.setUniqueId(UUID.randomUUID().toString());
             return getUserDao().insert(user);
         } else {
             getUserDao().update(user);

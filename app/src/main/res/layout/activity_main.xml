@@ -109,16 +109,6 @@
             android:layout_centerInParent="true">
 
 
-            <!--<com.guo.android_extend.widget.CameraSurfaceView
-                android:id="@+id/surfaceView"
-                android:layout_width="1dp"
-                android:layout_height="1dp" />
-
-            <com.guo.android_extend.widget.CameraGLSurfaceView
-                android:id="@+id/glsurfaceView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />-->
-
             <SurfaceView
                 android:id="@+id/camera_surfaceview"
                 android:layout_width="match_parent"
@@ -313,6 +303,7 @@
                     android:id="@+id/tv_tem"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="0~0℃"
                     android:textColor="@color/white"
                     android:textSize="40sp" />
 
@@ -323,6 +314,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:textColor="@color/white"
+                    android:text="晴"
                     android:textSize="26dp" />
 
             </LinearLayout>
