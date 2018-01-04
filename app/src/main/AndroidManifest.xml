@@ -212,6 +212,11 @@
             android:name=".ui.qrcode.QrcodeActivity"
             android:screenOrientation="portrait"/>
 
+        <!--zxing-->
+        <activity
+            android:name=".zxing.decode.CaptureActivity"
+            android:screenOrientation="portrait"/>
+
 
         <!-- 个推 -->
         <service

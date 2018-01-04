@@ -25,14 +25,10 @@ public class SurfaceHolderCaremaFont1 implements SurfaceHolder.Callback {
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         try {
-            if (camera != null) {
-                setPreview(holder);
-            } else {
+            if (camera == null) {
                 camera = openCamera(holder);
-                if (camera != null) {
-                    setPreview(holder);
-                }
             }
+            setPreview(holder);
         } catch (IOException e) {
             e.printStackTrace();
         }
