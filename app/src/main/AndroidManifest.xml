@@ -207,6 +207,11 @@
             android:name=".ui.faceadd.FaceAddActivity"
             android:screenOrientation="portrait" />
 
+        <!--二维码扫描界面-->
+        <activity
+            android:name=".ui.qrcode.QrcodeActivity"
+            android:screenOrientation="portrait"/>
+
 
         <!-- 个推 -->
         <service

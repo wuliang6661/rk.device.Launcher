@@ -6,7 +6,7 @@ package rk.device.launcher.utils.uuid;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Environment;
-import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.io.File;
@@ -40,10 +40,14 @@ public class DeviceUuidFactory {
                         if (recoverDeviceUuidFromSD() != null) {
                             uuid = UUID.fromString(recoverDeviceUuidFromSD());
                         } else {
-                            final String androidId = DeviceUtils.getMacAddress();
+                            String macAddress = DeviceUtils.getMacAddress();
+                            // todo fixme
+                            if (TextUtils.isEmpty(macAddress)) {
+                                macAddress = "00:00:00:00:00:00";
+                            }
                             try {
-                                if (!"9774d56d682e549c".equals(androidId)) {
-                                    uuid = UUID.nameUUIDFromBytes(androidId.getBytes("utf8"));
+                                if (!"9774d56d682e549c".equals(macAddress)) {
+                                    uuid = UUID.nameUUIDFromBytes(macAddress.getBytes("utf8"));
                                     try {
                                         saveDeviceUuidToSD(EncryptUtils.encryptDES(uuid.toString(), KEY));
                                     } catch (Exception e) {

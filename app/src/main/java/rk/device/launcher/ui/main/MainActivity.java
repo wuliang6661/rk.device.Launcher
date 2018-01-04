@@ -48,10 +48,10 @@ import rk.device.launcher.ui.activity.SetSysActivity;
 import rk.device.launcher.ui.activity.SettingActivity;
 import rk.device.launcher.ui.bbs.BbsActivity;
 import rk.device.launcher.ui.call.CallActivity;
-import rk.device.launcher.ui.faceadd.FaceAddActivity;
 import rk.device.launcher.ui.fragment.InitErrorDialogFragmen;
 import rk.device.launcher.ui.fragment.InputWifiPasswordDialogFragment;
 import rk.device.launcher.ui.numpassword.NumpasswordActivity;
+import rk.device.launcher.ui.qrcode.QrcodeActivity;
 import rk.device.launcher.utils.DateUtil;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.SoundPlayUtils;
@@ -360,7 +360,8 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
                 gotoActivity(CallActivity.class, false);
                 break;
             case R.id.qr_code_layout:    //二维码
-                gotoActivity(FaceAddActivity.class, false);
+                gotoActivity(QrcodeActivity.class, false);
+//                gotoActivity(CaptureActivity.class, false);
                 break;
             case R.id.liuyan_layout:    //留言
                 gotoActivity(BbsActivity.class, false);

@@ -33,9 +33,12 @@ public class SurfaceHolderCaremaFont implements SurfaceHolder.Callback {
             if (camera != null) {
                 camera.setPreviewDisplay(holder);
                 setFaceSize();
-                camera.setPreviewCallback((data, camera1) -> {
-                    if (callBack != null) {
-                        callBack.callMessage(data, camera.getParameters().getPreviewSize().width, camera.getParameters().getPreviewSize().height);
+                camera.setPreviewCallback(new Camera.PreviewCallback() {
+                    @Override
+                    public void onPreviewFrame(byte[] data, Camera camera1) {
+                        if (callBack != null) {
+                            callBack.callMessage(data, camera.getParameters().getPreviewSize().width, camera.getParameters().getPreviewSize().height);
+                        }
                     }
                 });
                 return;
