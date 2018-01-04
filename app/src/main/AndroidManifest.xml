@@ -207,15 +207,27 @@
             android:name=".ui.faceadd.FaceAddActivity"
             android:screenOrientation="portrait" />
 
+        <!-- 用户管理界面 -->
+        <activity
+            android:name=".ui.personmanage.PersonManageActivity"
+            android:screenOrientation="portrait" />
+
+
+        <!-- 增加用户界面 -->
+        <activity
+            android:name=".ui.person_add.Person_addActivity"
+            android:screenOrientation="portrait" />
+
+
         <!--二维码扫描界面-->
         <activity
             android:name=".ui.qrcode.QrcodeActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <!--zxing-->
         <activity
             android:name=".zxing.decode.CaptureActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
 
         <!-- 个推 -->

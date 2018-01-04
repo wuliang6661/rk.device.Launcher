@@ -15,6 +15,10 @@ import rk.device.launcher.R;
 import rk.device.launcher.db.DbHelper;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.mvp.MVPBaseActivity;
+import rk.device.launcher.ui.person_add.Person_addActivity;
+import rk.device.launcher.utils.StringUtils;
+import rk.device.launcher.widget.lgrecycleadapter.LGRecycleViewAdapter;
+import rk.device.launcher.widget.lgrecycleadapter.LGViewHolder;
 
 
 /**
@@ -46,6 +50,7 @@ public class PersonManageActivity extends MVPBaseActivity<PersonManageContract.V
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         recycle.setLayoutManager(manager);
+        setAdapter();
     }
 
 
@@ -53,9 +58,46 @@ public class PersonManageActivity extends MVPBaseActivity<PersonManageContract.V
      * 获取用户数据并展示
      */
     private void setAdapter() {
-        List<User> users = DbHelper.loadAll();
+        users = DbHelper.loadAll();
+        LGRecycleViewAdapter<User> adapter = new LGRecycleViewAdapter<User>(users) {
+            @Override
+            public int getLayoutId(int viewType) {
+                return R.layout.item_person_manager;
+            }
 
-
+            @Override
+            public void convert(LGViewHolder holder, User user, int position) {
+                holder.setText(R.id.person_id, "ID：" + user.getUniqueId());
+                holder.setText(R.id.person_name, user.getName());
+                if (StringUtils.isEmpty(user.getFaceID())) {
+                    holder.getView(R.id.person_face).setVisibility(View.GONE);
+                } else {
+                    holder.getView(R.id.person_face).setVisibility(View.VISIBLE);
+                }
+                if (user.getPassWord() == 0) {
+                    holder.getView(R.id.person_password).setVisibility(View.GONE);
+                } else {
+                    holder.getView(R.id.person_password).setVisibility(View.VISIBLE);
+                }
+                if (StringUtils.isEmpty(user.getCardNo())) {
+                    holder.getView(R.id.person_card).setVisibility(View.GONE);
+                } else {
+                    holder.getView(R.id.person_card).setVisibility(View.VISIBLE);
+                }
+                if (StringUtils.isEmpty(user.getFingerID1()) && StringUtils.isEmpty(user.getFingerID2()) && StringUtils.isEmpty(user.getFingerID3())) {
+                    holder.getView(R.id.person_finger).setVisibility(View.GONE);
+                } else {
+                    holder.getView(R.id.person_finger).setVisibility(View.VISIBLE);
+                }
+                if (StringUtils.isEmpty(user.getFaceID()) && user.getPassWord() == 0 && StringUtils.isEmpty(user.getCardNo()) &&
+                        StringUtils.isEmpty(user.getFingerID1()) && StringUtils.isEmpty(user.getFingerID2()) && StringUtils.isEmpty(user.getFingerID3())) {
+                    holder.getView(R.id.none_type).setVisibility(View.VISIBLE);
+                } else {
+                    holder.getView(R.id.none_type).setVisibility(View.GONE);
+                }
+            }
+        };
+        recycle.setAdapter(adapter);
     }
 
 
@@ -63,10 +105,8 @@ public class PersonManageActivity extends MVPBaseActivity<PersonManageContract.V
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.title_right:    //增加用户
-
+                gotoActivity(Person_addActivity.class, false);
                 break;
-
-
         }
     }
 }

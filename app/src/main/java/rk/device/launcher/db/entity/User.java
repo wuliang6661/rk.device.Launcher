@@ -6,14 +6,12 @@ import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Index;
 import org.greenrobot.greendao.annotation.NotNull;
 
-import rk.device.launcher.utils.encrypt.AESOperator;
-
 /**
  * Created by mundane on 2017/12/27 下午3:00
  * 授权信息数据表
  */
 @Entity
-public class User {
+public class User{
     @Id(autoincrement = true)
     private Long id;
 
@@ -102,14 +100,13 @@ public class User {
     }
 
     public String getName() {
-        String decodeName = AESOperator.decode(this.name);
-        return decodeName;
+        return this.name;
     }
 
     public void setName(String name) {
-        String encodeName = AESOperator.encode(name);
-        this.name = encodeName;
+        this.name = name;
     }
+
     public String getPopedomType() {
         return this.popedomType;
     }
@@ -183,14 +180,13 @@ public class User {
     }
 
     public String getFingerCode() {
-        String decodeFingerCode = AESOperator.decode(this.fingerCode);
-        return decodeFingerCode;
+        return this.fingerCode;
     }
 
     public void setFingerCode(String fingerCode) {
-        String encodeFingerCode = AESOperator.encode(fingerCode);
-        this.fingerCode = encodeFingerCode;
+        this.fingerCode = fingerCode;
     }
+
     public int getUploadStatus() {
         return this.uploadStatus;
     }
@@ -214,5 +210,6 @@ public class User {
     public void setUpdateTime(long updateTime) {
         this.updateTime = updateTime;
     }
+
 
 }
