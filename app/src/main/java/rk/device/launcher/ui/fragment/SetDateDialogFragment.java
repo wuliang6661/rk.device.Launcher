@@ -25,12 +25,6 @@ import rk.device.launcher.utils.DateUtil;
 import rk.device.launcher.widget.EasyPickView;
 
 
-/**
- * 滑动选择对话框
- *
- * @author Phoenix
- * @date 2016-10-8 13:54
- */
 public class SetDateDialogFragment extends DialogFragment {
     private static final String DIALOG_LEFT = "dialog_left";
     private static final String DIALOG_RIGHT = "dialog_right";

@@ -25,7 +25,7 @@ import rk.device.launcher.utils.DateUtil;
 import rk.device.launcher.widget.EasyPickView;
 
 
-public class SetTimeDialogFragment extends DialogFragment {
+public class SetFullTimeDialogFragment extends DialogFragment {
     private static final String DIALOG_LEFT = "dialog_left";
     private static final String DIALOG_RIGHT = "dialog_right";
     private static final String DIALOG_WHEEL = "dialog_wheel";
@@ -39,28 +39,34 @@ public class SetTimeDialogFragment extends DialogFragment {
 	private int mDividerColor;
 
     private Activity activity;
-    private EasyPickView mPickViewHour;
+
 
 
     private String[] dialogWheel;
     private String dialogLeft, dialogRight;
     private boolean isCancelableTouchOutSide, isCancelable, isBack;
-	private EasyPickView mPickViewMin;
+    private EasyPickView mWheelViewYear;
+    private EasyPickView mWheelViewMonth;
 	private EasyPickView mWheelViewDay;
+    private EasyPickView mWheelViewHour;
+    private EasyPickView mWheelViewMin;
 	private Calendar mCalendar;
 	private TextView mTvCancel;
 	private TextView mTvConfirm;
-	private Integer mSelectedHour;
-	private Integer mSelectedMin;
+	private Integer mSelectedYear;
+	private Integer mSelectedMonth;
 	private Integer mSelectedDay;
+    private Integer mSelectedHour;
+    private Integer mSelectedMin;
 
-	/**
+
+    /**
      * 滑动选择对话框
      *
      * @return
      */
-    public static SetTimeDialogFragment newInstance() {
-        SetTimeDialogFragment wheelDialog = new SetTimeDialogFragment();
+    public static SetFullTimeDialogFragment newInstance() {
+        SetFullTimeDialogFragment wheelDialog = new SetFullTimeDialogFragment();
 
         Bundle bundle = new Bundle();
         wheelDialog.setArguments(bundle);
@@ -81,13 +87,14 @@ public class SetTimeDialogFragment extends DialogFragment {
 //        //设置对话框显示在底部
 //        getDialog().getWindow().setGravity(Gravity.BOTTOM);
 //        //设置让对话框宽度充满屏幕
-//        getDialog().getWindow().setLayout(ScreenUtil.getScreenWidth(activity), getDialog().getWindow().getAttributes().height);
+//		getDialog().getWindow().setLayout(ScreenUtil.getScreenWidth(activity), getDialog().getWindow().getAttributes().height);
+
 		Window window = getDialog().getWindow();
 		WindowManager.LayoutParams attributes = window.getAttributes();
 		attributes.gravity = Gravity.BOTTOM;
 		attributes.width = WindowManager.LayoutParams.MATCH_PARENT;
 		window.setAttributes(attributes);
-    }
+	}
 
 
 	@Override
@@ -95,12 +102,21 @@ public class SetTimeDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
 		mCalendar = Calendar.getInstance();
 		mCalendar.setTime(new Date());
-		if (mSelectedHour == null) {
-			mSelectedHour = mCalendar.get(Calendar.HOUR_OF_DAY);
+		if (mSelectedYear == null) {
+			mSelectedYear = mCalendar.get(Calendar.YEAR);
 		}
-		if (mSelectedMin == null) {
-			mSelectedMin = mCalendar.get(Calendar.MINUTE);
+		if (mSelectedMonth == null) {
+			mSelectedMonth = mCalendar.get(Calendar.MONTH) + 1;
 		}
+		if (mSelectedDay == null) {
+			mSelectedDay = mCalendar.get(Calendar.DAY_OF_MONTH);
+		}
+        if (mSelectedHour == null) {
+            mSelectedHour = mCalendar.get(Calendar.HOUR_OF_DAY);
+        }
+        if (mSelectedMin == null) {
+            mSelectedMin = mCalendar.get(Calendar.MINUTE);
+        }
         Bundle bundle = getArguments();
         dialogWheel = bundle.getStringArray(DIALOG_WHEEL);
         dialogLeft = bundle.getString(DIALOG_LEFT);
@@ -114,8 +130,8 @@ public class SetTimeDialogFragment extends DialogFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		mSelectedColor = getResources().getColor(R.color.blue_338eff);
-		getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
-		View view = inflater.inflate(R.layout.view_dialog_set_time, container, false);
+//		getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
+		View view = inflater.inflate(R.layout.fragment_dialog_set_full_time, container, false);
 
 		initView(view);
 
@@ -125,8 +141,8 @@ public class SetTimeDialogFragment extends DialogFragment {
 		getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 		//设置对话框弹出动画，从底部滑入，从底部滑出
 		getDialog().getWindow().getAttributes().windowAnimations = R.style.dialog_animation;
-		getDialog().setCancelable(true);
-		getDialog().setCanceledOnTouchOutside(true);
+//		getDialog().setCancelable(true);
+//		getDialog().setCanceledOnTouchOutside(true);
 		getDialog().getWindow().setGravity(Gravity.BOTTOM);
 
 		setSubView();
@@ -136,32 +152,32 @@ public class SetTimeDialogFragment extends DialogFragment {
 	}
 
     private void initEvent() {
-//		mPickViewMin.setOnScrollChangedListener(new EasyPickView.OnScrollChangedListener() {
-//			@Override
-//			public void onScrollChanged(int curIndex) {
-//				fixDayOfMonth();
-//			}
-//
-//			@Override
-//			public void onScrollFinished(int curIndex) {
-//				fixDayOfMonth();
-//			}
-//		});
-//		mPickViewHour.setOnScrollChangedListener(new EasyPickView.OnScrollChangedListener() {
-//			@Override
-//			public void onScrollChanged(int curIndex) {
-//				fixDayOfMonth();
-//			}
-//
-//			@Override
-//			public void onScrollFinished(int curIndex) {
-//				fixDayOfMonth();
-//			}
-//		});
+		mWheelViewMonth.setOnScrollChangedListener(new EasyPickView.OnScrollChangedListener() {
+			@Override
+			public void onScrollChanged(int curIndex) {
+				fixDayOfMonth();
+			}
+
+			@Override
+			public void onScrollFinished(int curIndex) {
+				fixDayOfMonth();
+			}
+		});
+		mWheelViewYear.setOnScrollChangedListener(new EasyPickView.OnScrollChangedListener() {
+			@Override
+			public void onScrollChanged(int curIndex) {
+				fixDayOfMonth();
+			}
+
+			@Override
+			public void onScrollFinished(int curIndex) {
+				fixDayOfMonth();
+			}
+		});
 		mTvCancel.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				SetTimeDialogFragment.this.dismiss();
+				SetFullTimeDialogFragment.this.dismiss();
 			}
 		});
 
@@ -169,8 +185,14 @@ public class SetTimeDialogFragment extends DialogFragment {
 			@Override
 			public void onClick(View v) {
 				if (mOnConfirmDialogListener != null) {
-					mOnConfirmDialogListener.onClickConfirm(mPickViewHour.getValue(), mPickViewMin.getValue());
-					SetTimeDialogFragment.this.dismiss();
+					mOnConfirmDialogListener.onClickConfirm(
+					        mWheelViewYear.getValue(),
+                            mWheelViewMonth.getValue(),
+                            mWheelViewDay.getValue(),
+                            mWheelViewHour.getValue(),
+                            mWheelViewMin.getValue()
+                    );
+					SetFullTimeDialogFragment.this.dismiss();
 				}
 			}
 		});
@@ -188,7 +210,7 @@ public class SetTimeDialogFragment extends DialogFragment {
 	}
 
 	public interface OnConfirmDialogListener {
-		void onClickConfirm(String hour, String min);
+		void onClickConfirm(String year, String month, String day, String hour, String minute);
 	}
 
 	private OnConfirmDialogListener mOnConfirmDialogListener;
@@ -198,30 +220,38 @@ public class SetTimeDialogFragment extends DialogFragment {
 	}
 
     private void setSubView() {
-		mPickViewHour.setDataList(genrateData(0, 24));
+		mWheelViewYear.setDataList(genrateData(MIN_YEAR, MAX_YEAR - MIN_YEAR + 1));
+		mWheelViewYear.moveToImmidiatly(mSelectedYear - MIN_YEAR);
 
-		mPickViewHour.moveToImmidiatly(mSelectedHour);
+		mWheelViewMonth.setDataList(genrateData(1, 12));
+		mWheelViewMonth.moveToImmidiatly(mSelectedMonth - 1);
 
-		mPickViewMin.setDataList(genrateData(0, 60));
-		mPickViewMin.moveToImmidiatly(mSelectedMin);
+		fixDayOfMonth();
+		mWheelViewDay.moveToImmidiatly(mSelectedDay - 1);
 
-//		fixDayOfMonth();
-//		mWheelViewDay.moveToImmidiatly(mSelectedDay - 1);
+        mWheelViewHour.setDataList(genrateData(0, 24));
+        mWheelViewHour.moveToImmidiatly(mSelectedHour);
 
-		setWheelView(mPickViewHour);
-		setWheelView(mPickViewMin);
+        mWheelViewMin.setDataList(genrateData(0, 60));
+        mWheelViewMin.moveToImmidiatly(mSelectedMin);
+
+//		setWheelView(mWheelViewYear);
+//		setWheelView(mWheelViewMonth);
 //		setWheelView(mWheelViewDay);
 
 	}
 
-	public void setSelectedTime(int hour, int min) {
-		mSelectedHour = hour;
-		mSelectedMin = min;
-	}
+	public void setSelectedTime(int year, int month, int day, int hour, int min) {
+		mSelectedYear = year;
+		mSelectedMonth = month;
+		mSelectedDay = day;
+        mSelectedHour = hour;
+        mSelectedMin = min;
+    }
 
 	private void fixDayOfMonth() {
-		int currentYear = MIN_YEAR + mPickViewHour.getIndex();
-		int monthIndex = mPickViewMin.getIndex();
+		int currentYear = MIN_YEAR + mWheelViewYear.getIndex();
+		int monthIndex = mWheelViewMonth.getIndex();
 		int maxDayOfMonth = DateUtil.getMaxDayOfMonth(currentYear, monthIndex);
 		mWheelViewDay.updateDataList(genrateData(1, maxDayOfMonth));
 	}
@@ -235,11 +265,16 @@ public class SetTimeDialogFragment extends DialogFragment {
 	}
 
 	private void initView(View view) {
+//        tvLeft = (TextView) view.findViewById(R.id.tv_wheel_dialog_left);
+//        tvRight = (TextView) view.findViewById(R.id.tv_wheel_dialog_right);
 		mTvCancel = view.findViewById(R.id.tv_cancel);
 		mTvConfirm = view.findViewById(R.id.tv_confirm);
-		mPickViewHour = view.findViewById(R.id.pickview_hour);
-		mPickViewMin = view.findViewById(R.id.pickview_min);
-	}
+		mWheelViewYear = view.findViewById(R.id.wheelView_year);
+		mWheelViewMonth = view.findViewById(R.id.wheelView_month);
+		mWheelViewDay = view.findViewById(R.id.wheelView_day);
+        mWheelViewHour = view.findViewById(R.id.wheelView_hour);
+        mWheelViewMin = view.findViewById(R.id.wheelView_min);
+    }
 
 
 	/**
