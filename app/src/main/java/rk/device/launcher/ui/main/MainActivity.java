@@ -345,8 +345,8 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
                 break;
             case R.id.qr_code_layout:    //二维码
 //                gotoActivity(QrcodeActivity.class, false);
-//                gotoActivity(CaptureActivity.class, false);
-                gotoActivity(FaceAddActivity.class, false);
+                gotoActivity(CaptureActivity.class, false);
+
                 break;
             case R.id.liuyan_layout:    //留言
                 gotoActivity(BbsActivity.class, false);

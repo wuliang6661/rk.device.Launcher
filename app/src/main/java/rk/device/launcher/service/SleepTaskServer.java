@@ -74,7 +74,7 @@ public class SleepTaskServer extends Handler {
      */
     private void startSleepTask() {
         if (DenyTime == -1) {
-            removeCallbacks(sleepWindowTask);
+            stopSleepTask();
             return;
         }
         removeCallbacks(sleepWindowTask);

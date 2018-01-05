@@ -6,12 +6,17 @@ import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Index;
 import org.greenrobot.greendao.annotation.NotNull;
 
+import java.io.Serializable;
+
 /**
  * Created by mundane on 2017/12/27 下午3:00
  * 授权信息数据表
  */
 @Entity
-public class User{
+public class User implements Serializable {
+
+    private static final long serialVersionUID = 42L;
+
     @Id(autoincrement = true)
     private Long id;
 
@@ -57,10 +62,10 @@ public class User{
 
     @Generated(hash = 1647349471)
     public User(Long id, @NotNull String uniqueId, @NotNull String name,
-            @NotNull String popedomType, String cardNo, String fingerID1,
-            String fingerID2, String fingerID3, String faceID, int passWord,
-            long startTime, long endTime, String fingerCode, int uploadStatus,
-            long createTime, long updateTime) {
+                @NotNull String popedomType, String cardNo, String fingerID1,
+                String fingerID2, String fingerID3, String faceID, int passWord,
+                long startTime, long endTime, String fingerCode, int uploadStatus,
+                long createTime, long updateTime) {
         this.id = id;
         this.uniqueId = uniqueId;
         this.name = name;

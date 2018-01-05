@@ -149,6 +149,7 @@ public class FaceAddActivity extends MVPBaseActivity<FaceAddContract.View, FaceA
                     faceUtils.saveFace(editName.getText().toString(), aa_face);
                     setAdapter();
                 }
+
                 break;
         }
     }

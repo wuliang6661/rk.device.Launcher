@@ -218,6 +218,11 @@
             android:name=".ui.person_add.Person_addActivity"
             android:screenOrientation="portrait" />
 
+        <!-- 增加人脸界面 -->
+        <activity
+            android:name=".ui.personface.PersonFaceActivity"
+            android:screenOrientation="portrait" />
+
 
         <!--二维码扫描界面-->
         <activity

@@ -26,18 +26,28 @@ public class SurfaceHolderCaremaFont implements SurfaceHolder.Callback {
     Camera.Parameters parameters;
     CallBack callBack;
 
+    private int mWidth;
+    private int mHeight;
+
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
+        Log.d("wuliang", "surfaceview create");
         try {
             if (camera != null) {
+                mWidth = camera.getParameters().getPreviewSize().width;
+                mHeight = camera.getParameters().getPreviewSize().height;
                 camera.setPreviewDisplay(holder);
                 setFaceSize();
                 camera.setPreviewCallback(new Camera.PreviewCallback() {
                     @Override
                     public void onPreviewFrame(byte[] data, Camera camera1) {
-                        if (callBack != null) {
-                            callBack.callMessage(data, camera.getParameters().getPreviewSize().width, camera.getParameters().getPreviewSize().height);
+                        try {
+                            if (callBack != null) {
+                                callBack.callMessage(data, mWidth, mHeight);
+                            }
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
                         }
                     }
                 });
@@ -96,9 +106,11 @@ public class SurfaceHolderCaremaFont implements SurfaceHolder.Callback {
             // 启动摄像头预览
             camera.startPreview();
             setFaceSize();
+            mWidth = camera.getParameters().getPreviewSize().width;
+            mHeight = camera.getParameters().getPreviewSize().height;
             camera.setPreviewCallback((data, camera1) -> {
                 if (callBack != null) {
-                    callBack.callMessage(data, camera.getParameters().getPreviewSize().width, camera.getParameters().getPreviewSize().height);
+                    callBack.callMessage(data, mWidth, mHeight);
                 }
             });
         }
