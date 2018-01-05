@@ -168,6 +168,10 @@
 
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_height"
+            android:background="@color/blue_31598a" />
 
         <View
             android:layout_width="match_parent"

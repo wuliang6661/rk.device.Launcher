@@ -34,6 +34,7 @@ import rk.device.launcher.mvp.MVPBaseActivity;
 import rk.device.launcher.service.ElectricBroadcastReceiver;
 import rk.device.launcher.service.NetChangeBroadcastReceiver;
 import rk.device.launcher.service.SocketService;
+import rk.device.launcher.service.VerifyService;
 import rk.device.launcher.ui.activity.SetBasicInfoActivity;
 import rk.device.launcher.ui.activity.SetDoorGuardActivity;
 import rk.device.launcher.ui.activity.SetNetWorkActivity;
@@ -41,6 +42,7 @@ import rk.device.launcher.ui.activity.SetSysActivity;
 import rk.device.launcher.ui.activity.SettingActivity;
 import rk.device.launcher.ui.bbs.BbsActivity;
 import rk.device.launcher.ui.call.CallActivity;
+import rk.device.launcher.ui.fingeradd.FingeraddActivity;
 import rk.device.launcher.ui.fragment.InitErrorDialogFragmen;
 import rk.device.launcher.ui.fragment.InputWifiPasswordDialogFragment;
 import rk.device.launcher.ui.numpassword.NumpasswordActivity;
@@ -54,6 +56,7 @@ import rk.device.launcher.utils.verify.FaceUtils;
 import rk.device.launcher.widget.BatteryView;
 import rk.device.launcher.widget.GifView;
 import rk.device.launcher.widget.carema.DetectedFaceView;
+import rk.device.launcher.widget.carema.SurfaceHolderCaremaBack;
 import rk.device.launcher.widget.carema.SurfaceHolderCaremaFont;
 import rk.device.launcher.zxing.decode.CaptureActivity;
 
@@ -179,7 +182,8 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
         registerIPHost();
         mPresenter.initLocation(this);
         mPresenter.getData();
-        startService(new Intent(this, SocketService.class));
+//        startService(new Intent(this, SocketService.class));
+//        startService(new Intent(this, VerifyService.class));
     }
 
 
@@ -230,6 +234,12 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
         mStaticHandler.removeCallbacksAndMessages(null);
         CvcHelper.CVC_deinit();
         mPresenter.unRegisterReceiver(this);
+        SurfaceHolderCaremaFont.stopCarema();
+        SurfaceHolderCaremaBack.stopCarema();
+        FaceUtils.getInstance().stopFaceFR();
+        FaceUtils.getInstance().destory();
+//        stopService(new Intent(this, SocketService.class));
+//        stopService(new Intent(this, VerifyService.class));
         super.onDestroy();
     }
 
@@ -254,6 +264,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
         openCamera();
         surfaceholder.addCallback(callbackFont);
     }
+
 
     /**
      * 第一次进入页面，开始打开camera
@@ -331,9 +342,10 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
                 settingLoad();
                 break;
             case R.id.rl_contact_manager:
-                if (!StringUtils.isEmpty(modilePhone)) {
-                    showMessageDialog("联系电话: " + modilePhone);
-                }
+//                if (!StringUtils.isEmpty(modilePhone)) {
+//                    showMessageDialog("联系电话: " + modilePhone);
+//                }
+                gotoActivity(FingeraddActivity.class, false);
                 break;
             case R.id.init_error:     //有外设初始化失败
                 initDialog.show(getSupportFragmentManager(), "");
@@ -348,7 +360,6 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
 //                gotoActivity(QrcodeActivity.class, false);
                 Intent intent = new Intent(this, CaptureActivity.class);
                 startActivityForResult(intent, REQUEST_CODE);
-//                gotoActivity(FaceAddActivity.class, false);
                 break;
             case R.id.liuyan_layout:    //留言
                 gotoActivity(BbsActivity.class, false);

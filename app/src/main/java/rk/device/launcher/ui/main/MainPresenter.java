@@ -330,6 +330,7 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
     void registerFace() {
         FaceUtils faceUtils = FaceUtils.getInstance();
         faceUtils.startFaceFR();
+        Log.d("wuliang", "人脸识别启动！");
         faceUtils.setFaceFeature((name, max_score) -> mView.showSuress(name));
     }
 }

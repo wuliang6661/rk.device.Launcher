@@ -49,6 +49,6 @@ public class NfcHelper {
      * int PER_nfcGetCard(rk_nfc_card_uid *pCard)
      * @endcode
      */
-	public static native int PER_nfcGetCard(NfcCard card);
+	public static native int PER_nfcGetCard(int[] cardType, byte[] cardNumber);
 }
 

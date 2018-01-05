@@ -10,6 +10,7 @@ import android.util.Log;
 import cvc.CvcHelper;
 import cvc.CvcRect;
 import cvc.EventUtil;
+import dusun.finger.FingerHelper;
 import peripherals.LedHelper;
 import peripherals.NfcHelper;
 import peripherals.NumberpadHelper;
@@ -39,6 +40,7 @@ public class JniHandler extends Handler {
     private int LedStatus = 1;
     private int MdStatus = 1;
     private int NfcStatus = 1;
+    private String fingerStatus = "";//指纹库
 
     private boolean isStopCorrect = false;
 
@@ -108,6 +110,9 @@ public class JniHandler extends Handler {
         }
 //        if (MdStatus != 0) {
 //            MdStatus = MdHelper.PER_mdInit();
+//        }
+//        if(fingerStatus != 0){
+            fingerStatus = FingerHelper.JNIFpInit();
 //        }
         if (NfcStatus != 0) {
             NfcStatus = NfcHelper.PER_nfcInit();

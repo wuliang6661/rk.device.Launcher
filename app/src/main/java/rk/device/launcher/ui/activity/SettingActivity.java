@@ -19,6 +19,7 @@ import com.android.internal.os.storage.ExternalStorageFormatter;
 import butterknife.Bind;
 import rk.device.launcher.R;
 import rk.device.launcher.base.BaseActivity;
+import rk.device.launcher.ui.faceadd.FaceAddActivity;
 import rk.device.launcher.ui.fragment.RecoveryDialogFragment;
 import rk.device.launcher.ui.managedata.ManagedataActivity;
 import rk.device.launcher.ui.personmanage.PersonManageActivity;
@@ -115,7 +116,7 @@ public class SettingActivity extends BaseActivity {
         mLlManageUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                gotoActivity(PersonManageActivity.class, false);
+                gotoActivity(FaceAddActivity.class, false);
             }
         });
         mLlManageData.setOnClickListener(new View.OnClickListener() {

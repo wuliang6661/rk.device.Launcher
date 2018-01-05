@@ -55,5 +55,6 @@
     <string name="person_name">姓名</string>
     <string name="time_start">开始时间</string>
     <string name="time_end">结束时间</string>
+    <string name="person_face">请将人脸对正摄像头，便于快速录入人脸</string>
 
 </resources>

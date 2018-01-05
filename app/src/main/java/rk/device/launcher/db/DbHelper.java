@@ -150,4 +150,16 @@ public class DbHelper {
                 UserDao.Properties.PopedomType.eq(1)).build();
         return query.list();
     }
+
+
+    /**
+     * 根据唯一标示ID获取User
+     */
+    public static List<User> queryUserById(String id) {
+        UserDao userDao = DbHelper.getUserDao();
+        // where里面是可变参数
+        Query<User> query = userDao.queryBuilder().where(UserDao.Properties.UniqueId.eq(id)).build();
+        return query.list();
+    }
+
 }

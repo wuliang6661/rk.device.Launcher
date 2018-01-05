@@ -67,7 +67,7 @@ public class PersonManageActivity extends MVPBaseActivity<PersonManageContract.V
 
             @Override
             public void convert(LGViewHolder holder, User user, int position) {
-                holder.setText(R.id.person_id, "ID：" + user.getUniqueId());
+                holder.setText(R.id.person_id, "ID：" + user.getId());
                 holder.setText(R.id.person_name, user.getName());
                 if (StringUtils.isEmpty(user.getFaceID())) {
                     holder.getView(R.id.person_face).setVisibility(View.GONE);

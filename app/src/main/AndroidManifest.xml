@@ -109,11 +109,11 @@
         android:persistent="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
             android:name=".ui.main.MainActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -191,6 +191,10 @@
             android:name=".ui.finger.FingerActivity"
             android:screenOrientation="portrait" />
 
+        <!--添加指纹-->
+        <activity android:name=".ui.fingeradd.FingeraddActivity" />
+        <!--新增NFC-->
+        <activity android:name=".ui.nfcadd.NfcaddActivity" />
         <!-- 密码开门界面 -->
         <activity
             android:name=".ui.numpassword.NumpasswordActivity"
@@ -200,7 +204,6 @@
         <activity
             android:name=".ui.bbs.BbsActivity"
             android:screenOrientation="portrait" />
-
 
         <!-- 录入人脸界面 -->
         <activity
@@ -216,6 +219,11 @@
         <!-- 增加用户界面 -->
         <activity
             android:name=".ui.person_add.Person_addActivity"
+            android:screenOrientation="portrait" />
+
+        <!-- 增加人脸界面 -->
+        <activity
+            android:name=".ui.personface.PersonFaceActivity"
             android:screenOrientation="portrait" />
 
 
@@ -246,6 +254,7 @@
             android:name=".service.DownLoadIntentService"
             android:exported="false" />
         <service android:name=".service.SocketService" />
+        <service android:name=".service.VerifyService" />
 
         <receiver android:name=".service.UpdateBroadcastReceiver">
             <intent-filter>
