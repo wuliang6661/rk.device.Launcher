@@ -109,6 +109,7 @@
         android:persistent="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
             android:name=".ui.main.MainActivity"
             android:launchMode="singleTask"
@@ -203,7 +204,6 @@
         <activity
             android:name=".ui.bbs.BbsActivity"
             android:screenOrientation="portrait" />
-
 
         <!-- 录入人脸界面 -->
         <activity

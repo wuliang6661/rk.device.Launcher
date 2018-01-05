@@ -127,6 +127,19 @@ public class SurfaceHolderCaremaFont implements SurfaceHolder.Callback {
     }
 
 
+    /**
+     * 关闭carema
+     */
+    public static void stopCarema() {
+        if (camera != null) {
+            camera.setPreviewCallback(null);
+            camera.stopPreview();
+            camera.release();
+            camera = null;
+        }
+    }
+
+
     public void setCallBack(CallBack callBack) {
         this.callBack = callBack;
     }

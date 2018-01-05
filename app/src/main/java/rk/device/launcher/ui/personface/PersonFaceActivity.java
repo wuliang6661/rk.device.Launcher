@@ -120,7 +120,7 @@ public class PersonFaceActivity extends MVPBaseActivity<PersonFaceContract.View,
                 if (aa_face == null) {
                     showMessageDialog("未检测到人脸！");
                 } else {
-                    String name = faceUtils.saveFace(aa_face);
+                    String name = faceUtils.saveFace("", aa_face);
                     user.setFaceID(name);
                     DbHelper.insertUser(user);
                     finish();

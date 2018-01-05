@@ -56,6 +56,7 @@ import rk.device.launcher.utils.verify.FaceUtils;
 import rk.device.launcher.widget.BatteryView;
 import rk.device.launcher.widget.GifView;
 import rk.device.launcher.widget.carema.DetectedFaceView;
+import rk.device.launcher.widget.carema.SurfaceHolderCaremaBack;
 import rk.device.launcher.widget.carema.SurfaceHolderCaremaFont;
 import rk.device.launcher.zxing.decode.CaptureActivity;
 
@@ -181,8 +182,8 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
         registerIPHost();
         mPresenter.initLocation(this);
         mPresenter.getData();
-        startService(new Intent(this, SocketService.class));
-        startService(new Intent(this, VerifyService.class));
+//        startService(new Intent(this, SocketService.class));
+//        startService(new Intent(this, VerifyService.class));
     }
 
 
@@ -233,6 +234,12 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
         mStaticHandler.removeCallbacksAndMessages(null);
         CvcHelper.CVC_deinit();
         mPresenter.unRegisterReceiver(this);
+        SurfaceHolderCaremaFont.stopCarema();
+        SurfaceHolderCaremaBack.stopCarema();
+        FaceUtils.getInstance().stopFaceFR();
+        FaceUtils.getInstance().destory();
+//        stopService(new Intent(this, SocketService.class));
+//        stopService(new Intent(this, VerifyService.class));
         super.onDestroy();
     }
 
@@ -257,6 +264,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
         openCamera();
         surfaceholder.addCallback(callbackFont);
     }
+
 
     /**
      * 第一次进入页面，开始打开camera

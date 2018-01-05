@@ -14,7 +14,6 @@ import rk.device.launcher.db.DbHelper;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.mvp.MVPBaseActivity;
 import rk.device.launcher.ui.personface.PersonFaceActivity;
-import rk.device.launcher.utils.BitmapUtil;
 import rk.device.launcher.utils.StringUtils;
 import rk.device.launcher.utils.TimeUtils;
 
@@ -69,6 +68,8 @@ public class Person_addActivity extends MVPBaseActivity<Person_addContract.View,
         setTitle("添加用户");
         setOnClick(R.id.face_layout, R.id.pass_layout, R.id.card_layout, R.id.finger_layout01,
                 R.id.finger_layout02, R.id.finger_layout03, R.id.btn_finish_setting, R.id.iv_back);
+        llSetTime.setOnClickListener(this);
+        timeEnd.setOnClickListener(this);
         initView();
     }
 
@@ -80,7 +81,6 @@ public class Person_addActivity extends MVPBaseActivity<Person_addContract.View,
         tvTimeStart.setText(TimeUtils.getTime());
         tvTimeEnd.setText(TimeUtils.getTridTime());
     }
-
 
 
     @Override
@@ -111,6 +111,26 @@ public class Person_addActivity extends MVPBaseActivity<Person_addContract.View,
             case R.id.btn_finish_setting:     //完成设置
 
                 break;
+            case R.id.ll_set_time:    //开始时间
+                String startTime = tvTimeStart.getText().toString().trim();
+                SetFullTimeDialogFragment fragment = SetFullTimeDialogFragment.newInstance();
+                fragment.setSelectedTime(TimeUtils.stringToYear(startTime), TimeUtils.stringToMonth(startTime), TimeUtils.stringToDay(startTime),
+                        TimeUtils.stringToHour(startTime), TimeUtils.stringToMounth(startTime));
+                fragment.setOnConfirmDialogListener((year, month, day, hour, minute) -> {
+                    tvTimeStart.setText(year + "-" + month + "-" + day + " " + hour + ":" + minute);
+                });
+                fragment.show(getSupportFragmentManager(), "");
+                break;
+            case R.id.time_end:      //结束时间
+                String endTime = tvTimeEnd.getText().toString().trim();
+                SetFullTimeDialogFragment fragment1 = SetFullTimeDialogFragment.newInstance();
+                fragment1.setSelectedTime(TimeUtils.stringToYear(endTime), TimeUtils.stringToMonth(endTime), TimeUtils.stringToDay(endTime),
+                        TimeUtils.stringToHour(endTime), TimeUtils.stringToMounth(endTime));
+                fragment1.setOnConfirmDialogListener((year, month, day, hour, minute) -> {
+                    tvTimeEnd.setText(year + "-" + month + "-" + day + " " + hour + ":" + minute);
+                });
+                fragment1.show(getSupportFragmentManager(), "");
+                break;
         }
     }
 
@@ -131,6 +151,7 @@ public class Person_addActivity extends MVPBaseActivity<Person_addContract.View,
         user.setName(name);
         user.setStartTime(TimeUtils.string2Millis(tvTimeStart.getText().toString().trim()));
         user.setEndTime(TimeUtils.string2Millis(tvTimeEnd.getText().toString().trim()));
+        user.setPopedomType("1");
         DbHelper.insertUser(user);
         return true;
     }

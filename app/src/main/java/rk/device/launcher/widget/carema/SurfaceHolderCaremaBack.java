@@ -89,6 +89,19 @@ public class SurfaceHolderCaremaBack implements SurfaceHolder.Callback {
     }
 
 
+    /**
+     * 关闭carema
+     */
+    public static void stopCarema() {
+        if (camera != null) {
+            camera.setPreviewCallback(null);
+            camera.stopPreview();
+            camera.release();
+            camera = null;
+        }
+    }
+
+
     // 控制图像的正确显示方向
     private void setDisplay(Camera.Parameters parameters, Camera camera) {
         if (Integer.parseInt(Build.VERSION.SDK) >= 8) {
