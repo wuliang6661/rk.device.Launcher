@@ -80,7 +80,7 @@ public class FingerActivity extends MVPBaseActivity<FingerContract.View, FingerP
                 user.setStartTime(System.currentTimeMillis());
                 user.setUniqueId(String.valueOf(System.currentTimeMillis()));
                 user.setPopedomType("1");
-                user.setFingerID("123123");
+                user.setFingerID1("123123");
                 user.setFingerCode("123code");
                 user.setName("hanbin");
                 user.setPassWord(67341);
@@ -117,7 +117,7 @@ public class FingerActivity extends MVPBaseActivity<FingerContract.View, FingerP
                 user.setStartTime(System.currentTimeMillis());
                 user.setUniqueId(String.valueOf(System.currentTimeMillis()));
                 user.setPopedomType("2");
-                user.setFingerID("123123");
+                user.setFingerID1("123123");
                 user.setFingerCode("123code");
                 user.setName("hanbin");
                 user.setPassWord(67341);
@@ -154,7 +154,7 @@ public class FingerActivity extends MVPBaseActivity<FingerContract.View, FingerP
                 user.setStartTime(System.currentTimeMillis());
                 user.setUniqueId(String.valueOf(System.currentTimeMillis()));
                 user.setPopedomType("3");
-                user.setFingerID("123123");
+                user.setFingerID1("123123");
                 user.setFingerCode("123code");
                 user.setName("hanbin");
                 user.setPassWord(67341);

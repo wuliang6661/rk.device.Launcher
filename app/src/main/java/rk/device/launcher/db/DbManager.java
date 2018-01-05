@@ -3,6 +3,8 @@ package rk.device.launcher.db;
 import org.greenrobot.greendao.database.Database;
 
 import rk.device.launcher.db.dao.DaoMaster;
+import rk.device.launcher.db.dao.DaoSession;
+import rk.device.launcher.db.dao.RecordDao;
 import rk.device.launcher.db.dao.UserDao;
 import rk.device.launcher.utils.CommonUtils;
 
@@ -33,13 +35,22 @@ public class DbManager {
 	}
 
 	public UserDao getUserDao() {
-		MyOpenHelper helper = new MyOpenHelper(CommonUtils.getContext(), DB_NAME);
-//		Database db = helper.getEncryptedWritableDb(DB_PASSWORD);
-		Database db = helper.getWritableDb();
-		return new DaoMaster(db).newSession().getUserDao();
+		return getDaoSession().getUserDao();
 	}
-	
-	private UserDao getUserDao1() {
+
+    public RecordDao getRecordDao() {
+        return getDaoSession().getRecordDao();
+    }
+
+
+    private DaoSession getDaoSession() {
+        MyOpenHelper helper = new MyOpenHelper(CommonUtils.getContext(), DB_NAME);
+//		Database db = helper.getEncryptedWritableDb(DB_PASSWORD);
+        Database db = helper.getWritableDb();
+        return new DaoMaster(db).newSession();
+    }
+
+    private UserDao getUserDao1() {
 		return mUserDao;
 	}
 

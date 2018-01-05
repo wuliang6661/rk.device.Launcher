@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import org.greenrobot.greendao.query.Query;
 
 import java.util.List;
+import java.util.UUID;
 
 import rk.device.launcher.db.dao.UserDao;
 import rk.device.launcher.db.entity.User;
@@ -38,12 +39,18 @@ public class DbHelper {
 
     /**
      * 此处需要返回insert之后的反馈，不然无法知道是否insert成功
-     * 
+     *
      * @param user
      * @return
      */
-    public static long insert(User user) {
-        return getUserDao().insert(user);
+    public static boolean insert(User user) {
+        try {
+            long rowId = getUserDao().insert(user);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public static void insertInTx(User... users) {
@@ -71,7 +78,7 @@ public class DbHelper {
     }
 
     // 根据条件查询, 这里只是举个例子
-    public static List<User> query() {
+    private static List<User> query() {
 
         UserDao userDao = DbHelper.getUserDao();
         // where里面是可变参数
@@ -101,13 +108,13 @@ public class DbHelper {
      */
     public static List<User> queryByFinger(int fingerId) {
         Query<User> query = getUserDao().queryBuilder()
-                .where(UserDao.Properties.FingerID.eq(fingerId)).build();
+                .where(UserDao.Properties.FingerID1.eq(fingerId)).build();
         return query.list();
     }
 
     /**
      * 插入或更新一条数据
-     * 
+     *
      * @param user
      * @return
      */
@@ -120,11 +127,12 @@ public class DbHelper {
         if (TextUtils.isEmpty(user.getPopedomType())) {
             return Constant.NULL_POPEDOMTYPE;
         }
-        //唯一标识
-        if (TextUtils.isEmpty(user.getUniqueId())) {
-            return Constant.NULL_UNIQUEID;
-        }
+//        //唯一标识
+//        if (TextUtils.isEmpty(user.getUniqueId())) {
+//            return Constant.NULL_UNIQUEID;
+//        }
         if (user.getId() == null) {
+            user.setUniqueId(UUID.randomUUID().toString());
             return getUserDao().insert(user);
         } else {
             getUserDao().update(user);

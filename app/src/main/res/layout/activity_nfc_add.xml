@@ -4,4 +4,29 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <include layout="@layout/topbar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/shape_normal_bg"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="50dp"
+            android:src="#C0C0C0" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="35dp"
+            android:gravity="center"
+            android:text="请按示意图所示将卡靠近刷卡感应器"
+            android:textColor="#ffffff"
+            android:textSize="18sp" />
+    </LinearLayout>
+
 </LinearLayout>

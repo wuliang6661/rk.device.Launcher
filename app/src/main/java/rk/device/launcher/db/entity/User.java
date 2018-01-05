@@ -6,13 +6,12 @@ import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Index;
 import org.greenrobot.greendao.annotation.NotNull;
 
-import rk.device.launcher.utils.encrypt.AESOperator;
-
 /**
  * Created by mundane on 2017/12/27 下午3:00
+ * 授权信息数据表
  */
 @Entity
-public class User {
+public class User{
     @Id(autoincrement = true)
     private Long id;
 
@@ -34,7 +33,11 @@ public class User {
 
     private String cardNo;
 
-    private String fingerID;
+    private String fingerID1;
+
+    private String fingerID2;
+
+    private String fingerID3;
 
     private String faceID;
 
@@ -48,23 +51,32 @@ public class User {
 
     private int uploadStatus;
 
-    @Generated(hash = 1246737531)
+    private long createTime;
+
+    private long updateTime;
+
+    @Generated(hash = 1647349471)
     public User(Long id, @NotNull String uniqueId, @NotNull String name,
-            @NotNull String popedomType, String cardNo, String fingerID,
-            String faceID, int passWord, long startTime, long endTime,
-            String fingerCode, int uploadStatus) {
+            @NotNull String popedomType, String cardNo, String fingerID1,
+            String fingerID2, String fingerID3, String faceID, int passWord,
+            long startTime, long endTime, String fingerCode, int uploadStatus,
+            long createTime, long updateTime) {
         this.id = id;
         this.uniqueId = uniqueId;
         this.name = name;
         this.popedomType = popedomType;
         this.cardNo = cardNo;
-        this.fingerID = fingerID;
+        this.fingerID1 = fingerID1;
+        this.fingerID2 = fingerID2;
+        this.fingerID3 = fingerID3;
         this.faceID = faceID;
         this.passWord = passWord;
         this.startTime = startTime;
         this.endTime = endTime;
         this.fingerCode = fingerCode;
         this.uploadStatus = uploadStatus;
+        this.createTime = createTime;
+        this.updateTime = updateTime;
     }
 
     @Generated(hash = 586692638)
@@ -88,13 +100,11 @@ public class User {
     }
 
     public String getName() {
-        String decodeName = AESOperator.decode(this.name);
-        return decodeName;
+        return this.name;
     }
 
     public void setName(String name) {
-        String encodeName = AESOperator.encode(name);
-        this.name = encodeName;
+        this.name = name;
     }
 
     public String getPopedomType() {
@@ -113,12 +123,28 @@ public class User {
         this.cardNo = cardNo;
     }
 
-    public String getFingerID() {
-        return this.fingerID;
+    public String getFingerID1() {
+        return this.fingerID1;
     }
 
-    public void setFingerID(String fingerID) {
-        this.fingerID = fingerID;
+    public void setFingerID1(String fingerID1) {
+        this.fingerID1 = fingerID1;
+    }
+
+    public String getFingerID2() {
+        return this.fingerID2;
+    }
+
+    public void setFingerID2(String fingerID2) {
+        this.fingerID2 = fingerID2;
+    }
+
+    public String getFingerID3() {
+        return this.fingerID3;
+    }
+
+    public void setFingerID3(String fingerID3) {
+        this.fingerID3 = fingerID3;
     }
 
     public String getFaceID() {
@@ -154,13 +180,11 @@ public class User {
     }
 
     public String getFingerCode() {
-        String decodeFingerCode = AESOperator.decode(this.fingerCode);
-        return decodeFingerCode;
+        return this.fingerCode;
     }
 
     public void setFingerCode(String fingerCode) {
-        String encodeFingerCode = AESOperator.encode(fingerCode);
-        this.fingerCode = encodeFingerCode;
+        this.fingerCode = fingerCode;
     }
 
     public int getUploadStatus() {
@@ -169,6 +193,22 @@ public class User {
 
     public void setUploadStatus(int uploadStatus) {
         this.uploadStatus = uploadStatus;
+    }
+
+    public long getCreateTime() {
+        return this.createTime;
+    }
+
+    public void setCreateTime(long createTime) {
+        this.createTime = createTime;
+    }
+
+    public long getUpdateTime() {
+        return this.updateTime;
+    }
+
+    public void setUpdateTime(long updateTime) {
+        this.updateTime = updateTime;
     }
 
 

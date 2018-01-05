@@ -1,5 +1,6 @@
 package rk.device.launcher.widget.carema;
 
+import android.graphics.ImageFormat;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
 import android.os.Build;
@@ -25,8 +26,6 @@ public class SurfaceHolderCaremaBack implements SurfaceHolder.Callback {
     private static Camera camera;
     Camera.Parameters parameters;
 
-    SurfaceHolderCaremaFont.CallBack callBack;
-
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         try {
@@ -43,14 +42,12 @@ public class SurfaceHolderCaremaBack implements SurfaceHolder.Callback {
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         Log.d(TAG, "width = [" + width + "], height = [" + height + "]");
-        if (callBack != null) {
-            callBack.callHeightAndWidth(width, height);
-        }
         if (null != camera) {
             camera.autoFocus((success, camera1) -> {
                 if (success) {
                     parameters = camera1.getParameters();
                     parameters.setPictureFormat(PixelFormat.JPEG);
+                    parameters.setPreviewFormat(ImageFormat.NV21);
                     parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);// 1连续对焦
 //                    parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_FIXED);
                     Log.d("wuliang", "carema (FACING_FRONT) FocusMode is " + parameters.getFocusMode());
@@ -87,9 +84,6 @@ public class SurfaceHolderCaremaBack implements SurfaceHolder.Callback {
             // 启动摄像头预览
             camera.startPreview();
             camera.setPreviewCallback((data, camera1) -> {
-                if (callBack != null) {
-                    callBack.callMessage();
-                }
             });
         }
     }

@@ -40,8 +40,10 @@ import rk.device.launcher.ui.activity.SetDoorGuardActivity;
 import rk.device.launcher.ui.activity.SetNetWorkActivity;
 import rk.device.launcher.ui.activity.SetSysActivity;
 import rk.device.launcher.ui.activity.SettingActivity;
+import rk.device.launcher.ui.bbs.BbsActivity;
 import rk.device.launcher.ui.call.CallActivity;
 import rk.device.launcher.ui.fingeradd.FingeraddActivity;
+import rk.device.launcher.ui.faceadd.FaceAddActivity;
 import rk.device.launcher.ui.fragment.InitErrorDialogFragmen;
 import rk.device.launcher.ui.fragment.InputWifiPasswordDialogFragment;
 import rk.device.launcher.ui.numpassword.NumpasswordActivity;
@@ -51,10 +53,12 @@ import rk.device.launcher.utils.SoundPlayUtils;
 import rk.device.launcher.utils.StringUtils;
 import rk.device.launcher.utils.TimeUtils;
 import rk.device.launcher.utils.rxjava.RxBus;
+import rk.device.launcher.utils.verify.FaceUtils;
 import rk.device.launcher.widget.BatteryView;
 import rk.device.launcher.widget.GifView;
 import rk.device.launcher.widget.carema.DetectedFaceView;
 import rk.device.launcher.widget.carema.SurfaceHolderCaremaFont;
+import rk.device.launcher.zxing.decode.CaptureActivity;
 
 
 /**
@@ -108,6 +112,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
     LinearLayout suressLayout;
 
     JniHandler mHandler;
+
     private boolean isNetWork = true;// 此状态保存上次网络是否连接，默认已连接
     private InitErrorDialogFragmen initDialog;
     private InputWifiPasswordDialogFragment dialogFragment = null;
@@ -144,12 +149,15 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
 
         invition();
         register();
+        mPresenter.registerFace();
     }
 
     /**
      * 初始化界面
      */
     private void invition() {
+        caremaBg.setMovieResource(R.raw.camera_bg);
+        deviceNameBg.setMovieResource(R.raw.device_name_bg);
         initDialog = InitErrorDialogFragmen.newInstance();
         SoundPlayUtils.init(this);
         settingTv.setOnClickListener(this);
@@ -181,8 +189,6 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
      * 初始化布局显示
      */
     private void showView() {
-        caremaBg.setMovieResource(R.raw.camera_bg);
-        deviceNameBg.setMovieResource(R.raw.device_name_bg);
         String declareContent = SPUtils.getString(Constant.KEY_FIRSTPAGE_CONTENT);
         if (!TextUtils.isEmpty(declareContent)) {
             mTvDeclare.setVisibility(View.VISIBLE);
@@ -223,10 +229,10 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         mStaticHandler.removeCallbacksAndMessages(null);
         CvcHelper.CVC_deinit();
-        mPresenter.unRegisterReceiver();
+        mPresenter.unRegisterReceiver(this);
+        super.onDestroy();
     }
 
 
@@ -239,7 +245,6 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
     public void onRequestEnd() {
         
     }
-
 
     /**
      * 初始化摄像头显示
@@ -258,16 +263,19 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
     private void openCamera() {
         callbackFont.setCallBack(new SurfaceHolderCaremaFont.CallBack() {
             @Override
-            public void callMessage() {
-                faceCount++;
-                if (faceCount % 5 != 0) {
-                    return;
+            public void callMessage(byte[] data, int width, int height) {
+                if (width != 0 && height != 0) {
+                    FaceUtils.getInstance().caremeDataToFace(data, width, height);
                 }
-                Message message = new Message();
-                message.what = EventUtil.CVC_DETECTFACE;
-                mHandler.setOnBioAssay(MainActivity.this);
-                mHandler.sendMessage(message);
-                faceCount = faceCount == 25 ? 0 : faceCount;
+//                faceCount++;
+//                if (faceCount % 5 != 0) {
+//                    return;
+//                }
+//                Message message = new Message();
+//                message.what = EventUtil.CVC_DETECTFACE;
+//                mHandler.setOnBioAssay(MainActivity.this);
+//                mHandler.sendMessage(message);
+//                faceCount = faceCount == 25 ? 0 : faceCount;
             }
 
             @Override
@@ -340,10 +348,12 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
                 gotoActivity(CallActivity.class, false);
                 break;
             case R.id.qr_code_layout:    //二维码
-
+//                gotoActivity(QrcodeActivity.class, false);
+//                gotoActivity(CaptureActivity.class, false);
+                gotoActivity(FaceAddActivity.class, false);
                 break;
             case R.id.liuyan_layout:    //留言
-
+                gotoActivity(BbsActivity.class, false);
                 break;
         }
     }
@@ -553,9 +563,11 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
      * 身份验证成功，文字显示
      */
     public void showSuress(String text) {
-        suressText.setText("欢迎" + text + "回家");
-        suressLayout.setVisibility(View.VISIBLE);
-        new Handler().postDelayed(() -> suressLayout.setVisibility(View.GONE), 2000);
+        runOnUiThread(() -> {
+            suressText.setText("欢迎" + text + "回家");
+            suressLayout.setVisibility(View.VISIBLE);
+            new Handler().postDelayed(() -> suressLayout.setVisibility(View.GONE), 2000);
+        });
     }
 
 
@@ -569,4 +581,5 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
             mStaticHandler.postDelayed(this, REFRESH_DELAY);
         }
     };
+
 }

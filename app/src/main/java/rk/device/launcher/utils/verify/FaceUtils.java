@@ -6,6 +6,10 @@ import android.graphics.Rect;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.arcsoft.ageestimation.ASAE_FSDKAge;
+import com.arcsoft.ageestimation.ASAE_FSDKEngine;
+import com.arcsoft.ageestimation.ASAE_FSDKError;
+import com.arcsoft.ageestimation.ASAE_FSDKFace;
 import com.arcsoft.facedetection.AFD_FSDKEngine;
 import com.arcsoft.facedetection.AFD_FSDKError;
 import com.arcsoft.facedetection.AFD_FSDKFace;
@@ -17,6 +21,10 @@ import com.arcsoft.facerecognition.AFR_FSDKVersion;
 import com.arcsoft.facetracking.AFT_FSDKEngine;
 import com.arcsoft.facetracking.AFT_FSDKError;
 import com.arcsoft.facetracking.AFT_FSDKFace;
+import com.arcsoft.genderestimation.ASGE_FSDKEngine;
+import com.arcsoft.genderestimation.ASGE_FSDKError;
+import com.arcsoft.genderestimation.ASGE_FSDKFace;
+import com.arcsoft.genderestimation.ASGE_FSDKGender;
 import com.guo.android_extend.image.ImageConverter;
 import com.guo.android_extend.java.AbsLoop;
 import com.guo.android_extend.java.ExtInputStream;
@@ -30,7 +38,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rk.device.launcher.utils.FileUtils;
-import rk.device.launcher.utils.MD5;
 
 /**
  * Created by wuliang on 2017/12/28.
@@ -43,7 +50,6 @@ public class FaceUtils {
     private static final String TAG = "FaceUtils";
 
     private static final String facePath = "/data/rk_backup/face";
-
 
     private static String appid = "7p9bytNNtUW7h4i6QTMeJsWpGZG6zxbcuupyTEwc5Tpi";
     private static String ft_key = "56nNWR9uZaSZC4NidCkvtTcY88X3aAmTcNvoMoGeTMqn";
@@ -70,6 +76,14 @@ public class FaceUtils {
      * 人脸追踪
      */
     private AFT_FSDKEngine mFTengine;
+    /**
+     * 年龄检测
+     */
+    private ASAE_FSDKEngine mAgeEngine;
+    /**
+     * 性别检测
+     */
+    private ASGE_FSDKEngine mGenderEngine;
 
     /**
      * 人脸版本信息
@@ -82,6 +96,12 @@ public class FaceUtils {
     private List<AFT_FSDKFace> mFTresult;
 
     private Context mContext;
+
+    /**
+     * 年龄和性别检测
+     */
+    private List<ASAE_FSDKAge> ages = new ArrayList<>();
+    private List<ASGE_FSDKGender> genders = new ArrayList<>();
 
 
     public static FaceUtils getInstance() {
@@ -118,6 +138,8 @@ public class FaceUtils {
         }
         registerFaceD();
         registerFaceT();
+        registerFaceGen();
+        registerFaceAge();
     }
 
 
@@ -141,6 +163,26 @@ public class FaceUtils {
         mFTengine = new AFT_FSDKEngine();
         AFT_FSDKError err = mFTengine.AFT_FSDK_InitialFaceEngine(FaceUtils.appid, FaceUtils.ft_key, AFT_FSDKEngine.AFT_OPF_0_HIGHER_EXT, 16, 5);
         Log.d(TAG, "AFT_FSDK_InitialFaceEngine =" + err.getCode());
+    }
+
+
+    /**
+     * 注册性别检测
+     */
+    private void registerFaceGen() {
+        mGenderEngine = new ASGE_FSDKEngine();
+        ASGE_FSDKError error1 = mGenderEngine.ASGE_FSDK_InitgGenderEngine(FaceUtils.appid, FaceUtils.gender_key);
+        Log.d(TAG, "ASGE_FSDK_InitgGenderEngine =" + error1.getCode());
+    }
+
+
+    /**
+     * 注册年龄检测
+     */
+    private void registerFaceAge() {
+        mAgeEngine = new ASAE_FSDKEngine();
+        ASAE_FSDKError error = mAgeEngine.ASAE_FSDK_InitAgeEngine(FaceUtils.appid, FaceUtils.age_key);
+        Log.d(TAG, "ASAE_FSDK_InitAgeEngine =" + error.getCode());
     }
 
 
@@ -179,7 +221,9 @@ public class FaceUtils {
      * 保存人脸到本地，并返回人脸Id
      */
     public String saveFace(String personName, AFR_FSDKFace face) {
-        String name = MD5.strToMd5Low32(personName + "_" + System.currentTimeMillis());
+        Log.d("wuliang", "保存人脸");
+//        String name = UUID.randomUUID().toString();
+        String name = personName;
         try {
             //check if already registered.
             boolean add = true;
@@ -338,7 +382,7 @@ public class FaceUtils {
     }
 
 
-    private class FaceRegist {
+    public class FaceRegist {
         String mName;
         List<AFR_FSDKFace> mFaceList;
 
@@ -346,6 +390,15 @@ public class FaceUtils {
             mName = name;
             mFaceList = new ArrayList<>();
         }
+
+        public String getmName() {
+            return mName;
+        }
+    }
+
+
+    public List<FaceRegist> getmRegister() {
+        return mRegister;
     }
 
     /***********************************************人脸识别(追踪到人脸并识别)**********************************************************/
@@ -366,10 +419,10 @@ public class FaceUtils {
     /**
      * 人脸追踪
      */
-    public void caremeDataToFace(byte[] data, int width, int height) {
+    public Rect[] caremeDataToFace(byte[] data, int width, int height) {
         AFT_FSDKError err = mFTengine.AFT_FSDK_FaceFeatureDetect(data, width, height, AFT_FSDKEngine.CP_PAF_NV21, mFTresult);
-        Log.d(TAG, "AFT_FSDK_FaceFeatureDetect =" + err.getCode());
-        Log.d(TAG, "Face=" + mFTresult.size());
+//        Log.d(TAG, "AFT_FSDK_FaceFeatureDetect =" + err.getCode());
+//        Log.d(TAG, "Face=" + mFTresult.size());
         for (AFT_FSDKFace face : mFTresult) {
             Log.d(TAG, "Face:" + face.toString());
         }
@@ -386,6 +439,7 @@ public class FaceUtils {
         }
         //clear result.
         mFTresult.clear();
+        return rects;
     }
 
     /**
@@ -407,10 +461,11 @@ public class FaceUtils {
     private class FRAbsLoop extends AbsLoop {
 
         private AFR_FSDKFace result = new AFR_FSDKFace();
+        List<ASAE_FSDKFace> face1 = new ArrayList<>();
+        List<ASGE_FSDKFace> face2 = new ArrayList<>();
 
         @Override
         public void setup() {
-
         }
 
         @Override
@@ -434,12 +489,24 @@ public class FaceUtils {
                     }
                 }
 
+                //age & gender
+                face1.clear();
+                face2.clear();
+                face1.add(new ASAE_FSDKFace(mAFT_FSDKFace.getRect(), mAFT_FSDKFace.getDegree()));
+                face2.add(new ASGE_FSDKFace(mAFT_FSDKFace.getRect(), mAFT_FSDKFace.getDegree()));
+                ASAE_FSDKError error1 = mAgeEngine.ASAE_FSDK_AgeEstimation_Image(mImageNV21, mWidth, mHeight, AFT_FSDKEngine.CP_PAF_NV21, face1, ages);
+                ASGE_FSDKError error2 = mGenderEngine.ASGE_FSDK_GenderEstimation_Image(mImageNV21, mWidth, mHeight, AFT_FSDKEngine.CP_PAF_NV21, face2, genders);
+                Log.d(TAG, "ASAE_FSDK_AgeEstimation_Image:" + error1.getCode() + ",ASGE_FSDK_GenderEstimation_Image:" + error2.getCode());
+                Log.d(TAG, "age:" + ages.get(0).getAge() + ",gender:" + genders.get(0).getGender());
+                final String age = ages.get(0).getAge() == 0 ? "年龄未知" : ages.get(0).getAge() + "岁";
+                final String gender = genders.get(0).getGender() == -1 ? "性别未知" : (genders.get(0).getGender() == 0 ? "男" : "女");
+
                 if (max > 0.6f) {
                     //fr success.
-                    final float max_score = max;
-                    Log.d(TAG, "fit Score:" + max + ", NAME:" + name);
-                    final String mNameShow = name;
-
+                    Log.d("wuliang", "fit Score:" + max + ", NAME:" + name + ",age:" + age + ",gender:" + gender);
+                    if (featureFace != null) {
+                        featureFace.faceSuress(name, max);
+                    }
                 } else {
                     final String mNameShow = "未识别";
 
@@ -454,6 +521,23 @@ public class FaceUtils {
     }
 
 
+    private FeatureFace featureFace;
+
+    /**
+     * 设置人脸识别完成回调
+     */
+    public void setFaceFeature(FeatureFace faceFeature) {
+        this.featureFace = faceFeature;
+    }
+
+
+    public interface FeatureFace {
+
+        void faceSuress(String name, float max_score);
+
+    }
+
+
     /**
      * 注销所有人脸识别引擎
      */
@@ -461,5 +545,7 @@ public class FaceUtils {
         mFDengine.AFD_FSDK_UninitialFaceEngine();
         mFREngine.AFR_FSDK_UninitialEngine();
         mFTengine.AFT_FSDK_UninitialFaceEngine();
+        mAgeEngine.ASAE_FSDK_UninitAgeEngine();
+        mGenderEngine.ASGE_FSDK_UninitGenderEngine();
     }
 }

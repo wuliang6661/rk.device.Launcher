@@ -1,7 +1,10 @@
 package rk.device.launcher.ui.main;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.Message;
@@ -11,6 +14,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.sdk.android.oss.ClientException;
 import com.alibaba.sdk.android.oss.ServiceException;
 import com.alibaba.sdk.android.oss.model.PutObjectRequest;
+import com.arcsoft.facerecognition.AFR_FSDKFace;
 import com.trello.rxlifecycle.ActivityEvent;
 
 import java.util.HashMap;
@@ -39,6 +43,7 @@ import rk.device.launcher.utils.gps.GpsUtils;
 import rk.device.launcher.utils.oss.AliYunOssUtils;
 import rk.device.launcher.utils.oss.OssUploadListener;
 import rk.device.launcher.utils.uuid.DeviceUuidFactory;
+import rk.device.launcher.utils.verify.FaceUtils;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -129,10 +134,10 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
     /**
      * 注销各类服务
      */
-    void unRegisterReceiver() {
-        mView.getContext().unregisterReceiver(mBatteryReceiver);
-        mView.getContext().unregisterReceiver(netChangeBroadcastRecever);
-        mView.getContext().unregisterReceiver(netOffReceiver);
+    void unRegisterReceiver(Activity activity) {
+        activity.unregisterReceiver(mBatteryReceiver);
+        activity.unregisterReceiver(netChangeBroadcastRecever);
+        activity.unregisterReceiver(netOffReceiver);
     }
 
 
@@ -317,5 +322,14 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
                 }
             }
         });
+    }
+
+    /**
+     * 启动人脸检测
+     */
+    void registerFace() {
+        FaceUtils faceUtils = FaceUtils.getInstance();
+        faceUtils.startFaceFR();
+        faceUtils.setFaceFeature((name, max_score) -> mView.showSuress(name));
     }
 }

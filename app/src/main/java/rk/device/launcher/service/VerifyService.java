@@ -1,12 +1,17 @@
 package rk.device.launcher.service;
 
+import android.app.ActivityManager;
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
 import peripherals.NfcHelper;
+import rk.device.launcher.base.LauncherApplication;
+import rk.device.launcher.bean.event.NFCAddEvent;
+import rk.device.launcher.utils.rxjava.RxBus;
 
 /**
  * Created by hanbin on 2018/1/2.
@@ -34,8 +39,12 @@ public class VerifyService extends Service {
                     byte[] cardNumber = new byte[16];
                     int resultCode = NfcHelper.PER_nfcGetCard(cardType, cardNumber);
                     Log.i(TAG, TAG + "resultCode:" + resultCode);
+                    String NFCCard = bytesToHexString(cardNumber, cardType[0]);
                     Log.i(TAG, TAG + "NfcCard:" + bytesToHexString(cardNumber, cardType[0])
                             + "NfcType:" + cardType[0]);
+                    if(LauncherApplication.sIsNFCAdd == 1 && isTopActivity().equals("NfcaddActivity")){
+                        RxBus.getDefault().post(new NFCAddEvent(NFCCard));
+                    }
                     try {
                         Thread.sleep(500);
                     } catch (InterruptedException e) {
@@ -51,6 +60,13 @@ public class VerifyService extends Service {
             }
         });
         thread.start();
+    }
+
+    private String isTopActivity()
+    {
+        ActivityManager am = (ActivityManager)getSystemService(ACTIVITY_SERVICE);
+        ComponentName cn = am.getRunningTasks(1).get(0).topActivity;
+        return cn.getClassName();
     }
 
     /*

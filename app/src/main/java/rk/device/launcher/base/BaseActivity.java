@@ -191,6 +191,17 @@ public abstract class BaseActivity extends RxAppCompatActivity {
 
 
     /**
+     * 设置标题栏右边控件，并设置事件
+     */
+    protected void setRightButton(int resourse, View.OnClickListener listener) {
+        ImageView right = (ImageView) findViewById(R.id.title_right);
+        right.setVisibility(View.VISIBLE);
+        right.setBackgroundResource(resourse);
+        right.setOnClickListener(listener);
+    }
+
+
+    /**
      * 显示提示弹窗
      */
     protected BaseDialogFragment showMessageDialog(String message) {

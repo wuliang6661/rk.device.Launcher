@@ -84,18 +84,18 @@ dependencies {
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.android.support:recyclerview-v7:26.0.0-alpha1'
     compile 'com.google.zxing:core:3.3.1'
-    //RxJava相关依赖库
+    // RxJava相关依赖库
     compile 'io.reactivex:rxjava:1.1.6'
     compile 'io.reactivex:rxandroid:1.2.1'
     compile 'com.trello:rxlifecycle-components:0.6.1'
-    //retrofit
+    // retrofit
     compile 'com.squareup.retrofit2:retrofit:2.0.0-beta3'
     compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta4'
     compile 'com.squareup.retrofit2:adapter-rxjava:2.0.0-beta4'
     compile 'com.squareup.retrofit2:converter-scalars:2.0.0-beta4'
     compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
     compile 'com.alibaba:fastjson:1.2.5'
-    //蓝牙
+    // 蓝牙
     compile 'com.inuker.bluetooth:library:1.4.0'
     compile 'com.aliyun.dpa:oss-android-sdk:2.4.5'
     // 个推
@@ -104,6 +104,8 @@ dependencies {
     compile 'com.github.donkingliang:CustomBanner:1.1.0'
     // 数据库
     compile 'org.greenrobot:greendao:3.2.2'
-    //图片数据格式转换，人脸识别
+    // 图片数据格式转换，人脸识别
     compile 'com.guo.android_extend:android-extend:1.0.1'
+    // zxing
+    compile 'com.google.zxing:core:3.3.1'
 }

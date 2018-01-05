@@ -43,9 +43,14 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
     }
 
     private void initView() {
+        registerRxBus();
         setOnClick(R.id.btn_add_finger);
         goBack();
         addFingerBtn.setVisibility(View.VISIBLE);
+    }
+
+    private void registerRxBus() {
+
     }
 
     @Override
