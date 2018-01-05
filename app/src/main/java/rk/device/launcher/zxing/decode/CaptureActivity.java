@@ -191,6 +191,7 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
             beepManager.playBeepSoundAndVibrate();
             Intent resultIntent = new Intent();
             Bundle bundle = new Bundle();
+            Log.d(TAG, "result = " + resultString);
             bundle.putString("result", resultString);
             resultIntent.putExtras(bundle);
             this.setResult(RESULT_OK, resultIntent);

@@ -17,18 +17,27 @@ import rk.device.launcher.utils.verify.FaceUtils;
 
 public class LauncherApplication extends Application {
 
-
     public static Context sContext;
 
     /**
      * 记录电量数据上报
      */
-    public static int sLevel;
+    public static int     sLevel;
 
     /**
      * 记录是否在充电
      */
-    public static int sIsCharge;
+    public static int     sIsCharge;
+
+    /**
+     * 记录是否在录入指纹
+     */
+    public static int     sIsFingerAdd;
+
+    /**
+     * 记录是否在录入NFC卡
+     */
+    public static int     sIsNFCAdd;
 
     @Override
     public void onCreate() {
@@ -52,6 +61,5 @@ public class LauncherApplication extends Application {
     public static Context getContext() {
         return sContext;
     }
-
 
 }
