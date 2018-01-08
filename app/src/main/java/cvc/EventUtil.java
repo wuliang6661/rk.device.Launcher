@@ -41,5 +41,15 @@ public class EventUtil {
      */
     public static final int CVC_LIVINGFACE = 5;
 
+    /**
+     * 开启摄像头
+     */
+    public static final int MEDIA_OPEN = 7;
+
+    /**
+     * 关闭摄像头
+     */
+    public static final int MEDIA_CLOSE = 8;
+
 
 }

@@ -34,7 +34,6 @@ import rk.device.launcher.mvp.MVPBaseActivity;
 import rk.device.launcher.service.ElectricBroadcastReceiver;
 import rk.device.launcher.service.NetChangeBroadcastReceiver;
 import rk.device.launcher.service.SocketService;
-import rk.device.launcher.service.VerifyService;
 import rk.device.launcher.ui.activity.SetBasicInfoActivity;
 import rk.device.launcher.ui.activity.SetDoorGuardActivity;
 import rk.device.launcher.ui.activity.SetNetWorkActivity;
@@ -183,7 +182,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
         mPresenter.initLocation(this);
         mPresenter.getData();
         startService(new Intent(this, SocketService.class));
-        startService(new Intent(this, VerifyService.class));
+//        startService(new Intent(this, VerifyService.class));
     }
 
 
@@ -298,7 +297,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
      * Jni初始化的返回值
      */
     @Override
-    public void initCallBack(int cvcStatus, int LedStatus, int MdStatus, int NfcStatus) {
+    public void initCallBack(int cvcStatus, int LedStatus, int NfcStatus) {
         runOnUiThread(() -> {
             if (cvcStatus == 0 && LedStatus == 0 && NfcStatus == 0) {
                 initError.setVisibility(View.GONE);
@@ -307,7 +306,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
                 }
             } else {
                 initError.setVisibility(View.VISIBLE);
-                initDialog.setStatus(cvcStatus, LedStatus, MdStatus, NfcStatus, mHandler);
+                initDialog.setStatus(cvcStatus, LedStatus, 0, NfcStatus, mHandler);
                 if (initDialog != null && initDialog.isVisible()) {
                     T.showShort("部分设备初始化失败！建议重启设备！");
                     initDialog.setInitFinish();

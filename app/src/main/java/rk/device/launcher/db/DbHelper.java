@@ -10,6 +10,7 @@ import java.util.UUID;
 import rk.device.launcher.db.dao.UserDao;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.global.Constant;
+import rk.device.launcher.utils.MD5;
 
 /**
  * @author : mundane
@@ -155,7 +156,7 @@ public class DbHelper {
         //            return Constant.NULL_UNIQUEID;
         //        }
         if (user.getId() == null) {
-            user.setUniqueId(UUID.randomUUID().toString());
+            user.setUniqueId(MD5.get16Lowercase(UUID.randomUUID().toString()));
             return getUserDao().insert(user);
         } else {
             getUserDao().update(user);
