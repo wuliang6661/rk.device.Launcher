@@ -237,7 +237,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
         SurfaceHolderCaremaFont.stopCarema();
         SurfaceHolderCaremaBack.stopCarema();
         FaceUtils.getInstance().stopFaceFR();
-        stopService(new Intent(this, SocketService.class));
+//        stopService(new Intent(this, SocketService.class));
 //        stopService(new Intent(this, VerifyService.class));
         super.onDestroy();
     }

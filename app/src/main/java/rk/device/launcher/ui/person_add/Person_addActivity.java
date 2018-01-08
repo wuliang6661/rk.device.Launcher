@@ -31,6 +31,7 @@ public class Person_addActivity
         extends MVPBaseActivity<Person_addContract.View, Person_addPresenter>
         implements Person_addContract.View, View.OnClickListener {
 
+    private static final String EXTRA_UNIQUEID = "uniqueId";
     @Bind(R.id.et_person_name)
     EditText etPersonName;
     @Bind(R.id.tv_time_start)
@@ -140,7 +141,11 @@ public class Person_addActivity
                 }
                 break;
             case R.id.card_layout: //录入卡
-                gotoActivity(NfcaddActivity.class, false);
+                if (isHasName()) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString(EXTRA_UNIQUEID, user.getUniqueId());
+                    gotoActivity(NfcaddActivity.class, bundle, false);
+                }
                 break;
             case R.id.finger_layout01: //录入指纹
             case R.id.finger_layout02:

@@ -13,7 +13,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_300"
-            android:layout_marginTop="@dimen/dp_50"
+            android:layout_marginTop="@dimen/dp_60"
             android:gravity="center">
 
             <ImageView
@@ -67,6 +67,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_35"
             android:gravity="center"
+            android:visibility="gone"
             android:text="@string/nfc_card_notice"
             android:textColor="#ffffff"
             android:textSize="18sp"/>
