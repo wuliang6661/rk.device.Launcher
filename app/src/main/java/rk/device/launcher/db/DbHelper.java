@@ -114,7 +114,7 @@ public class DbHelper {
 
     /**
      * Get User List By UniqueId
-     * 
+     *
      * @param uniqueId
      * @return
      */
@@ -123,6 +123,17 @@ public class DbHelper {
                 .where(UserDao.Properties.UniqueId.eq(uniqueId)).build();
         return query.list();
     }
+
+
+    /**
+     * 通过faceId获取当前记录
+     */
+    public static List<User> queryByFaceId(String faceId) {
+        Query<User> query = getUserDao().queryBuilder()
+                .where(UserDao.Properties.FaceID.eq(faceId)).build();
+        return query.list();
+    }
+
 
     /**
      * 插入或更新一条数据

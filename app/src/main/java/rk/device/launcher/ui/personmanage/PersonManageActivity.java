@@ -127,4 +127,5 @@ public class PersonManageActivity extends MVPBaseActivity<PersonManageContract.V
                 break;
         }
     }
+
 }

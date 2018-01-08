@@ -205,11 +205,6 @@
             android:name=".ui.bbs.BbsActivity"
             android:screenOrientation="portrait" />
 
-        <!-- 录入人脸界面 -->
-        <activity
-            android:name=".ui.faceadd.FaceAddActivity"
-            android:screenOrientation="portrait" />
-
         <!-- 用户管理界面 -->
         <activity
             android:name=".ui.personmanage.PersonManageActivity"
@@ -240,14 +235,12 @@
         <!--数据管理-->
         <activity
             android:name=".ui.managedata.ManagedataActivity"
-            android:screenOrientation="portrait">
-
-        </activity>
+            android:screenOrientation="portrait" />
 
         <!--数据管理中搜索数据-->
         <activity
             android:name=".ui.managedata.SearchdataActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
 
         <!-- 个推 -->

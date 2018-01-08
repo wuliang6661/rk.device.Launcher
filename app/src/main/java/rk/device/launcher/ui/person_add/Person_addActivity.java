@@ -2,12 +2,13 @@ package rk.device.launcher.ui.person_add;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.text.InputType;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import java.util.List;
 
 import butterknife.Bind;
 import rk.device.launcher.R;
@@ -122,23 +123,7 @@ public class Person_addActivity
                 }
                 break;
             case R.id.pass_layout:    //录入密码
-                if (isHasName()) {
-                    showDialogFragment("开门密码", content -> {
-                        if (StringUtils.isEmpty(content)) {
-                            dialogFragment.showError("请输入开门密码！");
-                            return;
-                        }
-                        if (content.length() != 6) {
-                            dialogFragment.showError("请输入完整密码！");
-                            return;
-                        }
-                        user.setPassWord(Integer.parseInt(content));
-                        DbHelper.insertUser(user);
-                        dialogFragment.dismiss();
-                        loadUser();
-                    }, false);
-                    dialogFragment.show(getSupportFragmentManager(), "");
-                }
+                addNumPass();
                 break;
             case R.id.card_layout: //录入卡
                 if (isHasName()) {
@@ -162,20 +147,10 @@ public class Person_addActivity
                 }
                 break;
             case R.id.ll_set_time:    //开始时间
-                String startTime = tvTimeStart.getText().toString().trim();
-                SetFullTimeDialogFragment fragment = (SetFullTimeDialogFragment) getTimeDialog(startTime);
-                fragment.setOnConfirmDialogListener((year, month, day, hour, minute) -> {
-                    tvTimeStart.setText(year + "-" + month + "-" + day + " " + hour + ":" + minute);
-                });
-                fragment.show(getSupportFragmentManager(), "");
+                getTimeDialog(tvTimeStart);
                 break;
             case R.id.time_end:      //结束时间
-                String endTime = tvTimeEnd.getText().toString().trim();
-                SetFullTimeDialogFragment fragment1 = (SetFullTimeDialogFragment) getTimeDialog(endTime);
-                fragment1.setOnConfirmDialogListener((year, month, day, hour, minute) -> {
-                    tvTimeEnd.setText(year + "-" + month + "-" + day + " " + hour + ":" + minute);
-                });
-                fragment1.show(getSupportFragmentManager(), "");
+                getTimeDialog(tvTimeEnd);
                 break;
             case R.id.title_right:     //删除用户
                 showMessageDialog("是否确认删除该用户\n\n删除后所有录入信息都被删除", "确定", v -> {
@@ -217,11 +192,43 @@ public class Person_addActivity
     /**
      * 设置时间选择器
      */
-    private DialogFragment getTimeDialog(String time) {
+    private void getTimeDialog(TextView timeText) {
+        String time = timeText.getText().toString().trim();
         SetFullTimeDialogFragment fragment = SetFullTimeDialogFragment.newInstance();
         fragment.setSelectedTime(TimeUtils.stringToFormat(time, "yyyy"), TimeUtils.stringToFormat(time, "MM"), TimeUtils.stringToFormat(time, "dd"),
                 TimeUtils.stringToFormat(time, "HH"), TimeUtils.stringToFormat(time, "mm"));
-        return fragment;
+        fragment.setOnConfirmDialogListener((year, month, day, hour, minute) -> {
+            timeText.setText(year + "-" + month + "-" + day + " " + hour + ":" + minute);
+        });
+        fragment.show(getSupportFragmentManager(), "");
+    }
+
+    /**
+     * 录入数字密码
+     */
+    private void addNumPass() {
+        if (isHasName()) {
+            showDialogFragment("开门密码", content -> {
+                if (StringUtils.isEmpty(content)) {
+                    dialogFragment.showError("请输入开门密码！");
+                    return;
+                }
+                if (content.length() != 6) {
+                    dialogFragment.showError("请输入完整密码！");
+                    return;
+                }
+                List<User> users = DbHelper.queryByPassword(content);
+                if (users.isEmpty()) {
+                    user.setPassWord(Integer.parseInt(content));
+                    DbHelper.insertUser(user);
+                    dialogFragment.dismiss();
+                    loadUser();
+                } else {
+                    dialogFragment.showError("密码已存在！");
+                }
+            }, false);
+            dialogFragment.show(getSupportFragmentManager(), "");
+        }
     }
 
 
