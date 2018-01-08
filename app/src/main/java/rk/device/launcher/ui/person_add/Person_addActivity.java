@@ -1,6 +1,5 @@
 package rk.device.launcher.ui.person_add;
 
-
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -16,11 +15,11 @@ import rk.device.launcher.db.DbHelper;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.mvp.MVPBaseActivity;
 import rk.device.launcher.ui.fragment.InputWifiPasswordDialogFragment;
+import rk.device.launcher.ui.nfcadd.NfcaddActivity;
 import rk.device.launcher.ui.personface.PersonFaceActivity;
 import rk.device.launcher.utils.StringUtils;
 import rk.device.launcher.utils.TimeUtils;
 import rk.device.launcher.utils.verify.FaceUtils;
-
 
 /**
  * MVPPlugin
@@ -28,7 +27,8 @@ import rk.device.launcher.utils.verify.FaceUtils;
  * 增加用户界面
  */
 
-public class Person_addActivity extends MVPBaseActivity<Person_addContract.View, Person_addPresenter>
+public class Person_addActivity
+        extends MVPBaseActivity<Person_addContract.View, Person_addPresenter>
         implements Person_addContract.View, View.OnClickListener {
 
     @Bind(R.id.et_person_name)
@@ -107,7 +107,6 @@ public class Person_addActivity extends MVPBaseActivity<Person_addContract.View,
         }
     }
 
-
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -140,10 +139,10 @@ public class Person_addActivity extends MVPBaseActivity<Person_addContract.View,
                     dialogFragment.show(getSupportFragmentManager(), "");
                 }
                 break;
-            case R.id.card_layout:    //录入卡
-
+            case R.id.card_layout: //录入卡
+                gotoActivity(NfcaddActivity.class, false);
                 break;
-            case R.id.finger_layout01:    //录入指纹
+            case R.id.finger_layout01: //录入指纹
             case R.id.finger_layout02:
             case R.id.finger_layout03:
 

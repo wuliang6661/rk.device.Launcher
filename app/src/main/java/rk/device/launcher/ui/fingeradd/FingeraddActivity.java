@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import butterknife.Bind;
-import dusun.finger.FingerHelper;
+import peripherals.FingerHelper;
 import rk.device.launcher.R;
 import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.mvp.MVPBaseActivity;

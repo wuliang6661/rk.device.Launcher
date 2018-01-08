@@ -237,6 +237,11 @@
             android:name=".zxing.decode.CaptureActivity"
             android:screenOrientation="portrait" />
 
+        <!--数据管理-->
+        <activity
+            android:name=".ui.managedata.ManagedataActivity"
+            android:screenOrientation="portrait"/>
+
 
         <!-- 个推 -->
         <service

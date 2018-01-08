@@ -113,6 +113,18 @@ public class DbHelper {
     }
 
     /**
+     * Get User List By UniqueId
+     * 
+     * @param uniqueId
+     * @return
+     */
+    public static List<User> queryByUniqueId(String uniqueId) {
+        Query<User> query = getUserDao().queryBuilder()
+                .where(UserDao.Properties.UniqueId.eq(uniqueId)).build();
+        return query.list();
+    }
+
+    /**
      * 插入或更新一条数据
      *
      * @param user
@@ -127,10 +139,10 @@ public class DbHelper {
         if (TextUtils.isEmpty(user.getPopedomType())) {
             return Constant.NULL_POPEDOMTYPE;
         }
-//        //唯一标识
-//        if (TextUtils.isEmpty(user.getUniqueId())) {
-//            return Constant.NULL_UNIQUEID;
-//        }
+        //        //唯一标识
+        //        if (TextUtils.isEmpty(user.getUniqueId())) {
+        //            return Constant.NULL_UNIQUEID;
+        //        }
         if (user.getId() == null) {
             user.setUniqueId(UUID.randomUUID().toString());
             return getUserDao().insert(user);

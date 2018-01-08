@@ -35,12 +35,12 @@ public class VerifyUtils {
      * @param nfcCard
      * @return
      */
-    public String verifyByNfc(String nfcCard) {
+    public User verifyByNfc(String nfcCard) {
         List<User> userList = DbHelper.queryByNFCCard(nfcCard);
         if (userList.size() > 0) {
-            return userList.get(0).getPopedomType();
+            return userList.get(0);
         }
-        return "";
+        return null;
     }
 
     /**
@@ -55,6 +55,20 @@ public class VerifyUtils {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Get User by uniqueId
+     * 
+     * @param uniqueId
+     * @return
+     */
+    public User queryUserByUniqueId(String uniqueId) {
+        List<User> userList = DbHelper.queryByUniqueId(uniqueId);
+        if (userList.size() > 0) {
+            return userList.get(0);
+        }
+        return null;
     }
 
 }

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/ll_card_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_300"
+            android:layout_marginTop="@dimen/dp_50"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="@dimen/dp_50"
+                android:layout_marginRight="@dimen/dp_50"
+                android:src="@mipmap/card_back"/>
+
+            <TextView
+                android:id="@+id/tv_card_num"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_50"
+                android:layout_marginRight="@dimen/dp_50"
+                android:layout_marginTop="@dimen/dp_80"
+                android:gravity="center"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"/>
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/btn_save"
+            style="@style/btn_finish"
+            android:layout_marginLeft="@dimen/dp_50"
+            android:layout_marginRight="@dimen/dp_50"
+            android:layout_marginTop="@dimen/dp_80"
+            android:text="@string/save"/>
+
+        <TextView
+            android:id="@+id/tv_notice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_35"
+            android:gravity="center"
+            android:text="@string/nfc_card_notice"
+            android:textColor="#ffffff"
+            android:textSize="18sp"/>
+    </LinearLayout>
+</LinearLayout>
