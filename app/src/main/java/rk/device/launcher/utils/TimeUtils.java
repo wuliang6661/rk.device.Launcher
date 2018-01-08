@@ -35,8 +35,8 @@ public class TimeUtils {
      * 获取30天后的时间
      */
     public static String getTridTime() {
-        long time = new Date().getTime() + (30 * 24 * 60 * 60 * 1000);
-        return getFormatTimeFromTimestamp(time, "yyyy-MM-dd HH:mm");
+        long time = (System.currentTimeMillis() + (30 * 24 * 60 * 60 * 1000L));
+        return getFormatTimeFromTimestamp(time, null);
     }
 
 
@@ -48,7 +48,7 @@ public class TimeUtils {
      * @return
      */
     public static String getFormatTimeFromTimestamp(long timestamp, String format) {
-        SimpleDateFormat sdf = new SimpleDateFormat();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
         if (format == null || format.trim().equals("")) {
             int currentYear = Calendar.getInstance().get(Calendar.YEAR);
             int year = Integer.valueOf(sdf.format(new Date(timestamp))
@@ -79,65 +79,15 @@ public class TimeUtils {
         return -1;
     }
 
-
     /**
-     * 获取字符串的年
+     * 将字符串转为指定格式的int
      */
-    public static int stringToYear(String time) {
+    public static int stringToFormat(String time, String format) {
         try {
-            return new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).parse(time).getYear() + 1900;
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return -1;
-    }
-
-
-    /**
-     * 获取字符串的月
-     */
-    public static int stringToMonth(String time) {
-        try {
-            return new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).parse(time).getMonth() + 1;
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return -1;
-    }
-
-
-    /**
-     * 获取字符串的日
-     */
-    public static int stringToDay(String time) {
-        try {
-            return new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).parse(time).getDay();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return -1;
-    }
-
-
-    /**
-     * 获取字符串的时
-     */
-    public static int stringToHour(String time) {
-        try {
-            return new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).parse(time).getHours();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return -1;
-    }
-
-
-    /**
-     * 获取字符串的分
-     */
-    public static int stringToMounth(String time) {
-        try {
-            return new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).parse(time).getMinutes();
+            SimpleDateFormat SimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+            Date date = SimpleDateFormat.parse(time);
+            SimpleDateFormat.applyPattern(format);
+            return Integer.parseInt(SimpleDateFormat.format(date));
         } catch (ParseException e) {
             e.printStackTrace();
         }

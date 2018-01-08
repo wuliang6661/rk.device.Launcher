@@ -117,9 +117,7 @@ public class SettingActivity extends BaseActivity {
         mLlManageUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 gotoActivity(PersonManageActivity.class, false);
-//                gotoActivity(FaceAddActivity.class, false);
             }
         });
         mLlManageData.setOnClickListener(new View.OnClickListener() {

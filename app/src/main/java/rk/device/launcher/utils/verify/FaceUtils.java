@@ -36,6 +36,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import rk.device.launcher.utils.FileUtils;
 
@@ -220,9 +221,9 @@ public class FaceUtils {
     /**
      * 保存人脸到本地，并返回人脸Id
      */
-    public String saveFace(String name, AFR_FSDKFace face) {
+    public String saveFace(AFR_FSDKFace face) {
         Log.d("wuliang", "保存人脸");
-//        String name = UUID.randomUUID().toString();
+        String name = UUID.randomUUID().toString();
         try {
             //check if already registered.
             boolean add = true;

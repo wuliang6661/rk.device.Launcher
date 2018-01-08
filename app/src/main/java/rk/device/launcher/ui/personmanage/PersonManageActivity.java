@@ -1,10 +1,12 @@
 package rk.device.launcher.ui.personmanage;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 
@@ -34,6 +36,8 @@ public class PersonManageActivity extends MVPBaseActivity<PersonManageContract.V
 
     List<User> users;    //用户列表
 
+    LGRecycleViewAdapter<User> adapter;
+
 
     @Override
     protected int getLayout() {
@@ -50,7 +54,6 @@ public class PersonManageActivity extends MVPBaseActivity<PersonManageContract.V
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         recycle.setLayoutManager(manager);
-        setAdapter();
     }
 
 
@@ -58,8 +61,11 @@ public class PersonManageActivity extends MVPBaseActivity<PersonManageContract.V
      * 获取用户数据并展示
      */
     private void setAdapter() {
-        users = DbHelper.loadAll();
-        LGRecycleViewAdapter<User> adapter = new LGRecycleViewAdapter<User>(users) {
+        if (adapter != null) {
+            adapter.setDataList(users);
+            return;
+        }
+        adapter = new LGRecycleViewAdapter<User>(users) {
             @Override
             public int getLayoutId(int viewType) {
                 return R.layout.item_person_manager;
@@ -97,9 +103,21 @@ public class PersonManageActivity extends MVPBaseActivity<PersonManageContract.V
                 }
             }
         };
+        adapter.setOnItemClickListener(R.id.item_layout, (view, position) -> {
+            Intent intent = new Intent(PersonManageActivity.this, Person_addActivity.class);
+            intent.putExtra("user", users.get(position));
+            startActivity(intent);
+        });
         recycle.setAdapter(adapter);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        users = DbHelper.loadAll();
+        Log.d("wuliang", "users Size = " + users.size());
+        setAdapter();
+    }
 
     @Override
     public void onClick(View view) {

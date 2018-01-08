@@ -22,6 +22,35 @@
             android:orientation="vertical">
 
 
+            <LinearLayout
+                android:id="@+id/id_layout"
+                style="@style/ll_set_item">
+
+                <TextView
+                    style="@style/tv_set_label"
+                    android:text="ID" />
+
+                <TextView
+                    android:id="@+id/id_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_10"
+                    android:layout_marginRight="@dimen/dp_15"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:textColor="@color/white"
+                    android:textColorHint="#666666"
+                    android:textSize="@dimen/sp_27" />
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/id_view"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height"
+                android:background="@color/blue_31598a" />
+
+
             <LinearLayout style="@style/ll_set_item">
 
                 <TextView

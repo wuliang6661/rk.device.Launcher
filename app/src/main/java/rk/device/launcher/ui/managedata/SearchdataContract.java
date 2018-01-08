@@ -5,24 +5,21 @@ import android.support.v7.widget.RecyclerView;
 import rk.device.launcher.mvp.BasePresenter;
 import rk.device.launcher.mvp.BaseView;
 
-
 /**
  * MVPPlugin
  *  邮箱 784787081@qq.com
  */
 
-public class ManagedataContract {
+public class SearchdataContract {
     interface View extends BaseView {
-        void refreshTypeText(String name);
-
-        void dismissPopupWindow();
+        
     }
 
     interface  Presenter extends BasePresenter<View> {
-        void goToSearchActivity();
+        void initData(RecyclerView rv);
 
-        void initData(RecyclerView recyclerView);
+        void searchData(String keyword);
 
-        void popupMenu(android.view.View anchor);
+        void immedidateSearchData(String keyword);
     }
 }

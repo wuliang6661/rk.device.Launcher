@@ -12,4 +12,9 @@ public class OpenDoorTypeBean {
     public OpenDoorTypeBean(String name) {
         this.name = name;
     }
+
+    public OpenDoorTypeBean(String name, boolean isChecked) {
+        this.name = name;
+        this.isChecked = isChecked;
+    }
 }

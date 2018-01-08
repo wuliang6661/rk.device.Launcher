@@ -2,12 +2,9 @@ package rk.device.launcher.base;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 
 import cat.ereza.customactivityoncrash.CustomActivityOnCrash;
 import rk.device.launcher.R;
-import rk.device.launcher.service.SocketService;
-import rk.device.launcher.service.VerifyService;
 import rk.device.launcher.utils.STUtils;
 import rk.device.launcher.utils.Utils;
 import rk.device.launcher.utils.verify.FaceUtils;
@@ -73,7 +70,6 @@ public class LauncherApplication extends Application implements CustomActivityOn
         SurfaceHolderCaremaFont.stopCarema();
         SurfaceHolderCaremaBack.stopCarema();
         FaceUtils.getInstance().stopFaceFR();
-        FaceUtils.getInstance().destory();
 //        stopService(new Intent(this, SocketService.class));
 //        stopService(new Intent(this, VerifyService.class));
     }
