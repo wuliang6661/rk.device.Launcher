@@ -11,10 +11,10 @@ import android.view.View;
  * Created by mundane on 2018/1/5 下午2:13
  */
 
-public class ManageDataItemDecoration extends RecyclerView.ItemDecoration {
+public class SelectTypeDecoration extends RecyclerView.ItemDecoration {
     private Paint mPaint;
     private int mDividerHeight;
-    public ManageDataItemDecoration(Context context, int colorResId) {
+    public SelectTypeDecoration(Context context, int colorResId) {
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
         // 间隔线颜色
         mPaint.setColor(context.getResources().getColor(colorResId));
@@ -32,11 +32,19 @@ public class ManageDataItemDecoration extends RecyclerView.ItemDecoration {
             final int top = child.getBottom() + layoutParams.bottomMargin;
             final int bottom = top + mDividerHeight;
             c.drawRect(left, top, right, bottom, mPaint);
+            if (i == 0) {
+                c.drawRect(left, child.getTop()+ layoutParams.topMargin - mDividerHeight, right, child.getTop() + layoutParams.topMargin, mPaint);
+            }
         }
     }
 
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-        outRect.set(0, 0, 0, mDividerHeight);
+        int position = parent.getChildAdapterPosition(view);
+        if (position == 0) {
+            outRect.set(0, mDividerHeight, 0, mDividerHeight);
+        } else {
+            outRect.set(0, 0, 0, mDividerHeight);
+        }
     }
 }

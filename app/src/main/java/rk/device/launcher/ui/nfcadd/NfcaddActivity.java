@@ -2,7 +2,6 @@ package rk.device.launcher.ui.nfcadd;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -43,7 +42,6 @@ public class NfcaddActivity extends MVPBaseActivity<NfcaddContract.View, NfcaddP
     LinearLayout                cardNoticeLL;               //用于展示提示信息的Layout
     @Bind(R.id.stub_layout)
     ViewStub                    cardNumberStub;             //用于展示卡片信息的Layout
-    @Bind(R.id.tv_notice)
     TextView                    noticeTv;                   //用于提示当前卡牌状态
     private View                cardNumberView;
     private Button              saveBtn;
@@ -95,10 +93,8 @@ public class NfcaddActivity extends MVPBaseActivity<NfcaddContract.View, NfcaddP
                                         noticeTv = cardNumberView.findViewById(R.id.tv_notice);
                                         saveBtn.setOnClickListener(NfcaddActivity.this);
                                     }
-                                    cardNumTv.setText(Html
-                                            .fromHtml("<font size='12' color='#ffffff'>卡号</font> ")
-                                            + nfcAddEvent.NFCCard);
-                                    noticeTv.setText(getString(R.string.notice_card_read_success));
+                                    cardNumTv.setText(nfcAddEvent.NFCCard);
+                                    noticeTv.setText(getResources().getString(R.string.notice_card_read_success));
                                 }
                             });
                         } else {
@@ -106,7 +102,7 @@ public class NfcaddActivity extends MVPBaseActivity<NfcaddContract.View, NfcaddP
                                 @Override
                                 public void run() {
                                     //判断当前卡已经存在
-                                    noticeTv.setText(getString(R.string.notice_card_is_exist));
+                                    noticeTv.setText(getResources().getString(R.string.notice_card_is_exist));
                                 }
                             });
                             return;

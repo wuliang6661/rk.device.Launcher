@@ -22,6 +22,7 @@ import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.ui.faceadd.FaceAddActivity;
 import rk.device.launcher.ui.fragment.RecoveryDialogFragment;
 import rk.device.launcher.ui.managedata.ManagedataActivity;
+import rk.device.launcher.ui.person_add.Person_addActivity;
 import rk.device.launcher.ui.personmanage.PersonManageActivity;
 import rk.device.launcher.utils.SettingUtils;
 

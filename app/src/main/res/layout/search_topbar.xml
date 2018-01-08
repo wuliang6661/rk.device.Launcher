@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="93dp"
+    android:background="@drawable/shape_top_background"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    tools:showIn="@layout/activity_search_data">
+
+    <ImageView
+        android:id="@+id/iv_back"
+        android:layout_width="57dp"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:paddingBottom="32dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="32dp"
+        android:src="@drawable/arrow_back"/>
+
+    <rk.device.launcher.widget.ClearEditText
+        android:singleLine="true"
+        android:imeOptions="actionSearch"
+        android:id="@+id/et"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/dp_20"
+        android:layout_weight="1"
+        android:background="@drawable/shape_bg_search_data"
+        android:hint="搜索用户姓名"
+        android:padding="@dimen/dp_10"
+        android:textColor="@color/color_333333"
+        android:textColorHint="@color/color_ccccc"
+        android:textSize="27sp"
+        />
+
+
+</LinearLayout>

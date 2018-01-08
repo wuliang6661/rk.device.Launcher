@@ -17,13 +17,14 @@ import butterknife.ButterKnife;
 import rk.device.launcher.R;
 import rk.device.launcher.ui.managedata.bean.OpenDoorTypeBean;
 import rk.device.launcher.ui.managedata.rv.SelectRvAdapter;
+import rk.device.launcher.ui.managedata.rv.SelectTypeDecoration;
 
 /**
  * Created by mundane on 2018/1/5 下午4:05
  */
 
 
-public class SelectTypePopupWindow extends PopupWindow {
+public class SelectTypePopupWindow extends PopupWindow implements SelectRvAdapter.OnItemClickedListener {
     @Bind(R.id.rv)
     RecyclerView mRv;
     private List<OpenDoorTypeBean> mDataList;
@@ -39,7 +40,7 @@ public class SelectTypePopupWindow extends PopupWindow {
 
     private void initData(Context context) {
         mDataList = new ArrayList<>();
-        mDataList.add(new OpenDoorTypeBean("全部类型"));
+        mDataList.add(new OpenDoorTypeBean("全部类型", true));
         mDataList.add(new OpenDoorTypeBean("刷脸开门"));
         mDataList.add(new OpenDoorTypeBean("密码开门"));
         mDataList.add(new OpenDoorTypeBean("刷卡开门"));
@@ -47,6 +48,30 @@ public class SelectTypePopupWindow extends PopupWindow {
         mDataList.add(new OpenDoorTypeBean("二维码开门"));
         mDataList.add(new OpenDoorTypeBean("远程开门"));
         mRv.setLayoutManager(new LinearLayoutManager(context));
+        mRv.addItemDecoration(new SelectTypeDecoration(context, R.color.color_2d5581));
         mRv.setAdapter(mAdapter = new SelectRvAdapter(mDataList));
+        mAdapter.setOnItemClickedListener(this);
+    }
+
+    public interface OnItemClickedListener{
+        void onItemClicked(OpenDoorTypeBean bean);
+    }
+
+    private OnItemClickedListener mOnItemClickedListener;
+
+    public void setOnItemClickedListener(OnItemClickedListener listener) {
+        mOnItemClickedListener = listener;
+    }
+
+
+    @Override
+    public void onItemClicked(int position) {
+        OpenDoorTypeBean clickedBean = mDataList.get(position);
+        clickedBean.isChecked = true;
+        mAdapter.notifyDataSetChanged();
+        if (mOnItemClickedListener != null) {
+            mOnItemClickedListener.onItemClicked(clickedBean);
+        }
+        dismiss();
     }
 }

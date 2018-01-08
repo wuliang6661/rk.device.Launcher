@@ -36,10 +36,14 @@ public class ManagedataActivity extends MVPBaseActivity<ManagedataContract.View,
     ImageView mIvArrow;
     @Bind(R.id.ll_select_type)
     LinearLayout mLlSelectType;
+    @Bind(R.id.view_bg)
+    View mBg;
     private View.OnClickListener mPopupListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             mPresenter.popupMenu(mLlSelectType);
+            mBg.setVisibility(View.VISIBLE);
+            mIvArrow.setRotation(180);
         }
     };
 
@@ -71,4 +75,14 @@ public class ManagedataActivity extends MVPBaseActivity<ManagedataContract.View,
 
     }
 
+    @Override
+    public void refreshTypeText(String name) {
+        mTvPop.setText(name);
+    }
+
+    @Override
+    public void dismissPopupWindow() {
+        mIvArrow.setRotation(0);
+        mBg.setVisibility(View.GONE);
+    }
 }
