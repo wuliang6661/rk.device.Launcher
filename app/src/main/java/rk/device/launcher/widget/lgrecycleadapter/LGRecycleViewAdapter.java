@@ -41,6 +41,13 @@ public abstract class LGRecycleViewAdapter<T> extends RecyclerView.Adapter<LGVie
         }
     }
 
+
+    public void setDataList(List<T> dataList) {
+        this.dataList = dataList;
+        notifyDataSetChanged();
+    }
+
+
     /**
      * 获取列表控件的视图id(由子类负责完成)
      *

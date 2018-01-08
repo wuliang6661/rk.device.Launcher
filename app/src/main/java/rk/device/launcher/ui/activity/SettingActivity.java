@@ -115,14 +115,14 @@ public class SettingActivity extends BaseActivity {
         mLlManageUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                gotoActivity(FaceAddActivity.class, false);
+                gotoActivity(PersonManageActivity.class, false);
             }
         });
         mLlManageData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // todo
-                gotoActivity(PersonManageActivity.class, false);
+
             }
         });
         mLlSetTime.setOnClickListener(new View.OnClickListener() {
