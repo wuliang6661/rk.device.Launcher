@@ -1,15 +1,7 @@
-package dusun.finger;
+package peripherals; 
 
 
 public class FingerHelper{
-
-    static {
-//        try {
-            System.loadLibrary("finger");
-//        } catch (UnsatisfiedLinkError e) {
-//            System.out.println("Failed to load library: " + e);
-//        }
-    }
 
 
     /**
@@ -51,4 +43,23 @@ public class FingerHelper{
      */
     public static native String JNIFpFingerMatch();
 
+    // Used to load the 'native-lib' library on application startup.
+    static {
+        System.loadLibrary("finger");
+    }
+    /*
+     * 仅用于演示
+     */
+    public  static void CallbackDemo(int pro)
+    {
+        System.out.printf("C call Java ...use Call_Back_Invoke %d\n", pro);
+    }
+    /*
+     * 指纹注册过程中回调java方法，用于展示注册过程。方法由Android实现。
+     */
+    public  static  void CallbackRegister(int progress)
+    {
+        //TODO
+        System.out.printf("register progress = %d\n", progress);
+    }
 }

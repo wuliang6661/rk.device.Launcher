@@ -6,20 +6,24 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 
 import peripherals.NfcHelper;
 import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.bean.event.NFCAddEvent;
+import rk.device.launcher.db.entity.User;
 import rk.device.launcher.utils.rxjava.RxBus;
+import rk.device.launcher.utils.verify.VerifyUtils;
 
 /**
  * Created by hanbin on 2018/1/2.
  */
 
 public class VerifyService extends Service {
-    private static final String TAG    = "VerifyService";
-    private boolean             isOpen = true;
+    private static final String TAG          = "VerifyService";
+    private static final String NFC_ADD_PAGE = "rk.device.launcher.ui.nfcadd.NfcaddActivity";
+    private boolean             isOpen       = true;
 
     @Override
     public void onCreate() {
@@ -30,21 +34,11 @@ public class VerifyService extends Service {
     private void init() {
         Log.i(TAG, TAG + " init");
         isOpen = true;
-        //初始化线程池
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 while (isOpen) {
-                    int[] cardType = new int[1];
-                    byte[] cardNumber = new byte[16];
-                    int resultCode = NfcHelper.PER_nfcGetCard(cardType, cardNumber);
-                    Log.i(TAG, TAG + "resultCode:" + resultCode);
-                    String NFCCard = bytesToHexString(cardNumber, cardType[0]);
-                    Log.i(TAG, TAG + "NfcCard:" + bytesToHexString(cardNumber, cardType[0])
-                            + "NfcType:" + cardType[0]);
-                    if(LauncherApplication.sIsNFCAdd == 1 && isTopActivity().equals("NfcaddActivity")){
-                        RxBus.getDefault().post(new NFCAddEvent(NFCCard));
-                    }
+                    nfcService();
                     try {
                         Thread.sleep(500);
                     } catch (InterruptedException e) {
@@ -54,7 +48,6 @@ public class VerifyService extends Service {
                             TAG + android.os.Process.myPid() + " Thread: "
                                     + android.os.Process.myTid() + " name "
                                     + Thread.currentThread().getName());
-                    //                    Log.d(TAG, TAG + " code:" + thread.getId());
 
                 }
             }
@@ -62,11 +55,46 @@ public class VerifyService extends Service {
         thread.start();
     }
 
-    private String isTopActivity()
-    {
-        ActivityManager am = (ActivityManager)getSystemService(ACTIVITY_SERVICE);
+    private String isTopActivity() {
+        ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
         ComponentName cn = am.getRunningTasks(1).get(0).topActivity;
         return cn.getClassName();
+    }
+
+    private void nfcService() {
+        int[] cardType = new int[1];
+        byte[] cardNumber = new byte[16];
+        //read nfc
+        int resultCode = NfcHelper.PER_nfcGetCard(cardType, cardNumber);
+        Log.i(TAG, TAG + " resultCode:" + resultCode);
+        if (resultCode == 0) {
+            String NFCCard = bytesToHexString(cardNumber, cardType[0]);
+            if (NFCCard == null) {
+                Log.i(TAG, TAG + ": cardNumber is null.");
+                return;
+            }
+            Log.i(TAG, TAG + "NfcCard:" + bytesToHexString(cardNumber, cardType[0]) + "NfcType:"
+                    + cardType[0]);
+            //nfc add model
+            if (LauncherApplication.sIsNFCAdd == 1 && isTopActivity().equals(NFC_ADD_PAGE)) {
+                RxBus.getDefault().post(new NFCAddEvent(NFCCard));
+            } else {
+                //nfc verify model
+                LauncherApplication.sIsNFCAdd = 0;
+                User user = VerifyUtils.getInstance().verifyByNfc(NFCCard);
+                if (user == null) {
+                    return;
+                }
+                if (TextUtils.isEmpty(user.getPopedomType())) {
+                    Log.i(TAG, TAG + ": User is not exist.");
+                } else {
+                    Log.i(TAG, TAG + ": User is exist.");
+                }
+            }
+        } else {
+            Log.i(TAG, TAG + " read nfc failed.");
+        }
+
     }
 
     /*
@@ -81,7 +109,7 @@ public class VerifyService extends Service {
         if (src == null || src.length <= 0) {
             return null;
         }
-        int length = 0;
+        int length;
         if (type == 2) {
             length = 8;
         } else {
@@ -120,6 +148,12 @@ public class VerifyService extends Service {
     public void onDestroy() {
         super.onDestroy();
         isOpen = false;
+        int status = NfcHelper.PER_nfcDeinit();
+        if (status == 0) {
+            Log.i(TAG, TAG + ": Nfc deinit success.");
+        } else {
+            Log.i(TAG, TAG + ": Nfc deinit failed.");
+        }
     }
 
     @Nullable

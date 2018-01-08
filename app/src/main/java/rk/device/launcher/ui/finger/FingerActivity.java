@@ -181,7 +181,8 @@ public class FingerActivity extends MVPBaseActivity<FingerContract.View, FingerP
                 break;
             case R.id.tv_verify:
                 nfc = nfcEt.getText().toString().trim();
-                switch (VerifyUtils.getInstance().verifyByNfc(nfc)) {
+                User userModel = VerifyUtils.getInstance().verifyByNfc(nfc);
+                switch (userModel.getPopedomType()) {
                     case Constant.USER_TYPE_OPEN_ONLY://只能开门
                         T.showShort("open door only.");
                         break;

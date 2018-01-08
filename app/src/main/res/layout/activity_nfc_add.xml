@@ -12,21 +12,39 @@
         android:background="@drawable/shape_normal_bg"
         android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="300dp"
-            android:layout_height="300dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="50dp"
-            android:src="#C0C0C0" />
 
-        <TextView
+        <LinearLayout
+            android:id="@+id/ll_card_notice"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="35dp"
+            android:layout_height="400dp"
+            android:layout_marginTop="50dp"
             android:gravity="center"
-            android:text="请按示意图所示将卡靠近刷卡感应器"
-            android:textColor="#ffffff"
-            android:textSize="18sp" />
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="300dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:src="@mipmap/card_notice" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="35dp"
+                android:gravity="center"
+                android:text="请按照示意图所示将卡靠近刷卡感应器"
+                android:textColor="#ffffff"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <ViewStub
+            android:id="@+id/stub_layout"
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:layout="@layout/layout_card_number" />
+
     </LinearLayout>
 
 </LinearLayout>
