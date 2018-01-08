@@ -34,7 +34,6 @@ import rk.device.launcher.mvp.MVPBaseActivity;
 import rk.device.launcher.service.ElectricBroadcastReceiver;
 import rk.device.launcher.service.NetChangeBroadcastReceiver;
 import rk.device.launcher.service.SocketService;
-import rk.device.launcher.service.VerifyService;
 import rk.device.launcher.ui.activity.SetBasicInfoActivity;
 import rk.device.launcher.ui.activity.SetDoorGuardActivity;
 import rk.device.launcher.ui.activity.SetNetWorkActivity;
@@ -182,7 +181,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
         registerIPHost();
         mPresenter.initLocation(this);
         mPresenter.getData();
-//        startService(new Intent(this, SocketService.class));
+        startService(new Intent(this, SocketService.class));
 //        startService(new Intent(this, VerifyService.class));
     }
 
@@ -237,8 +236,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
         SurfaceHolderCaremaFont.stopCarema();
         SurfaceHolderCaremaBack.stopCarema();
         FaceUtils.getInstance().stopFaceFR();
-        FaceUtils.getInstance().destory();
-//        stopService(new Intent(this, SocketService.class));
+        stopService(new Intent(this, SocketService.class));
 //        stopService(new Intent(this, VerifyService.class));
         super.onDestroy();
     }

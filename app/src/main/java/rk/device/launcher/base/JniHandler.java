@@ -10,7 +10,7 @@ import android.util.Log;
 import cvc.CvcHelper;
 import cvc.CvcRect;
 import cvc.EventUtil;
-import dusun.finger.FingerHelper;
+import peripherals.FingerHelper;
 import peripherals.LedHelper;
 import peripherals.NfcHelper;
 import peripherals.NumberpadHelper;

@@ -146,7 +146,7 @@ public class FaceAddActivity extends MVPBaseActivity<FaceAddContract.View, FaceA
                 } else if (StringUtils.isEmpty(editName.getText().toString())) {
                     showMessageDialog("请输入人名！");
                 } else {
-                    faceUtils.saveFace(editName.getText().toString(), aa_face);
+                    faceUtils.saveFace(aa_face);
                     setAdapter();
                 }
 
