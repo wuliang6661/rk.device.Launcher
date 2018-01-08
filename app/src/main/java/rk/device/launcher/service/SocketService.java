@@ -94,7 +94,7 @@ public class SocketService extends Service {
 		openService();
 		return super.onStartCommand(intent, flags, startId);
 	}
-	
+
 	public void closeThreadPool() {
 		if (mThreadPool != null) {
 //			closeSocket();
@@ -201,7 +201,8 @@ public class SocketService extends Service {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		try {
+        Log.d(TAG, "onDestroy: SocketService");
+        try {
 			CloseUtils.closeIOQuietly(outputStream, bufferedReader, socket, inputStream);
 			Log.i("socket isConnected", "socket isConnected:" + socket.isConnected());
 		} catch (Exception e) {

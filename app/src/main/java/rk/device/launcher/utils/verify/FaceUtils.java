@@ -220,10 +220,9 @@ public class FaceUtils {
     /**
      * 保存人脸到本地，并返回人脸Id
      */
-    public String saveFace(String personName, AFR_FSDKFace face) {
+    public String saveFace(String name, AFR_FSDKFace face) {
         Log.d("wuliang", "保存人脸");
 //        String name = UUID.randomUUID().toString();
-        String name = personName;
         try {
             //check if already registered.
             boolean add = true;

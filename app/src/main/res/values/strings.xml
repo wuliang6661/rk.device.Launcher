@@ -60,5 +60,6 @@
     <string name="title_nfc_card_add">添加卡</string>
     <string name="notice_card_is_exist">设备已存在改卡片，请更换其他卡</string>
     <string name="notice_card_read_success">成功识别卡号</string>
+    <string name="person_face">请将人脸对正摄像头，便于快速录入人脸</string>
 
 </resources>

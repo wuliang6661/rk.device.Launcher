@@ -9,8 +9,13 @@ import android.widget.TextView;
 
 import butterknife.Bind;
 import rk.device.launcher.R;
+import rk.device.launcher.db.DbHelper;
+import rk.device.launcher.db.entity.User;
 import rk.device.launcher.mvp.MVPBaseActivity;
 import rk.device.launcher.ui.nfcadd.NfcaddActivity;
+import rk.device.launcher.ui.personface.PersonFaceActivity;
+import rk.device.launcher.utils.StringUtils;
+import rk.device.launcher.utils.TimeUtils;
 
 /**
  * MVPPlugin
@@ -49,6 +54,8 @@ public class Person_addActivity
     @Bind(R.id.finger_text03)
     TextView     fingerText03;
 
+    User user;
+
     @Override
     protected int getLayout() {
         return R.layout.act_person_add;
@@ -58,20 +65,39 @@ public class Person_addActivity
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        goBack();
         setTitle("添加用户");
         setOnClick(R.id.face_layout, R.id.pass_layout, R.id.card_layout, R.id.finger_layout01,
-                R.id.finger_layout02, R.id.finger_layout03, R.id.btn_finish_setting);
+                R.id.finger_layout02, R.id.finger_layout03, R.id.btn_finish_setting, R.id.iv_back);
+        llSetTime.setOnClickListener(this);
+        timeEnd.setOnClickListener(this);
+        initView();
+    }
+
+
+    /**
+     * 初始化界面显示
+     */
+    private void initView() {
+        tvTimeStart.setText(TimeUtils.getTime());
+        tvTimeEnd.setText(TimeUtils.getTridTime());
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.face_layout: //录入人脸
-
+            case R.id.iv_back:    //返回的话数据不保存
+                finish();
                 break;
-            case R.id.pass_layout: //录入密码
-
+            case R.id.face_layout:    //录入人脸
+                if (isHasName()) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("id", user.getUniqueId());
+                    gotoActivity(PersonFaceActivity.class, bundle, false);
+                }
+                break;
+            case R.id.pass_layout:    //录入密码
+                if (isHasName()) {
+                }
                 break;
             case R.id.card_layout: //录入卡
                 gotoActivity(NfcaddActivity.class, false);
@@ -84,6 +110,50 @@ public class Person_addActivity
             case R.id.btn_finish_setting: //完成设置
 
                 break;
+            case R.id.ll_set_time:    //开始时间
+                String startTime = tvTimeStart.getText().toString().trim();
+                SetFullTimeDialogFragment fragment = SetFullTimeDialogFragment.newInstance();
+                fragment.setSelectedTime(TimeUtils.stringToYear(startTime), TimeUtils.stringToMonth(startTime), TimeUtils.stringToDay(startTime),
+                        TimeUtils.stringToHour(startTime), TimeUtils.stringToMounth(startTime));
+                fragment.setOnConfirmDialogListener((year, month, day, hour, minute) -> {
+                    tvTimeStart.setText(year + "-" + month + "-" + day + " " + hour + ":" + minute);
+                });
+                fragment.show(getSupportFragmentManager(), "");
+                break;
+            case R.id.time_end:      //结束时间
+                String endTime = tvTimeEnd.getText().toString().trim();
+                SetFullTimeDialogFragment fragment1 = SetFullTimeDialogFragment.newInstance();
+                fragment1.setSelectedTime(TimeUtils.stringToYear(endTime), TimeUtils.stringToMonth(endTime), TimeUtils.stringToDay(endTime),
+                        TimeUtils.stringToHour(endTime), TimeUtils.stringToMounth(endTime));
+                fragment1.setOnConfirmDialogListener((year, month, day, hour, minute) -> {
+                    tvTimeEnd.setText(year + "-" + month + "-" + day + " " + hour + ":" + minute);
+                });
+                fragment1.show(getSupportFragmentManager(), "");
+                break;
         }
     }
+
+
+    /**
+     * 判断人名是否存在
+     */
+    private boolean isHasName() {
+        String name = etPersonName.getText().toString().trim();
+        if (StringUtils.isEmpty(name)) {
+            showMessageDialog("请输入用户名称！");
+            return false;
+        }
+        if (user != null) {
+            return true;
+        }
+        user = new User();
+        user.setName(name);
+        user.setStartTime(TimeUtils.string2Millis(tvTimeStart.getText().toString().trim()));
+        user.setEndTime(TimeUtils.string2Millis(tvTimeEnd.getText().toString().trim()));
+        user.setPopedomType("1");
+        DbHelper.insertUser(user);
+        return true;
+    }
 }
+
+

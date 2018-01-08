@@ -109,6 +109,7 @@
         android:persistent="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
             android:name=".ui.main.MainActivity"
             android:launchMode="singleTask"
@@ -204,7 +205,6 @@
             android:name=".ui.bbs.BbsActivity"
             android:screenOrientation="portrait" />
 
-
         <!-- 录入人脸界面 -->
         <activity
             android:name=".ui.faceadd.FaceAddActivity"
@@ -221,6 +221,11 @@
             android:name=".ui.person_add.Person_addActivity"
             android:screenOrientation="portrait" />
 
+        <!-- 增加人脸界面 -->
+        <activity
+            android:name=".ui.personface.PersonFaceActivity"
+            android:screenOrientation="portrait" />
+
 
         <!--二维码扫描界面-->
         <activity
@@ -231,6 +236,11 @@
         <activity
             android:name=".zxing.decode.CaptureActivity"
             android:screenOrientation="portrait" />
+
+        <!--数据管理-->
+        <activity
+            android:name=".ui.managedata.ManagedataActivity"
+            android:screenOrientation="portrait"/>
 
 
         <!-- 个推 -->
