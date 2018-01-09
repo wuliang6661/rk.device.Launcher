@@ -40,7 +40,7 @@ public class JniHandler extends Handler {
     private int LedStatus = 1;
     private int MdStatus = 1;
     private int NfcStatus = 1;
-    private String fingerStatus = "";//指纹库
+    private String fingerStatus = "1";//指纹库
 
     private boolean isStopCorrect = false;
 
@@ -111,14 +111,15 @@ public class JniHandler extends Handler {
 //        if (MdStatus != 0) {
 //            MdStatus = MdHelper.PER_mdInit();
 //        }
-//        if(fingerStatus != 0){
+        //init finger
+        if(!fingerStatus.equals("0")){
             fingerStatus = FingerHelper.JNIFpInit();
-//        }
+        }
         if (NfcStatus != 0) {
             NfcStatus = NfcHelper.PER_nfcInit();
         }
         Log.i("wuliang", "cvcStatus == " + cvcStatus + "LedStatus == " + LedStatus + "MdStatus == " + MdStatus + "NfcStatus == " + NfcStatus);
-        if (cvcStatus == 0 && LedStatus == 0 && NfcStatus == 0 && MdStatus == 0) {
+        if (cvcStatus == 0 && LedStatus == 0 && NfcStatus == 0 && MdStatus == 0 && fingerStatus.equals("0")) {
             Log.i("wuliang", "all device init surecc!!!!");
         }
         int faceSuress = CvcHelper.CVC_setLivingFaceThreshold(faceThreshold);

@@ -50,6 +50,7 @@ public class NfcaddActivity extends MVPBaseActivity<NfcaddContract.View, NfcaddP
     private Button              saveBtn;
     private boolean             isDetail       = false;
     private boolean             isChange       = false;
+    private boolean             isReload       = false;
 
     @Override
     protected int getLayout() {
@@ -100,6 +101,9 @@ public class NfcaddActivity extends MVPBaseActivity<NfcaddContract.View, NfcaddP
                     public void onNext(NFCAddEvent nfcAddEvent) {
                         isChange = true;
                         //用户录入，首先需要判断改卡是否已经绑定了用户——用户和卡一一对应
+                        if (isDetail && !isReload) {
+                            return;
+                        }
                         User user = VerifyUtils.getInstance().verifyByNfc(nfcAddEvent.NFCCard);
                         if (user == null) {
                             runOnUiThread(new Runnable() {
@@ -182,6 +186,11 @@ public class NfcaddActivity extends MVPBaseActivity<NfcaddContract.View, NfcaddP
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_save:
+                if(isDetail && !isReload){
+                    isReload = true;
+                    saveBtn.setText(getResources().getString(R.string.save));
+                    return;
+                }
                 //添加用户
                 if (TextUtils.isEmpty(uniqueId) || uniqueId == null) {
                     T.showShort(getString(R.string.illeagel_user_not_exist));

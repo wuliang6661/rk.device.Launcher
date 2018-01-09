@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 
+import peripherals.FingerHelper;
 import peripherals.NfcHelper;
 import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.bean.event.NFCAddEvent;
@@ -21,9 +22,11 @@ import rk.device.launcher.utils.verify.VerifyUtils;
  */
 
 public class VerifyService extends Service {
-    private static final String TAG          = "VerifyService";
-    private static final String NFC_ADD_PAGE = "rk.device.launcher.ui.nfcadd.NfcaddActivity";
-    private boolean             isOpen       = true;
+    private static final int    DELAY           = 500;
+    private static final String TAG             = "VerifyService";
+    private static final String NFC_ADD_PAGE    = "rk.device.launcher.ui.nfcadd.NfcaddActivity";
+    private static final String FINGER_ADD_PAGE = "rk.device.launcher.ui.fingeradd.FingeraddActivity";
+    private boolean             isOpen          = true;
 
     @Override
     public void onCreate() {
@@ -39,6 +42,7 @@ public class VerifyService extends Service {
             public void run() {
                 while (isOpen) {
                     nfcService();
+                    fingerService();
                     Log.d(TAG,
                             TAG + android.os.Process.myPid() + " Thread: "
                                     + android.os.Process.myTid() + " name "
@@ -56,6 +60,22 @@ public class VerifyService extends Service {
         return cn.getClassName();
     }
 
+    /**
+     * finger service
+     */
+    private void fingerService() {
+        if (LauncherApplication.sIsFingerAdd == 1 && isTopActivity().equals(FINGER_ADD_PAGE)) {
+
+        }else{
+            String resultCode = FingerHelper.JNIFpFingerMatch();
+//            Log.i(TAG, TAG + " finger resultCode:" + resultCode);
+        }
+        sleep();
+    }
+
+    /**
+     * nfc service
+     */
     private void nfcService() {
         int[] cardType = new int[1];
         byte[] cardNumber = new byte[16];
@@ -64,13 +84,9 @@ public class VerifyService extends Service {
         Log.i(TAG, TAG + " resultCode:" + resultCode);
         if (resultCode == 0) {
             int type = cardType[0];
-            if(type == 0){
+            if (type == 0) {
                 Log.i(TAG, TAG + ": no card.");
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-
-                }
+                sleep();
                 return;
             }
             String NFCCard = bytesToHexString(cardNumber, cardType[0]);
@@ -85,7 +101,6 @@ public class VerifyService extends Service {
                 RxBus.getDefault().post(new NFCAddEvent(NFCCard));
             } else {
                 //nfc verify model
-                LauncherApplication.sIsNFCAdd = 0;
                 User user = VerifyUtils.getInstance().verifyByNfc(NFCCard);
                 if (user == null) {
                     return;
@@ -96,20 +111,19 @@ public class VerifyService extends Service {
                     Log.i(TAG, TAG + ": User is exist.");
                 }
             }
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-
-            }
         } else {
             Log.i(TAG, TAG + " read nfc failed.");
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-
-            }
         }
+        sleep();
 
+    }
+
+    private void sleep() {
+        try {
+            Thread.sleep(DELAY);
+        } catch (InterruptedException e) {
+
+        }
     }
 
     /*

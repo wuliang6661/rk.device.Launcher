@@ -15,6 +15,7 @@ import rk.device.launcher.R;
 import rk.device.launcher.db.DbHelper;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.mvp.MVPBaseActivity;
+import rk.device.launcher.ui.fingeradd.FingeraddActivity;
 import rk.device.launcher.ui.fragment.InputWifiPasswordDialogFragment;
 import rk.device.launcher.ui.nfcadd.NfcaddActivity;
 import rk.device.launcher.ui.personface.PersonFaceActivity;
@@ -33,6 +34,7 @@ public class Person_addActivity
         implements Person_addContract.View, View.OnClickListener {
 
     private static final String EXTRA_UNIQUEID = "uniqueId";
+    private static final String EXTRA_NUMBER = "number";
     @Bind(R.id.et_person_name)
     EditText etPersonName;
     @Bind(R.id.tv_time_start)
@@ -133,9 +135,28 @@ public class Person_addActivity
                 }
                 break;
             case R.id.finger_layout01: //录入指纹
+                if(isHasName()){
+                    Bundle bundle = new Bundle();
+                    bundle.putString(EXTRA_UNIQUEID, user.getUniqueId());
+                    bundle.putInt(EXTRA_NUMBER, 1);
+                    gotoActivity(FingeraddActivity.class, bundle, false);
+                }
+                break;
             case R.id.finger_layout02:
+                if(isHasName()){
+                    Bundle bundle = new Bundle();
+                    bundle.putString(EXTRA_UNIQUEID, user.getUniqueId());
+                    bundle.putInt(EXTRA_NUMBER, 2);
+                    gotoActivity(FingeraddActivity.class, bundle, false);
+                }
+                break;
             case R.id.finger_layout03:
-
+                if(isHasName()){
+                    Bundle bundle = new Bundle();
+                    bundle.putString(EXTRA_UNIQUEID, user.getUniqueId());
+                    bundle.putInt(EXTRA_NUMBER, 3);
+                    gotoActivity(FingeraddActivity.class, bundle, false);
+                }
                 break;
             case R.id.btn_finish_setting:     //完成设置
                 if (isHasName()) {

@@ -6,4 +6,9 @@ package rk.device.launcher.bean.event;
  * 添加指纹命令
  */
 public class FingerAddEvent {
+    public String resultCode;
+
+    public FingerAddEvent(String resultCode) {
+        this.resultCode = resultCode;
+    }
 }

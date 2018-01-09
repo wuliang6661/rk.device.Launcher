@@ -67,5 +67,13 @@
     <string name="sure">确认</string>
     <string name="notice_delete_card">是否确认删除改卡</string>
     <string name="notice_exist_not_save">是否确认退出，退出后卡号信息不保存</string>
+    <string name="notice_exist_finger_not_save">是否确认退出，退出后指纹信息不保存</string>
+    <string name="finger_notice">手指长按指纹传感器，便于快速录入指纹</string>
+    <string name="rename">重命名</string>
+    <string name="title_finger_add">添加指纹</string>
+    <string name="title_finger_detail">指纹详情</string>
+    <string name="notice_delete_finger">是否确认删除该指纹</string>
+    <string name="delete_success">删除成功</string>
+    <string name="delete_fail">删除失败</string>
 
 </resources>

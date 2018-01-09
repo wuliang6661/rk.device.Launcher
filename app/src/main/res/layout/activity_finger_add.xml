@@ -7,6 +7,7 @@
     <include layout="@layout/topbar" />
 
     <LinearLayout
+        android:id="@+id/ll_finger_notice"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/shape_normal_bg"
@@ -21,6 +22,7 @@
             android:src="@drawable/wuguan_img" />
 
         <TextView
+            android:id="@+id/tv_notice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="30dp"
@@ -39,6 +41,7 @@
             android:visibility="gone">
 
             <TextView
+                android:id="@+id/tv_rename"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dp_15"
@@ -53,6 +56,7 @@
                 android:textSize="18sp" />
 
             <TextView
+                android:id="@+id/tv_save"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dp_10"
@@ -66,8 +70,8 @@
                 android:textColor="@color/white"
                 android:textSize="18sp" />
 
-        </LinearLayout>
 
+        </LinearLayout>
         <Button
             android:id="@+id/btn_add_finger"
             style="@style/btn_finish"
@@ -75,4 +79,5 @@
             android:text="添加指纹"
             android:visibility="visible" />
     </LinearLayout>
+
 </LinearLayout>
