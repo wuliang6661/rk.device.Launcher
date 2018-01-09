@@ -39,11 +39,6 @@ public class VerifyService extends Service {
             public void run() {
                 while (isOpen) {
                     nfcService();
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-
-                    }
                     Log.d(TAG,
                             TAG + android.os.Process.myPid() + " Thread: "
                                     + android.os.Process.myTid() + " name "
@@ -68,6 +63,16 @@ public class VerifyService extends Service {
         int resultCode = NfcHelper.PER_nfcGetCard(cardType, cardNumber);
         Log.i(TAG, TAG + " resultCode:" + resultCode);
         if (resultCode == 0) {
+            int type = cardType[0];
+            if(type == 0){
+                Log.i(TAG, TAG + ": no card.");
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+
+                }
+                return;
+            }
             String NFCCard = bytesToHexString(cardNumber, cardType[0]);
             if (NFCCard == null) {
                 Log.i(TAG, TAG + ": cardNumber is null.");
@@ -91,8 +96,18 @@ public class VerifyService extends Service {
                     Log.i(TAG, TAG + ": User is exist.");
                 }
             }
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+
+            }
         } else {
             Log.i(TAG, TAG + " read nfc failed.");
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+
+            }
         }
 
     }
@@ -148,6 +163,7 @@ public class VerifyService extends Service {
     public void onDestroy() {
         super.onDestroy();
         isOpen = false;
+        Log.i(TAG, TAG + ": onDestroy.");
         int status = NfcHelper.PER_nfcDeinit();
         if (status == 0) {
             Log.i(TAG, TAG + ": Nfc deinit success.");

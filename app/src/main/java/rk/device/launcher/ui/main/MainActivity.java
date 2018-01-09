@@ -236,7 +236,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
         SurfaceHolderCaremaFont.stopCarema();
         SurfaceHolderCaremaBack.stopCarema();
         FaceUtils.getInstance().stopFaceFR();
-        stopService(new Intent(this, SocketService.class));
+//        stopService(new Intent(this, SocketService.class));
 //        stopService(new Intent(this, VerifyService.class));
         super.onDestroy();
     }
@@ -297,7 +297,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
      * Jni初始化的返回值
      */
     @Override
-    public void initCallBack(int cvcStatus, int LedStatus, int MdStatus, int NfcStatus) {
+    public void initCallBack(int cvcStatus, int LedStatus, int NfcStatus) {
         runOnUiThread(() -> {
             if (cvcStatus == 0 && LedStatus == 0 && NfcStatus == 0) {
                 initError.setVisibility(View.GONE);
@@ -306,7 +306,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
                 }
             } else {
                 initError.setVisibility(View.VISIBLE);
-                initDialog.setStatus(cvcStatus, LedStatus, MdStatus, NfcStatus, mHandler);
+                initDialog.setStatus(cvcStatus, LedStatus, 0, NfcStatus, mHandler);
                 if (initDialog != null && initDialog.isVisible()) {
                     T.showShort("部分设备初始化失败！建议重启设备！");
                     initDialog.setInitFinish();

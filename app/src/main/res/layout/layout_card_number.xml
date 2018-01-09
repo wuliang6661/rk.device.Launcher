@@ -7,14 +7,13 @@
     <LinearLayout
         android:id="@+id/ll_card_number"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="visible">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_300"
-            android:layout_marginTop="@dimen/dp_50"
+            android:layout_marginTop="@dimen/dp_60"
             android:gravity="center">
 
             <ImageView
@@ -25,16 +24,32 @@
                 android:layout_marginRight="@dimen/dp_50"
                 android:src="@mipmap/card_back"/>
 
-            <TextView
-                android:id="@+id/tv_card_num"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dp_50"
                 android:layout_marginRight="@dimen/dp_50"
-                android:layout_marginTop="@dimen/dp_80"
                 android:gravity="center"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp"/>
+                android:layout_marginTop="@dimen/dp_80"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text="卡号："
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp"/>
+
+                <TextView
+                    android:id="@+id/tv_card_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp"/>
+            </LinearLayout>
+
         </RelativeLayout>
 
         <Button
@@ -43,7 +58,8 @@
             android:layout_marginLeft="@dimen/dp_50"
             android:layout_marginRight="@dimen/dp_50"
             android:layout_marginTop="@dimen/dp_80"
-            android:text="@string/save"/>
+            android:text="@string/save"
+            android:textSize="18sp"/>
 
         <TextView
             android:id="@+id/tv_notice"
@@ -51,8 +67,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_35"
             android:gravity="center"
+            android:visibility="gone"
             android:text="@string/nfc_card_notice"
             android:textColor="#ffffff"
             android:textSize="18sp"/>
+
     </LinearLayout>
 </LinearLayout>

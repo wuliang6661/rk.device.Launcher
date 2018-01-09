@@ -14,6 +14,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.sdk.android.oss.ClientException;
 import com.alibaba.sdk.android.oss.ServiceException;
 import com.alibaba.sdk.android.oss.model.PutObjectRequest;
+import com.alibaba.sdk.android.oss.model.UploadPartRequest;
 import com.arcsoft.facerecognition.AFR_FSDKFace;
 import com.trello.rxlifecycle.ActivityEvent;
 
@@ -30,6 +31,8 @@ import rk.device.launcher.bean.AddressBO;
 import rk.device.launcher.bean.DeviceInfoBO;
 import rk.device.launcher.bean.VerifyBO;
 import rk.device.launcher.bean.WeatherBO;
+import rk.device.launcher.db.DbHelper;
+import rk.device.launcher.db.entity.User;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.mvp.BasePresenterImpl;
 import rk.device.launcher.service.ElectricBroadcastReceiver;
@@ -331,6 +334,11 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
         FaceUtils faceUtils = FaceUtils.getInstance();
         faceUtils.startFaceFR();
         Log.d("wuliang", "人脸识别启动！");
-        faceUtils.setFaceFeature((name, max_score) -> mView.showSuress(name));
+        faceUtils.setFaceFeature((name, max_score) -> {
+            List<User> users = DbHelper.queryByFaceId(name);
+            if (!users.isEmpty()) {
+                mView.showSuress(users.get(0).getName());
+            }
+        });
     }
 }

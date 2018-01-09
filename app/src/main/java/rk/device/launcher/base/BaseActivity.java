@@ -180,6 +180,14 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         });
     }
 
+    /**
+     * 设置返回键
+     */
+    protected void goBack(View.OnClickListener listener) {
+        ImageView back = (ImageView) findViewById(R.id.iv_back);
+        back.setOnClickListener(listener);
+    }
+
 
     /**
      * 修改标题栏标题

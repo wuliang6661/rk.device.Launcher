@@ -61,5 +61,11 @@
     <string name="notice_card_is_exist">设备已存在改卡片，请更换其他卡</string>
     <string name="notice_card_read_success">成功识别卡号</string>
     <string name="person_face">请将人脸对正摄像头，便于快速录入人脸</string>
+    <string name="illeagel_user_not_exist">该用户不存在</string>
+    <string name="title_nfc_card_detail">卡详情</string>
+    <string name="re_load">重新录入</string>
+    <string name="sure">确认</string>
+    <string name="notice_delete_card">是否确认删除改卡</string>
+    <string name="notice_exist_not_save">是否确认退出，退出后卡号信息不保存</string>
 
 </resources>

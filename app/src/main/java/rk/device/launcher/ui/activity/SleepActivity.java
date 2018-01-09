@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,8 +22,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import butterknife.Bind;
+import cvc.EventUtil;
 import rk.device.launcher.R;
 import rk.device.launcher.base.BaseActivity;
+import rk.device.launcher.base.JniHandler;
 import rk.device.launcher.utils.rxjava.RxBus;
 import rk.device.launcher.bean.event.SleepImageEvent;
 import rk.device.launcher.service.SleepTaskServer;
@@ -55,6 +58,8 @@ public class SleepActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         initView();
         initData();
+        caremaSet(EventUtil.MEDIA_CLOSE);
+        System.gc();
     }
 
 
@@ -126,7 +131,17 @@ public class SleepActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        caremaSet(EventUtil.MEDIA_OPEN);
         SleepTaskServer.getSleepHandler(SleepActivity.this).sendEmptyMessage(0x33);
     }
 
+    /**
+     * 对摄像头的操作
+     */
+    private void caremaSet(int type) {
+        JniHandler mHandler = JniHandler.getInstance();
+        Message msg = new Message();
+        msg.what = type;
+        mHandler.sendMessage(msg);
+    }
 }
