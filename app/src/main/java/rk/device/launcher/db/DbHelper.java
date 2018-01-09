@@ -127,11 +127,11 @@ public class DbHelper {
 
 
     /**
-     * 通过faceId获取当前记录
+     * 通过faceId获取是否可开门
      */
     public static List<User> queryByFaceId(String faceId) {
         Query<User> query = getUserDao().queryBuilder()
-                .where(UserDao.Properties.FaceID.eq(faceId)).build();
+                .where(UserDao.Properties.FaceID.eq(faceId), UserDao.Properties.PopedomType.eq(1)).build();
         return query.list();
     }
 

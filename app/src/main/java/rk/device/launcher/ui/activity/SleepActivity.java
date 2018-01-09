@@ -72,6 +72,7 @@ public class SleepActivity extends BaseActivity {
 
     protected void initData() {
         advertisingImg.setOnClickListener(view -> {
+            caremaSet(EventUtil.MEDIA_OPEN);
             finish();
         });
     }
@@ -131,7 +132,6 @@ public class SleepActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        caremaSet(EventUtil.MEDIA_OPEN);
         SleepTaskServer.getSleepHandler(SleepActivity.this).sendEmptyMessage(0x33);
     }
 

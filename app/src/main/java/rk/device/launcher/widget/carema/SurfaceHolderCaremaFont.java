@@ -35,8 +35,6 @@ public class SurfaceHolderCaremaFont implements SurfaceHolder.Callback {
         Log.d("wuliang", "surfaceview create");
         try {
             if (camera != null) {
-                mWidth = camera.getParameters().getPreviewSize().width;
-                mHeight = camera.getParameters().getPreviewSize().height;
                 camera.setPreviewDisplay(holder);
                 setFaceSize();
                 camera.setPreviewCallback(new Camera.PreviewCallback() {
@@ -93,8 +91,8 @@ public class SurfaceHolderCaremaFont implements SurfaceHolder.Callback {
     /**
      * 第一次进入页面，开始打开camera
      */
-    private void openCamera(SurfaceHolder holder) throws IOException {
-        // 获取camera对象
+    private void openCamera(SurfaceHolder holder) {
+//        new Thread(() -> {
         int cameraCount = Camera.getNumberOfCameras();
         Log.d(TAG, cameraCount + "");
         if (cameraCount == 2) {
@@ -102,18 +100,21 @@ public class SurfaceHolderCaremaFont implements SurfaceHolder.Callback {
         }
         if (null != camera) {
             // 设置预览监听
-            camera.setPreviewDisplay(holder);
+            try {
+                camera.setPreviewDisplay(holder);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             // 启动摄像头预览
             camera.startPreview();
             setFaceSize();
-            mWidth = camera.getParameters().getPreviewSize().width;
-            mHeight = camera.getParameters().getPreviewSize().height;
             camera.setPreviewCallback((data, camera1) -> {
                 if (callBack != null) {
                     callBack.callMessage(data, mWidth, mHeight);
                 }
             });
         }
+//        }).start();
     }
 
 
@@ -121,8 +122,8 @@ public class SurfaceHolderCaremaFont implements SurfaceHolder.Callback {
      * 为人脸识别初始化宽高
      */
     private void setFaceSize() {
-        int mWidth = camera.getParameters().getPreviewSize().width;
-        int mHeight = camera.getParameters().getPreviewSize().height;
+        mWidth = camera.getParameters().getPreviewSize().width;
+        mHeight = camera.getParameters().getPreviewSize().height;
         FaceUtils.getInstance().setCaremaSize(mWidth, mHeight);
     }
 

@@ -154,7 +154,10 @@ public class NumpasswordActivity extends MVPBaseActivity<NumpasswordContract.Vie
                 if (users.isEmpty()) {
                     showMessageDialog("密码错误，请重新输入");
                 } else {
-                    mPresenter.openDoor();
+                    long time = System.currentTimeMillis();
+                    if (users.get(0).getStartTime() < time && users.get(0).getEndTime() > time) {    //在有效时间内，则开门
+                        mPresenter.openDoor();
+                    }
                 }
                 break;
         }
