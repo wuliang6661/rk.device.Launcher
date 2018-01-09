@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,15 +8,23 @@
     >
 
     <SurfaceView
+        app:layout_constraintDimensionRatio="640:480"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
         android:id="@+id/preview_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_width="0dp"
+        android:layout_height="0dp" />
 
     <rk.device.launcher.zxing.view.ViewfinderView
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
         android:id="@+id/viewfinderView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         app:corner_color="@color/corner_color"
         app:frame_color="@color/viewfinder_frame"
         app:label_text="二维码扫描"
@@ -25,4 +33,4 @@
         app:mask_color="@color/viewfinder_mask"
         app:result_color="@color/result_view"
         app:result_point_color="@color/result_point_color" />
-</FrameLayout>
+</android.support.constraint.ConstraintLayout>
