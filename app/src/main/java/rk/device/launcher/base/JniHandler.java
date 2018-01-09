@@ -10,6 +10,7 @@ import android.util.Log;
 import cvc.CvcHelper;
 import cvc.CvcRect;
 import cvc.EventUtil;
+import mediac.MediacHelper;
 import peripherals.FingerHelper;
 import peripherals.LedHelper;
 import peripherals.NfcHelper;
@@ -38,7 +39,6 @@ public class JniHandler extends Handler {
 
     private int cvcStatus = 1;
     private int LedStatus = 1;
-    private int MdStatus = 1;
     private int NfcStatus = 1;
     private String fingerStatus = "1";//指纹库
 
@@ -47,6 +47,9 @@ public class JniHandler extends Handler {
     private static final int faceThreshold = 0;    //默认设置活体检测真人概率为50则返回人脸
 
     private static JniHandler jniHandler;
+
+    private long[] carmer01 = new long[1];    //前置摄像头的编号
+    private long[] carmer02 = new long[1];    //后置摄像头的编号
 
 
     /**
@@ -93,6 +96,12 @@ public class JniHandler extends Handler {
             case EventUtil.CVC_LIVINGFACE:     //活体检测
                 livingCall();
                 break;
+            case EventUtil.MEDIA_OPEN:    //开启摄像头
+                openCarema();
+                break;
+            case EventUtil.MEDIA_CLOSE:    //关闭摄像头
+                closeCarema();
+                break;
         }
         super.handleMessage(msg);
     }
@@ -118,8 +127,11 @@ public class JniHandler extends Handler {
         if (NfcStatus != 0) {
             NfcStatus = NfcHelper.PER_nfcInit();
         }
-        Log.i("wuliang", "cvcStatus == " + cvcStatus + "LedStatus == " + LedStatus + "MdStatus == " + MdStatus + "NfcStatus == " + NfcStatus);
-        if (cvcStatus == 0 && LedStatus == 0 && NfcStatus == 0 && MdStatus == 0 && fingerStatus.equals("0")) {
+        int carema01 = MediacHelper.MEDIAC_init(0, carmer01);
+        int carema02 = MediacHelper.MEDIAC_init(1, carmer02);
+        Log.i("wuliang", "cvcStatus == " + cvcStatus + "LedStatus == " + LedStatus + "NfcStatus == " + NfcStatus +
+                "carema01 == " + carema01 + "carema02 ==" + carema02);
+        if (cvcStatus == 0 && LedStatus == 0 && NfcStatus == 0 && fingerStatus.equals("0")) {
             Log.i("wuliang", "all device init surecc!!!!");
         }
         int faceSuress = CvcHelper.CVC_setLivingFaceThreshold(faceThreshold);
@@ -129,7 +141,37 @@ public class JniHandler extends Handler {
         int callsuress = NumberpadHelper.PER_numberpadInit();
         Log.i("wuliang", "call  " + callsuress);
         if (initListener != null) {
-            initListener.initCallBack(cvcStatus, LedStatus, MdStatus, NfcStatus);
+            initListener.initCallBack(cvcStatus, LedStatus, NfcStatus);
+        }
+    }
+
+    /**
+     * 开启摄像头
+     */
+    private void openCarema() {
+        int open = MediacHelper.MEDIAC_open(carmer01[0]);
+        if (open == 0) {
+            MediacHelper.MEDIAC_setFormat(carmer01[0], 640, 480);
+            MediacHelper.MEDIAC_startStreaming(carmer01[0]);
+        }
+        int open02 = MediacHelper.MEDIAC_open(carmer02[0]);
+        if (open02 == 0) {
+            MediacHelper.MEDIAC_setFormat(carmer02[0], 640, 480);
+            MediacHelper.MEDIAC_startStreaming(carmer02[0]);
+        }
+    }
+
+    /**
+     * 关闭摄像头
+     */
+    private void closeCarema() {
+        int stop = MediacHelper.MEDIAC_stopStreaming(carmer01[0]);
+        if (stop == 0) {
+            MediacHelper.MEDIAC_close(carmer01[0]);
+        }
+        int stop02 = MediacHelper.MEDIAC_stopStreaming(carmer02[0]);
+        if (stop02 == 0) {
+            MediacHelper.MEDIAC_close(carmer02[0]);
         }
     }
 
@@ -276,7 +318,7 @@ public class JniHandler extends Handler {
      */
     public interface OnInitListener {
 
-        void initCallBack(int cvcStatus, int LedStatus, int MdStatus, int NfcStatus);
+        void initCallBack(int cvcStatus, int LedStatus, int NfcStatus);
     }
 
 

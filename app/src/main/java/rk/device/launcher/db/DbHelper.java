@@ -10,6 +10,7 @@ import java.util.UUID;
 import rk.device.launcher.db.dao.UserDao;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.global.Constant;
+import rk.device.launcher.utils.MD5;
 
 /**
  * @author : mundane
@@ -126,11 +127,11 @@ public class DbHelper {
 
 
     /**
-     * 通过faceId获取当前记录
+     * 通过faceId获取是否可开门
      */
     public static List<User> queryByFaceId(String faceId) {
         Query<User> query = getUserDao().queryBuilder()
-                .where(UserDao.Properties.FaceID.eq(faceId)).build();
+                .where(UserDao.Properties.FaceID.eq(faceId), UserDao.Properties.PopedomType.eq(1)).build();
         return query.list();
     }
 
@@ -155,7 +156,7 @@ public class DbHelper {
         //            return Constant.NULL_UNIQUEID;
         //        }
         if (user.getId() == null) {
-            user.setUniqueId(UUID.randomUUID().toString());
+            user.setUniqueId(MD5.get16Lowercase(UUID.randomUUID().toString()));
             return getUserDao().insert(user);
         } else {
             getUserDao().update(user);

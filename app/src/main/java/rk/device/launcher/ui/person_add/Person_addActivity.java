@@ -98,7 +98,7 @@ public class Person_addActivity
             idLayout.setVisibility(View.VISIBLE);
             idView.setVisibility(View.VISIBLE);
             setTitle("修改用户");
-            idText.setText(user.getId() + "");
+            idText.setText(user.getUniqueId() + "");
             tvTimeStart.setText(TimeUtils.getFormatTimeFromTimestamp(user.getStartTime(), null));
             tvTimeEnd.setText(TimeUtils.getFormatTimeFromTimestamp(user.getEndTime(), null));
             etPersonName.setText(user.getName());

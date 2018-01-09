@@ -240,7 +240,8 @@
         <!--数据管理中搜索数据-->
         <activity
             android:name=".ui.managedata.SearchdataActivity"
-            android:screenOrientation="portrait" />
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait"/>
 
 
         <!-- 个推 -->

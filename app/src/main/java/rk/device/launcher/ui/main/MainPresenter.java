@@ -3,8 +3,6 @@ package rk.device.launcher.ui.main;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.Message;
@@ -14,8 +12,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.sdk.android.oss.ClientException;
 import com.alibaba.sdk.android.oss.ServiceException;
 import com.alibaba.sdk.android.oss.model.PutObjectRequest;
-import com.alibaba.sdk.android.oss.model.UploadPartRequest;
-import com.arcsoft.facerecognition.AFR_FSDKFace;
 import com.trello.rxlifecycle.ActivityEvent;
 
 import java.util.HashMap;
@@ -337,7 +333,10 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
         faceUtils.setFaceFeature((name, max_score) -> {
             List<User> users = DbHelper.queryByFaceId(name);
             if (!users.isEmpty()) {
-                mView.showSuress(users.get(0).getName());
+                long time = System.currentTimeMillis();
+                if (users.get(0).getStartTime() < time && users.get(0).getEndTime() > time) {    //在有效时间内，则开门
+                    mView.showSuress(users.get(0).getName());
+                }
             }
         });
     }

@@ -37,11 +37,6 @@ public class SoundPlayUtils {
         mSoundPlayer.load(mContext, R.raw.error, 2);// 2
         mSoundPlayer.load(mContext, R.raw.success, 3);// 3
         mSoundPlayer.load(mContext, R.raw.success_two, 4);// 3
-      //  mSoundPlayer.load(mContext, R.raw.ding, 1);// 4
-      //  mSoundPlayer.load(mContext, R.raw.gone, 1);// 5
-      //  mSoundPlayer.load(mContext, R.raw.popup, 1);// 6
-      //  mSoundPlayer.load(mContext, R.raw.water, 1);// 7
-     //   mSoundPlayer.load(mContext, R.raw.ying, 1);// 8
 
         return soundPlayUtils;
     }
