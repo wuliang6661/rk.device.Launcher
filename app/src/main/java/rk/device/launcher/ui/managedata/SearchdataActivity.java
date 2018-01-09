@@ -7,6 +7,8 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,6 +16,7 @@ import android.widget.TextView;
 import butterknife.Bind;
 import rk.device.launcher.R;
 import rk.device.launcher.mvp.MVPBaseActivity;
+import rk.device.launcher.utils.IMEUtils;
 import rk.device.launcher.widget.ClearEditText;
 
 
@@ -47,6 +50,13 @@ public class SearchdataActivity extends MVPBaseActivity<SearchdataContract.View,
     private void bindListener() {
         mEt.setOnEditorActionListener(this);
         mEt.addTextChangedListener(this);
+        mRv.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                IMEUtils.hideIME(SearchdataActivity.this);
+                return false;
+            }
+        });
     }
 
     @Override
