@@ -40,9 +40,15 @@ public class User implements Serializable {
 
     private String fingerID1;
 
+    private String fingerName1;
+
     private String fingerID2;
 
+    private String fingerName2;
+
     private String fingerID3;
+
+    private String fingerName3;
 
     private String faceID;
 
@@ -60,20 +66,24 @@ public class User implements Serializable {
 
     private long updateTime;
 
-    @Generated(hash = 1647349471)
+    @Generated(hash = 427907020)
     public User(Long id, @NotNull String uniqueId, @NotNull String name,
-                @NotNull String popedomType, String cardNo, String fingerID1,
-                String fingerID2, String fingerID3, String faceID, int passWord,
-                long startTime, long endTime, String fingerCode, int uploadStatus,
-                long createTime, long updateTime) {
+            @NotNull String popedomType, String cardNo, String fingerID1,
+            String fingerName1, String fingerID2, String fingerName2,
+            String fingerID3, String fingerName3, String faceID, int passWord,
+            long startTime, long endTime, String fingerCode, int uploadStatus,
+            long createTime, long updateTime) {
         this.id = id;
         this.uniqueId = uniqueId;
         this.name = name;
         this.popedomType = popedomType;
         this.cardNo = cardNo;
         this.fingerID1 = fingerID1;
+        this.fingerName1 = fingerName1;
         this.fingerID2 = fingerID2;
+        this.fingerName2 = fingerName2;
         this.fingerID3 = fingerID3;
+        this.fingerName3 = fingerName3;
         this.faceID = faceID;
         this.passWord = passWord;
         this.startTime = startTime;
@@ -136,6 +146,14 @@ public class User implements Serializable {
         this.fingerID1 = fingerID1;
     }
 
+    public String getFingerName1() {
+        return this.fingerName1;
+    }
+
+    public void setFingerName1(String fingerName1) {
+        this.fingerName1 = fingerName1;
+    }
+
     public String getFingerID2() {
         return this.fingerID2;
     }
@@ -144,12 +162,28 @@ public class User implements Serializable {
         this.fingerID2 = fingerID2;
     }
 
+    public String getFingerName2() {
+        return this.fingerName2;
+    }
+
+    public void setFingerName2(String fingerName2) {
+        this.fingerName2 = fingerName2;
+    }
+
     public String getFingerID3() {
         return this.fingerID3;
     }
 
     public void setFingerID3(String fingerID3) {
         this.fingerID3 = fingerID3;
+    }
+
+    public String getFingerName3() {
+        return this.fingerName3;
+    }
+
+    public void setFingerName3(String fingerName3) {
+        this.fingerName3 = fingerName3;
     }
 
     public String getFaceID() {
@@ -215,6 +249,7 @@ public class User implements Serializable {
     public void setUpdateTime(long updateTime) {
         this.updateTime = updateTime;
     }
+
 
 
 }

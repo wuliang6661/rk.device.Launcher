@@ -30,16 +30,19 @@ public class UserDao extends AbstractDao<User, Long> {
         public final static Property PopedomType = new Property(3, String.class, "popedomType", false, "POPEDOM_TYPE");
         public final static Property CardNo = new Property(4, String.class, "cardNo", false, "CARD_NO");
         public final static Property FingerID1 = new Property(5, String.class, "fingerID1", false, "FINGER_ID1");
-        public final static Property FingerID2 = new Property(6, String.class, "fingerID2", false, "FINGER_ID2");
-        public final static Property FingerID3 = new Property(7, String.class, "fingerID3", false, "FINGER_ID3");
-        public final static Property FaceID = new Property(8, String.class, "faceID", false, "FACE_ID");
-        public final static Property PassWord = new Property(9, int.class, "passWord", false, "PASS_WORD");
-        public final static Property StartTime = new Property(10, long.class, "startTime", false, "START_TIME");
-        public final static Property EndTime = new Property(11, long.class, "endTime", false, "END_TIME");
-        public final static Property FingerCode = new Property(12, String.class, "fingerCode", false, "FINGER_CODE");
-        public final static Property UploadStatus = new Property(13, int.class, "uploadStatus", false, "UPLOAD_STATUS");
-        public final static Property CreateTime = new Property(14, long.class, "createTime", false, "CREATE_TIME");
-        public final static Property UpdateTime = new Property(15, long.class, "updateTime", false, "UPDATE_TIME");
+        public final static Property FingerName1 = new Property(6, String.class, "fingerName1", false, "FINGER_NAME1");
+        public final static Property FingerID2 = new Property(7, String.class, "fingerID2", false, "FINGER_ID2");
+        public final static Property FingerName2 = new Property(8, String.class, "fingerName2", false, "FINGER_NAME2");
+        public final static Property FingerID3 = new Property(9, String.class, "fingerID3", false, "FINGER_ID3");
+        public final static Property FingerName3 = new Property(10, String.class, "fingerName3", false, "FINGER_NAME3");
+        public final static Property FaceID = new Property(11, String.class, "faceID", false, "FACE_ID");
+        public final static Property PassWord = new Property(12, int.class, "passWord", false, "PASS_WORD");
+        public final static Property StartTime = new Property(13, long.class, "startTime", false, "START_TIME");
+        public final static Property EndTime = new Property(14, long.class, "endTime", false, "END_TIME");
+        public final static Property FingerCode = new Property(15, String.class, "fingerCode", false, "FINGER_CODE");
+        public final static Property UploadStatus = new Property(16, int.class, "uploadStatus", false, "UPLOAD_STATUS");
+        public final static Property CreateTime = new Property(17, long.class, "createTime", false, "CREATE_TIME");
+        public final static Property UpdateTime = new Property(18, long.class, "updateTime", false, "UPDATE_TIME");
     }
 
 
@@ -61,16 +64,19 @@ public class UserDao extends AbstractDao<User, Long> {
                 "\"POPEDOM_TYPE\" TEXT NOT NULL ," + // 3: popedomType
                 "\"CARD_NO\" TEXT," + // 4: cardNo
                 "\"FINGER_ID1\" TEXT," + // 5: fingerID1
-                "\"FINGER_ID2\" TEXT," + // 6: fingerID2
-                "\"FINGER_ID3\" TEXT," + // 7: fingerID3
-                "\"FACE_ID\" TEXT," + // 8: faceID
-                "\"PASS_WORD\" INTEGER NOT NULL ," + // 9: passWord
-                "\"START_TIME\" INTEGER NOT NULL ," + // 10: startTime
-                "\"END_TIME\" INTEGER NOT NULL ," + // 11: endTime
-                "\"FINGER_CODE\" TEXT," + // 12: fingerCode
-                "\"UPLOAD_STATUS\" INTEGER NOT NULL ," + // 13: uploadStatus
-                "\"CREATE_TIME\" INTEGER NOT NULL ," + // 14: createTime
-                "\"UPDATE_TIME\" INTEGER NOT NULL );"); // 15: updateTime
+                "\"FINGER_NAME1\" TEXT," + // 6: fingerName1
+                "\"FINGER_ID2\" TEXT," + // 7: fingerID2
+                "\"FINGER_NAME2\" TEXT," + // 8: fingerName2
+                "\"FINGER_ID3\" TEXT," + // 9: fingerID3
+                "\"FINGER_NAME3\" TEXT," + // 10: fingerName3
+                "\"FACE_ID\" TEXT," + // 11: faceID
+                "\"PASS_WORD\" INTEGER NOT NULL ," + // 12: passWord
+                "\"START_TIME\" INTEGER NOT NULL ," + // 13: startTime
+                "\"END_TIME\" INTEGER NOT NULL ," + // 14: endTime
+                "\"FINGER_CODE\" TEXT," + // 15: fingerCode
+                "\"UPLOAD_STATUS\" INTEGER NOT NULL ," + // 16: uploadStatus
+                "\"CREATE_TIME\" INTEGER NOT NULL ," + // 17: createTime
+                "\"UPDATE_TIME\" INTEGER NOT NULL );"); // 18: updateTime
         // Add Indexes
         db.execSQL("CREATE UNIQUE INDEX " + constraint + "IDX_USER_UNIQUE_ID ON \"USER\"" +
                 " (\"UNIQUE_ID\" ASC);");
@@ -104,31 +110,46 @@ public class UserDao extends AbstractDao<User, Long> {
             stmt.bindString(6, fingerID1);
         }
  
+        String fingerName1 = entity.getFingerName1();
+        if (fingerName1 != null) {
+            stmt.bindString(7, fingerName1);
+        }
+ 
         String fingerID2 = entity.getFingerID2();
         if (fingerID2 != null) {
-            stmt.bindString(7, fingerID2);
+            stmt.bindString(8, fingerID2);
+        }
+ 
+        String fingerName2 = entity.getFingerName2();
+        if (fingerName2 != null) {
+            stmt.bindString(9, fingerName2);
         }
  
         String fingerID3 = entity.getFingerID3();
         if (fingerID3 != null) {
-            stmt.bindString(8, fingerID3);
+            stmt.bindString(10, fingerID3);
+        }
+ 
+        String fingerName3 = entity.getFingerName3();
+        if (fingerName3 != null) {
+            stmt.bindString(11, fingerName3);
         }
  
         String faceID = entity.getFaceID();
         if (faceID != null) {
-            stmt.bindString(9, faceID);
+            stmt.bindString(12, faceID);
         }
-        stmt.bindLong(10, entity.getPassWord());
-        stmt.bindLong(11, entity.getStartTime());
-        stmt.bindLong(12, entity.getEndTime());
+        stmt.bindLong(13, entity.getPassWord());
+        stmt.bindLong(14, entity.getStartTime());
+        stmt.bindLong(15, entity.getEndTime());
  
         String fingerCode = entity.getFingerCode();
         if (fingerCode != null) {
-            stmt.bindString(13, fingerCode);
+            stmt.bindString(16, fingerCode);
         }
-        stmt.bindLong(14, entity.getUploadStatus());
-        stmt.bindLong(15, entity.getCreateTime());
-        stmt.bindLong(16, entity.getUpdateTime());
+        stmt.bindLong(17, entity.getUploadStatus());
+        stmt.bindLong(18, entity.getCreateTime());
+        stmt.bindLong(19, entity.getUpdateTime());
     }
 
     @Override
@@ -153,31 +174,46 @@ public class UserDao extends AbstractDao<User, Long> {
             stmt.bindString(6, fingerID1);
         }
  
+        String fingerName1 = entity.getFingerName1();
+        if (fingerName1 != null) {
+            stmt.bindString(7, fingerName1);
+        }
+ 
         String fingerID2 = entity.getFingerID2();
         if (fingerID2 != null) {
-            stmt.bindString(7, fingerID2);
+            stmt.bindString(8, fingerID2);
+        }
+ 
+        String fingerName2 = entity.getFingerName2();
+        if (fingerName2 != null) {
+            stmt.bindString(9, fingerName2);
         }
  
         String fingerID3 = entity.getFingerID3();
         if (fingerID3 != null) {
-            stmt.bindString(8, fingerID3);
+            stmt.bindString(10, fingerID3);
+        }
+ 
+        String fingerName3 = entity.getFingerName3();
+        if (fingerName3 != null) {
+            stmt.bindString(11, fingerName3);
         }
  
         String faceID = entity.getFaceID();
         if (faceID != null) {
-            stmt.bindString(9, faceID);
+            stmt.bindString(12, faceID);
         }
-        stmt.bindLong(10, entity.getPassWord());
-        stmt.bindLong(11, entity.getStartTime());
-        stmt.bindLong(12, entity.getEndTime());
+        stmt.bindLong(13, entity.getPassWord());
+        stmt.bindLong(14, entity.getStartTime());
+        stmt.bindLong(15, entity.getEndTime());
  
         String fingerCode = entity.getFingerCode();
         if (fingerCode != null) {
-            stmt.bindString(13, fingerCode);
+            stmt.bindString(16, fingerCode);
         }
-        stmt.bindLong(14, entity.getUploadStatus());
-        stmt.bindLong(15, entity.getCreateTime());
-        stmt.bindLong(16, entity.getUpdateTime());
+        stmt.bindLong(17, entity.getUploadStatus());
+        stmt.bindLong(18, entity.getCreateTime());
+        stmt.bindLong(19, entity.getUpdateTime());
     }
 
     @Override
@@ -194,16 +230,19 @@ public class UserDao extends AbstractDao<User, Long> {
             cursor.getString(offset + 3), // popedomType
             cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // cardNo
             cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // fingerID1
-            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // fingerID2
-            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // fingerID3
-            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // faceID
-            cursor.getInt(offset + 9), // passWord
-            cursor.getLong(offset + 10), // startTime
-            cursor.getLong(offset + 11), // endTime
-            cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12), // fingerCode
-            cursor.getInt(offset + 13), // uploadStatus
-            cursor.getLong(offset + 14), // createTime
-            cursor.getLong(offset + 15) // updateTime
+            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // fingerName1
+            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // fingerID2
+            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // fingerName2
+            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // fingerID3
+            cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10), // fingerName3
+            cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11), // faceID
+            cursor.getInt(offset + 12), // passWord
+            cursor.getLong(offset + 13), // startTime
+            cursor.getLong(offset + 14), // endTime
+            cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15), // fingerCode
+            cursor.getInt(offset + 16), // uploadStatus
+            cursor.getLong(offset + 17), // createTime
+            cursor.getLong(offset + 18) // updateTime
         );
         return entity;
     }
@@ -216,16 +255,19 @@ public class UserDao extends AbstractDao<User, Long> {
         entity.setPopedomType(cursor.getString(offset + 3));
         entity.setCardNo(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
         entity.setFingerID1(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
-        entity.setFingerID2(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
-        entity.setFingerID3(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
-        entity.setFaceID(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
-        entity.setPassWord(cursor.getInt(offset + 9));
-        entity.setStartTime(cursor.getLong(offset + 10));
-        entity.setEndTime(cursor.getLong(offset + 11));
-        entity.setFingerCode(cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12));
-        entity.setUploadStatus(cursor.getInt(offset + 13));
-        entity.setCreateTime(cursor.getLong(offset + 14));
-        entity.setUpdateTime(cursor.getLong(offset + 15));
+        entity.setFingerName1(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
+        entity.setFingerID2(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
+        entity.setFingerName2(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
+        entity.setFingerID3(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
+        entity.setFingerName3(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
+        entity.setFaceID(cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11));
+        entity.setPassWord(cursor.getInt(offset + 12));
+        entity.setStartTime(cursor.getLong(offset + 13));
+        entity.setEndTime(cursor.getLong(offset + 14));
+        entity.setFingerCode(cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15));
+        entity.setUploadStatus(cursor.getInt(offset + 16));
+        entity.setCreateTime(cursor.getLong(offset + 17));
+        entity.setUpdateTime(cursor.getLong(offset + 18));
      }
     
     @Override
