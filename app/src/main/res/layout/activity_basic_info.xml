@@ -154,7 +154,7 @@
 
             <TextView
                 style="@style/tv_set_label"
-                android:text="双目校验效果查看" />
+                android:text="双摄像头效果" />
 
             <TextView
                 android:layout_width="0dp"

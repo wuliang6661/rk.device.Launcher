@@ -210,6 +210,15 @@ public abstract class BaseActivity extends RxAppCompatActivity {
 
 
     /**
+     * 设置标题栏右边控件隐藏
+     */
+    protected void hideRightButton() {
+        ImageView right = (ImageView) findViewById(R.id.title_right);
+        right.setVisibility(View.GONE);
+    }
+
+
+    /**
      * 显示提示弹窗
      */
     protected BaseDialogFragment showMessageDialog(String message) {
