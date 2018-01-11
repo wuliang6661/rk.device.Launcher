@@ -57,6 +57,22 @@
                 android:textColor="@color/white"
                 android:textSize="18sp"/>
 
+            <TextView
+                android:id="@+id/tv_save"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_15"
+                android:layout_marginRight="@dimen/dp_10"
+                android:layout_weight="1"
+                android:background="@drawable/shape_btn_finish_setting"
+                android:gravity="center"
+                android:visibility="gone"
+                android:paddingBottom="15dp"
+                android:paddingTop="15dp"
+                android:text="@string/save"
+                android:textColor="@color/white"
+                android:textSize="18sp"/>
+
         </LinearLayout>
 
         <Button

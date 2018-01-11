@@ -14,9 +14,9 @@ public class FingerHelper{
      * which is packaged with this application.
      */
     /* 初始化指纹模块 */
-    public static native String JNIFpInit();
+    public static native int JNIFpInit();
     /* 去初始化指纹模块 */
-    public static native String JNIFpDeInit();
+    public static native int JNIFpDeInit();
     /* 获取指纹模块版本信息，信息中包含最大用户数 */
     public static native String JNIFpGetModuleInfo();
     /*
@@ -25,34 +25,34 @@ public class FingerHelper{
      *         "-2"       超时
      *         "-1"       失败
      */
-    public static native String JNIUserRegisterMOFN();
+    public static native int JNIUserRegisterMOFN();
     /*
      * 删除所有用户
      * 返回值： "0"        删除成功
      *         "-2"       超时
      *         "-1"       失败
      */
-    public static native String JNIFpUserDeleteAll();
+    public static native int JNIFpUserDeleteAll();
     /*
      * 删除指定ID用户
      * 返回值： "0"        删除成功
      *         "-2"       超时
      *         "-1"       失败
      */
-    public static native String JNIFpDelUserByID(int uID);
+    public static native int JNIFpDelUserByID(int uID);
     /*
      * 删除指定ID用户
      * 返回值： "uID#xx"   指纹匹配成功，xx表示匹配的ID
      *         "-2"       超时
      *         "-1"       失败
      */
-    public static native String JNIFpFingerMatch();
+    public static native int JNIFpFingerMatch();
     /*
      * 获取当前已注册用户总数
      * 返回值："-1"       失败
      *        其它       成功
      */
-    public static native String JNIFpGetTotalUser();
+    public static native int JNIFpGetTotalUser();
 
     // Used to load the 'native-lib' library on application startup.
     static {
