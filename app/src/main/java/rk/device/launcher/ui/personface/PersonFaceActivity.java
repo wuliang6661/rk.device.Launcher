@@ -55,6 +55,7 @@ public class PersonFaceActivity extends MVPBaseActivity<PersonFaceContract.View,
 
     private User user;
     private boolean isUpdate = false;
+    private FaceUtils faceUtils;
 
 
     @Override
@@ -71,6 +72,7 @@ public class PersonFaceActivity extends MVPBaseActivity<PersonFaceContract.View,
         setTitle("添加人脸");
         String id = getIntent().getExtras().getString("id");
         user = DbHelper.queryUserById(id).get(0);
+        faceUtils = FaceUtils.getInstance();
 
         initView();
         initCrema();
@@ -90,6 +92,7 @@ public class PersonFaceActivity extends MVPBaseActivity<PersonFaceContract.View,
             faceImg.setVisibility(View.VISIBLE);
             hintText.setVisibility(View.INVISIBLE);
             btnFinishSetting.setText("重新拍摄");
+            setRightButton(R.drawable.delete_person, this);
         }
     }
 
@@ -126,6 +129,7 @@ public class PersonFaceActivity extends MVPBaseActivity<PersonFaceContract.View,
                     hintText.setVisibility(View.VISIBLE);
                     btnFinishSetting.setText("拍摄");
                     setTitle("添加人脸");
+                    hideRightButton();
                     buttonLayout.setVisibility(View.GONE);
                     isUpdate = false;
                 } else {
@@ -146,7 +150,7 @@ public class PersonFaceActivity extends MVPBaseActivity<PersonFaceContract.View,
                     showMessageDialog("请先拍摄人脸！");
                     return;
                 }
-                FaceUtils faceUtils = FaceUtils.getInstance();
+                faceUtils = FaceUtils.getInstance();
                 if (!StringUtils.isEmpty(user.getFaceID())) {
                     faceUtils.delete(user.getFaceID());
                 }
@@ -155,10 +159,26 @@ public class PersonFaceActivity extends MVPBaseActivity<PersonFaceContract.View,
                     showMessageDialog("未检测到人脸！");
                 } else {
                     String name = faceUtils.saveFace(aa_face);
-                    user.setFaceID(name);
-                    DbHelper.insertUser(user);
-                    finish();
+                    if (StringUtils.isEmpty(name)) {
+                        showMessageDialog("存储失败，请重新录入！");
+                    } else {
+                        user.setFaceID(name);
+                        DbHelper.insertUser(user);
+                        finish();
+                    }
                 }
+                break;
+            case R.id.title_right:      //删除人脸
+                showMessageDialog("是否删除该人脸", "确定", v1 -> {
+                    if (faceUtils.delete(user.getFaceID())) {
+                        user.setFaceID("");
+                        DbHelper.insertUser(user);
+                        dissmissMessageDialog();
+                        finish();
+                    } else {
+                        showMessageDialog("删除失败！");
+                    }
+                });
                 break;
         }
     }

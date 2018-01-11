@@ -123,7 +123,11 @@ public class PersonManageActivity extends MVPBaseActivity<PersonManageContract.V
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.title_right:    //增加用户
-                gotoActivity(Person_addActivity.class, false);
+                if (DbHelper.loadAll().size() > 1000) {
+                    showMessageDialog("本机用户存储已达上限！");
+                } else {
+                    gotoActivity(Person_addActivity.class, false);
+                }
                 break;
         }
     }

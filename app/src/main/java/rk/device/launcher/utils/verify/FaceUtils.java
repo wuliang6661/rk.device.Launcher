@@ -259,6 +259,7 @@ public class FaceUtils {
             }
         } catch (IOException e) {
             e.printStackTrace();
+            return "";
         }
         return name;
     }

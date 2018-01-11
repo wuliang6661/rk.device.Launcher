@@ -31,6 +31,7 @@ public class SurfaceHolderCaremaBack implements SurfaceHolder.Callback {
         try {
             if (camera != null) {
                 camera.setPreviewDisplay(holder);
+                camera.startPreview();
                 return;
             }
             openCamera(holder);
@@ -64,28 +65,37 @@ public class SurfaceHolderCaremaBack implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        Log.d(TAG, "surface被干掉了！！！！！");
+        if (camera != null) {
+            camera.stopPreview();
+        }
     }
 
 
     /**
      * 第一次进入页面，开始打开camera
      */
-    private void openCamera(SurfaceHolder holder) throws IOException {
-        // 获取camera对象
-        int cameraCount = Camera.getNumberOfCameras();
-        Log.d(TAG, cameraCount + "");
-        if (cameraCount == 2) {
-            camera = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT);
-        }
-        if (null != camera) {
-            // 设置预览监听
-            camera.setPreviewDisplay(holder);
-            // 启动摄像头预览
-            camera.startPreview();
-            camera.setPreviewCallback((data, camera1) -> {
-            });
-        }
+    private void openCamera(SurfaceHolder holder) {
+        new Thread(() -> {
+            // 获取camera对象
+            int cameraCount = Camera.getNumberOfCameras();
+            Log.d(TAG, cameraCount + "");
+            if (cameraCount == 2) {
+                camera = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT);
+            }
+            if (null != camera) {
+                // 设置预览监听
+                try {
+                    camera.setPreviewDisplay(holder);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                // 启动摄像头预览
+                camera.startPreview();
+                camera.setPreviewCallback((data, camera1) -> {
+                });
+            }
+        }).start();
+
     }
 
 

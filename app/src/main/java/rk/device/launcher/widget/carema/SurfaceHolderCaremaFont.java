@@ -36,6 +36,7 @@ public class SurfaceHolderCaremaFont implements SurfaceHolder.Callback {
         try {
             if (camera != null) {
                 camera.setPreviewDisplay(holder);
+                camera.startPreview();
                 setFaceSize();
                 camera.setPreviewCallback(new Camera.PreviewCallback() {
                     @Override
@@ -85,6 +86,9 @@ public class SurfaceHolderCaremaFont implements SurfaceHolder.Callback {
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         Log.d(TAG, "surface被干掉了！！！！！");
+        if (camera != null) {
+            camera.stopPreview();
+        }
     }
 
 
@@ -92,29 +96,29 @@ public class SurfaceHolderCaremaFont implements SurfaceHolder.Callback {
      * 第一次进入页面，开始打开camera
      */
     private void openCamera(SurfaceHolder holder) {
-//        new Thread(() -> {
-        int cameraCount = Camera.getNumberOfCameras();
-        Log.d(TAG, cameraCount + "");
-        if (cameraCount == 2) {
-            camera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
-        }
-        if (null != camera) {
-            // 设置预览监听
-            try {
-                camera.setPreviewDisplay(holder);
-            } catch (IOException e) {
-                e.printStackTrace();
+        new Thread(() -> {
+            int cameraCount = Camera.getNumberOfCameras();
+            Log.d(TAG, cameraCount + "");
+            if (cameraCount == 2) {
+                camera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
             }
-            // 启动摄像头预览
-            camera.startPreview();
-            setFaceSize();
-            camera.setPreviewCallback((data, camera1) -> {
-                if (callBack != null) {
-                    callBack.callMessage(data, mWidth, mHeight);
+            if (null != camera) {
+                // 设置预览监听
+                try {
+                    camera.setPreviewDisplay(holder);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            });
-        }
-//        }).start();
+                // 启动摄像头预览
+                camera.startPreview();
+                setFaceSize();
+                camera.setPreviewCallback((data, camera1) -> {
+                    if (callBack != null) {
+                        callBack.callMessage(data, mWidth, mHeight);
+                    }
+                });
+            }
+        }).start();
     }
 
 
