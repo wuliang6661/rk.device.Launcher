@@ -34,6 +34,7 @@ import rk.device.launcher.mvp.MVPBaseActivity;
 import rk.device.launcher.service.ElectricBroadcastReceiver;
 import rk.device.launcher.service.NetChangeBroadcastReceiver;
 import rk.device.launcher.service.SocketService;
+import rk.device.launcher.service.VerifyService;
 import rk.device.launcher.ui.activity.SetBasicInfoActivity;
 import rk.device.launcher.ui.activity.SetDoorGuardActivity;
 import rk.device.launcher.ui.activity.SetNetWorkActivity;
@@ -41,7 +42,6 @@ import rk.device.launcher.ui.activity.SetSysActivity;
 import rk.device.launcher.ui.activity.SettingActivity;
 import rk.device.launcher.ui.bbs.BbsActivity;
 import rk.device.launcher.ui.call.CallActivity;
-import rk.device.launcher.ui.fingeradd.FingeraddActivity;
 import rk.device.launcher.ui.fragment.InitErrorDialogFragmen;
 import rk.device.launcher.ui.fragment.InputWifiPasswordDialogFragment;
 import rk.device.launcher.ui.numpassword.NumpasswordActivity;
@@ -182,7 +182,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
         mPresenter.initLocation(this);
         mPresenter.getData();
         startService(new Intent(this, SocketService.class));
-//        startService(new Intent(this, VerifyService.class));
+        startService(new Intent(this, VerifyService.class));
     }
 
 
@@ -340,10 +340,9 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
                 settingLoad();
                 break;
             case R.id.rl_contact_manager:
-//                if (!StringUtils.isEmpty(modilePhone)) {
-//                    showMessageDialog("联系电话: " + modilePhone);
-//                }
-                gotoActivity(FingeraddActivity.class, false);
+                if (!StringUtils.isEmpty(modilePhone)) {
+                    showMessageDialog("联系电话: " + modilePhone);
+                }
                 break;
             case R.id.init_error:     //有外设初始化失败
                 initDialog.show(getSupportFragmentManager(), "");

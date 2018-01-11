@@ -105,12 +105,31 @@ public class DbHelper {
      * 通过指纹ID 获取当前记录
      *
      * @param fingerId
+     * @value 1 指纹1
+     * @value 2 指纹2
+     * @value 3 指纹3
      * @return
      */
-    public static List<User> queryByFinger(int fingerId) {
+    public static int queryByFinger(int fingerId) {
         Query<User> query = getUserDao().queryBuilder()
                 .where(UserDao.Properties.FingerID1.eq(fingerId)).build();
-        return query.list();
+        if (query.list().size() == 0) {
+            query = getUserDao().queryBuilder().where(UserDao.Properties.FingerID2.eq(fingerId))
+                    .build();
+        } else {
+            return 1;
+        }
+        if (query.list().size() == 0) {
+            query = getUserDao().queryBuilder().where(UserDao.Properties.FingerID3.eq(fingerId))
+                    .build();
+        } else {
+            return 2;
+        }
+        if (query.list().size() == 0) {
+            return -1;
+        } else {
+            return 3;
+        }
     }
 
     /**
@@ -125,16 +144,15 @@ public class DbHelper {
         return query.list();
     }
 
-
     /**
      * 通过faceId获取是否可开门
      */
     public static List<User> queryByFaceId(String faceId) {
         Query<User> query = getUserDao().queryBuilder()
-                .where(UserDao.Properties.FaceID.eq(faceId), UserDao.Properties.PopedomType.eq(1)).build();
+                .where(UserDao.Properties.FaceID.eq(faceId), UserDao.Properties.PopedomType.eq(1))
+                .build();
         return query.list();
     }
-
 
     /**
      * 插入或更新一条数据
@@ -175,14 +193,14 @@ public class DbHelper {
         return query.list();
     }
 
-
     /**
      * 根据唯一标示ID获取User
      */
     public static List<User> queryUserById(String id) {
         UserDao userDao = DbHelper.getUserDao();
         // where里面是可变参数
-        Query<User> query = userDao.queryBuilder().where(UserDao.Properties.UniqueId.eq(id)).build();
+        Query<User> query = userDao.queryBuilder().where(UserDao.Properties.UniqueId.eq(id))
+                .build();
         return query.list();
     }
 

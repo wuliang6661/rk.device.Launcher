@@ -49,12 +49,11 @@ public class VerifyUtils {
      * @param fingerId
      * @return
      */
-    public boolean verifyByFinger(int fingerId) {
-        List<User> userList = DbHelper.queryByFinger(fingerId);
-        if (userList.size() > 0) {
-            return true;
+    public int verifyByFinger(int fingerId) {
+        if (fingerId == 0) {
+            return -1;
         }
-        return false;
+        return DbHelper.queryByFinger(fingerId);
     }
 
     /**

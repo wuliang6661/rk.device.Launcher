@@ -78,6 +78,8 @@ public class NfcaddActivity extends MVPBaseActivity<NfcaddContract.View, NfcaddP
                                     finish();
                                 }
                             });
+                }else{
+                    finish();
                 }
             }
         });

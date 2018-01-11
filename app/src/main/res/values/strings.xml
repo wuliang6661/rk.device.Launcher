@@ -75,5 +75,6 @@
     <string name="notice_delete_finger">是否确认删除该指纹</string>
     <string name="delete_success">删除成功</string>
     <string name="delete_fail">删除失败</string>
+    <string name="finger_add_error">指纹信息录入失败，请重新录入</string>
 
 </resources>

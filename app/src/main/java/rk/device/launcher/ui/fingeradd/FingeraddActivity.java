@@ -14,17 +14,22 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import butterknife.Bind;
 import peripherals.FingerConstant;
 import peripherals.FingerHelper;
 import rk.device.launcher.R;
 import rk.device.launcher.api.T;
 import rk.device.launcher.base.LauncherApplication;
+import rk.device.launcher.bean.FingerInfoModel;
 import rk.device.launcher.bean.event.FingerRegisterProgressEvent;
 import rk.device.launcher.db.DbHelper;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.mvp.MVPBaseActivity;
+import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.TypeTranUtils;
+import rk.device.launcher.utils.WindowManagerUtils;
 import rk.device.launcher.utils.rxjava.RxBus;
 import rk.device.launcher.utils.verify.VerifyUtils;
 import rx.Subscriber;
@@ -38,11 +43,17 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
     private static final int    MSG_FINGER_ADD       = 1001;               //添加指纹信息
     private static final int    MSG_READ_FINGER_INFO = 1002;               //读取指纹信息
     private static final int    MSG_DELETE_FINGER    = 1003;               //删除指纹信息
+    private static final int    READ_NEED_ADD        = 1;                  //删除指纹信息
+    private static final int    READ_NOT_NEED_ADD    = 0;                  //删除指纹信息
     private static final String EXTRA_UNIQUEID       = "uniqueId";
     private static final String EXTRA_NUMBER         = "number";
     private static final String TAG                  = "FingerAddActivity";
+    private static final String FINGER_ERROR         = "fingerError";      //录入失败
+    private static final String EXTRA_MAXUSER        = "maxUser";          //最大用户数
     @Bind(R.id.ll_button)
     LinearLayout                buttonLL;
+    @Bind(R.id.ll_finger_notice)
+    LinearLayout                fingerNoticeLL;
     @Bind(R.id.btn_add_finger)
     Button                      addFingerBtn;
     @Bind(R.id.tv_notice)
@@ -55,6 +66,9 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
     private String              fingerId             = "";
     private boolean             isDetail             = false;
     private boolean             isChange             = false;
+    private int                 maxUser              = 0;
+    private int                 currUser             = 0;
+    private boolean             isAdd                = false;
 
     @Override
     protected int getLayout() {
@@ -71,11 +85,16 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
     private void initData() {
         LauncherApplication.sIsFingerAdd = 1;
         uniqueId = getIntent().getStringExtra(EXTRA_UNIQUEID);
-        readFingerInfo();
+        number = getIntent().getIntExtra(EXTRA_NUMBER, 0);
+        readFingerInfo(READ_NOT_NEED_ADD);
         checkIsDetail();
     }
 
     private void initView() {
+        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) fingerNoticeLL.getLayoutParams();
+        int height = WindowManagerUtils.getWindowHeight(this);
+        lp.setMargins(0, height / 4, 0, 0);
+        fingerNoticeLL.setLayoutParams(lp);
         registerRxBus();
         setOnClick(R.id.btn_add_finger, R.id.tv_rename, R.id.tv_save, R.id.iv_search);
         goBack(new View.OnClickListener() {
@@ -87,9 +106,15 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
                             getResources().getString(R.string.sure), new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    finish();
+                                    if (doDeleteJniFinger(TypeTranUtils.str2Int(fingerId))) {
+                                        finish();
+                                    } else {
+                                        T.showShort("delete jni finger error");
+                                    }
                                 }
                             });
+                } else {
+                    finish();
                 }
             }
         });
@@ -121,7 +146,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_add_finger://新增 or 修改
-                addFinger();
+                readFingerInfo(READ_NEED_ADD);
                 break;
             case R.id.tv_rename:
 
@@ -162,8 +187,19 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
      */
     private void checkIsDetail() {
         User eUser = VerifyUtils.getInstance().queryUserByUniqueId(uniqueId);
+        switch (number) {
+            case 1:
+                fingerId = eUser.getFingerID1();
+                break;
+            case 2:
+                fingerId = eUser.getFingerID2();
+                break;
+            case 3:
+                fingerId = eUser.getFingerID3();
+                break;
+        }
         String title;
-        if (!TextUtils.isEmpty(eUser.getCardNo())) {
+        if (!TextUtils.isEmpty(fingerId)) {
             isDetail = true;
             deleteImg.setVisibility(View.VISIBLE);
             deleteImg.setImageDrawable(getResources().getDrawable(R.mipmap.delete));
@@ -180,6 +216,10 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
      * 发起添加指纹指令
      */
     private void addFinger() {
+        if (isAdd) {
+            return;
+        }
+        isAdd = true;
         Message msg = new Message();
         msg.what = MSG_FINGER_ADD;
         fingerAddHandler.sendMessage(msg);
@@ -188,9 +228,10 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
     /**
      * 发起读取指纹头信息指令
      */
-    private void readFingerInfo() {
+    private void readFingerInfo(int needAdd) {
         Message msg = new Message();
         msg.what = MSG_READ_FINGER_INFO;
+        msg.arg1 = needAdd;
         fingerAddHandler.sendMessage(msg);
     }
 
@@ -216,7 +257,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
                     doAddFinger();
                     break;
                 case MSG_READ_FINGER_INFO://获取指纹头信息
-                    doReadFingerInfo();
+                    doReadFingerInfoOrCheckCanAdd(msg.arg1);
                     break;
                 case MSG_DELETE_FINGER://删除指纹信息
                     doDeleteFinger();
@@ -253,8 +294,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
                     eUser.setFingerID3("");
                     break;
             }
-            String resultCode = FingerHelper.JNIFpDelUserByID(uId);
-            if (TypeTranUtils.str2Int(resultCode) == FingerConstant.SUCCESS) {
+            if (doDeleteJniFinger(uId)) {
                 DbHelper.update(eUser);
                 T.showShort(getResources().getString(R.string.delete_success));
                 finish();
@@ -267,15 +307,56 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
     }
 
     /**
-     * 读取指纹头信息
+     * 删除指纹头中的指纹
+     * 
+     * @param uId
+     * @return
      */
-    private void doReadFingerInfo() {
+    private boolean doDeleteJniFinger(int uId) {
+        String resultCode = FingerHelper.JNIFpDelUserByID(uId);
+        if (TypeTranUtils.str2Int(resultCode) == FingerConstant.SUCCESS) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 读取指纹头信息 or 判断能否录入
+     */
+    private boolean doReadFingerInfoOrCheckCanAdd(int needAdd) {
         String moduleInfo = FingerHelper.JNIFpGetModuleInfo();
-        Log.i(TAG, TAG + " finger moduleInfo:" + moduleInfo);
+        Log.i(TAG, TAG + " read moduleInfo:" + moduleInfo);
+        FingerInfoModel fingerInfoModel = new Gson().fromJson(moduleInfo, FingerInfoModel.class);
+        if (fingerInfoModel.getMaxUser() == 0) {
+            maxUser = SPUtils.getInt(EXTRA_MAXUSER);
+        } else {
+            SPUtils.put(EXTRA_MAXUSER, fingerInfoModel.getMaxUser());
+        }
+        maxUser = fingerInfoModel.getMaxUser();
+        currUser = TypeTranUtils.str2Int(FingerHelper.JNIFpGetTotalUser());
+        Log.i(TAG, TAG + " read JNIFpGetTotalUser currUserNumber:" + currUser);
+        if (currUser == -1) {
+            Log.i(TAG, TAG + " read JNIFpGetTotalUser error!");
+            return false;
+        }
+        if (currUser >= maxUser) {
+            T.showShort("指纹头指纹信息已经录满，请清理指纹头中指纹信息");
+            return false;
+        }
+        if (needAdd == READ_NEED_ADD) {
+            addFinger();
+        }
+        return true;
     }
 
     /**
      * 添加指纹（读取指纹头录入指纹信息）
+     * 
+     * @step 1 录入之前需要判断是否已经存在于该指纹头中
+     * @step 1.1 如果已存在，判断该手指是否已经绑定用户
+     * @step 1.2 如果没有，删除该指纹，重新录入
+     * @step 2 手指还未录入的情况下，才能录入该指纹头
      */
     private void doAddFinger() {
         String resultCode = FingerHelper.JNIUserRegisterMOFN();
@@ -289,18 +370,35 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
                 }
             });
         } else {
-            fingerId = resultCode;
+            String[] fingerArr = resultCode.split("#");
+            fingerId = fingerArr.length == 2 ? fingerArr[1] : FINGER_ERROR;
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    addFingerBtn.setVisibility(View.GONE);
+                    buttonLL.setVisibility(View.VISIBLE);
+                }
+            });
             isChange = true;
             Log.i(TAG, TAG + " finger add success:" + resultCode);
         }
+        isAdd = false;
     }
 
     /**
      * 保存指纹到本地
      */
     private void doSaveFinger() {
+        if (fingerId.equals(FINGER_ERROR)) {
+            T.showShort(getResources().getString(R.string.finger_add_error));
+            return;
+        }
         User eUser = VerifyUtils.getInstance().queryUserByUniqueId(uniqueId);
         if (eUser != null) {
+            //如果是详情，先删除原来的指纹
+            if (isDetail) {
+                deleteFinger();
+            }
             switch (number) {
                 case 1:
                     eUser.setFingerID1(fingerId);
