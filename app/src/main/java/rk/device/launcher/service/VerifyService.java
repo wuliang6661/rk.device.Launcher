@@ -67,7 +67,7 @@ public class VerifyService extends Service {
         if (LauncherApplication.sIsFingerAdd == 1 && isTopActivity().equals(FINGER_ADD_PAGE)) {
 
         }else{
-            String resultCode = FingerHelper.JNIFpFingerMatch();
+            int resultCode = FingerHelper.JNIFpFingerMatch();
             Log.i(TAG, TAG + " finger resultCode:" + resultCode);
         }
         sleep();
