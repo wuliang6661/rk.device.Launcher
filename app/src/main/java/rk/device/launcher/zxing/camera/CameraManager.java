@@ -172,7 +172,7 @@ public final class CameraManager {
         }
         if (camera != null && previewing) {
             // fixme
-//            camera.getCamera().stopPreview();
+            camera.getCamera().stopPreview();
             previewCallback.setHandler(null, 0);
             previewing = false;
         }
