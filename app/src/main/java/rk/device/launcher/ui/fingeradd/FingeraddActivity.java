@@ -58,6 +58,8 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
     Button                      addFingerBtn;
     @Bind(R.id.tv_notice)
     TextView                    noticeTv;
+    @Bind(R.id.tv_save)
+    TextView                    saveTv;
     @Bind(R.id.iv_search)
     ImageView                   deleteImg;                                 //删除按钮
     private String              uniqueId             = "";
@@ -203,10 +205,13 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
             isDetail = true;
             deleteImg.setVisibility(View.VISIBLE);
             deleteImg.setImageDrawable(getResources().getDrawable(R.mipmap.delete));
+            buttonLL.setVisibility(View.VISIBLE);
+            saveTv.setVisibility(View.GONE);
             title = getString(R.string.title_finger_detail);
         } else {
             isDetail = false;
             deleteImg.setVisibility(View.GONE);
+            buttonLL.setVisibility(View.GONE);
             title = getString(R.string.title_finger_add);
         }
         setTitle(title);
@@ -313,8 +318,8 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
      * @return
      */
     private boolean doDeleteJniFinger(int uId) {
-        String resultCode = FingerHelper.JNIFpDelUserByID(uId);
-        if (TypeTranUtils.str2Int(resultCode) == FingerConstant.SUCCESS) {
+        int resultCode = FingerHelper.JNIFpDelUserByID(uId);
+        if (resultCode == FingerConstant.SUCCESS) {
             return true;
         } else {
             return false;
@@ -334,9 +339,9 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
             SPUtils.put(EXTRA_MAXUSER, fingerInfoModel.getMaxUser());
         }
         maxUser = fingerInfoModel.getMaxUser();
-        currUser = TypeTranUtils.str2Int(FingerHelper.JNIFpGetTotalUser());
+        currUser = FingerHelper.JNIFpGetTotalUser();
         Log.i(TAG, TAG + " read JNIFpGetTotalUser currUserNumber:" + currUser);
-        if (currUser == -1) {
+        if (currUser == FingerConstant.FAIL) {
             Log.i(TAG, TAG + " read JNIFpGetTotalUser error!");
             return false;
         }
@@ -359,9 +364,9 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
      * @step 2 手指还未录入的情况下，才能录入该指纹头
      */
     private void doAddFinger() {
-        String resultCode = FingerHelper.JNIUserRegisterMOFN();
+        int resultCode = FingerHelper.JNIUserRegisterMOFN();
         Log.i(TAG, TAG + " finger add resultCode:" + resultCode);
-        if (resultCode.equals("-2") || resultCode.equals("-1")) {
+        if (resultCode == FingerConstant.TIMEOUT || resultCode == FingerConstant.FAIL) {
             Log.i(TAG, TAG + " finger add fail:" + resultCode);
             runOnUiThread(new Runnable() {
                 @Override
@@ -370,13 +375,13 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
                 }
             });
         } else {
-            String[] fingerArr = resultCode.split("#");
-            fingerId = fingerArr.length == 2 ? fingerArr[1] : FINGER_ERROR;
+            fingerId = String.valueOf(resultCode);
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     addFingerBtn.setVisibility(View.GONE);
                     buttonLL.setVisibility(View.VISIBLE);
+                    saveTv.setVisibility(View.VISIBLE);
                 }
             });
             isChange = true;
