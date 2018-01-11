@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@drawable/shape_normal_bg"
+              android:orientation="vertical">
 
-    <include layout="@layout/topbar" />
+    <include layout="@layout/topbar"/>
 
     <LinearLayout
         android:id="@+id/ll_finger_notice"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/shape_normal_bg"
         android:orientation="vertical">
 
         <ImageView
@@ -18,18 +18,19 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_gravity="center"
-            android:layout_marginTop="@dimen/dp_100"
-            android:src="@drawable/wuguan_img" />
+            android:src="@drawable/wuguan_img"/>
 
         <TextView
             android:id="@+id/tv_notice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="30dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="@dimen/dp_100"
             android:gravity="center"
             android:text="请将手指放在指纹传感器上，待识别成功后抬起手指"
             android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:textSize="18sp"/>
 
 
         <LinearLayout
@@ -37,6 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dp_100"
+            android:layout_marginTop="@dimen/dp_100"
             android:orientation="horizontal"
             android:visibility="gone">
 
@@ -53,31 +55,17 @@
                 android:paddingTop="15dp"
                 android:text="重命名"
                 android:textColor="@color/white"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/tv_save"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dp_10"
-                android:layout_marginRight="@dimen/dp_15"
-                android:layout_weight="1"
-                android:background="@drawable/shape_btn_finish_setting"
-                android:gravity="center"
-                android:paddingBottom="15dp"
-                android:paddingTop="15dp"
-                android:text="保存"
-                android:textColor="@color/white"
-                android:textSize="18sp" />
-
+                android:textSize="18sp"/>
 
         </LinearLayout>
+
         <Button
             android:id="@+id/btn_add_finger"
             style="@style/btn_finish"
+            android:layout_marginTop="@dimen/dp_100"
             android:layout_marginBottom="@dimen/dp_100"
             android:text="添加指纹"
-            android:visibility="visible" />
+            android:visibility="visible"/>
     </LinearLayout>
 
 </LinearLayout>

@@ -68,7 +68,7 @@ public class VerifyService extends Service {
 
         }else{
             String resultCode = FingerHelper.JNIFpFingerMatch();
-//            Log.i(TAG, TAG + " finger resultCode:" + resultCode);
+            Log.i(TAG, TAG + " finger resultCode:" + resultCode);
         }
         sleep();
     }
