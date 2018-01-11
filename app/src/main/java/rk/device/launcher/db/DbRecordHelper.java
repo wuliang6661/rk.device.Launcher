@@ -2,8 +2,8 @@ package rk.device.launcher.db;
 
 import java.util.List;
 
-import rk.device.launcher.db.dao.RecordDao;
 import rk.device.launcher.db.entity.Record;
+import rk.device.launcher.db.entity.RecordDao;
 
 
 /**
