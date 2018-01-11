@@ -24,13 +24,8 @@ public class QrcodePresenter extends BasePresenterImpl<QrcodeContract.View> impl
         SurfaceHolder surfaceholder = surfaceView.getHolder();
         surfaceholder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 //        setCallback(surfaceholder);
-        setCallback1(surfaceholder);
     }
 
-    private void setCallback1(SurfaceHolder surfaceholder) {
-        SurfaceHolderCaremaFont1 callbackFont = new SurfaceHolderCaremaFont1();
-        surfaceholder.addCallback(callbackFont);
-    }
 
     private void setCallback(SurfaceHolder surfaceholder) {
         SurfaceHolderCaremaFont callbackFont = new SurfaceHolderCaremaFont();

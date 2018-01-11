@@ -34,7 +34,6 @@ import rk.device.launcher.mvp.MVPBaseActivity;
 import rk.device.launcher.service.ElectricBroadcastReceiver;
 import rk.device.launcher.service.NetChangeBroadcastReceiver;
 import rk.device.launcher.service.SocketService;
-import rk.device.launcher.service.VerifyService;
 import rk.device.launcher.ui.activity.SetBasicInfoActivity;
 import rk.device.launcher.ui.activity.SetDoorGuardActivity;
 import rk.device.launcher.ui.activity.SetNetWorkActivity;

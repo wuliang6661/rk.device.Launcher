@@ -22,6 +22,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import rk.device.launcher.utils.LogUtil;
+
 final class PreviewCallback implements Camera.PreviewCallback {
 
   private static final String TAG = PreviewCallback.class.getSimpleName();
@@ -41,6 +43,7 @@ final class PreviewCallback implements Camera.PreviewCallback {
 
   @Override
   public void onPreviewFrame(byte[] data, Camera camera) {
+      LogUtil.d(TAG, "qrcode_data");
     Point cameraResolution = configManager.getCameraResolution();
     Handler thePreviewHandler = previewHandler;
     if (cameraResolution != null && thePreviewHandler != null) {
