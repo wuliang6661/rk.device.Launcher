@@ -102,9 +102,6 @@ public class JniHandler extends Handler {
             case EventUtil.MEDIA_CLOSE:    //关闭摄像头
                 closeCarema();
                 break;
-            case EventUtil.MEDIA_RESTART:   //重启摄像头
-                restartCarema();
-                break;
         }
         super.handleMessage(msg);
     }
@@ -176,15 +173,6 @@ public class JniHandler extends Handler {
         if (stop02 == 0) {
             MediacHelper.MEDIAC_close(carmer02[0]);
         }
-    }
-
-
-    /**
-     * carema重启
-     */
-    private void restartCarema() {
-        closeCarema();
-        openCarema();
     }
 
 

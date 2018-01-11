@@ -182,7 +182,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
         mPresenter.initLocation(this);
         mPresenter.getData();
         startService(new Intent(this, SocketService.class));
-        startService(new Intent(this, VerifyService.class));
+//        startService(new Intent(this, VerifyService.class));
     }
 
 

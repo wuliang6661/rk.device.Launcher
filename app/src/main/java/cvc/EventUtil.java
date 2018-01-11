@@ -51,10 +51,4 @@ public class EventUtil {
      */
     public static final int MEDIA_CLOSE = 8;
 
-    /**
-     * 重启摄像头
-     */
-    public static final int MEDIA_RESTART = 9;
-
-
 }
