@@ -51,7 +51,7 @@ public class VerifyUtils {
      */
     public int verifyByFinger(int fingerId) {
         if (fingerId == 0) {
-            return -1;
+            return -2;
         }
         return DbHelper.queryByFinger(fingerId);
     }

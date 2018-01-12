@@ -19,6 +19,7 @@ import rk.device.launcher.bean.event.NFCAddEvent;
 import rk.device.launcher.db.DbHelper;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.mvp.MVPBaseActivity;
+import rk.device.launcher.utils.WindowManagerUtils;
 import rk.device.launcher.utils.rxjava.RxBus;
 import rk.device.launcher.utils.verify.VerifyUtils;
 import rx.Subscriber;
@@ -67,6 +68,10 @@ public class NfcaddActivity extends MVPBaseActivity<NfcaddContract.View, NfcaddP
     private void initView() {
         setOnClick(R.id.iv_search);
         registerRxBus();
+        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) cardNoticeLL.getLayoutParams();
+        int height = WindowManagerUtils.getWindowHeight(this);
+        lp.setMargins(0, height / 4, 0, 0);
+        cardNoticeLL.setLayoutParams(lp);
         goBack(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

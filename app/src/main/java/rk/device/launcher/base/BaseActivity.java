@@ -255,6 +255,26 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         return hintDialog;
     }
 
+    /**
+     * 显示需要自定义的提示弹窗
+     */
+    protected BaseDialogFragment showMessageDialog(String title,String message, String right, View.OnClickListener listener) {
+        if (hintDialog != null && hintDialog.getDialog() != null
+                && hintDialog.getDialog().isShowing()) {
+            return null;
+        }
+        hintDialog = BaseDialogFragment.newInstance();
+        hintDialog.setTitle(title);
+        hintDialog.setMessage(message);
+        hintDialog.setCancleable(true);
+        hintDialog.setLeftButton("取消", view -> hintDialog.dismiss());
+        hintDialog.setRightButton(right, listener);
+        if (!hintDialog.isAdded()) {
+            showDialog(hintDialog);
+        }
+        return hintDialog;
+    }
+
 
     /**
      * 隐藏提示弹窗

@@ -15,19 +15,24 @@
 
         <ImageView
             android:id="@+id/img_finger"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
             android:layout_gravity="center"
-            android:src="@drawable/wuguan_img"/>
+            android:src="@mipmap/add_finger"/>
 
         <TextView
             android:id="@+id/tv_notice"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:layout_marginTop="@dimen/dp_100"
             android:gravity="center"
+            android:paddingTop="@dimen/dp_10"
+            android:paddingBottom="@dimen/dp_10"
+            android:paddingLeft="@dimen/dp_20"
+            android:paddingRight="@dimen/dp_20"
+            android:layout_gravity="center_horizontal"
             android:text="请将手指放在指纹传感器上，待识别成功后抬起手指"
             android:textColor="@color/white"
             android:textSize="18sp"/>
@@ -66,20 +71,20 @@
                 android:layout_weight="1"
                 android:background="@drawable/shape_btn_finish_setting"
                 android:gravity="center"
-                android:visibility="gone"
                 android:paddingBottom="15dp"
                 android:paddingTop="15dp"
                 android:text="@string/save"
                 android:textColor="@color/white"
-                android:textSize="18sp"/>
+                android:textSize="18sp"
+                android:visibility="gone"/>
 
         </LinearLayout>
 
         <Button
             android:id="@+id/btn_add_finger"
             style="@style/btn_finish"
-            android:layout_marginTop="@dimen/dp_100"
             android:layout_marginBottom="@dimen/dp_100"
+            android:layout_marginTop="@dimen/dp_100"
             android:text="添加指纹"
             android:visibility="visible"/>
     </LinearLayout>

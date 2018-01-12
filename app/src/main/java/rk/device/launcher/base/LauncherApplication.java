@@ -7,6 +7,7 @@ import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
 import cat.ereza.customactivityoncrash.CustomActivityOnCrash;
+import peripherals.FingerHelper;
 import rk.device.launcher.R;
 import rk.device.launcher.utils.STUtils;
 import rk.device.launcher.utils.Utils;
@@ -76,6 +77,7 @@ public class LauncherApplication extends Application implements CustomActivityOn
         SurfaceHolderCaremaFont.stopCarema();
         SurfaceHolderCaremaBack.stopCarema();
         FaceUtils.getInstance().stopFaceFR();
+        FingerHelper.JNIFpDeInit();
 //        stopService(new Intent(this, SocketService.class));
 //        stopService(new Intent(this, VerifyService.class));
     }
