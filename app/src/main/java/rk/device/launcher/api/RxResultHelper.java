@@ -15,21 +15,26 @@ import rx.schedulers.Schedulers;
 public class RxResultHelper {
     private static final String TAG = "RxResultHelper";
 
-    public static <T> Observable.Transformer<BaseResult<T>, T> httpRusult() {
-        return apiResponseObservable -> apiResponseObservable.flatMap(
-                new Func1<BaseResult<T>, Observable<T>>() {
-                    @Override
-                    public Observable<T> call(BaseResult<T> mDYResponse) {
-                        Log.d(TAG, "call_button() called with: mDYResponse = [" + mDYResponse + "]");
-                        if (mDYResponse.getResult() == 200) {
-                            return createData(mDYResponse.getData());
-                        } else {
-                            Log.e("wuliang", "请求报错啦！");
-                            return Observable.error(new RuntimeException(mDYResponse.getMessage()));
+    public static <T> Observable.Transformer<BaseResult<T>, T> httpResult() {
+        return new Observable.Transformer<BaseResult<T>, T>() {
+            @Override
+            public Observable<T> call(Observable<BaseResult<T>> apiResponseObservable) {
+                return apiResponseObservable.flatMap(
+                        new Func1<BaseResult<T>, Observable<T>>() {
+                            @Override
+                            public Observable<T> call(BaseResult<T> baseResult) {
+                                Log.d(TAG, "call_button() called with: baseResult = [" + baseResult + "]");
+                                if (baseResult.getResult() == 200) {
+                                    return createData(baseResult.getData());
+                                } else {
+                                    Log.e("wuliang", "请求报错啦！");
+                                    return Observable.error(new RuntimeException(baseResult.getMessage()));
+                                }
+                            }
                         }
-                    }
-                }
-        ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+                ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+            }
+        };
     }
 
 
