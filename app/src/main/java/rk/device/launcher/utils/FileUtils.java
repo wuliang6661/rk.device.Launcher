@@ -1292,6 +1292,20 @@ public class FileUtils {
         return filePath.substring(lastPoi + 1);
     }
 
+
+    /**
+     * 给文件夹或文件赋予所有用户都可以读写的权限
+     */
+    public static void setPrission(String filePath) {
+        try {
+            Runtime.getRuntime().exec("chmod 777 " + filePath);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+
 //    /** copy from ConvertUtils **/
 //
 //    /**

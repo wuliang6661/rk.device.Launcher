@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/shape_normal_bg"
-    tools:context="rk.device.launcher.ui.activity.SetNetWorkActivity">
+    tools:context="rk.device.launcher.ui.setting.SetNetWorkActivity">
 
     <include layout="@layout/topbar"/>
 

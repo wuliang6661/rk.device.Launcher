@@ -1,4 +1,4 @@
-package rk.device.launcher.ui.activity;
+package rk.device.launcher.ui.setting;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,10 +21,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import butterknife.Bind;
-import cvc.EventUtil;
 import rk.device.launcher.R;
 import rk.device.launcher.base.BaseActivity;
-import rk.device.launcher.base.JniHandler;
 import rk.device.launcher.utils.rxjava.RxBus;
 import rk.device.launcher.bean.event.SleepImageEvent;
 import rk.device.launcher.service.SleepTaskServer;

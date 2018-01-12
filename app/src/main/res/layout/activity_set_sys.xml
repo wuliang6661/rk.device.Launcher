@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/shape_normal_bg"
     android:orientation="vertical"
-    tools:context="rk.device.launcher.ui.activity.SetSysActivity">
+    tools:context="rk.device.launcher.ui.setting.SetSysActivity">
 
     <include layout="@layout/topbar" />
 

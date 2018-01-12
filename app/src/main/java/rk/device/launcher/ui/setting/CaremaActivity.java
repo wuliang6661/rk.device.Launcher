@@ -1,16 +1,9 @@
-package rk.device.launcher.ui.activity;
+package rk.device.launcher.ui.setting;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import java.io.File;
 
 import butterknife.Bind;
 import rk.device.launcher.R;

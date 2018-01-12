@@ -1,4 +1,4 @@
-package rk.device.launcher.ui.activity;
+package rk.device.launcher.ui.setting;
 
 import android.app.Activity;
 import android.content.Context;

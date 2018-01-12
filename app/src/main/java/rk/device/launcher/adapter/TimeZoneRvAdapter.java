@@ -14,7 +14,7 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import rk.device.launcher.R;
-import rk.device.launcher.ui.activity.TimeZoneListActivity;
+import rk.device.launcher.ui.setting.TimeZoneListActivity;
 
 /**
  * Created by mundane on 2017/12/12 下午4:02
