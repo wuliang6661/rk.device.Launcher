@@ -19,26 +19,27 @@ import rk.device.launcher.utils.FileUtils;
 
 public class DbManager {
 
-//	private static final String DB_NAME = "rk.db";
-	private static final String DB_NAME = "/data/rk_backup/rk.db";
-//	private static final String DB_PASSWORD = "793478MUDd97fdUjl2";
-	private UserDao mUserDao;
+    //	private static final String DB_NAME = "rk.db";
+    private static final String DB_NAME = "/data/rk_backup/rk.db";
+    private static final String DB_PATH_JOUR = "/data/rk_backup/rk.db-journal";
+    //	private static final String DB_PASSWORD = "793478MUDd97fdUjl2";
+    private UserDao mUserDao;
 
-	private static class SingletonHolder {
-		private static final DbManager INSTANCE = new DbManager();
-	}
+    private static class SingletonHolder {
+        private static final DbManager INSTANCE = new DbManager();
+    }
 
-	private DbManager() {
+    private DbManager() {
 //		SQLiteDatabase.loadLibs(CommonUtils.getContext());
 //		File databaseFile = CommonUtils.getContext().getDatabasePath(DB_NAME);
 //		databaseFile.mkdirs();
 //		databaseFile.delete();
-		mUserDao = getUserDao();
-	}
+        mUserDao = getUserDao();
+    }
 
-	public UserDao getUserDao() {
-		return getDaoSession().getUserDao();
-	}
+    public UserDao getUserDao() {
+        return getDaoSession().getUserDao();
+    }
 
     public RecordDao getRecordDao() {
         return getDaoSession().getRecordDao();
@@ -48,18 +49,19 @@ public class DbManager {
     private DaoSession getDaoSession() {
         MyOpenHelper helper = new MyOpenHelper(CommonUtils.getContext(), DB_NAME);
         FileUtils.setPermission(DB_NAME);
+        FileUtils.setPermission(DB_PATH_JOUR);
 //		Database db = helper.getEncryptedWritableDb(DB_PASSWORD);
         Database db = helper.getWritableDb();
         return new DaoMaster(db).newSession();
     }
 
     private UserDao getUserDao1() {
-		return mUserDao;
-	}
+        return mUserDao;
+    }
 
-	public static DbManager getInstance() {
-		return SingletonHolder.INSTANCE;
-	}
+    public static DbManager getInstance() {
+        return SingletonHolder.INSTANCE;
+    }
 
 
 }
