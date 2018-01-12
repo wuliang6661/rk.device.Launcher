@@ -26,7 +26,7 @@ public class KeyUtils {
             return false;
         }
         boolean isWrite = FileUtils.writeFileFromString(keyPath, encodeKey, false);
-        FileUtils.setPrission(keyPath);
+        FileUtils.setPermission(keyPath);
         return isWrite;
     }
 
