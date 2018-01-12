@@ -65,9 +65,6 @@ public class SurfaceHolderCaremaBack implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        if (camera != null) {
-            camera.stopPreview();
-        }
     }
 
 
@@ -75,27 +72,24 @@ public class SurfaceHolderCaremaBack implements SurfaceHolder.Callback {
      * 第一次进入页面，开始打开camera
      */
     private void openCamera(SurfaceHolder holder) {
-        new Thread(() -> {
-            // 获取camera对象
-            int cameraCount = Camera.getNumberOfCameras();
-            Log.d(TAG, cameraCount + "");
-            if (cameraCount == 2) {
-                camera = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT);
+        // 获取camera对象
+        int cameraCount = Camera.getNumberOfCameras();
+        Log.d(TAG, cameraCount + "");
+        if (cameraCount == 2) {
+            camera = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT);
+        }
+        if (null != camera) {
+            // 设置预览监听
+            try {
+                camera.setPreviewDisplay(holder);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            if (null != camera) {
-                // 设置预览监听
-                try {
-                    camera.setPreviewDisplay(holder);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                // 启动摄像头预览
-                camera.startPreview();
-                camera.setPreviewCallback((data, camera1) -> {
-                });
-            }
-        }).start();
-
+            // 启动摄像头预览
+            camera.startPreview();
+            camera.setPreviewCallback((data, camera1) -> {
+            });
+        }
     }
 
 
@@ -111,6 +105,12 @@ public class SurfaceHolderCaremaBack implements SurfaceHolder.Callback {
         }
     }
 
+
+    public static void closeSteram() {
+        if (camera != null) {
+            camera.stopPreview();
+        }
+    }
 
     // 控制图像的正确显示方向
     private void setDisplay(Camera.Parameters parameters, Camera camera) {
@@ -135,5 +135,4 @@ public class SurfaceHolderCaremaBack implements SurfaceHolder.Callback {
             Log.e("Came_e", "图像出错");
         }
     }
-
 }

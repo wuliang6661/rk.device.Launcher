@@ -6,7 +6,7 @@ import android.os.Handler;
 import android.os.Message;
 
 import rk.device.launcher.global.Constant;
-import rk.device.launcher.ui.activity.SleepActivity;
+import rk.device.launcher.ui.setting.SleepActivity;
 import rk.device.launcher.utils.SPUtils;
 
 /**

@@ -51,5 +51,4 @@ public class EventUtil {
      */
     public static final int MEDIA_CLOSE = 8;
 
-
 }

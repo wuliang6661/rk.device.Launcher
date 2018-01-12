@@ -22,6 +22,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import rk.device.launcher.utils.LogUtil;
+
 final class PreviewCallback implements Camera.PreviewCallback {
 
   private static final String TAG = PreviewCallback.class.getSimpleName();

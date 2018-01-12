@@ -240,6 +240,7 @@ public class FaceUtils {
                 mRegister.add(frface);
             }
             if (FileUtils.createOrExistsDir(new File(facePath))) {
+                FileUtils.setPermission(facePath);
                 if (saveInfo()) {
                     //update all names
                     FileOutputStream fs = new FileOutputStream(facePath + "/face.txt", true);
@@ -253,6 +254,7 @@ public class FaceUtils {
                     fs = new FileOutputStream(facePath + "/" + name + ".data", true);
                     bos = new ExtOutputStream(fs);
                     bos.writeBytes(face.getFeatureData());
+                    FileUtils.setPermission(facePath + "/" + name + ".data");
                     bos.close();
                     fs.close();
                 }
@@ -368,18 +370,14 @@ public class FaceUtils {
     /**
      * 保存人脸的版本信息作为text文件的开头
      */
-    private boolean saveInfo() {
-        try {
-            FileOutputStream fs = new FileOutputStream(facePath + "/face.txt");
-            ExtOutputStream bos = new ExtOutputStream(fs);
-            bos.writeString(mFRVersion.toString() + "," + mFRVersion.getFeatureLevel());
-            bos.close();
-            fs.close();
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return false;
+    private boolean saveInfo() throws IOException {
+        FileOutputStream fs = new FileOutputStream(facePath + "/face.txt");
+        ExtOutputStream bos = new ExtOutputStream(fs);
+        bos.writeString(mFRVersion.toString() + "," + mFRVersion.getFeatureLevel());
+        FileUtils.setPermission(facePath + "/face.txt");
+        bos.close();
+        fs.close();
+        return true;
     }
 
 

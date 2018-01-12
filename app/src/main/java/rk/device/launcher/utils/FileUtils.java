@@ -1,6 +1,6 @@
 package rk.device.launcher.utils;
 
-import android.annotation.SuppressLint;
+import android.util.Log;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -1292,42 +1292,59 @@ public class FileUtils {
         return filePath.substring(lastPoi + 1);
     }
 
-//    /** copy from ConvertUtils **/
-//
-//    /**
-//     * inputStream转byteArr
-//     *
-//     * @param is 输入流
-//     * @return 字节数组
-//     */
-//    private static byte[] inputStream2Bytes(InputStream is) {
-//        if (is == null) return null;
-//        return input2OutputStream(is).toByteArray();
-//    }
 
-//    /**
-//     * inputStream转outputStream
-//     *
-//     * @param is 输入流
-//     * @return outputStream子类
-//     */
-//    private static ByteArrayOutputStream input2OutputStream(InputStream is) {
-//        if (is == null) return null;
-//        try {
-//            ByteArrayOutputStream os = new ByteArrayOutputStream();
-//            byte[] b = new byte[MemoryConstants.KB];
-//            int len;
-//            while ((len = is.read(b, 0, MemoryConstants.KB)) != -1) {
-//                os.write(b, 0, len);
-//            }
-//            return os;
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return null;
-//        } finally {
-//            CloseUtils.closeIO(is);
-//        }
-//    }
+    /**
+     * 给文件夹或文件赋予所有用户都可以读写的权限
+     */
+    public static void setPermission(String filePath) {
+        try {
+            Runtime.getRuntime().exec("chmod 777 " + filePath);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+
+    /** copy from ConvertUtils **/
+
+    /**
+     * inputStream转byteArr
+     *
+     * @param is 输入流
+     * @return 字节数组
+     */
+    private static byte[] inputStream2Bytes(InputStream is) {
+        if (is == null) return null;
+        return input2OutputStream(is).toByteArray();
+    }
+
+    /**
+     * inputStream转outputStream
+     *
+     * @param is 输入流
+     * @return outputStream子类
+     */
+    public static ByteArrayOutputStream input2OutputStream(InputStream is) {
+        if (is == null) return null;
+        try {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            byte[] buffer = new byte[8 * 1024];
+            int len;
+            while ((len = is.read(buffer)) != -1) {
+                bos.write(buffer, 0, len);
+            }
+            return bos;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            CloseUtils.closeIO(is);
+        }
+    }
+
+    public static void bos2file(ByteArrayOutputStream bos) {
+    }
 
     private static final char hexDigits[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 

@@ -23,11 +23,11 @@ public class SurfaceHolderCaremaFont implements SurfaceHolder.Callback {
     private static final String TAG = "SurfaceHolderCallbackFo";
 
     public static Camera camera;
-    Camera.Parameters parameters;
-    CallBack callBack;
+    private Camera.Parameters parameters;
+    private CallBack callBack;
 
-    private int mWidth;
-    private int mHeight;
+    private int mWidth = 0;
+    private int mHeight = 0;
 
 
     @Override
@@ -86,9 +86,6 @@ public class SurfaceHolderCaremaFont implements SurfaceHolder.Callback {
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         Log.d(TAG, "surface被干掉了！！！！！");
-        if (camera != null) {
-            camera.stopPreview();
-        }
     }
 
 
@@ -96,29 +93,27 @@ public class SurfaceHolderCaremaFont implements SurfaceHolder.Callback {
      * 第一次进入页面，开始打开camera
      */
     private void openCamera(SurfaceHolder holder) {
-        new Thread(() -> {
-            int cameraCount = Camera.getNumberOfCameras();
-            Log.d(TAG, cameraCount + "");
-            if (cameraCount == 2) {
-                camera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
+        int cameraCount = Camera.getNumberOfCameras();
+        Log.d(TAG, cameraCount + "");
+        if (cameraCount == 2) {
+            camera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
+        }
+        if (null != camera) {
+            // 设置预览监听
+            try {
+                camera.setPreviewDisplay(holder);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            if (null != camera) {
-                // 设置预览监听
-                try {
-                    camera.setPreviewDisplay(holder);
-                } catch (IOException e) {
-                    e.printStackTrace();
+            // 启动摄像头预览
+            camera.startPreview();
+            setFaceSize();
+            camera.setPreviewCallback((data, camera1) -> {
+                if (callBack != null) {
+                    callBack.callMessage(data, mWidth, mHeight);
                 }
-                // 启动摄像头预览
-                camera.startPreview();
-                setFaceSize();
-                camera.setPreviewCallback((data, camera1) -> {
-                    if (callBack != null) {
-                        callBack.callMessage(data, mWidth, mHeight);
-                    }
-                });
-            }
-        }).start();
+            });
+        }
     }
 
 
@@ -126,14 +121,16 @@ public class SurfaceHolderCaremaFont implements SurfaceHolder.Callback {
      * 为人脸识别初始化宽高
      */
     private void setFaceSize() {
-        mWidth = camera.getParameters().getPreviewSize().width;
-        mHeight = camera.getParameters().getPreviewSize().height;
+        if (mHeight == 0 || mWidth == 0) {
+            mWidth = camera.getParameters().getPreviewSize().width;
+            mHeight = camera.getParameters().getPreviewSize().height;
+        }
         FaceUtils.getInstance().setCaremaSize(mWidth, mHeight);
     }
 
 
     /**
-     * 关闭carema
+     * 停止数据流的输出
      */
     public static void stopCarema() {
         if (camera != null) {
@@ -141,6 +138,13 @@ public class SurfaceHolderCaremaFont implements SurfaceHolder.Callback {
             camera.stopPreview();
             camera.release();
             camera = null;
+        }
+    }
+
+
+    public static void closeSteram() {
+        if (camera != null) {
+            camera.stopPreview();
         }
     }
 

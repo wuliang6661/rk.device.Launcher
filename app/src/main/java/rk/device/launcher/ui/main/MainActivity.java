@@ -34,12 +34,12 @@ import rk.device.launcher.mvp.MVPBaseActivity;
 import rk.device.launcher.service.ElectricBroadcastReceiver;
 import rk.device.launcher.service.NetChangeBroadcastReceiver;
 import rk.device.launcher.service.SocketService;
-import rk.device.launcher.service.VerifyService;
-import rk.device.launcher.ui.activity.SetBasicInfoActivity;
-import rk.device.launcher.ui.activity.SetDoorGuardActivity;
-import rk.device.launcher.ui.activity.SetNetWorkActivity;
-import rk.device.launcher.ui.activity.SetSysActivity;
-import rk.device.launcher.ui.activity.SettingActivity;
+import rk.device.launcher.ui.key.KeyActivity;
+import rk.device.launcher.ui.setting.SetBasicInfoActivity;
+import rk.device.launcher.ui.setting.SetDoorGuardActivity;
+import rk.device.launcher.ui.setting.SetNetWorkActivity;
+import rk.device.launcher.ui.setting.SetSysActivity;
+import rk.device.launcher.ui.setting.SettingActivity;
 import rk.device.launcher.ui.bbs.BbsActivity;
 import rk.device.launcher.ui.call.CallActivity;
 import rk.device.launcher.ui.fragment.InitErrorDialogFragmen;
@@ -158,7 +158,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
      */
     private void invition() {
         caremaBg.setMovieResource(R.raw.camera_bg);
-        deviceNameBg.setMovieResource(R.raw.device_name_bg);
+//        deviceNameBg.setMovieResource(R.raw.device_name_bg);
         initDialog = InitErrorDialogFragmen.newInstance();
         SoundPlayUtils.init(this);
         settingTv.setOnClickListener(this);
@@ -182,7 +182,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
         mPresenter.initLocation(this);
         mPresenter.getData();
         startService(new Intent(this, SocketService.class));
-        startService(new Intent(this, VerifyService.class));
+//        startService(new Intent(this, VerifyService.class));
     }
 
 
@@ -415,8 +415,8 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
                     dialogFragment.dismiss();
                     int type = SPUtils.getInt(Constant.SETTING_NUM, Constant.SETTING_TYPE1);
                     switch (type) {
-                        case Constant.SETTING_TYPE1:         //进入基础设置
-                            gotoActivity(SetBasicInfoActivity.class, false);   //缓存一个2
+                        case Constant.SETTING_TYPE1:         //网络设置
+                            gotoActivity(SetNetWorkActivity.class, false);   //缓存一个2
                             break;
                         case Constant.SETTING_TYPE2:         //网络设置
                             gotoActivity(SetNetWorkActivity.class, false);    //缓存个4
@@ -436,6 +436,51 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
                 }
             }
         }, isHideInput);
+        dialogFragment.show(getSupportFragmentManager(), "");
+    }
+
+
+    /**
+     * 设置初始流程（改）
+     */
+    private void setFirstLoder() {
+        int type = SPUtils.getInt(Constant.SETTING_NUM, Constant.SETTING_TYPE1);
+        switch (type) {
+            case Constant.SETTING_TYPE1:    //网络设置
+                gotoActivity(SetNetWorkActivity.class, false);
+                break;
+            case Constant.SETTING_TYPE2:   //设置激活码
+                gotoActivity(KeyActivity.class, false);
+                break;
+            case Constant.SETTING_TYPE3:   //设置管理员密码
+
+                break;
+            case Constant.SETTING_TYPE4:   //门禁设置
+                gotoActivity(SetDoorGuardActivity.class, false);
+                break;
+            case Constant.SETTING_TYPE5:   //系统设置
+
+                break;
+            case Constant.SETTING_TYPE6:    //基础设置
+                gotoActivity(SetBasicInfoActivity.class, false);
+                break;
+            default:
+                gotoActivity(SettingActivity.class, false);
+                break;
+        }
+    }
+
+
+    /**
+     * 显示输入管理员密码进入设置
+     */
+    private void showManagerDialog() {
+        showDialogFragment("请输入管理员密码", new InputWifiPasswordDialogFragment.OnConfirmClickListener() {
+            @Override
+            public void onConfirmClick(String content) {
+
+            }
+        }, true);
         dialogFragment.show(getSupportFragmentManager(), "");
     }
 

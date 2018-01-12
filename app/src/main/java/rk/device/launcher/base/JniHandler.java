@@ -121,7 +121,7 @@ public class JniHandler extends Handler {
 //            MdStatus = MdHelper.PER_mdInit();
 //        }
         //init finger
-        if(fingerStatus != 0){
+        if (fingerStatus != 0) {
             fingerStatus = FingerHelper.JNIFpInit();
         }
         if (NfcStatus != 0) {

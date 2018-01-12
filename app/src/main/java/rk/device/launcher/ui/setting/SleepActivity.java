@@ -1,4 +1,4 @@
-package rk.device.launcher.ui.activity;
+package rk.device.launcher.ui.setting;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,13 +21,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import butterknife.Bind;
-import cvc.EventUtil;
 import rk.device.launcher.R;
 import rk.device.launcher.base.BaseActivity;
-import rk.device.launcher.base.JniHandler;
 import rk.device.launcher.utils.rxjava.RxBus;
 import rk.device.launcher.bean.event.SleepImageEvent;
 import rk.device.launcher.service.SleepTaskServer;
+import rk.device.launcher.widget.carema.SurfaceHolderCaremaBack;
+import rk.device.launcher.widget.carema.SurfaceHolderCaremaFont;
 
 /**
  * Created by wuliang on 2017/12/19.
@@ -58,8 +57,8 @@ public class SleepActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         initView();
         initData();
-        caremaSet(EventUtil.MEDIA_CLOSE);
-        System.gc();
+        SurfaceHolderCaremaBack.closeSteram();
+        SurfaceHolderCaremaFont.closeSteram();
     }
 
 
@@ -72,7 +71,6 @@ public class SleepActivity extends BaseActivity {
 
     protected void initData() {
         advertisingImg.setOnClickListener(view -> {
-            caremaSet(EventUtil.MEDIA_OPEN);
             finish();
         });
     }
@@ -133,15 +131,5 @@ public class SleepActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         SleepTaskServer.getSleepHandler(SleepActivity.this).sendEmptyMessage(0x33);
-    }
-
-    /**
-     * 对摄像头的操作
-     */
-    private void caremaSet(int type) {
-        JniHandler mHandler = JniHandler.getInstance();
-        Message msg = new Message();
-        msg.what = type;
-        mHandler.sendMessage(msg);
     }
 }

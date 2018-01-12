@@ -1,11 +1,13 @@
 package rk.device.launcher.ui.person_add;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.InputType;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -67,9 +69,22 @@ public class Person_addActivity
     LinearLayout idLayout;
     @Bind(R.id.id_view)
     View idView;
+    @Bind(R.id.face_layout)
+    RelativeLayout faceLayout;
+    @Bind(R.id.pass_layout)
+    RelativeLayout passLayout;
+    @Bind(R.id.card_layout)
+    RelativeLayout cardLayout;
+    @Bind(R.id.finger_layout01)
+    RelativeLayout fingerLayout01;
+    @Bind(R.id.finger_layout02)
+    RelativeLayout fingerLayout02;
+    @Bind(R.id.finger_layout03)
+    RelativeLayout fingerLayout03;
 
     User user;
     InputWifiPasswordDialogFragment dialogFragment;
+
 
     @Override
     protected int getLayout() {
@@ -98,7 +113,7 @@ public class Person_addActivity
             idLayout.setVisibility(View.VISIBLE);
             idView.setVisibility(View.VISIBLE);
             setTitle("修改用户");
-            idText.setText(user.getUniqueId() + "");
+            idText.setText(String.valueOf(user.getUniqueId()));
             tvTimeStart.setText(TimeUtils.getFormatTimeFromTimestamp(user.getStartTime(), null));
             tvTimeEnd.setText(TimeUtils.getFormatTimeFromTimestamp(user.getEndTime(), null));
             etPersonName.setText(user.getName());
@@ -135,7 +150,7 @@ public class Person_addActivity
                 }
                 break;
             case R.id.finger_layout01: //录入指纹
-                if(isHasName()){
+                if (isHasName()) {
                     Bundle bundle = new Bundle();
                     bundle.putString(EXTRA_UNIQUEID, user.getUniqueId());
                     bundle.putInt(EXTRA_NUMBER, 1);
@@ -143,7 +158,7 @@ public class Person_addActivity
                 }
                 break;
             case R.id.finger_layout02:
-                if(isHasName()){
+                if (isHasName()) {
                     Bundle bundle = new Bundle();
                     bundle.putString(EXTRA_UNIQUEID, user.getUniqueId());
                     bundle.putInt(EXTRA_NUMBER, 2);
@@ -151,7 +166,7 @@ public class Person_addActivity
                 }
                 break;
             case R.id.finger_layout03:
-                if(isHasName()){
+                if (isHasName()) {
                     Bundle bundle = new Bundle();
                     bundle.putString(EXTRA_UNIQUEID, user.getUniqueId());
                     bundle.putInt(EXTRA_NUMBER, 3);
@@ -218,9 +233,7 @@ public class Person_addActivity
         SetFullTimeDialogFragment fragment = SetFullTimeDialogFragment.newInstance();
         fragment.setSelectedTime(TimeUtils.stringToFormat(time, "yyyy"), TimeUtils.stringToFormat(time, "MM"), TimeUtils.stringToFormat(time, "dd"),
                 TimeUtils.stringToFormat(time, "HH"), TimeUtils.stringToFormat(time, "mm"));
-        fragment.setOnConfirmDialogListener((year, month, day, hour, minute) -> {
-            timeText.setText(year + "-" + month + "-" + day + " " + hour + ":" + minute);
-        });
+        fragment.setOnConfirmDialogListener((year, month, day, hour, minute) -> timeText.setText(year + "-" + month + "-" + day + " " + hour + ":" + minute));
         fragment.show(getSupportFragmentManager(), "");
     }
 
@@ -285,33 +298,37 @@ public class Person_addActivity
             return;
         }
         user = DbHelper.queryUserById(user.getUniqueId()).get(0);
-        faceText.setText(getType(user.getFaceID()));
+        faceText.setText(getType(user.getFaceID(), faceLayout));
         if (user.getPassWord() != 0) {
+            passLayout.setBackgroundColor(Color.parseColor("#302d85"));
             passMessage.setText("密码：******");
             passText.setText("已录入");
         } else {
             passMessage.setText("密码：空");
             passText.setText("未录入");
+            passLayout.setBackgroundColor(Color.parseColor("#30374b"));
         }
         if (!StringUtils.isEmpty(user.getCardNo())) {
-            cardMessage.setText("卡号：" + user.getCardNo());
+            cardMessage.setText(String.valueOf("卡号：" + user.getCardNo()));
         } else {
             cardMessage.setText("卡号：空");
         }
-        cardText.setText(getType(user.getCardNo()));
-        fingerText01.setText(getType(user.getFingerID1()));
-        fingerText02.setText(getType(user.getFingerID2()));
-        fingerText03.setText(getType(user.getFingerID3()));
+        cardText.setText(getType(user.getCardNo(), cardLayout));
+        fingerText01.setText(getType(user.getFingerID1(), fingerLayout01));
+        fingerText02.setText(getType(user.getFingerID2(), fingerLayout02));
+        fingerText03.setText(getType(user.getFingerID3(), fingerLayout03));
     }
 
 
     /**
      * 判断数据是否存在，返回显示
      */
-    private String getType(String message) {
+    private String getType(String message, View view) {
         if (StringUtils.isEmpty(message)) {
+            view.setBackgroundColor(Color.parseColor("#30374b"));
             return "未录入";
         } else {
+            view.setBackgroundColor(Color.parseColor("#302d85"));
             return "已录入";
         }
     }

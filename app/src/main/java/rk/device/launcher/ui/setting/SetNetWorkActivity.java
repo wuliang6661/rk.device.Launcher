@@ -1,4 +1,4 @@
-package rk.device.launcher.ui.activity;
+package rk.device.launcher.ui.setting;
 
 import android.net.ConnectivityManager;
 import android.os.Bundle;
@@ -147,7 +147,7 @@ public class SetNetWorkActivity extends BaseActivity implements View.OnClickList
 				//判断是否是第一次
 				boolean isFirst = (boolean) SPUtils.get(Constant.IS_FIRST_SETTING, true);
 				if (isFirst) {
-					SPUtils.put(Constant.SETTING_NUM, Constant.SETTING_TYPE3);
+					SPUtils.put(Constant.SETTING_NUM, Constant.SETTING_TYPE2);
 					gotoActivity(SetDoorGuardActivity.class, true);
 				} else {
 					finish();

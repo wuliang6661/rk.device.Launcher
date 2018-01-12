@@ -7,8 +7,8 @@ import org.greenrobot.greendao.query.Query;
 import java.util.List;
 import java.util.UUID;
 
-import rk.device.launcher.db.dao.UserDao;
 import rk.device.launcher.db.entity.User;
+import rk.device.launcher.db.entity.UserDao;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.utils.MD5;
 

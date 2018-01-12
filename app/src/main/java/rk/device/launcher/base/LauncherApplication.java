@@ -2,13 +2,18 @@ package rk.device.launcher.base;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 
-import com.squareup.leakcanary.LeakCanary;
-import com.squareup.leakcanary.RefWatcher;
+import java.io.File;
 
 import cat.ereza.customactivityoncrash.CustomActivityOnCrash;
 import peripherals.FingerHelper;
 import rk.device.launcher.R;
+import rk.device.launcher.global.Constant;
+import rk.device.launcher.utils.FileUtils;
+import rk.device.launcher.utils.LogUtil;
+import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.STUtils;
 import rk.device.launcher.utils.Utils;
 import rk.device.launcher.utils.verify.FaceUtils;
@@ -45,14 +50,28 @@ public class LauncherApplication extends Application implements CustomActivityOn
      */
     public static int sIsNFCAdd;
 
-    public static RefWatcher refWatcher;
+    private final String DB_FOLDER = "/data/rk_backup/";
+    private final String DB_NAME = "rk.db";
+    private final String TEMP_DB_NAME = "temp.db";
+    private final String DB_JOUR = "rk.db-journal";
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 0:
+                    LogUtil.d("数据导入完成");
+                    break;
+            }
+        }
+    };
 
     @Override
     public void onCreate() {
         super.onCreate();
+
+
         sContext = getApplicationContext();
 
-        refWatcher = LeakCanary.install(this);
         CustomActivityOnCrash.install(this);
         CustomActivityOnCrash.setShowErrorDetails(true);
         CustomActivityOnCrash.setDefaultErrorActivityDrawable(R.mipmap.ic_launcher);
@@ -61,6 +80,47 @@ public class LauncherApplication extends Application implements CustomActivityOn
         STUtils.init(this);
         FaceUtils.getInstance().init(this);
         FaceUtils.getInstance().loadFaces();
+        SPUtils.inviSp();
+        setDb();
+    }
+
+
+    /**
+     * 检测数据库更新
+     */
+    private void setDb() {
+        new CopyFileThread().start();
+    }
+
+
+    private class CopyFileThread extends Thread {
+        @Override
+        public void run() {
+            try {
+                File dbFolder = new File(DB_FOLDER);
+                if (!dbFolder.mkdirs()) {
+                    dbFolder.mkdirs();
+                }
+                File dbFile = new File(dbFolder, DB_NAME);
+                if (dbFile.exists()) {
+                    File tempDbFile = new File(dbFolder, TEMP_DB_NAME);
+                    FileUtils.setPermission(tempDbFile.getAbsolutePath());
+                    FileUtils.copyFile(dbFile, tempDbFile);
+                    dbFile.delete();
+                    File selfDbFile = new File(dbFolder, DB_NAME);
+                    FileUtils.copyFile(tempDbFile, selfDbFile);
+                    FileUtils.setPermission(selfDbFile.getAbsolutePath());
+                    tempDbFile.delete();
+                    File journal = new File(dbFolder, DB_JOUR);
+                    if (journal.exists()) {
+                        journal.delete();
+                    }
+                    mHandler.sendEmptyMessage(0);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**

@@ -47,7 +47,11 @@
         android:id="@+id/hint_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="96dp"
+        android:layout_marginTop="81dp"
+        android:background="@drawable/face_add_hint"
+        android:gravity="center"
+        android:paddingLeft="26dp"
+        android:paddingRight="26dp"
         android:text="@string/person_face"
         android:textColor="@color/white"
         android:textSize="26dp" />
@@ -56,7 +60,7 @@
     <Button
         android:id="@+id/btn_finish_setting"
         style="@style/btn_finish"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="180dp"
         android:text="拍摄" />
 
 
