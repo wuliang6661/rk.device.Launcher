@@ -35,6 +35,8 @@ public class DbManager {
 //		databaseFile.mkdirs();
 //		databaseFile.delete();
         mUserDao = getUserDao();
+        FileUtils.setPermission(DB_NAME);
+        FileUtils.setPermission(DB_PATH_JOUR);
     }
 
     public UserDao getUserDao() {
@@ -48,8 +50,8 @@ public class DbManager {
 
     private DaoSession getDaoSession() {
         MyOpenHelper helper = new MyOpenHelper(CommonUtils.getContext(), DB_NAME);
-        FileUtils.setPermission(DB_NAME);
-        FileUtils.setPermission(DB_PATH_JOUR);
+//        FileUtils.setPermission(DB_NAME);
+//        FileUtils.setPermission(DB_PATH_JOUR);
 //		Database db = helper.getEncryptedWritableDb(DB_PASSWORD);
         Database db = helper.getWritableDb();
         return new DaoMaster(db).newSession();
