@@ -112,5 +112,6 @@ public interface Constant {
     String USER_TYPE_PATROL_ONLY = "2";                    // 2:  巡更权限，向服务器发送一条上报消息，代表已巡更
     String USER_TYPE_ADMINISTRATOR = "3";                    // 3:  管理员权限，可以开门、巡更、或进入设置页面更改设置
 
+    String IS_FIRST_OPEN_APP = "is_first_open_app";
 
 }
