@@ -440,6 +440,28 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
 
 
     /**
+     * 设置初始流程（改）
+     */
+    private void setFirstLoder(){
+        
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /**
      * 显示输入管理员密码弹窗
      */
     private void showDialogFragment(String title, InputWifiPasswordDialogFragment.OnConfirmClickListener listener, boolean isHideInput) {
