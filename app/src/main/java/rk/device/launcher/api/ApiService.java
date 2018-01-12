@@ -85,7 +85,7 @@ public class ApiService {
      * 获取天气接口
      */
     public static Observable<List<WeatherBO>> weather(Map<String, Object> params) {
-        return weatherFactorys().weather(params).compose(RxResultHelper.httpRusult()).compose(activity.bindUntilEvent(ActivityEvent.DESTROY));
+        return weatherFactorys().weather(params).compose(RxResultHelper.httpResult()).compose(activity.bindUntilEvent(ActivityEvent.DESTROY));
     }
 
     /**
@@ -99,7 +99,7 @@ public class ApiService {
      * 检测App是否更新
      */
     public static Observable<VersionBO> updateApp(String verCode) {
-        return weatherFactorys().updateApp(verCode).compose(RxResultHelper.httpRusult()).compose(activity.bindUntilEvent(ActivityEvent.DESTROY));
+        return weatherFactorys().updateApp(verCode).compose(RxResultHelper.httpResult()).compose(activity.bindUntilEvent(ActivityEvent.DESTROY));
     }
 
     /**
@@ -107,14 +107,14 @@ public class ApiService {
      */
     public static Observable<DeviceInfoBO> deviceConfiguration(String verCode, String cid) {
         return weatherFactorys().deviceConfiguration(verCode, cid)
-                .compose(RxResultHelper.httpRusult()).compose(activity.bindUntilEvent(ActivityEvent.DESTROY));
+                .compose(RxResultHelper.httpResult()).compose(activity.bindUntilEvent(ActivityEvent.DESTROY));
     }
 
     /**
      * 人脸识别
      */
     public static Observable<VerifyBO> verifyFace(Map<String, Object> params) {
-        return weatherFactorys().verify(params).compose(RxResultHelper.httpRusult()).compose(activity.bindUntilEvent(ActivityEvent.DESTROY));
+        return weatherFactorys().verify(params).compose(RxResultHelper.httpResult()).compose(activity.bindUntilEvent(ActivityEvent.DESTROY));
     }
 
 }

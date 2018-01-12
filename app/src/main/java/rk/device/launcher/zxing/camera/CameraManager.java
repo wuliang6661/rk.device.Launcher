@@ -172,7 +172,7 @@ public final class CameraManager {
         }
         if (camera != null && previewing) {
             // fixme
-            camera.getCamera().stopPreview();
+//            camera.getCamera().stopPreview();
             previewCallback.setHandler(null, 0);
             previewing = false;
         }
@@ -339,9 +339,9 @@ public final class CameraManager {
             return null;
         }
         // Go ahead and assume it's YUV rather than die.
-//        return new PlanarYUVLuminanceSource(data, width, height, rect.left, rect.top, rect.width(), rect.height(), false);
+        return new PlanarYUVLuminanceSource(data, width, height, rect.left, rect.top, rect.width(), rect.height(), false);
         // fixme
-        return new PlanarYUVLuminanceSource(data, width, height, 0, 0, width, height, false);
+//        return new PlanarYUVLuminanceSource(data, width, height, 0, 0, width, height, false);
     }
 
 }

@@ -12,6 +12,7 @@ import retrofit2.http.POST;
 import retrofit2.http.QueryMap;
 import rk.device.launcher.bean.BaseResult;
 import rk.device.launcher.bean.DeviceInfoBO;
+import rk.device.launcher.bean.SyncOpendoorHistoryBO;
 import rk.device.launcher.bean.VerifyBO;
 import rk.device.launcher.bean.VersionBO;
 import rk.device.launcher.bean.WeatherBO;
@@ -55,5 +56,29 @@ public interface BaseApi {
     @FormUrlEncoded
     @POST(ApiName.VERIFY)
     Observable<BaseResult<VerifyBO>> verify(@FieldMap Map<String, Object> params);
+
+
+    /**
+     * 开门授权同步接口
+     * @param access_token
+     * @param uuid
+     * @param peopleId
+     * @param popeName
+     * @param popedomType
+     * @param type
+     * @param data
+     * @return
+     */
+    @FormUrlEncoded
+    @POST("/public/rest/face/upAuthlist")
+    Observable<BaseResult<SyncOpendoorHistoryBO>> upAuthlist(@Field("access_token") String access_token,
+                                                             @Field("uuid") String uuid,
+                                                             @Field("peopleId") String peopleId,
+                                                             @Field("popeName") String popeName,
+                                                             @Field("popedomType") String popedomType,
+                                                             @Field("type") String type,
+                                                             @Field("data") String data);
+
+
 
 }
