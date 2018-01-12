@@ -7,6 +7,7 @@ import rk.device.launcher.db.entity.DaoSession;
 import rk.device.launcher.db.entity.RecordDao;
 import rk.device.launcher.db.entity.UserDao;
 import rk.device.launcher.utils.CommonUtils;
+import rk.device.launcher.utils.FileUtils;
 
 
 /**
@@ -18,8 +19,9 @@ import rk.device.launcher.utils.CommonUtils;
 
 public class DbManager {
 
-	private static final String DB_NAME = "rk.db";
-	private static final String DB_PASSWORD = "793478MUDd97fdUjl2";
+//	private static final String DB_NAME = "rk.db";
+	private static final String DB_NAME = "/data/rk_backup/rk.db";
+//	private static final String DB_PASSWORD = "793478MUDd97fdUjl2";
 	private UserDao mUserDao;
 
 	private static class SingletonHolder {
@@ -45,6 +47,7 @@ public class DbManager {
 
     private DaoSession getDaoSession() {
         MyOpenHelper helper = new MyOpenHelper(CommonUtils.getContext(), DB_NAME);
+        FileUtils.setPermission(DB_NAME);
 //		Database db = helper.getEncryptedWritableDb(DB_PASSWORD);
         Database db = helper.getWritableDb();
         return new DaoMaster(db).newSession();

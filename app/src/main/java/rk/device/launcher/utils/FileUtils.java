@@ -1,12 +1,9 @@
 package rk.device.launcher.utils;
 
-import android.annotation.SuppressLint;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -1296,7 +1293,7 @@ public class FileUtils {
     /**
      * 给文件夹或文件赋予所有用户都可以读写的权限
      */
-    public static void setPrission(String filePath) {
+    public static void setPermission(String filePath) {
         try {
             Runtime.getRuntime().exec("chmod 777 " + filePath);
         } catch (IOException e) {
