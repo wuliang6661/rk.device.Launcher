@@ -34,6 +34,7 @@ import rk.device.launcher.mvp.MVPBaseActivity;
 import rk.device.launcher.service.ElectricBroadcastReceiver;
 import rk.device.launcher.service.NetChangeBroadcastReceiver;
 import rk.device.launcher.service.SocketService;
+import rk.device.launcher.ui.key.KeyActivity;
 import rk.device.launcher.ui.setting.SetBasicInfoActivity;
 import rk.device.launcher.ui.setting.SetDoorGuardActivity;
 import rk.device.launcher.ui.setting.SetNetWorkActivity;
@@ -442,23 +443,46 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
     /**
      * 设置初始流程（改）
      */
-    private void setFirstLoder(){
+    private void setFirstLoder() {
+        int type = SPUtils.getInt(Constant.SETTING_NUM, Constant.SETTING_TYPE1);
+        switch (type) {
+            case Constant.SETTING_TYPE1:    //网络设置
+                gotoActivity(SetNetWorkActivity.class, false);
+                break;
+            case Constant.SETTING_TYPE2:   //设置激活码
+                gotoActivity(KeyActivity.class, false);
+                break;
+            case Constant.SETTING_TYPE3:   //设置管理员密码
 
+                break;
+            case Constant.SETTING_TYPE4:   //门禁设置
+                gotoActivity(SetDoorGuardActivity.class, false);
+                break;
+            case Constant.SETTING_TYPE5:   //系统设置
+
+                break;
+            case Constant.SETTING_TYPE6:    //基础设置
+                gotoActivity(SetBasicInfoActivity.class, false);
+                break;
+            default:
+                gotoActivity(SettingActivity.class, false);
+                break;
+        }
     }
 
 
+    /**
+     * 显示输入管理员密码进入设置
+     */
+    private void showManagerDialog() {
+        showDialogFragment("请输入管理员密码", new InputWifiPasswordDialogFragment.OnConfirmClickListener() {
+            @Override
+            public void onConfirmClick(String content) {
 
-
-
-
-
-
-
-
-
-
-
-
+            }
+        }, true);
+        dialogFragment.show(getSupportFragmentManager(), "");
+    }
 
 
     /**

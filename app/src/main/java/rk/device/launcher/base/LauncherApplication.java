@@ -3,9 +3,6 @@ package rk.device.launcher.base;
 import android.app.Application;
 import android.content.Context;
 
-import com.squareup.leakcanary.LeakCanary;
-import com.squareup.leakcanary.RefWatcher;
-
 import cat.ereza.customactivityoncrash.CustomActivityOnCrash;
 import rk.device.launcher.R;
 import rk.device.launcher.utils.STUtils;
@@ -44,14 +41,11 @@ public class LauncherApplication extends Application implements CustomActivityOn
      */
     public static int sIsNFCAdd;
 
-    public static RefWatcher refWatcher;
-
     @Override
     public void onCreate() {
         super.onCreate();
         sContext = getApplicationContext();
 
-        refWatcher = LeakCanary.install(this);
         CustomActivityOnCrash.install(this);
         CustomActivityOnCrash.setShowErrorDetails(true);
         CustomActivityOnCrash.setDefaultErrorActivityDrawable(R.mipmap.ic_launcher);

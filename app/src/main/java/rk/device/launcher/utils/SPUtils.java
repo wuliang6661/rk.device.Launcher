@@ -1,12 +1,18 @@
 package rk.device.launcher.utils;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.SharedPreferences;
 
+import java.io.File;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Map;
 
 public class SPUtils {
+
+    private static final String XML_PATH = "/data/rk_backup";
 
     private static SharedPreferences sp;
     private static SharedPreferences.Editor sEditor;
@@ -18,9 +24,37 @@ public class SPUtils {
 
     private static SharedPreferences getSp() {
         if (sp == null) {
-            sp = CommonUtils.getContext().getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+//            sp = CommonUtils.getContext().getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+            sp = getSharedPreferences(Utils.getContext(), FILE_NAME);
+            FileUtils.setPermission("/data/rk_backup/" + FILE_NAME + ".xml");
         }
         return sp;
+    }
+
+
+    /**
+     * 将SharedPreferences的路径改为自定义路径
+     */
+    public static SharedPreferences getSharedPreferences(Context context, String fileName) {
+        try {
+            // 获取ContextWrapper对象中的mBase变量。该变量保存了ContextImpl对象
+            Field field = ContextWrapper.class.getDeclaredField("mBase");
+            field.setAccessible(true);
+            // 获取mBase变量
+            Object obj = field.get(context);
+            // 获取ContextImpl。mPreferencesDir变量，该变量保存了数据文件的保存路径
+            field = obj.getClass().getDeclaredField("mPreferencesDir");
+            field.setAccessible(true);
+            // 创建自定义路径
+            File file = new File(XML_PATH);
+            // 修改mPreferencesDir变量的值
+            field.set(obj, file);
+            // 返回修改路径以后的 SharedPreferences :%FILE_PATH%/%fileName%.xml
+            return context.getSharedPreferences(fileName, Activity.MODE_PRIVATE);
+        } catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 
@@ -65,10 +99,10 @@ public class SPUtils {
         return sp.getLong(key, DEFAULT_LONG_VALUE);
     }
 
-	public static long getLong(String key, long defaultValue) {
-		SharedPreferences sp = getSp();
-		return sp.getLong(key, defaultValue);
-	}
+    public static long getLong(String key, long defaultValue) {
+        SharedPreferences sp = getSp();
+        return sp.getLong(key, defaultValue);
+    }
 
 
     public static String getString(String key) {
