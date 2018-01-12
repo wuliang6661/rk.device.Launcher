@@ -1,5 +1,7 @@
 package rk.device.launcher.utils;
 
+import android.util.Log;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;

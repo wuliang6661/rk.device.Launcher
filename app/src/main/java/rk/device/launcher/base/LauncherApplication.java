@@ -68,12 +68,6 @@ public class LauncherApplication extends Application implements CustomActivityOn
     public void onCreate() {
         super.onCreate();
 
-        boolean isFirst = SPUtils.getBoolean(Constant.IS_FIRST_OPEN_APP, true);
-        if (isFirst) {
-            new CopyFileThread().start();
-        } else {
-            SPUtils.putBoolean(Constant.IS_FIRST_OPEN_APP, true);
-        }
 
         sContext = getApplicationContext();
 
@@ -85,7 +79,18 @@ public class LauncherApplication extends Application implements CustomActivityOn
         STUtils.init(this);
         FaceUtils.getInstance().init(this);
         FaceUtils.getInstance().loadFaces();
+        SPUtils.inviSp();
+        setDb();
     }
+
+
+    /**
+     * 检测数据库更新
+     */
+    private void setDb() {
+        new CopyFileThread().start();
+    }
+
 
     private class CopyFileThread extends Thread {
         @Override
@@ -105,10 +110,10 @@ public class LauncherApplication extends Application implements CustomActivityOn
                     FileUtils.copyFile(tempDbFile, selfDbFile);
                     FileUtils.setPermission(selfDbFile.getAbsolutePath());
                     tempDbFile.delete();
-//                    File journal = new File(dbFolder, DB_JOUR);
-//                    if (journal.exists()) {
-//                        journal.delete();
-//                    }
+                    File journal = new File(dbFolder, DB_JOUR);
+                    if (journal.exists()) {
+                        journal.delete();
+                    }
                     mHandler.sendEmptyMessage(0);
                 }
             } catch (Exception e) {

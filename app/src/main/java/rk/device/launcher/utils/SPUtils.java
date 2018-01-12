@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.SharedPreferences;
+import android.util.Xml;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -12,7 +13,7 @@ import java.util.Map;
 
 public class SPUtils {
 
-    private static final String XML_PATH = "/data/rk_backup";
+    private static final String XML_PATH = "/data/rk_backup/";
 
     private static SharedPreferences sp;
     private static SharedPreferences.Editor sEditor;
@@ -26,16 +27,22 @@ public class SPUtils {
         if (sp == null) {
 //            sp = CommonUtils.getContext().getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
             sp = getSharedPreferences(Utils.getContext(), FILE_NAME);
-            FileUtils.setPermission("/data/rk_backup/" + FILE_NAME + ".xml");
         }
         return sp;
+    }
+
+    public static void inviSp() {
+        if (!new File(XML_PATH + FILE_NAME + ".xml").exists()) {
+            put("version", PackageUtils.getCurrentVersion());
+        }
+        FileUtils.setPermission(XML_PATH + FILE_NAME + ".xml");
     }
 
 
     /**
      * 将SharedPreferences的路径改为自定义路径
      */
-    public static SharedPreferences getSharedPreferences(Context context, String fileName) {
+    static SharedPreferences getSharedPreferences(Context context, String fileName) {
         try {
             // 获取ContextWrapper对象中的mBase变量。该变量保存了ContextImpl对象
             Field field = ContextWrapper.class.getDeclaredField("mBase");
