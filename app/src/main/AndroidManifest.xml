@@ -226,6 +226,11 @@
             android:name=".ui.key.KeyActivity"
             android:screenOrientation="portrait" />
 
+        <!--输入管理员密码页面-->
+        <activity
+            android:name=".ui.settingmangerpwd.SettingMangerPwdActivity"
+            android:screenOrientation="portrait" />
+
 
         <!--二维码扫描界面-->
         <activity
