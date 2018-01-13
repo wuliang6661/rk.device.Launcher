@@ -12,7 +12,9 @@ import retrofit2.http.POST;
 import retrofit2.http.QueryMap;
 import rk.device.launcher.bean.BaseResult;
 import rk.device.launcher.bean.DeviceInfoBO;
+import rk.device.launcher.bean.OpenDoorBo;
 import rk.device.launcher.bean.SyncOpendoorHistoryBO;
+import rk.device.launcher.bean.TokenBO;
 import rk.device.launcher.bean.VerifyBO;
 import rk.device.launcher.bean.VersionBO;
 import rk.device.launcher.bean.WeatherBO;
@@ -80,5 +82,24 @@ public interface BaseApi {
                                                              @Field("data") String data);
 
 
+    /**
+     * 设备开门鉴权token请求接口
+     *
+     * @param params
+     * @return
+     */
+    @FormUrlEncoded
+    @POST("/public/rest/face/token")
+    Observable<BaseResult<TokenBO>> obtainToken(@FieldMap Map<String, Object> params);
+
+    /**
+     * 开门
+     *
+     * @param params
+     * @return
+     */
+    @FormUrlEncoded
+    @POST("/public/rest/face/token")
+    Observable<BaseResult<OpenDoorBo>> openDoor(@FieldMap Map<String, Object> params);
 
 }

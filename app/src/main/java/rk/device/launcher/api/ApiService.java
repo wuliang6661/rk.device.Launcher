@@ -8,6 +8,8 @@ import java.util.Map;
 
 import retrofit2.Retrofit;
 import rk.device.launcher.base.BaseActivity;
+import rk.device.launcher.bean.OpenDoorBo;
+import rk.device.launcher.bean.TokenBO;
 import rk.device.launcher.global.Config;
 import rk.device.launcher.bean.DeviceInfoBO;
 import rk.device.launcher.bean.VerifyBO;
@@ -115,6 +117,26 @@ public class ApiService {
      */
     public static Observable<VerifyBO> verifyFace(Map<String, Object> params) {
         return weatherFactorys().verify(params).compose(RxResultHelper.httpResult()).compose(activity.bindUntilEvent(ActivityEvent.DESTROY));
+    }
+
+    /**
+     * 设备开门鉴权token请求接口
+     *
+     * @param params
+     * @return
+     */
+    public static Observable<TokenBO> obtainToken(Map<String,Object> params){
+        return weatherFactorys().obtainToken(params).compose(RxResultHelper.httpResult()).compose(activity.bindUntilEvent(ActivityEvent.DESTROY));
+    }
+
+    /**
+     * 开门
+     *
+     * @param params
+     * @return
+     */
+    public static Observable<OpenDoorBo> openDoor(Map<String,Object> params){
+        return weatherFactorys().openDoor(params).compose(RxResultHelper.httpResult()).compose(activity.bindUntilEvent(ActivityEvent.DESTROY));
     }
 
 }
