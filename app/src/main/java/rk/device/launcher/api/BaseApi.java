@@ -3,6 +3,8 @@ package rk.device.launcher.api;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.RequestBody;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
@@ -13,6 +15,7 @@ import retrofit2.http.QueryMap;
 import rk.device.launcher.bean.BaseResult;
 import rk.device.launcher.bean.DeviceInfoBO;
 import rk.device.launcher.bean.SyncOpendoorHistoryBO;
+import rk.device.launcher.bean.TokenBo;
 import rk.device.launcher.bean.VerifyBO;
 import rk.device.launcher.bean.VersionBO;
 import rk.device.launcher.bean.WeatherBO;
@@ -84,9 +87,14 @@ public interface BaseApi {
     /**
      * 激活设备接口
      */
-    @FormUrlEncoded
     @POST("/tenantcenter/a/public/rest/face1/activation")
-    Observable<BaseResult<String>> activationDiveces(@Field("uuid") String uuid, @Field("mac") String mac, @Field("license") String license);
+    Observable<BaseResult<Object>> activationDiveces(@Body RequestBody requestBody);
 
+
+    /**
+     * 获取开门token
+     */
+    @POST("/tenantcenter/a/public/rest/face1/token")
+    Observable<BaseResult<TokenBo>> getToken(@Body RequestBody requestBody);
 
 }

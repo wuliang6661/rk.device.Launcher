@@ -1,7 +1,5 @@
 package rk.device.launcher.ui.key;
 
-import android.util.Log;
-
 import rk.device.launcher.api.BaseApiImpl;
 import rk.device.launcher.mvp.BasePresenterImpl;
 import rx.Subscriber;
@@ -14,11 +12,10 @@ import rx.Subscriber;
 public class KeyPresenter extends BasePresenterImpl<KeyContract.View> implements KeyContract.Presenter {
 
     private static final String TAG = "KeyPresenter";
-    
+
     @Override
     public void activationDiveces(String uuid, String mac, String license) {
-        Log.d(TAG, "activationDiveces() called with: uuid = [" + uuid + "], mac = [" + mac + "], license = [" + license + "]");
-        BaseApiImpl.activationDiveces(uuid, mac, license).subscribe(new Subscriber<String>() {
+        BaseApiImpl.activationDiveces(uuid, mac, license).subscribe(new Subscriber<Object>() {
             @Override
             public void onCompleted() {
                 mView.onRequestEnd();
@@ -30,8 +27,8 @@ public class KeyPresenter extends BasePresenterImpl<KeyContract.View> implements
             }
 
             @Override
-            public void onNext(String s) {
-
+            public void onNext(Object s) {
+                mView.onSuress();
             }
         });
     }

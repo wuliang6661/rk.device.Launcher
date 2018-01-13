@@ -66,6 +66,7 @@ public class KeyActivity extends MVPBaseActivity<KeyContract.View, KeyPresenter>
                     onRequestError("请输入正确激活码");
                 } else {
                     mPresenter.activationDiveces(new DeviceUuidFactory(this).getUuid() + "", DeviceUtils.getMacAddress(), key);
+                    showWaitProgress("正在激活...");
                 }
                 break;
             case R.id.go_net:
@@ -78,20 +79,27 @@ public class KeyActivity extends MVPBaseActivity<KeyContract.View, KeyPresenter>
 
     @Override
     public void onRequestError(String msg) {
+        hintWaitProgress();
         errorLayout.setVisibility(View.VISIBLE);
         new Handler().postDelayed(() -> errorLayout.setVisibility(View.GONE), 1500);
     }
 
     @Override
     public void onRequestEnd() {
-
+        hintWaitProgress();
     }
 
     @Override
     public void onSuress() {
+        hintWaitProgress();
         if (KeyUtils.saveKey(key)) {
-            SPUtils.put(Constant.SETTING_NUM, Constant.SETTING_TYPE3);
-            gotoActivity(SetBasicInfoActivity.class, true);
+
         }
+    }
+
+    @Override
+    public void onTokenSuress() {
+        SPUtils.put(Constant.SETTING_NUM, Constant.SETTING_TYPE3);
+        gotoActivity(SetBasicInfoActivity.class, true);
     }
 }

@@ -16,6 +16,11 @@ public class KeyContract {
          */
         void onSuress();
 
+        /**
+         * token获取成功
+         */
+        void onTokenSuress();
+
     }
 
     interface Presenter extends BasePresenter<View> {
@@ -24,6 +29,7 @@ public class KeyContract {
          * 激活设备
          */
         void activationDiveces(String uuid, String mac, String license);
+
 
     }
 }
