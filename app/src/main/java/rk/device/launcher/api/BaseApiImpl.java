@@ -1,8 +1,5 @@
 package rk.device.launcher.api;
 
-
-import android.util.Log;
-
 import com.trello.rxlifecycle.ActivityEvent;
 
 import org.json.JSONException;
@@ -15,6 +12,7 @@ import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Retrofit;
 import rk.device.launcher.base.BaseActivity;
+import rk.device.launcher.bean.OpenDoorBo;
 import rk.device.launcher.bean.TokenBo;
 import rk.device.launcher.global.Config;
 import rk.device.launcher.bean.DeviceInfoBO;
@@ -126,6 +124,17 @@ public class BaseApiImpl {
     }
 
     /**
+     * 开门
+     *
+     * @param params
+     * @return
+     */
+    public static Observable<OpenDoorBo> openDoor(JSONObject params){
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), params.toString());
+        return weatherFactorys().openDoor(requestBody).compose(RxResultHelper.httpResult()).compose(activity.bindUntilEvent(ActivityEvent.DESTROY));
+    }
+
+    /*
      * 激活设备
      */
     public static Observable<Object> activationDiveces(String uuid, String mac, String license) {

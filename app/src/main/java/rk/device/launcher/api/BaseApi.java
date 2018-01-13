@@ -14,6 +14,7 @@ import retrofit2.http.POST;
 import retrofit2.http.QueryMap;
 import rk.device.launcher.bean.BaseResult;
 import rk.device.launcher.bean.DeviceInfoBO;
+import rk.device.launcher.bean.OpenDoorBo;
 import rk.device.launcher.bean.SyncOpendoorHistoryBO;
 import rk.device.launcher.bean.TokenBo;
 import rk.device.launcher.bean.VerifyBO;
@@ -31,7 +32,7 @@ public interface BaseApi {
     /**
      * 天气接口
      */
-    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @Headers({ "Content-Type: application/json", "Accept: application/json" })
     @GET(ApiName.WEATHER)
     Observable<BaseResult<List<WeatherBO>>> weather(@QueryMap Map<String, Object> params);
 
@@ -60,7 +61,6 @@ public interface BaseApi {
     @POST(ApiName.VERIFY)
     Observable<BaseResult<VerifyBO>> verify(@FieldMap Map<String, Object> params);
 
-
     /**
      * 开门授权同步接口
      *
@@ -83,13 +83,21 @@ public interface BaseApi {
                                                              @Field("type") String type,
                                                              @Field("data") String data);
 
+    /**
+     * 开门
+     *
+     * @param requestBody
+     * @return
+     */
+    @FormUrlEncoded
+    @POST("/public/rest/face/token")
+    Observable<BaseResult<OpenDoorBo>> openDoor(@Body RequestBody requestBody);
 
     /**
      * 激活设备接口
      */
     @POST("/tenantcenter/a/public/rest/face1/activation")
     Observable<BaseResult<Object>> activationDiveces(@Body RequestBody requestBody);
-
 
     /**
      * 获取开门token
