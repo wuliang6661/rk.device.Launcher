@@ -130,4 +130,19 @@ public class TimeUtils {
         LogUtil.d("转换后的日期: " + format);
         return date;
     }
+<<<<<<< HEAD
+=======
+
+    public static String getFormatDateByTimeStamp(long timeStamp) {
+        if (timeStamp == 0) {
+            return null;
+        }
+        timeStamp = timeStamp * 1000;
+        Date date = new Date(timeStamp);
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH:mm:ss");
+        String format = sdf.format(date);
+        return format;
+    }
+
+>>>>>>> 18ce35465eca44394b1bf16f59d4dc9a2b18502b
 }

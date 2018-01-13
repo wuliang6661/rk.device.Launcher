@@ -40,13 +40,13 @@ public class SelectTypePopupWindow extends PopupWindow implements SelectRvAdapte
 
     private void initData(Context context) {
         mDataList = new ArrayList<>();
-        mDataList.add(new OpenDoorTypeBean("全部类型", true));
-        mDataList.add(new OpenDoorTypeBean("刷脸开门"));
-        mDataList.add(new OpenDoorTypeBean("密码开门"));
-        mDataList.add(new OpenDoorTypeBean("刷卡开门"));
-        mDataList.add(new OpenDoorTypeBean("指纹开门"));
-        mDataList.add(new OpenDoorTypeBean("二维码开门"));
-        mDataList.add(new OpenDoorTypeBean("远程开门"));
+        mDataList.add(new OpenDoorTypeBean("全部类型", 0, true));
+        mDataList.add(new OpenDoorTypeBean("刷脸开门", 3));
+        mDataList.add(new OpenDoorTypeBean("密码开门", 4));
+        mDataList.add(new OpenDoorTypeBean("刷卡开门", 1));
+        mDataList.add(new OpenDoorTypeBean("指纹开门", 2));
+        mDataList.add(new OpenDoorTypeBean("二维码开门", 5));
+        mDataList.add(new OpenDoorTypeBean("远程开门", 6));
         mRv.setLayoutManager(new LinearLayoutManager(context));
         mRv.addItemDecoration(new SelectTypeDecoration(context, R.color.color_2d5581));
         mRv.setAdapter(mAdapter = new SelectRvAdapter(mDataList));

@@ -12,10 +12,10 @@ import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Retrofit;
 import rk.device.launcher.base.BaseActivity;
-import rk.device.launcher.bean.OpenDoorBo;
 import rk.device.launcher.bean.TokenBO;
 import rk.device.launcher.global.Config;
 import rk.device.launcher.bean.DeviceInfoBO;
+import rk.device.launcher.bean.StatusBo;
 import rk.device.launcher.bean.VerifyBO;
 import rk.device.launcher.bean.VersionBO;
 import rk.device.launcher.bean.WeatherBO;
@@ -126,10 +126,22 @@ public class BaseApiImpl {
     /**
      * 开门
      *
-     * @param params
+     * @param token
+     * @param uuid
+     * @param type
+     * @param time
      * @return
      */
-    public static Observable<OpenDoorBo> openDoor(JSONObject params){
+    public static Observable<StatusBo> openDoor(String token, String uuid, int type, int time) {
+        JSONObject params = new JSONObject();
+        try {
+            params.put("access_token", token);
+            params.put("uuid", uuid);
+            params.put("openType", type);
+            params.put("time", time);
+        } catch (JSONException e) {
+
+        }
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), params.toString());
         return weatherFactorys().openDoor(requestBody).compose(RxResultHelper.httpResult()).compose(activity.bindUntilEvent(ActivityEvent.DESTROY));
     }
@@ -166,5 +178,16 @@ public class BaseApiImpl {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * 同步记录
+     *
+     * @param params
+     * @return
+     */
+    public static Observable<StatusBo> syncRecords(JSONObject params) {
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), params.toString());
+        return weatherFactorys().syncRecords(requestBody).compose(RxResultHelper.httpResult()).compose(activity.bindUntilEvent(ActivityEvent.DESTROY));
     }
 }
