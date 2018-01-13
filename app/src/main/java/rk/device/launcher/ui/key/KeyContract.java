@@ -25,5 +25,6 @@ public class KeyContract {
          */
         void activationDiveces(String uuid, String mac, String license);
 
+
     }
 }

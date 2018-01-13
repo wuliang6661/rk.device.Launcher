@@ -20,14 +20,9 @@ public class DbRecordHelper {
         return sRecordDao;
     }
 
-    public static boolean insert(Record record) {
-        try {
-            long rowId = getRecordDao().insert(record);
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+    public static long insert(Record record) {
+        long rowId = getRecordDao().insert(record);
+        return rowId;
     }
 
     public static void delete(Record record) {

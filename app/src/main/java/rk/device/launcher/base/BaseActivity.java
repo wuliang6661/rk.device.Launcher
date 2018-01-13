@@ -2,7 +2,6 @@ package rk.device.launcher.base;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -28,10 +27,10 @@ import rk.device.launcher.service.BlueToothsBroadcastReceiver;
 import rk.device.launcher.service.RKLauncherPushIntentService;
 import rk.device.launcher.service.RKLauncherPushService;
 import rk.device.launcher.service.SleepTaskServer;
-import rk.device.launcher.ui.setting.SetNetWorkActivity;
-import rk.device.launcher.ui.setting.SleepActivity;
 import rk.device.launcher.ui.fragment.BaseDialogFragment;
 import rk.device.launcher.ui.fragment.WaitDialog;
+import rk.device.launcher.ui.setting.SetNetWorkActivity;
+import rk.device.launcher.ui.setting.SleepActivity;
 import rk.device.launcher.utils.AppManager;
 import rk.device.launcher.utils.rxjava.RxBus;
 import rx.Subscription;
@@ -73,7 +72,6 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayout());
-//        getWindow().addFlags(WindowManager.LayoutParams.F);
         hideNavigationBar();
         ButterKnife.bind(this);
         SleepTaskServer.getSleepHandler(this).sendEmptyMessage(0x11);
@@ -86,7 +84,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        acquireWakeLock();
+        BaseApiImpl.setActivity(this);
         PushManager.getInstance().initialize(getApplicationContext(), RKLauncherPushService.class);
         PushManager.getInstance().registerPushIntentService(getApplicationContext(), RKLauncherPushIntentService.class);
     }
@@ -94,7 +92,6 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        releaseWakeLock();
     }
 
     @Override
@@ -112,24 +109,6 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         if (hintDialog != null && hintDialog.getDialog() != null
                 && hintDialog.getDialog().isShowing()) {
             hintDialog.dismiss();
-        }
-    }
-
-
-    private void acquireWakeLock() {
-        if (wakeLock == null) {
-            PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-            wakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, this.getClass().getCanonicalName());
-            wakeLock.acquire();
-        }
-
-    }
-
-    //释放锁
-    private void releaseWakeLock() {
-        if (wakeLock != null && wakeLock.isHeld()) {
-            wakeLock.release();
-            wakeLock = null;
         }
     }
 
@@ -258,7 +237,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     /**
      * 显示需要自定义的提示弹窗
      */
-    protected BaseDialogFragment showMessageDialog(String title,String message, String right, View.OnClickListener listener) {
+    protected BaseDialogFragment showMessageDialog(String title, String message, String right, View.OnClickListener listener) {
         if (hintDialog != null && hintDialog.getDialog() != null
                 && hintDialog.getDialog().isShowing()) {
             return null;

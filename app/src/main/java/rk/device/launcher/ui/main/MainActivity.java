@@ -469,6 +469,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
             }
             final String password = SPUtils.getString(Constant.KEY_PASSWORD);
             if (TextUtils.equals(password, content)) { //密码输入正确
+                dialogFragment.dismiss();
                 if (type == -1000) {
                     gotoActivity(SettingActivity.class, false);
                 } else {

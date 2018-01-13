@@ -1,18 +1,24 @@
 package rk.device.launcher.api;
 
-
 import com.trello.rxlifecycle.ActivityEvent;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Retrofit;
 import rk.device.launcher.base.BaseActivity;
-import rk.device.launcher.global.Config;
 import rk.device.launcher.bean.DeviceInfoBO;
+import rk.device.launcher.bean.StatusBo;
+import rk.device.launcher.bean.TokenBo;
 import rk.device.launcher.bean.VerifyBO;
 import rk.device.launcher.bean.VersionBO;
 import rk.device.launcher.bean.WeatherBO;
+import rk.device.launcher.global.Config;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.StringUtils;
@@ -118,11 +124,70 @@ public class BaseApiImpl {
     }
 
     /**
+     * 开门
+     *
+     * @param token
+     * @param uuid
+     * @param type
+     * @param time
+     * @return
+     */
+    public static Observable<StatusBo> openDoor(String token, String uuid, int type, int time) {
+        JSONObject params = new JSONObject();
+        try {
+            params.put("access_token", token);
+            params.put("uuid", uuid);
+            params.put("openType", type);
+            params.put("time", time);
+        } catch (JSONException e) {
+
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), params.toString());
+        return weatherFactorys().openDoor(requestBody).compose(RxResultHelper.httpResult()).compose(activity.bindUntilEvent(ActivityEvent.DESTROY));
+    }
+
+    /*
      * 激活设备
      */
-    public static Observable<String> activationDiveces(String uuid, String mac, String license) {
-        return weatherFactorys().activationDiveces(uuid, mac, license).compose(RxResultHelper.httpResult()).compose(activity.bindUntilEvent(ActivityEvent.DESTROY));
+    public static Observable<Object> activationDiveces(String uuid, String mac, String license) {
+        JSONObject object = new JSONObject();
+        try {
+            object.put("uuid", uuid);
+            object.put("mac", mac);
+            object.put("license", license);
+            RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), object.toString());
+            return weatherFactorys().activationDiveces(requestBody).compose(RxResultHelper.httpResult()).compose(activity.bindUntilEvent(ActivityEvent.DESTROY));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 
+    /**
+     * 获取accens_token
+     */
+    public static Observable<TokenBo> postToken(String uuid, String license) {
+        JSONObject object = new JSONObject();
+        try {
+            object.put("uuid", uuid);
+            object.put("license", license);
+            RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), object.toString());
+            return weatherFactorys().getToken(requestBody).compose(RxResultHelper.httpResult()).compose(activity.bindUntilEvent(ActivityEvent.DESTROY));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 同步记录
+     *
+     * @param params
+     * @return
+     */
+    public static Observable<StatusBo> syncRecords(JSONObject params) {
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), params.toString());
+        return weatherFactorys().syncRecords(requestBody).compose(RxResultHelper.httpResult()).compose(activity.bindUntilEvent(ActivityEvent.DESTROY));
+    }
 }
