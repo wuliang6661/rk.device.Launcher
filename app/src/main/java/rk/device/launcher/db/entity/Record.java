@@ -181,5 +181,38 @@ public class Record {
         this.dateText = TimeUtils.getFormatDateByTimeStamp(cdate);
     }
 
+    public String getDateText() {
+        this.dateText = TimeUtils.getFormatDateByTimeStamp(cdate);
+        return this.dateText;
+    }
+
+    public String getOpenTypeText(){
+        this.openTypeText = "";
+        switch (openType) {
+            case 1:
+                this.openTypeText = "卡";
+                break;
+            case 2:
+                this.openTypeText = "指纹";
+                break;
+            case 3:
+                this.openTypeText = "人脸";
+                break;
+            case 4:
+                this.openTypeText = "密码";
+                break;
+            case 5:
+                this.openTypeText = "二维码";
+                break;
+            case 6:
+                this.openTypeText = "远程开门";
+                break;
+            default:
+                break;
+        }
+        return this.openTypeText;
+    }
+
+
 
 }

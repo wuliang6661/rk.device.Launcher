@@ -1,6 +1,7 @@
 package rk.device.launcher.ui.managedata.rv;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +13,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import rk.device.launcher.R;
 import rk.device.launcher.db.entity.Record;
-import rk.device.launcher.utils.TimeUtils;
 
 /**
  * Created by mundane on 2018/1/5 下午1:17
@@ -90,33 +90,11 @@ public class SearchDataRvAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         public void bind(Record record) {
             tvName.setText(record.getPopeName());
-            int openType = record.getOpenType();
-            String openTypeText = "";
-            switch (openType) {
-                case 1:
-                    openTypeText = "卡";
-                    break;
-                case 2:
-                    openTypeText = "指纹";
-                    break;
-                case 3:
-                    openTypeText = "人脸";
-                    break;
-                case 4:
-                    openTypeText = "密码";
-                    break;
-                case 5:
-                    openTypeText = "二维码";
-                    break;
-                case 6:
-                    openTypeText = "远程开门";
-                    break;
-                default:
-                    break;
+            tvType.setText(record.getOpenTypeText());
+            String dateText = record.getDateText();
+            if (!TextUtils.isEmpty(dateText)) {
+                tvDate.setText(dateText);
             }
-            tvType.setText(openTypeText);
-            String date = TimeUtils.getFormatDateByTimeStamp(record.getCdate());
-            tvDate.setText(date);
         }
     }
 
