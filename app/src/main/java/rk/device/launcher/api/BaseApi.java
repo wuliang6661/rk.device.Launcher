@@ -14,7 +14,7 @@ import retrofit2.http.POST;
 import retrofit2.http.QueryMap;
 import rk.device.launcher.bean.BaseResult;
 import rk.device.launcher.bean.DeviceInfoBO;
-import rk.device.launcher.bean.OpenDoorBo;
+import rk.device.launcher.bean.StatusBo;
 import rk.device.launcher.bean.SyncOpendoorHistoryBO;
 import rk.device.launcher.bean.TokenBo;
 import rk.device.launcher.bean.VerifyBO;
@@ -89,9 +89,8 @@ public interface BaseApi {
      * @param requestBody
      * @return
      */
-    @FormUrlEncoded
-    @POST("/public/rest/face/token")
-    Observable<BaseResult<OpenDoorBo>> openDoor(@Body RequestBody requestBody);
+    @POST("/public/rest/face/openDoor")
+    Observable<BaseResult<StatusBo>> openDoor(@Body RequestBody requestBody);
 
     /**
      * 激活设备接口
@@ -105,4 +104,12 @@ public interface BaseApi {
     @POST("/tenantcenter/a/public/rest/face1/token")
     Observable<BaseResult<TokenBo>> getToken(@Body RequestBody requestBody);
 
+    /**
+     * 同步开门记录
+     *
+     * @param requestBody
+     * @return
+     */
+    @POST("/public/rest/face/openHistory")
+    Observable<BaseResult<StatusBo>> syncRecords(RequestBody requestBody);
 }

@@ -4,7 +4,7 @@ package rk.device.launcher.bean;
  * Created by hanbin on 2018/1/13.
  */
 
-public class OpenDoorBo {
+public class StatusBo {
     private int status;
 
     public int getStatus() {

@@ -1,5 +1,6 @@
 package rk.device.launcher.utils.verify;
 
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -8,7 +9,7 @@ import java.util.UUID;
 
 import rk.device.launcher.api.BaseApiImpl;
 import rk.device.launcher.base.LauncherApplication;
-import rk.device.launcher.bean.OpenDoorBo;
+import rk.device.launcher.bean.StatusBo;
 import rk.device.launcher.bean.TokenBo;
 import rk.device.launcher.db.DbRecordHelper;
 import rk.device.launcher.db.entity.Record;
@@ -25,21 +26,37 @@ import rx.Subscriber;
 
 public class OpenUtils {
 
-    DeviceUuidFactory deviceUuidFactory = new DeviceUuidFactory(LauncherApplication.getContext());
+    public static final String TAG               = "OpenUtils";
+
+    DeviceUuidFactory          deviceUuidFactory = new DeviceUuidFactory(
+            LauncherApplication.getContext());
+
+    private static OpenUtils   openUtils         = null;
+
+    public static OpenUtils getInstance() {
+        if (openUtils == null) {
+            synchronized (OpenUtils.class) {
+                if (openUtils == null) {
+                    openUtils = new OpenUtils();
+                }
+            }
+        }
+        return openUtils;
+    }
 
     /**
      * 开门方式
      *
-     * @param type       1 : nfc,2 : 指纹,3 : 人脸,4 : 密码,5 : 二维码,6 : 远程开门
+     * @param type 1 : nfc,2 : 指纹,3 : 人脸,4 : 密码,5 : 二维码,6 : 远程开门
      * @param personId
      * @param personName
-     * @param time       验资时间，比如刷卡，按指纹时间
+     * @param time 验资时间，比如刷卡，按指纹时间
      * @step 1 验证通过之后，调取开门接口（接口1）
      * @result 1.1 token过期，需要重新获取token，并重新请求开门（接口2）
      * @result 1.2 验证通过
      * @step 2 数据库插入开门记录
      * @step 3 开门记录同步到服务端(接口3)
-     * <p/>
+     *       <p/>
      */
     public void open(int type, int personId, String personName, int time) {
         String token = SPUtils.getString(Constant.ACCENT_TOKEN);
@@ -54,23 +71,24 @@ public class OpenUtils {
      * @param personName
      * @param time
      */
-    public void obtainToken(int type, int personId, String personName, int time) {
-        BaseApiImpl.postToken(deviceUuidFactory.getUuid().toString(), "").subscribe(new Subscriber<TokenBo>() {
-            @Override
-            public void onCompleted() {
+    private void obtainToken(int type, int personId, String personName, int time) {
+        BaseApiImpl.postToken(deviceUuidFactory.getUuid().toString(), "")
+                .subscribe(new Subscriber<TokenBo>() {
+                    @Override
+                    public void onCompleted() {
 
-            }
+                    }
 
-            @Override
-            public void onError(Throwable e) {
+                    @Override
+                    public void onError(Throwable e) {
 
-            }
+                    }
 
-            @Override
-            public void onNext(TokenBo tokenBo) {
-                openDoor(tokenBo.getAccess_token(), type, personId, personName, time);
-            }
-        });
+                    @Override
+                    public void onNext(TokenBo tokenBo) {
+                        openDoor(tokenBo.getAccess_token(), type, personId, personName, time);
+                    }
+                });
     }
 
     /**
@@ -80,16 +98,106 @@ public class OpenUtils {
      * @param type
      */
     private void openDoor(String token, int type, int personId, String personName, int time) {
+        BaseApiImpl.openDoor(token, deviceUuidFactory.getUuid().toString(), type,
+                TimeUtils.getTimeStamp()).subscribe(new Subscriber<StatusBo>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(StatusBo statusBo) {
+
+                        String data = openStatus(type);
+                        insertToLocalDB(type, personId, personName, time, data);
+                        syncRecords(token, type, personId, personName, time, data);
+                    }
+                });
+    }
+
+    /**
+     * 获取开门方式对应的文案
+     * 
+     * @param type
+     * @return
+     */
+    private String openStatus(int type) {
+        String data;
+        switch (type) {
+            case 1:
+                data = "开门方式1 卡：录入卡号";
+                break;
+            case 2:
+                data = "开门方式2 指纹：指纹ID";
+                break;
+            case 3:
+                data = "开门方式3 人脸：人脸ID";
+                break;
+            case 4:
+                data = "开门方式4 密码：开门密码";
+                break;
+            case 5:
+                data = "开门方式5 二维码：二维码开门";
+                break;
+            case 6:
+                data = "开门方式6 远程开门：远程开门";
+                break;
+            default:
+                data = "未知开门方式";
+                break;
+        }
+        return data;
+
+    }
+
+    /**
+     * 插入本地数据库
+     * 
+     * @param type
+     * @param personId
+     * @param personName
+     * @param time
+     */
+    private void insertToLocalDB(int type, int personId, String personName, int time, String data) {
+        Record record = new Record(null, MD5.get16Lowercase(UUID.randomUUID().toString()),
+                personName, String.valueOf(personId), type, data, time, TimeUtils.getTimeStamp());
+        int recordId = (int) DbRecordHelper.insert(record);
+        if (recordId > 0) {
+            Log.i(TAG, TAG + " insert record to local db success.");
+        } else {
+            Log.i(TAG, TAG + " insert record to local db fail.");
+        }
+    }
+
+    /**
+     * 同步开门记录
+     * 
+     * @param token
+     * @param type
+     * @param personId
+     * @param personName
+     * @param time
+     * @param data
+     */
+    private void syncRecords(String token, int type, int personId, String personName, int time,
+                             String data) {
         JSONObject params = new JSONObject();
         try {
             params.put("access_token", token);
             params.put("uuid", deviceUuidFactory.getUuid());
+            params.put("peopleId", personId);
+            params.put("popeName", personName);
             params.put("openType", type);
-            params.put("time", TimeUtils.getTimeStamp());
+            params.put("data", data);
+            params.put("cdate", time);
         } catch (JSONException e) {
-
         }
-        BaseApiImpl.openDoor(params).subscribe(new Subscriber<OpenDoorBo>() {
+        BaseApiImpl.syncRecords(params).subscribe(new Subscriber<StatusBo>() {
             @Override
             public void onCompleted() {
 
@@ -101,42 +209,11 @@ public class OpenUtils {
             }
 
             @Override
-            public void onNext(OpenDoorBo openDoorBo) {
-                if (openDoorBo.getStatus() == 1) {
-                    //开门成功
-                    //Record( int slide_data,int cdate)
-                    String data;
-                    switch (type) {
-                        case 1:
-                            data = "开门方式1 卡：录入卡号";
-                            break;
-                        case 2:
-                            data = "开门方式2 指纹：指纹ID";
-                            break;
-                        case 3:
-                            data = "开门方式3 人脸：人脸ID";
-                            break;
-                        case 4:
-                            data = "开门方式4 密码：开门密码";
-                            break;
-                        case 5:
-                            data = "开门方式5 二维码：二维码开门";
-                            break;
-                        case 6:
-                            data = "开门方式6 远程开门：远程开门";
-                            break;
-                        default:
-                            data = "未知开门方式";
-                            break;
-                    }
-                    Record record = new Record(null, MD5.get16Lowercase(UUID.randomUUID().toString()), personName, String.valueOf(personId), type, data, time, TimeUtils.getTimeStamp());
-                    int recordId = (int) DbRecordHelper.insert(record);
-                    if (recordId > 0) {
-
-                    }
+            public void onNext(StatusBo statusBo) {
+                if (statusBo.getStatus() == 1) {
+                    Log.i(TAG, TAG + " syncRecords success.");
                 } else {
-                    //开门失败，此处是token失效还是因为什么，接口文档看不出来？
-
+                    Log.i(TAG, TAG + " syncRecords fail.");
                 }
             }
         });
