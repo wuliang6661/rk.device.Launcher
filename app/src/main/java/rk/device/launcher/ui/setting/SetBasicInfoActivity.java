@@ -9,6 +9,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.inuker.bluetooth.library.BluetoothClient;
 import com.inuker.bluetooth.library.Constants;
@@ -24,6 +25,7 @@ import rk.device.launcher.bean.event.BlueToothEvent;
 import rk.device.launcher.bean.event.HomeInfoEvent;
 import rk.device.launcher.bean.event.TimeEvent;
 import rk.device.launcher.global.Constant;
+import rk.device.launcher.utils.AppManager;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.StringUtils;
 import rk.device.launcher.utils.TimeUtils;
@@ -229,12 +231,12 @@ public class SetBasicInfoActivity extends BaseActivity implements View.OnClickLi
         if (when_time / 1000 < Integer.MAX_VALUE) {
             SystemClock.setCurrentTimeMillis(when_time);
         }
-        //判断是否是第一次
-        boolean isFirst = (boolean) SPUtils.get(Constant.IS_FIRST_SETTING, true);
-//        syncBlueTime();
-        if (isFirst) {
-            SPUtils.put(Constant.SETTING_NUM, Constant.SETTING_TYPE2);
-            gotoActivity(SetNetWorkActivity.class, true);
+        boolean isFirstSetting = SPUtils.getBoolean(Constant.IS_FIRST_SETTING, true);    //是否第一次进入设置
+        if (isFirstSetting) {
+            SPUtils.putInt(Constant.SETTING_NUM, -1000);
+            SPUtils.putBoolean(Constant.IS_FIRST_SETTING, false);
+            Toast.makeText(SetBasicInfoActivity.this, "完成设置", Toast.LENGTH_LONG).show();
+            AppManager.getAppManager().goBackMain();
         } else {
             finish();
         }

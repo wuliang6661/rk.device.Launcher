@@ -65,8 +65,8 @@ public class RetrofitManager {
                 .readTimeout(20000, TimeUnit.MILLISECONDS)
                 .connectTimeout(20000, TimeUnit.MILLISECONDS)
                 .addInterceptor(logging)
-                .addInterceptor(new CacheControlInterceptor())
-                .cache(FileUtil.getCache())
+//                .addInterceptor(new CacheControlInterceptor())
+//                .cache(FileUtil.getCache())
 //		    .addInterceptor(new Interceptor() {
 //			    @Override
 //			    public Response intercept(Chain chain) throws IOException {

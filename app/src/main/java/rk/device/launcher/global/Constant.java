@@ -115,8 +115,9 @@ public interface Constant {
     String IS_FIRST_OPEN_APP = "is_first_open_app";
 
     /**
-     * access_token保存的key值
+     * access_token保存的key值，鉴权Token
+     *
      */
-    String KEY_ACCESS_TOKEN = "access_token";//token
+    String ACCENT_TOKEN = "access_token";
 
 }

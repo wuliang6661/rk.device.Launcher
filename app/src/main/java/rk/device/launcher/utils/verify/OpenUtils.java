@@ -1,13 +1,15 @@
 package rk.device.launcher.utils.verify;
 
-import java.util.HashMap;
-import java.util.Map;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.UUID;
 
-import rk.device.launcher.api.ApiService;
+import rk.device.launcher.api.BaseApiImpl;
 import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.bean.OpenDoorBo;
-import rk.device.launcher.bean.TokenBO;
+import rk.device.launcher.bean.TokenBo;
 import rk.device.launcher.db.DbRecordHelper;
 import rk.device.launcher.db.entity.Record;
 import rk.device.launcher.global.Constant;
@@ -40,7 +42,7 @@ public class OpenUtils {
      * <p/>
      */
     public void open(int type, int personId, String personName, int time) {
-        String token = SPUtils.getString(Constant.KEY_ACCESS_TOKEN);
+        String token = SPUtils.getString(Constant.ACCENT_TOKEN);
         openDoor(token, type, personId, personName, time);
     }
 
@@ -53,10 +55,7 @@ public class OpenUtils {
      * @param time
      */
     public void obtainToken(int type, int personId, String personName, int time) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("uuid", deviceUuidFactory.getUuid());
-        params.put("license", "");
-        ApiService.obtainToken(params).subscribe(new Subscriber<TokenBO>() {
+        BaseApiImpl.postToken(deviceUuidFactory.getUuid().toString(), "").subscribe(new Subscriber<TokenBo>() {
             @Override
             public void onCompleted() {
 
@@ -68,8 +67,8 @@ public class OpenUtils {
             }
 
             @Override
-            public void onNext(TokenBO tokenBO) {
-                openDoor(tokenBO.getAccess_token(), type, personId, personName, time);
+            public void onNext(TokenBo tokenBo) {
+                openDoor(tokenBo.getAccess_token(), type, personId, personName, time);
             }
         });
     }
@@ -81,12 +80,16 @@ public class OpenUtils {
      * @param type
      */
     private void openDoor(String token, int type, int personId, String personName, int time) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("access_token", token);
-        params.put("uuid", deviceUuidFactory.getUuid());
-        params.put("openType", type);
-        params.put("time", TimeUtils.getTimeStamp());
-        ApiService.openDoor(params).subscribe(new Subscriber<OpenDoorBo>() {
+        JSONObject params = new JSONObject();
+        try {
+            params.put("access_token", token);
+            params.put("uuid", deviceUuidFactory.getUuid());
+            params.put("openType", type);
+            params.put("time", TimeUtils.getTimeStamp());
+        } catch (JSONException e) {
+
+        }
+        BaseApiImpl.openDoor(params).subscribe(new Subscriber<OpenDoorBo>() {
             @Override
             public void onCompleted() {
 
@@ -126,11 +129,14 @@ public class OpenUtils {
                             data = "未知开门方式";
                             break;
                     }
+                    Record record = new Record(null, MD5.get16Lowercase(UUID.randomUUID().toString()), personName, String.valueOf(personId), type, data, time, TimeUtils.getTimeStamp());
+                    int recordId = (int) DbRecordHelper.insert(record);
+                    if (recordId > 0) {
 
-                    Record record = new Record(null, MD5.get16Lowercase(UUID.randomUUID().toString()), personName, personId, type, data, time, TimeUtils.getTimeStamp());
-                    DbRecordHelper.insert(record);
+                    }
                 } else {
                     //开门失败，此处是token失效还是因为什么，接口文档看不出来？
+
                 }
             }
         });

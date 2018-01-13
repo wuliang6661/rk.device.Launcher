@@ -23,6 +23,18 @@ public class TimeUtils {
         return date.getHours();
     }
 
+<<<<<<< HEAD
+=======
+    /**
+     * 获取当前时间
+     * @return
+     */
+    public static Date getCurrentTime() {
+        return new Date();
+    }
+
+
+>>>>>>> f118aaa0a809ab581d7323e9b3ea314d67a23fc1
     /**
      * 获取当前手机时间
      */
@@ -95,6 +107,7 @@ public class TimeUtils {
     }
 
     /**
+<<<<<<< HEAD
      * 获取当前时间戳
      * 
      * @return
@@ -102,5 +115,23 @@ public class TimeUtils {
     public static int getTimeStamp() {
         return (int) (System.currentTimeMillis() / 1000l);
     }
+=======
+     * 将时间戳转换为日期
+     * @param timeStamp 时间戳, 单位为秒
+     * @return 日期
+     */
+    public static Date formatTimeStamp(long timeStamp) {
+        if (timeStamp == 0) {
+            return null;
+        }
+        timeStamp = timeStamp * 1000;
+        Date date = new Date(timeStamp);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String format = sdf.format(date);
+        LogUtil.d("转换后的日期: " + format);
+        return date;
+    }
+
+>>>>>>> f118aaa0a809ab581d7323e9b3ea314d67a23fc1
 
 }

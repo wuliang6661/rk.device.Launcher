@@ -34,17 +34,17 @@ import rk.device.launcher.mvp.MVPBaseActivity;
 import rk.device.launcher.service.ElectricBroadcastReceiver;
 import rk.device.launcher.service.NetChangeBroadcastReceiver;
 import rk.device.launcher.service.SocketService;
+import rk.device.launcher.ui.bbs.BbsActivity;
+import rk.device.launcher.ui.call.CallActivity;
+import rk.device.launcher.ui.fragment.InitErrorDialogFragmen;
+import rk.device.launcher.ui.fragment.InputWifiPasswordDialogFragment;
 import rk.device.launcher.ui.key.KeyActivity;
+import rk.device.launcher.ui.numpassword.NumpasswordActivity;
 import rk.device.launcher.ui.setting.SetBasicInfoActivity;
 import rk.device.launcher.ui.setting.SetDoorGuardActivity;
 import rk.device.launcher.ui.setting.SetNetWorkActivity;
 import rk.device.launcher.ui.setting.SetSysActivity;
 import rk.device.launcher.ui.setting.SettingActivity;
-import rk.device.launcher.ui.bbs.BbsActivity;
-import rk.device.launcher.ui.call.CallActivity;
-import rk.device.launcher.ui.fragment.InitErrorDialogFragmen;
-import rk.device.launcher.ui.fragment.InputWifiPasswordDialogFragment;
-import rk.device.launcher.ui.numpassword.NumpasswordActivity;
 import rk.device.launcher.utils.DateUtil;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.SoundPlayUtils;
@@ -337,7 +337,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_setting:
-                settingLoad();
+                setFirstLoder();
                 break;
             case R.id.rl_contact_manager:
                 if (!StringUtils.isEmpty(modilePhone)) {
@@ -445,6 +445,47 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
      */
     private void setFirstLoder() {
         int type = SPUtils.getInt(Constant.SETTING_NUM, Constant.SETTING_TYPE1);
+        final String password = SPUtils.getString(Constant.KEY_PASSWORD);
+        if (!StringUtils.isEmpty(password)) {
+            showManagerDialog(type);
+        } else {     //如果密码为空，设置流程一定没走完
+            goToSetting(type);
+        }
+    }
+
+
+    /**
+     * 显示输入管理员密码进入设置
+     */
+    private void showManagerDialog(int type) {
+        showDialogFragment("请输入管理员密码", content -> {
+            if (StringUtils.isEmpty(content)) {
+                dialogFragment.showError("请输入管理员密码！");
+                return;
+            }
+            if (content.length() != 6) {
+                dialogFragment.showError("请输入完整密码！");
+                return;
+            }
+            final String password = SPUtils.getString(Constant.KEY_PASSWORD);
+            if (TextUtils.equals(password, content)) { //密码输入正确
+                dialogFragment.dismiss();
+                if (type == -1000) {
+                    gotoActivity(SettingActivity.class, false);
+                } else {
+                    goToSetting(type);
+                }
+            } else {
+                dialogFragment.showError();
+            }
+        }, true);
+        dialogFragment.show(getSupportFragmentManager(), "");
+    }
+
+    /**
+     * 页面跳转
+     */
+    private void goToSetting(int type) {
         switch (type) {
             case Constant.SETTING_TYPE1:    //网络设置
                 gotoActivity(SetNetWorkActivity.class, false);
@@ -459,29 +500,12 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
                 gotoActivity(SetDoorGuardActivity.class, false);
                 break;
             case Constant.SETTING_TYPE5:   //系统设置
-
+                gotoActivity(SetSysActivity.class, false);
                 break;
             case Constant.SETTING_TYPE6:    //基础设置
                 gotoActivity(SetBasicInfoActivity.class, false);
                 break;
-            default:
-                gotoActivity(SettingActivity.class, false);
-                break;
         }
-    }
-
-
-    /**
-     * 显示输入管理员密码进入设置
-     */
-    private void showManagerDialog() {
-        showDialogFragment("请输入管理员密码", new InputWifiPasswordDialogFragment.OnConfirmClickListener() {
-            @Override
-            public void onConfirmClick(String content) {
-
-            }
-        }, true);
-        dialogFragment.show(getSupportFragmentManager(), "");
     }
 
 

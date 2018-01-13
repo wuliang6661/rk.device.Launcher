@@ -35,6 +35,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.Map;
 
 import rk.device.launcher.R;
+import rk.device.launcher.utils.LogUtil;
 
 
 final class DecodeHandler extends Handler {
@@ -83,6 +84,7 @@ final class DecodeHandler extends Handler {
      * @param height The height of the preview frame.
      */
     private void decode(byte[] data, int width, int height) {
+        LogUtil.d("width = " + width+ ", height = " + height);
         long start = System.currentTimeMillis();
         Result rawResult = null;
         PlanarYUVLuminanceSource source = activity.getCameraManager().buildLuminanceSource(data, width, height);
@@ -97,13 +99,14 @@ final class DecodeHandler extends Handler {
             }
         }
 
-        Handler handler = activity.getHandler();//拿到CaptureActivityHandler
+        // 拿到CaptureActivityHandler
+        Handler handler = activity.getHandler();
         if (rawResult != null) {
             // Don't log the barcode contents for security.
             long end = System.currentTimeMillis();
             Log.d(TAG, "Found barcode in " + (end - start) + " ms");
             if (handler != null) {
-                //给CaptureActivityHandler发消息
+                // 给CaptureActivityHandler发消息
                 Message message = Message.obtain(handler, R.id.decode_succeeded, rawResult);
                 Bundle bundle = new Bundle();
                 bundleThumbnail(source, bundle);

@@ -237,7 +237,8 @@ public final class CameraManager {
 
             int width = findDesiredDimensionInRange(screenResolution.x, MIN_FRAME_WIDTH, MAX_FRAME_WIDTH);
             int height = findDesiredDimensionInRange(screenResolution.y, MIN_FRAME_HEIGHT, MAX_FRAME_HEIGHT);
-
+            // FIXME: 2018/1/12
+            height = width;
 
             int leftOffset = (screenResolution.x - width) / 2;
             int topOffset = (screenResolution.y - height) / 2;
@@ -248,7 +249,9 @@ public final class CameraManager {
     }
 
     private static int findDesiredDimensionInRange(int resolution, int hardMin, int hardMax) {
-        int dim = 5 * resolution / 8; // Target 5/8 of each dimension
+//        int dim = 5 * resolution / 8; // Target 5/8 of each dimension
+        // fixme
+        int dim = resolution / 2; // Target 5/8 of each dimension
         if (dim < hardMin) {
             return hardMin;
         }
@@ -339,9 +342,9 @@ public final class CameraManager {
             return null;
         }
         // Go ahead and assume it's YUV rather than die.
-        return new PlanarYUVLuminanceSource(data, width, height, rect.left, rect.top, rect.width(), rect.height(), false);
+//        return new PlanarYUVLuminanceSource(data, width, height, rect.left, rect.top, rect.width(), rect.height(), false);
         // fixme
-//        return new PlanarYUVLuminanceSource(data, width, height, 0, 0, width, height, false);
+        return new PlanarYUVLuminanceSource(data, width, height, 0, 0, width, height, false);
     }
 
 }
