@@ -9,7 +9,6 @@ public class TokenBo {
      * @params access_token : token
      * @params expires_in :
      */
-
     private String access_token;
     private String expires_in;
 
