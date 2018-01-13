@@ -1,10 +1,13 @@
 package rk.device.launcher.db.entity;
 
 import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.NotNull;
+import org.greenrobot.greendao.annotation.Transient;
 import org.greenrobot.greendao.annotation.Unique;
-import org.greenrobot.greendao.annotation.Generated;
+
+import rk.device.launcher.utils.TimeUtils;
 
 /**
  * Created by mundane on 2018/1/2 下午2:19
@@ -64,12 +67,18 @@ public class Record {
     /**
      * 生成记录的时间
      */
-    private int cdate;
+    private long cdate;
 
-    @Generated(hash = 2006753078)
+    @Transient
+    private String dateText;
+
+    @Transient
+    private String openTypeText;
+
+    @Generated(hash = 1487740252)
     public Record(Long id, @NotNull String uniqueId, String popeName,
             @NotNull String peopleId, int openType, String data, int slide_data,
-            int cdate) {
+            long cdate) {
         this.id = id;
         this.uniqueId = uniqueId;
         this.popeName = popeName;
@@ -122,6 +131,29 @@ public class Record {
 
     public void setOpenType(int openType) {
         this.openType = openType;
+        this.openTypeText = "";
+        switch (openType) {
+            case 1:
+                this.openTypeText = "卡";
+                break;
+            case 2:
+                this.openTypeText = "指纹";
+                break;
+            case 3:
+                this.openTypeText = "人脸";
+                break;
+            case 4:
+                this.openTypeText = "密码";
+                break;
+            case 5:
+                this.openTypeText = "二维码";
+                break;
+            case 6:
+                this.openTypeText = "远程开门";
+                break;
+            default:
+                break;
+        }
     }
 
     public String getData() {
@@ -140,11 +172,14 @@ public class Record {
         this.slide_data = slide_data;
     }
 
-    public int getCdate() {
+    public long getCdate() {
         return this.cdate;
     }
 
-    public void setCdate(int cdate) {
+    public void setCdate(long cdate) {
         this.cdate = cdate;
+        this.dateText = TimeUtils.getFormatDateByTimeStamp(cdate);
     }
+
+
 }

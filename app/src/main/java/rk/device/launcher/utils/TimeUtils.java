@@ -119,5 +119,16 @@ public class TimeUtils {
         return date;
     }
 
+    public static String getFormatDateByTimeStamp(long timeStamp) {
+        if (timeStamp == 0) {
+            return null;
+        }
+        timeStamp = timeStamp * 1000;
+        Date date = new Date(timeStamp);
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH:mm:ss");
+        String format = sdf.format(date);
+        return format;
+    }
+
 
 }
