@@ -9,12 +9,8 @@ import java.util.UUID;
 
 import rk.device.launcher.api.BaseApiImpl;
 import rk.device.launcher.base.LauncherApplication;
-<<<<<<< HEAD
-import rk.device.launcher.bean.OpenDoorBo;
-import rk.device.launcher.bean.TokenBO;
-=======
 import rk.device.launcher.bean.StatusBo;
->>>>>>> 18ce35465eca44394b1bf16f59d4dc9a2b18502b
+import rk.device.launcher.bean.TokenBo;
 import rk.device.launcher.db.DbRecordHelper;
 import rk.device.launcher.db.entity.Record;
 import rk.device.launcher.global.Constant;
@@ -30,12 +26,12 @@ import rx.Subscriber;
 
 public class OpenUtils {
 
-    public static final String TAG               = "OpenUtils";
+    public static final String TAG = "OpenUtils";
 
-    DeviceUuidFactory          deviceUuidFactory = new DeviceUuidFactory(
+    DeviceUuidFactory deviceUuidFactory = new DeviceUuidFactory(
             LauncherApplication.getContext());
 
-    private static OpenUtils   openUtils         = null;
+    private static OpenUtils openUtils = null;
 
     public static OpenUtils getInstance() {
         if (openUtils == null) {
@@ -51,16 +47,16 @@ public class OpenUtils {
     /**
      * 开门方式
      *
-     * @param type 1 : nfc,2 : 指纹,3 : 人脸,4 : 密码,5 : 二维码,6 : 远程开门
+     * @param type       1 : nfc,2 : 指纹,3 : 人脸,4 : 密码,5 : 二维码,6 : 远程开门
      * @param personId
      * @param personName
-     * @param time 验资时间，比如刷卡，按指纹时间
+     * @param time       验资时间，比如刷卡，按指纹时间
      * @step 1 验证通过之后，调取开门接口（接口1）
      * @result 1.1 token过期，需要重新获取token，并重新请求开门（接口2）
      * @result 1.2 验证通过
      * @step 2 数据库插入开门记录
      * @step 3 开门记录同步到服务端(接口3)
-     *       <p/>
+     * <p/>
      */
     public void open(int type, int personId, String personName, int time) {
         String token = SPUtils.getString(Constant.ACCENT_TOKEN);
@@ -75,18 +71,11 @@ public class OpenUtils {
      * @param personName
      * @param time
      */
-<<<<<<< HEAD
-    public void obtainToken(int type, int personId, String personName, int time) {
-        BaseApiImpl.postToken(deviceUuidFactory.getUuid().toString(), "").subscribe(new Subscriber<TokenBO>() {
-            @Override
-            public void onCompleted() {
-=======
     private void obtainToken(int type, int personId, String personName, int time) {
         BaseApiImpl.postToken(deviceUuidFactory.getUuid().toString(), "")
                 .subscribe(new Subscriber<TokenBo>() {
                     @Override
                     public void onCompleted() {
->>>>>>> 18ce35465eca44394b1bf16f59d4dc9a2b18502b
 
                     }
 
@@ -95,19 +84,11 @@ public class OpenUtils {
 
                     }
 
-<<<<<<< HEAD
-            @Override
-            public void onNext(TokenBO tokenBo) {
-                openDoor(tokenBo.getAccess_token(), type, personId, personName, time);
-            }
-        });
-=======
                     @Override
                     public void onNext(TokenBo tokenBo) {
                         openDoor(tokenBo.getAccess_token(), type, personId, personName, time);
                     }
                 });
->>>>>>> 18ce35465eca44394b1bf16f59d4dc9a2b18502b
     }
 
     /**
@@ -119,29 +100,29 @@ public class OpenUtils {
     private void openDoor(String token, int type, int personId, String personName, int time) {
         BaseApiImpl.openDoor(token, deviceUuidFactory.getUuid().toString(), type,
                 TimeUtils.getTimeStamp()).subscribe(new Subscriber<StatusBo>() {
-                    @Override
-                    public void onCompleted() {
+            @Override
+            public void onCompleted() {
 
-                    }
+            }
 
-                    @Override
-                    public void onError(Throwable e) {
+            @Override
+            public void onError(Throwable e) {
 
-                    }
+            }
 
-                    @Override
-                    public void onNext(StatusBo statusBo) {
+            @Override
+            public void onNext(StatusBo statusBo) {
 
-                        String data = openStatus(type);
-                        insertToLocalDB(type, personId, personName, time, data);
-                        syncRecords(token, type, personId, personName, time, data);
-                    }
-                });
+                String data = openStatus(type);
+                insertToLocalDB(type, personId, personName, time, data);
+                syncRecords(token, type, personId, personName, time, data);
+            }
+        });
     }
 
     /**
      * 获取开门方式对应的文案
-     * 
+     *
      * @param type
      * @return
      */
@@ -176,7 +157,7 @@ public class OpenUtils {
 
     /**
      * 插入本地数据库
-     * 
+     *
      * @param type
      * @param personId
      * @param personName
@@ -195,7 +176,7 @@ public class OpenUtils {
 
     /**
      * 同步开门记录
-     * 
+     *
      * @param token
      * @param type
      * @param personId

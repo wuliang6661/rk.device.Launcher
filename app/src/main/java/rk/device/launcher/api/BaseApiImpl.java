@@ -12,7 +12,7 @@ import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Retrofit;
 import rk.device.launcher.base.BaseActivity;
-import rk.device.launcher.bean.TokenBO;
+import rk.device.launcher.bean.TokenBo;
 import rk.device.launcher.global.Config;
 import rk.device.launcher.bean.DeviceInfoBO;
 import rk.device.launcher.bean.StatusBo;
@@ -167,7 +167,7 @@ public class BaseApiImpl {
     /**
      * 获取accens_token
      */
-    public static Observable<TokenBO> postToken(String uuid, String license) {
+    public static Observable<TokenBo> postToken(String uuid, String license) {
         JSONObject object = new JSONObject();
         try {
             object.put("uuid", uuid);

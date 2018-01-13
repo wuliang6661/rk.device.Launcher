@@ -130,8 +130,6 @@ public class TimeUtils {
         LogUtil.d("转换后的日期: " + format);
         return date;
     }
-<<<<<<< HEAD
-=======
 
     public static String getFormatDateByTimeStamp(long timeStamp) {
         if (timeStamp == 0) {
@@ -144,5 +142,4 @@ public class TimeUtils {
         return format;
     }
 
->>>>>>> 18ce35465eca44394b1bf16f59d4dc9a2b18502b
 }
