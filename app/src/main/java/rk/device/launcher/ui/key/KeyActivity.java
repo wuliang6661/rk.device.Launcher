@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -93,13 +94,10 @@ public class KeyActivity extends MVPBaseActivity<KeyContract.View, KeyPresenter>
     public void onSuress() {
         hintWaitProgress();
         if (KeyUtils.saveKey(key)) {
-
+            Log.d("wuliang", KeyUtils.getKey());
+            SPUtils.put(Constant.SETTING_NUM, Constant.SETTING_TYPE3);
+            gotoActivity(SetBasicInfoActivity.class, true);
         }
     }
 
-    @Override
-    public void onTokenSuress() {
-        SPUtils.put(Constant.SETTING_NUM, Constant.SETTING_TYPE3);
-        gotoActivity(SetBasicInfoActivity.class, true);
-    }
 }

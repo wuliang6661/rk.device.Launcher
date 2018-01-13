@@ -16,11 +16,6 @@ public class KeyContract {
          */
         void onSuress();
 
-        /**
-         * token获取成功
-         */
-        void onTokenSuress();
-
     }
 
     interface Presenter extends BasePresenter<View> {
