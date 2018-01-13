@@ -45,6 +45,7 @@ import rk.device.launcher.ui.setting.SetDoorGuardActivity;
 import rk.device.launcher.ui.setting.SetNetWorkActivity;
 import rk.device.launcher.ui.setting.SetSysActivity;
 import rk.device.launcher.ui.setting.SettingActivity;
+import rk.device.launcher.ui.settingmangerpwd.SettingMangerPwdActivity;
 import rk.device.launcher.utils.DateUtil;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.SoundPlayUtils;
@@ -494,7 +495,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
                 gotoActivity(KeyActivity.class, false);
                 break;
             case Constant.SETTING_TYPE3:   //设置管理员密码
-
+                gotoActivity(SettingMangerPwdActivity.class, false);
                 break;
             case Constant.SETTING_TYPE4:   //门禁设置
                 gotoActivity(SetDoorGuardActivity.class, false);

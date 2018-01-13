@@ -9,7 +9,7 @@ import java.util.UUID;
 import rk.device.launcher.api.BaseApiImpl;
 import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.bean.OpenDoorBo;
-import rk.device.launcher.bean.TokenBo;
+import rk.device.launcher.bean.TokenBO;
 import rk.device.launcher.db.DbRecordHelper;
 import rk.device.launcher.db.entity.Record;
 import rk.device.launcher.global.Constant;
@@ -55,7 +55,7 @@ public class OpenUtils {
      * @param time
      */
     public void obtainToken(int type, int personId, String personName, int time) {
-        BaseApiImpl.postToken(deviceUuidFactory.getUuid().toString(), "").subscribe(new Subscriber<TokenBo>() {
+        BaseApiImpl.postToken(deviceUuidFactory.getUuid().toString(), "").subscribe(new Subscriber<TokenBO>() {
             @Override
             public void onCompleted() {
 
@@ -67,7 +67,7 @@ public class OpenUtils {
             }
 
             @Override
-            public void onNext(TokenBo tokenBo) {
+            public void onNext(TokenBO tokenBo) {
                 openDoor(tokenBo.getAccess_token(), type, personId, personName, time);
             }
         });

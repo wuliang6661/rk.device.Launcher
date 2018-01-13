@@ -16,7 +16,7 @@ import rk.device.launcher.bean.BaseResult;
 import rk.device.launcher.bean.DeviceInfoBO;
 import rk.device.launcher.bean.OpenDoorBo;
 import rk.device.launcher.bean.SyncOpendoorHistoryBO;
-import rk.device.launcher.bean.TokenBo;
+import rk.device.launcher.bean.TokenBO;
 import rk.device.launcher.bean.VerifyBO;
 import rk.device.launcher.bean.VersionBO;
 import rk.device.launcher.bean.WeatherBO;
@@ -103,6 +103,6 @@ public interface BaseApi {
      * 获取开门token
      */
     @POST("/tenantcenter/a/public/rest/face1/token")
-    Observable<BaseResult<TokenBo>> getToken(@Body RequestBody requestBody);
+    Observable<BaseResult<TokenBO>> getToken(@Body RequestBody requestBody);
 
 }
