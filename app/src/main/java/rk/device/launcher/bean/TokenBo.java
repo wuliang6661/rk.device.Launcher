@@ -1,19 +1,14 @@
 package rk.device.launcher.bean;
 
-import java.io.Serializable;
-
 /**
- * Created by wuliang on 2018/1/13.
- * <p>
- * 鉴权token
+ * Created by hanbin on 2018/1/13.
  */
 
-public class TokenBo implements Serializable {
-
+public class TokenBO {
 
     /**
-     * access_token : f383f3cc-25cf-4d8d-992e-6037d50e8dff
-     * expires_in : 7200
+     * @params access_token : token
+     * @params expires_in :
      */
 
     private String access_token;
