@@ -23,6 +23,14 @@ public class TimeUtils {
         return date.getHours();
     }
 
+    /**
+     * 获取当前时间
+     * @return
+     */
+    public static Date getCurrentTime() {
+        return new Date();
+    }
+
 
     /**
      * 获取当前手机时间
@@ -92,6 +100,23 @@ public class TimeUtils {
             e.printStackTrace();
         }
         return -1;
+    }
+
+    /**
+     * 将时间戳转换为日期
+     * @param timeStamp 时间戳, 单位为秒
+     * @return 日期
+     */
+    public static Date formatTimeStamp(long timeStamp) {
+        if (timeStamp == 0) {
+            return null;
+        }
+        timeStamp = timeStamp * 1000;
+        Date date = new Date(timeStamp);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String format = sdf.format(date);
+        LogUtil.d("转换后的日期: " + format);
+        return date;
     }
 
 

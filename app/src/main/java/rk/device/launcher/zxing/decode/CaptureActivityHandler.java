@@ -96,8 +96,8 @@ public final class CaptureActivityHandler extends Handler {
             }
             activity.handleDecode((Result) message.obj, barcode, scaleFactor);
         } else if (what == R.id.decode_failed) {
-            state = State.PREVIEW;
-            cameraManager.requestPreviewFrame(decodeThread.getHandler(), R.id.decode);
+            // 发送消息, 重新扫描
+            reScan();
         } else if (what == R.id.return_scan_result) {
             activity.setResult(Activity.RESULT_OK, (Intent) message.obj);
             activity.finish();
@@ -186,6 +186,11 @@ public final class CaptureActivityHandler extends Handler {
 //                }
 //                break;
 //        }
+    }
+
+    public void reScan() {
+        state = State.PREVIEW;
+        cameraManager.requestPreviewFrame(decodeThread.getHandler(), R.id.decode);
     }
 
     public void quitSynchronously() {

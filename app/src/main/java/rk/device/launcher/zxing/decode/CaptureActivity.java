@@ -1,7 +1,6 @@
 package rk.device.launcher.zxing.decode;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.os.Bundle;
@@ -10,20 +9,30 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Date;
 
 import rk.device.launcher.R;
+import rk.device.launcher.api.T;
+import rk.device.launcher.bean.QrCodeBO;
+import rk.device.launcher.utils.LogUtil;
+import rk.device.launcher.utils.TimeUtils;
+import rk.device.launcher.utils.encrypt.RSAUtils;
 import rk.device.launcher.zxing.camera.CameraManager;
 import rk.device.launcher.zxing.view.ViewfinderView;
 
 
-public class CaptureActivity extends Activity implements SurfaceHolder.Callback {
+public class CaptureActivity extends Activity implements SurfaceHolder.Callback, View.OnClickListener {
 
     private static final String TAG = CaptureActivity.class.getSimpleName();
 
@@ -39,6 +48,9 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
     private AmbientLightManager ambientLightManager;
     public static Camera camera;
     private Camera.Parameters parameters;
+    private ImageView mIvBack;
+    private TextView mTvTitle;
+    private TextView mTvWarning;
 
     public ViewfinderView getViewfinderView() {
         return viewfinderView;
@@ -56,12 +68,21 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_capture);
+        initView();
         hasSurface = false;
         inactivityTimer = new InactivityTimer(this);
         beepManager = new BeepManager(this);
         ambientLightManager = new AmbientLightManager(this);
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+    }
+
+    private void initView() {
+        mIvBack = findViewById(R.id.iv_back);
+        mTvTitle = findViewById(R.id.tv_title);
+        mTvWarning = findViewById(R.id.tv_warning);
+        mTvTitle.setText("二维码扫描");
+        mIvBack.setOnClickListener(this);
     }
 
     @Override
@@ -187,19 +208,59 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
         boolean fromLiveScan = barcode != null;
         if (fromLiveScan) {
             String resultString = rawResult.getText();
-            // Then not from history, so beep/vibrate and we have an image to draw on
-            beepManager.playBeepSoundAndVibrate();
-            Intent resultIntent = new Intent();
-            Bundle bundle = new Bundle();
-            Log.d(TAG, "result = " + resultString);
-            bundle.putString("result", resultString);
-            resultIntent.putExtras(bundle);
-            this.setResult(RESULT_OK, resultIntent);
+//            // Then not from history, so beep/vibrate and we have an image to draw on
+//            beepManager.playBeepSoundAndVibrate();
+//            Intent intent = new Intent();
+//            Bundle bundle = new Bundle();
+//            Log.d(TAG, "result = " + resultString);
+//            bundle.putString("result", resultString);
+//            intent.putExtras(bundle);
+//            this.setResult(RESULT_OK, intent);
+            parseResult(resultString);
         } else {
             Toast.makeText(CaptureActivity.this, "Scan failed!", Toast.LENGTH_SHORT).show();
         }
-        CaptureActivity.this.finish();
+//        CaptureActivity.this.finish();
 
+    }
+
+    private void parseResult(String resultString) {
+        try {
+            String decryptedString = RSAUtils.decrypt(resultString);
+            LogUtil.d("decryptedString = " + decryptedString);
+            QrCodeBO qrCodeBO = JSON.parseObject(decryptedString, QrCodeBO.class);
+            long endTime = qrCodeBO.endTime;
+            long startTime = qrCodeBO.startTime;
+            Date endDate = TimeUtils.formatTimeStamp(endTime);
+//            T.showShort("获取到结束时间");
+            Date currentDate = TimeUtils.getCurrentTime();
+            // 授权时间已过期
+            if (currentDate.after(endDate)) {
+                showWarning("授权已过期, 请联系管理员");
+            } else if (false) { // todo 用户未进行授权该门禁+系统不存在该用户，提示：“未授权用户，请联系管理员”
+
+            } else { // 成功, 执行开门逻辑, 显示文字：验证成功；1.5s后跳转首页
+                T.showShort("开门成功");
+            }
+
+        } catch (Exception e) {
+            showWarning("请扫描正确二维码");
+            e.printStackTrace();
+        }
+    }
+
+    private void showWarning(String message) {
+        // 发送信息, 重新扫描
+        handler.reScan();
+        mTvWarning.setVisibility(View.VISIBLE);
+        mTvWarning.setText(message);
+        mTvWarning.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mTvWarning.setText("");
+                mTvWarning.setVisibility(View.GONE);
+            }
+        }, 3000);
     }
 
 
@@ -222,5 +283,14 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.iv_back:
+                finish();
+                break;
+        }
     }
 }

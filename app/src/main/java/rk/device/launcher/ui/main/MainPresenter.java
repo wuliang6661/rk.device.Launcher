@@ -164,6 +164,13 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
      * 定位不可用，通过IP获取地址
      */
     private void getIPLocation(BaseActivity activity) {
+        // mRetrofit.create(AddressAPI.class).getAddress("js")
+        // 通常, mRetrofit.create(AddressAPI.class)这一段是包装起来的
+        // 之前的做法是addSubscription(ApiService.deviceList(...))这样子
+        // 现在的想法是在baseActivity里一开始就创建一个requestQueue,
+        // requestQueue.register(observable).subscribe(subscriber)
+        // 将所有的Subscription添加到一个CompositeSubscription里
+        // activity在ondestroy的时候调用requestQueue.cancelAll()将CompositeSubscription.unsubscribe()
         BaseApiImpl.address("js").subscribeOn(Schedulers.io())
                 .flatMap(s -> {
                     int start = s.indexOf("{");
