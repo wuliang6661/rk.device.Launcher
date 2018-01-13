@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,13 +22,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import butterknife.Bind;
+import cvc.EventUtil;
 import rk.device.launcher.R;
 import rk.device.launcher.base.BaseActivity;
-import rk.device.launcher.utils.rxjava.RxBus;
+import rk.device.launcher.base.JniHandler;
 import rk.device.launcher.bean.event.SleepImageEvent;
 import rk.device.launcher.service.SleepTaskServer;
-import rk.device.launcher.widget.carema.SurfaceHolderCaremaBack;
-import rk.device.launcher.widget.carema.SurfaceHolderCaremaFont;
+import rk.device.launcher.utils.rxjava.RxBus;
 
 /**
  * Created by wuliang on 2017/12/19.
@@ -57,8 +58,6 @@ public class SleepActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         initView();
         initData();
-        SurfaceHolderCaremaBack.closeSteram();
-        SurfaceHolderCaremaFont.closeSteram();
     }
 
 
@@ -71,8 +70,17 @@ public class SleepActivity extends BaseActivity {
 
     protected void initData() {
         advertisingImg.setOnClickListener(view -> {
+            setCrema(EventUtil.MEDIA_OPEN);
             finish();
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        SurfaceHolderCaremaBack.closeSteram();
+//        SurfaceHolderCaremaFont.closeSteram();
+        setCrema(EventUtil.MEDIA_CLOSE);
     }
 
     /**
@@ -132,4 +140,13 @@ public class SleepActivity extends BaseActivity {
         super.onDestroy();
         SleepTaskServer.getSleepHandler(SleepActivity.this).sendEmptyMessage(0x33);
     }
+
+
+    private void setCrema(int status) {
+        JniHandler mHandler = JniHandler.getInstance();
+        Message msg = new Message();
+        msg.what = status;
+        mHandler.sendMessage(msg);
+    }
+
 }

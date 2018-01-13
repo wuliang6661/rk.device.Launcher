@@ -34,6 +34,7 @@ import rk.device.launcher.mvp.MVPBaseActivity;
 import rk.device.launcher.service.ElectricBroadcastReceiver;
 import rk.device.launcher.service.NetChangeBroadcastReceiver;
 import rk.device.launcher.service.SocketService;
+import rk.device.launcher.service.VerifyService;
 import rk.device.launcher.ui.bbs.BbsActivity;
 import rk.device.launcher.ui.call.CallActivity;
 import rk.device.launcher.ui.fragment.InitErrorDialogFragmen;
@@ -183,7 +184,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
         mPresenter.initLocation(this);
         mPresenter.getData();
         startService(new Intent(this, SocketService.class));
-//        startService(new Intent(this, VerifyService.class));
+        startService(new Intent(this, VerifyService.class));
     }
 
 
@@ -237,7 +238,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
         SurfaceHolderCaremaFont.stopCarema();
         SurfaceHolderCaremaBack.stopCarema();
         FaceUtils.getInstance().stopFaceFR();
-//        stopService(new Intent(this, SocketService.class));
+        stopService(new Intent(this, SocketService.class));
 //        stopService(new Intent(this, VerifyService.class));
         super.onDestroy();
     }
@@ -376,70 +377,6 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
             }
         }
     }
-
-    /**
-     * 初始设置流程加载
-     */
-    private void settingLoad() {
-        if (dialogFragment != null && dialogFragment.isVisible()) {
-            return;
-        }
-        boolean isHideInput;
-        final String password = SPUtils.getString(Constant.KEY_PASSWORD);
-        String message;
-        if (StringUtils.isEmpty(password)) {
-            isHideInput = false;
-            message = "设置管理员密码";
-        } else {
-            message = "请输入管理员密码";
-            isHideInput = true;
-        }
-        showDialogFragment(message, content -> {
-            if (StringUtils.isEmpty(content)) {
-                dialogFragment.showError("请输入管理员密码！");
-                return;
-            }
-            if (content.length() != 6) {
-                dialogFragment.showError("请输入完整密码！");
-                return;
-            }
-            if (StringUtils.isEmpty(password)) { //设置管理员密码，判断为第一次进入
-                if (!TextUtils.isEmpty(content)) {
-                    dialogFragment.dismiss();
-                    SPUtils.putString(Constant.KEY_PASSWORD, content); //缓存密码
-                    gotoActivity(SetBasicInfoActivity.class, false);//进入基础设置
-                } else {
-                    dialogFragment.showError("请设置管理员密码！");
-                }
-            } else { //本地存在密码,则按缓存序号，跳入未设置页面
-                if (TextUtils.equals(password, content)) { //密码输入正确
-                    dialogFragment.dismiss();
-                    int type = SPUtils.getInt(Constant.SETTING_NUM, Constant.SETTING_TYPE1);
-                    switch (type) {
-                        case Constant.SETTING_TYPE1:         //网络设置
-                            gotoActivity(SetNetWorkActivity.class, false);   //缓存一个2
-                            break;
-                        case Constant.SETTING_TYPE2:         //网络设置
-                            gotoActivity(SetNetWorkActivity.class, false);    //缓存个4
-                            break;
-                        case Constant.SETTING_TYPE3:       //门禁设置
-                            gotoActivity(SetDoorGuardActivity.class, false);    //缓存个5
-                            break;
-                        case Constant.SETTING_TYPE4:     //系统设置
-                            gotoActivity(SetSysActivity.class, false);
-                            break;
-                        default:
-                            gotoActivity(SettingActivity.class, false);
-                            break;
-                    }
-                } else {
-                    dialogFragment.showError();
-                }
-            }
-        }, isHideInput);
-        dialogFragment.show(getSupportFragmentManager(), "");
-    }
-
 
     /**
      * 设置初始流程（改）

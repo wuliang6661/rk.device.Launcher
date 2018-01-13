@@ -10,7 +10,6 @@ import java.io.File;
 import cat.ereza.customactivityoncrash.CustomActivityOnCrash;
 import peripherals.FingerHelper;
 import rk.device.launcher.R;
-import rk.device.launcher.global.Constant;
 import rk.device.launcher.utils.FileUtils;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.SPUtils;

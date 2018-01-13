@@ -39,7 +39,6 @@
             android:maxLength="14"
             android:maxLines="1"
             android:paddingLeft="20dp"
-            android:text="3894-3908-6466"
             android:textColor="@color/white"
             android:textColorHint="#999999"
             android:textSize="26dp" />
