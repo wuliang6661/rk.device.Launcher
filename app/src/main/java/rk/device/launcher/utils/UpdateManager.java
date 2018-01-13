@@ -36,7 +36,7 @@ import java.net.URL;
 import java.text.DecimalFormat;
 
 import rk.device.launcher.R;
-import rk.device.launcher.api.ApiService;
+import rk.device.launcher.api.BaseApiImpl;
 import rk.device.launcher.api.T;
 import rk.device.launcher.bean.VersionBO;
 import rk.device.launcher.ui.fragment.CheckUpdateDialogFragment;
@@ -157,7 +157,7 @@ public class UpdateManager {
                 return;
         }
         mCompositeSubscription = new CompositeSubscription();
-        ApiService.updateApp(AppUtils.getAppVersionCode(mContext) + "").subscribe(new Subscriber<VersionBO>() {
+        BaseApiImpl.updateApp(AppUtils.getAppVersionCode(mContext) + "").subscribe(new Subscriber<VersionBO>() {
             @Override
             public void onCompleted() {
 

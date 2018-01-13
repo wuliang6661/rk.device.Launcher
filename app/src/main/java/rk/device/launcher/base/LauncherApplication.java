@@ -8,6 +8,7 @@ import android.os.Message;
 import java.io.File;
 
 import cat.ereza.customactivityoncrash.CustomActivityOnCrash;
+import peripherals.FingerHelper;
 import rk.device.launcher.R;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.utils.FileUtils;
@@ -136,6 +137,7 @@ public class LauncherApplication extends Application implements CustomActivityOn
         SurfaceHolderCaremaFont.stopCarema();
         SurfaceHolderCaremaBack.stopCarema();
         FaceUtils.getInstance().stopFaceFR();
+        FingerHelper.JNIFpDeInit();
 //        stopService(new Intent(this, SocketService.class));
 //        stopService(new Intent(this, VerifyService.class));
     }

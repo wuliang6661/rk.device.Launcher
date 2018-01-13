@@ -22,7 +22,7 @@ import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import butterknife.ButterKnife;
 import rk.device.launcher.R;
-import rk.device.launcher.api.ApiService;
+import rk.device.launcher.api.BaseApiImpl;
 import rk.device.launcher.bean.NetDismissBO;
 import rk.device.launcher.service.BlueToothsBroadcastReceiver;
 import rk.device.launcher.service.RKLauncherPushIntentService;
@@ -80,7 +80,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         AppManager.getAppManager().addActivity(this);
         setNetListener();
         makeFilters();
-        ApiService.setActivity(this);
+        BaseApiImpl.setActivity(this);
     }
 
     @Override
@@ -245,6 +245,26 @@ public abstract class BaseActivity extends RxAppCompatActivity {
             return null;
         }
         hintDialog = BaseDialogFragment.newInstance();
+        hintDialog.setMessage(message);
+        hintDialog.setCancleable(true);
+        hintDialog.setLeftButton("取消", view -> hintDialog.dismiss());
+        hintDialog.setRightButton(right, listener);
+        if (!hintDialog.isAdded()) {
+            showDialog(hintDialog);
+        }
+        return hintDialog;
+    }
+
+    /**
+     * 显示需要自定义的提示弹窗
+     */
+    protected BaseDialogFragment showMessageDialog(String title,String message, String right, View.OnClickListener listener) {
+        if (hintDialog != null && hintDialog.getDialog() != null
+                && hintDialog.getDialog().isShowing()) {
+            return null;
+        }
+        hintDialog = BaseDialogFragment.newInstance();
+        hintDialog.setTitle(title);
         hintDialog.setMessage(message);
         hintDialog.setCancleable(true);
         hintDialog.setLeftButton("取消", view -> hintDialog.dismiss());

@@ -60,6 +60,7 @@ public interface BaseApi {
 
     /**
      * 开门授权同步接口
+     *
      * @param access_token
      * @param uuid
      * @param peopleId
@@ -79,6 +80,13 @@ public interface BaseApi {
                                                              @Field("type") String type,
                                                              @Field("data") String data);
 
+
+    /**
+     * 激活设备接口
+     */
+    @FormUrlEncoded
+    @POST("/tenantcenter/a/public/rest/face1/activation")
+    Observable<BaseResult<String>> activationDiveces(@Field("uuid") String uuid, @Field("mac") String mac, @Field("license") String license);
 
 
 }

@@ -22,7 +22,6 @@ import butterknife.ButterKnife;
 import rk.device.launcher.R;
 import rk.device.launcher.utils.DrawableUtil;
 import rk.device.launcher.utils.ScreenUtil;
-import rk.device.launcher.utils.StringUtils;
 
 
 /**
@@ -52,6 +51,7 @@ public class InputWifiPasswordDialogFragment extends DialogFragment {
     private CharSequence mTitle;
     private Integer mInputType;
     private String hint;
+    private String content;
     private int maxLength = 0;
 
     public String getEtText() {
@@ -175,6 +175,9 @@ public class InputWifiPasswordDialogFragment extends DialogFragment {
         if (hint != null) {
             mEtPassword.setHint(hint);
         }
+        if(content!=null){
+            mEtPassword.setText(content);
+        }
         if (maxLength != 0) {
             mEtPassword.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLength)}); //最大输入长度
         }
@@ -193,5 +196,10 @@ public class InputWifiPasswordDialogFragment extends DialogFragment {
                 mOnConfirmClickListener.onConfirmClick(mEtPassword.getText().toString());
             }
         });
+    }
+
+    public InputWifiPasswordDialogFragment setContent(String content) {
+        this.content = content;
+        return this;
     }
 }

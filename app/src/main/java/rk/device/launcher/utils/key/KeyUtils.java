@@ -51,11 +51,4 @@ public class KeyUtils {
     private static boolean isHaveKey() {
         return FileUtils.getFileByPath(keyPath).exists();
     }
-
-
-    public static void main(String[] args) {
-
-    }
-
-
 }

@@ -36,9 +36,10 @@
             android:background="@drawable/call_edit_bg"
             android:digits="1234567890-"
             android:hint="请输入激活码"
-            android:maxLength="15"
+            android:maxLength="14"
             android:maxLines="1"
             android:paddingLeft="20dp"
+            android:text="3894-3908-6466"
             android:textColor="@color/white"
             android:textColorHint="#999999"
             android:textSize="26dp" />
