@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import butterknife.Bind;
 import rk.device.launcher.R;
-import rk.device.launcher.api.ApiService;
+import rk.device.launcher.api.BaseApiImpl;
 import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.bean.DeviceInfoBO;
 import rk.device.launcher.global.Constant;
@@ -127,7 +127,7 @@ public class SetDoorGuardActivity extends BaseActivity implements View.OnClickLi
                 SPUtils.putString(Constant.DEVICE_TYPE, deviceName);
                 boolean isFirstSetting = SPUtils.getBoolean(Constant.IS_FIRST_SETTING, true);    //是否第一次进入设置
                 if (isFirstSetting) {
-                    SPUtils.putInt(Constant.SETTING_NUM, Constant.SETTING_TYPE4);
+                    SPUtils.putInt(Constant.SETTING_NUM, Constant.SETTING_TYPE5);
                     gotoActivity(SetSysActivity.class, false);
                 } else {
                     finish();
@@ -153,7 +153,7 @@ public class SetDoorGuardActivity extends BaseActivity implements View.OnClickLi
      * 获取关联设备的配置
      */
     public void getData() {
-        addSubscription(ApiService.deviceConfiguration(AppUtils.getAppVersionCode(this) + "", null).subscribe(new Subscriber<DeviceInfoBO>() {
+        addSubscription(BaseApiImpl.deviceConfiguration(AppUtils.getAppVersionCode(this) + "", null).subscribe(new Subscriber<DeviceInfoBO>() {
                     @Override
                     public void onCompleted() {
 

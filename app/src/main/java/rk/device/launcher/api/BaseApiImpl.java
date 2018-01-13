@@ -24,7 +24,7 @@ import rx.Observable;
  * 所有网络接口的实现类
  */
 
-public class ApiService {
+public class BaseApiImpl {
 
 
     private static volatile Retrofit mApiRetrofit;
@@ -64,7 +64,7 @@ public class ApiService {
 
 
     public static void setActivity(BaseActivity activity) {
-        ApiService.activity = activity;
+        BaseApiImpl.activity = activity;
     }
 
 
@@ -116,5 +116,13 @@ public class ApiService {
     public static Observable<VerifyBO> verifyFace(Map<String, Object> params) {
         return weatherFactorys().verify(params).compose(RxResultHelper.httpResult()).compose(activity.bindUntilEvent(ActivityEvent.DESTROY));
     }
+
+    /**
+     * 激活设备
+     */
+    public static Observable<String> activationDiveces(String uuid, String mac, String license) {
+        return weatherFactorys().activationDiveces(uuid, mac, license).compose(RxResultHelper.httpResult()).compose(activity.bindUntilEvent(ActivityEvent.DESTROY));
+    }
+
 
 }

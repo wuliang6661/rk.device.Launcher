@@ -22,7 +22,7 @@ import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import butterknife.ButterKnife;
 import rk.device.launcher.R;
-import rk.device.launcher.api.ApiService;
+import rk.device.launcher.api.BaseApiImpl;
 import rk.device.launcher.bean.NetDismissBO;
 import rk.device.launcher.service.BlueToothsBroadcastReceiver;
 import rk.device.launcher.service.RKLauncherPushIntentService;
@@ -80,7 +80,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         AppManager.getAppManager().addActivity(this);
         setNetListener();
         makeFilters();
-        ApiService.setActivity(this);
+        BaseApiImpl.setActivity(this);
     }
 
     @Override

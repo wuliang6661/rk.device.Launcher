@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import cvc.EventUtil;
-import rk.device.launcher.api.ApiService;
+import rk.device.launcher.api.BaseApiImpl;
 import rk.device.launcher.api.T;
 import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.base.JniHandler;
@@ -164,7 +164,7 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
      * 定位不可用，通过IP获取地址
      */
     private void getIPLocation(BaseActivity activity) {
-        ApiService.address("js").subscribeOn(Schedulers.io())
+        BaseApiImpl.address("js").subscribeOn(Schedulers.io())
                 .flatMap(s -> {
                     int start = s.indexOf("{");
                     int end = s.indexOf("}");
@@ -174,7 +174,7 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
                     params.put("city", addressModel.city);
                     Observable<List<WeatherBO>> observable;
                     try {
-                        observable = ApiService.weather(params);
+                        observable = BaseApiImpl.weather(params);
                     } catch (Exception e) {
                         e.printStackTrace();
                         throw new RuntimeException("error throw ip");
@@ -209,7 +209,7 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
     private void httpGetWeather(String area) {
         Map<String, Object> params = new HashMap<>();
         params.put("city", area);
-        ApiService.weather(params).subscribe(new Subscriber<List<WeatherBO>>() {
+        BaseApiImpl.weather(params).subscribe(new Subscriber<List<WeatherBO>>() {
             @Override
             public void onCompleted() {
 
@@ -232,7 +232,7 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
      * 获取配置接口
      */
     void getData() {
-        ApiService.deviceConfiguration(AppUtils.getAppVersionCode(mView.getContext()) + "", null).subscribe(new Subscriber<DeviceInfoBO>() {
+        BaseApiImpl.deviceConfiguration(AppUtils.getAppVersionCode(mView.getContext()) + "", null).subscribe(new Subscriber<DeviceInfoBO>() {
             @Override
             public void onCompleted() {
 
@@ -296,7 +296,7 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
         params.put("image_url", filePath);
         params.put("uuid", uuid);
         params.put("type", myType);
-        ApiService.verifyFace(params).subscribe(new Subscriber<VerifyBO>() {
+        BaseApiImpl.verifyFace(params).subscribe(new Subscriber<VerifyBO>() {
 
             @Override
             public void onCompleted() {

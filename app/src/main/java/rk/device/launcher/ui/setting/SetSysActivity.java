@@ -14,7 +14,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,19 +22,18 @@ import butterknife.Bind;
 import butterknife.OnClick;
 import peripherals.LedHelper;
 import rk.device.launcher.R;
-import rk.device.launcher.api.ApiService;
+import rk.device.launcher.api.BaseApiImpl;
 import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.bean.SetDoorRvBO;
-import rk.device.launcher.utils.rxjava.RxBus;
 import rk.device.launcher.bean.event.IpHostEvent;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.service.SleepTaskServer;
-import rk.device.launcher.utils.AppManager;
 import rk.device.launcher.utils.DrawableUtil;
 import rk.device.launcher.utils.EditUtil;
 import rk.device.launcher.utils.NetWorkUtil;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.StringUtils;
+import rk.device.launcher.utils.rxjava.RxBus;
 import rk.device.launcher.utils.uuid.DeviceUuidFactory;
 
 /**
@@ -183,7 +181,7 @@ public class SetSysActivity extends BaseActivity {
     private void saveSession(String ip, String port, String clientCode) {
         SPUtils.putString(Constant.KEY_IP, ip);
         SPUtils.putString(Constant.KEY_PORT, port);
-        ApiService.clearIP();
+        BaseApiImpl.clearIP();
         RxBus.getDefault().post(new IpHostEvent(true));
         // 保存客户号
         SPUtils.putString(Constant.KEY_CLIENT_CODE, clientCode);
@@ -197,12 +195,12 @@ public class SetSysActivity extends BaseActivity {
         } else {
             LedHelper.PER_ledToggle(0);
         }
-        boolean isFirstSetting = SPUtils.getBoolean(Constant.IS_FIRST_SETTING, true);    //是否第一次进入设置
-        if (isFirstSetting) {
-            SPUtils.putInt(Constant.SETTING_NUM, -1000);
-            SPUtils.putBoolean(Constant.IS_FIRST_SETTING, false);
-            Toast.makeText(SetSysActivity.this, "完成设置", Toast.LENGTH_LONG).show();
-            AppManager.getAppManager().goBackMain();
+        //判断是否是第一次
+        boolean isFirst = (boolean) SPUtils.get(Constant.IS_FIRST_SETTING, true);
+//        syncBlueTime();
+        if (isFirst) {
+            SPUtils.put(Constant.SETTING_NUM, Constant.SETTING_TYPE6);
+            gotoActivity(SetBasicInfoActivity.class, true);
         } else {
             finish();
         }
