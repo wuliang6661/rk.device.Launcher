@@ -1,6 +1,7 @@
 package rk.device.launcher.ui.managedata;
 
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -38,6 +39,7 @@ public class ManagedataActivity extends MVPBaseActivity<ManagedataContract.View,
     LinearLayout mLlSelectType;
     @Bind(R.id.view_bg)
     View mBg;
+    private ProgressDialog mProgressDialog;
     private View.OnClickListener mPopupListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -84,5 +86,16 @@ public class ManagedataActivity extends MVPBaseActivity<ManagedataContract.View,
     public void dismissPopupWindow() {
         mIvArrow.setRotation(0);
         mBg.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showProgress() {
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.show();
+    }
+
+    @Override
+    public void hideProgress() {
+        mProgressDialog.dismiss();
     }
 }
