@@ -7,8 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rk.device.launcher.R;
+import rk.device.launcher.db.DbRecordHelper;
+import rk.device.launcher.db.entity.Record;
 import rk.device.launcher.mvp.BasePresenterImpl;
-import rk.device.launcher.ui.managedata.bean.UserBean;
 import rk.device.launcher.ui.managedata.rv.ManageDataItemDecoration;
 import rk.device.launcher.ui.managedata.rv.SearchDataRvAdapter;
 
@@ -19,28 +20,30 @@ import rk.device.launcher.ui.managedata.rv.SearchDataRvAdapter;
 
 public class SearchdataPresenter extends BasePresenterImpl<SearchdataContract.View> implements SearchdataContract.Presenter{
 
-    private List<UserBean> mDataList;
+    private List<Record> mDataList;
     private SearchDataRvAdapter mRvAdapter;
+    private List<Record> mDbAllRecordList;
 
     @Override
     public void initData(RecyclerView recyclerView) {
+        mDbAllRecordList = DbRecordHelper.loadAll();
         mDataList = new ArrayList<>();
         recyclerView.addItemDecoration(new ManageDataItemDecoration(mContext, R.color.color_171f36));
-        testData();
         recyclerView.setAdapter(mRvAdapter = new SearchDataRvAdapter(mDataList));
 
     }
 
     @Override
     public void searchData(String keyword) {
-        // todo 只是测试
-        if (TextUtils.equals("123", keyword)) {
-            mDataList.clear();
-        } else {
-            testData();
+        mDataList.clear();
+        if (!mDbAllRecordList.isEmpty()) {
+            for (Record record : mDbAllRecordList) {
+                if (record.getPopeName().contains(keyword)) {
+                    mDataList.add(record);
+                }
+            }
         }
         mRvAdapter.notifyDataSetChanged();
-
     }
 
     @Override
@@ -55,9 +58,4 @@ public class SearchdataPresenter extends BasePresenterImpl<SearchdataContract.Vi
         searchData(keyword);
     }
 
-    private void testData() {
-        for (int i = 0; i < 10; i++) {
-            mDataList.add(new UserBean("张三三", "12-30", "19:30:12", "密码开门"));
-        }
-    }
 }
