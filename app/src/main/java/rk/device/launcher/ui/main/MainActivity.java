@@ -52,6 +52,7 @@ import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.SoundPlayUtils;
 import rk.device.launcher.utils.StringUtils;
 import rk.device.launcher.utils.TimeUtils;
+import rk.device.launcher.utils.key.KeyUtils;
 import rk.device.launcher.utils.rxjava.RxBus;
 import rk.device.launcher.utils.verify.FaceUtils;
 import rk.device.launcher.widget.BatteryView;
@@ -215,9 +216,11 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
     protected void onResume() {
         super.onResume();
         tvPlaceName.setText(SPUtils.getString(Constant.DEVICE_NAME));
-//        if (isIpError) {
-//            showMessageDialog("服务器数据获取出错！\n\n请检查网络或IP地址是否可用！");
-//        }
+        new Handler().postDelayed(() -> {
+            if (!KeyUtils.isHaveKey()) {
+                setFirstLoder();
+            }
+        }, 500);
     }
 
 
@@ -605,5 +608,4 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
             mStaticHandler.postDelayed(this, REFRESH_DELAY);
         }
     };
-
 }

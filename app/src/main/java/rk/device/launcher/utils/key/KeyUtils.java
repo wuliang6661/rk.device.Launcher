@@ -48,7 +48,7 @@ public class KeyUtils {
     }
 
 
-    private static boolean isHaveKey() {
+    public static boolean isHaveKey() {
         return FileUtils.getFileByPath(keyPath).exists();
     }
 }
