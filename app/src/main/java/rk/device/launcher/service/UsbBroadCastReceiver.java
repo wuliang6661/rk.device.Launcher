@@ -3,26 +3,49 @@ package rk.device.launcher.service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.os.storage.StorageManager;
-import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
 import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
-import rk.device.launcher.utils.rxjava.RxBus;
 import rk.device.launcher.bean.event.SleepImageEvent;
 import rk.device.launcher.utils.FileUtils;
 import rk.device.launcher.utils.LogUtil;
+import rk.device.launcher.utils.ThreadUtils;
 import rk.device.launcher.utils.carema.utils.FileUtil;
+import rk.device.launcher.utils.rxjava.RxBus;
 
 import static android.content.Context.STORAGE_SERVICE;
+import static com.igexin.sdk.GTServiceManager.context;
 
 
 public class UsbBroadCastReceiver extends BroadcastReceiver {
+
+    private Handler mHandler = new Handler(Looper.getMainLooper()){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 0:
+                    Toast.makeText(context, "复制完毕", Toast.LENGTH_LONG).show();
+                    if (!mPicFileList.isEmpty()) {
+                        RxBus.getDefault().post(new SleepImageEvent(mPicFileList));
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+    private List<File> mPicFileList;
 
 
     // 获取次存储卡路径,一般就是外置 TF 卡了. 不过也有可能是 USB OTG 设备...
@@ -51,43 +74,59 @@ public class UsbBroadCastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        LogUtil.d(TAG, "收到sd卡插入的广播");
         // 当sd卡插上的时候
         if (Intent.ACTION_MEDIA_MOUNTED.equals(intent.getAction())) {
+            LogUtil.d(TAG, "收到sd卡插入的广播");
             // 外置tf卡的路径
             String sdCardDirPath = "/mnt/external_sd";
-//			String sdCardDirPath = getSecondaryStoragePath(context);
-            if (TextUtils.isEmpty(sdCardDirPath)) {
+            File sdcardDir = new File(sdCardDirPath);
+            if (!sdcardDir.exists()) {
                 return;
             }
-            File sdcardDir = new File(sdCardDirPath);
-            if (sdcardDir.exists()) {
-                File roombankerDir = new File(sdCardDirPath, "roombanker");
-                List<File> encryptedFileList = FileUtils.listFilesInDirWithFilter(roombankerDir, ".ao", true);
-                if (encryptedFileList == null || encryptedFileList.isEmpty()) {
-                    return;
-                }
-                List<File> picFileList = new ArrayList<>();
-                for (File encryptedFile : encryptedFileList) {
-                    // 获取全路径中的文件名(不要.ao的后缀)
-                    String fileName = getFileName(encryptedFile);
+            File roombankerDir = new File(sdCardDirPath, "roombanker");
+            List<File> encryptedFileList = FileUtils.listFilesInDirWithFilter(roombankerDir, ".ao", true);
+            if (encryptedFileList == null || encryptedFileList.isEmpty()) {
+                return;
+            }
+            mPicFileList = new ArrayList<>();
+            ThreadUtils.newThread(new Runnable() {
+                @Override
+                public void run() {
                     String destDirPath = "/data/rk_backup/rk_ad";
                     File destDir = new File(destDirPath);
-                    if (FileUtils.createOrExistsDir(destDir)) {
+                    if (!FileUtils.createOrExistsDir(destDir)) {
+                        return;
+                    }
+                    for (File encryptedFile : encryptedFileList) {
+                        // 获取全路径中的文件名(不要.ao的后缀)
+                        String fileName = getFileName(encryptedFile);
                         File decryptedFile = new File(destDir, fileName + ".jpeg");
                         // 成功复制
                         if (FileUtil.encryptFile(encryptedFile, decryptedFile)) {
-                            picFileList.add(decryptedFile);
+                            mPicFileList.add(decryptedFile);
                         }
                     }
+                    // 复制完毕
+                    LogUtil.d(TAG, "复制完毕");
+                    // 按照名字从小到大排序
+                    Collections.sort(mPicFileList, new Comparator<File>() {
+                        @Override
+                        public int compare(File o1, File o2) {
+                            try {
+                                String fileName1 = getFileName(o1);
+                                String fileName2 = getFileName(o2);
+                                int i1 = Integer.parseInt(fileName1);
+                                int i2 = Integer.parseInt(fileName2);
+                                return i1 - i2;
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            return 0;
+                        }
+                    });
+                    mHandler.sendEmptyMessage(0);
                 }
-                // 复制完毕 修改call分支
-                LogUtil.d(TAG, "复制完毕");
-                Toast.makeText(context, "复制完毕", Toast.LENGTH_LONG).show();
-                if (!picFileList.isEmpty()) {
-                    RxBus.getDefault().post(new SleepImageEvent(picFileList));
-                }
-            }
+            });
         }
     }
 }

@@ -18,13 +18,19 @@ import com.alibaba.fastjson.JSON;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 
+import org.greenrobot.greendao.query.Query;
+
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import rk.device.launcher.R;
 import rk.device.launcher.api.T;
 import rk.device.launcher.bean.QrCodeBO;
+import rk.device.launcher.db.DbHelper;
+import rk.device.launcher.db.entity.User;
+import rk.device.launcher.db.entity.UserDao;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.TimeUtils;
 import rk.device.launcher.utils.encrypt.RSAUtils;
@@ -231,15 +237,25 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback,
             QrCodeBO qrCodeBO = JSON.parseObject(decryptedString, QrCodeBO.class);
             long endTime = qrCodeBO.endTime;
             long startTime = qrCodeBO.startTime;
+            String peopleId = qrCodeBO.peopleId;
             Date endDate = TimeUtils.formatTimeStamp(endTime);
 //            T.showShort("获取到结束时间");
             Date currentDate = TimeUtils.getCurrentTime();
             // 授权时间已过期
             if (currentDate.after(endDate)) {
                 showWarning("授权已过期, 请联系管理员");
-            } else if (false) { // todo 用户未进行授权该门禁+系统不存在该用户，提示：“未授权用户，请联系管理员”
-
-            } else { // 成功, 执行开门逻辑, 显示文字：验证成功；1.5s后跳转首页
+            } else {
+                UserDao userDao = DbHelper.getUserDao();
+                Query<User> query = userDao.queryBuilder()
+                        .where(UserDao.Properties.UniqueId.eq(peopleId))
+                        .build();
+                List<User> userList = query.list();
+                if (userList == null || userList.isEmpty()) {
+                    showWarning("未授权用户，请联系管理员");
+                    return;
+                }
+                // todo 用户未进行授权该门禁+系统不存在该用户，提示：“未授权用户，请联系管理员”
+                // 调用开门接口, 假如成功, 执行开门逻辑, 显示文字：验证成功；1.5s后跳转首页
                 T.showShort("开门成功");
             }
 
