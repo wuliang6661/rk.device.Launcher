@@ -174,7 +174,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
             case R.id.btn_add_finger:
                 /**
                  * 新增指纹
-                 * 
+                 *
                  * @step 判断指纹头能否录入指纹
                  * @step 录入指纹
                  */
@@ -402,7 +402,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
         //step 1 判断该指纹是否已入库 1 提示已存在 0 删除该指纹
         //如果不存在，直接添加
         if (oFingerId > 0) {
-            if (VerifyUtils.getInstance().verifyByFinger(oFingerId) < 0) {
+            if (VerifyUtils.getInstance().verifyByFinger(oFingerId) == null) {
                 if (!doDeleteJniFinger(oFingerId)) {
                     Log.i(TAG, TAG + " delete useless finger error!");
                     isAdd = false;

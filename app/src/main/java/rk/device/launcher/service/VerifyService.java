@@ -13,6 +13,7 @@ import peripherals.FingerHelper;
 import peripherals.NfcHelper;
 import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.bean.event.NFCAddEvent;
+import rk.device.launcher.bean.event.OpenDoorSuccessEvent;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.utils.rxjava.RxBus;
 import rk.device.launcher.utils.verify.VerifyUtils;
@@ -73,10 +74,18 @@ public class VerifyService extends Service {
      */
     private void fingerService() {
         if (LauncherApplication.sIsFingerAdd == 1 && isTopActivity().equals(FINGER_ADD_PAGE)) {
-
+            Log.i(TAG, TAG + " model:finger add");
         } else {
+            Log.i(TAG, TAG + " model:finger verify");
             int resultCode = FingerHelper.JNIFpFingerMatch();
-            Log.i(TAG, TAG + " finger resultCode:" + resultCode);
+            Log.i(TAG, TAG + " fingerId:" + resultCode);
+            if (resultCode > 0) {
+                User user = VerifyUtils.getInstance().verifyByFinger(resultCode);
+                if (user != null) {
+//                    OpenUtils.getInstance().open(VerifyTypeConstant.TYPE_FINGER,user.getId().intValue(),user.getName(), TimeUtils.getTimeStamp());
+                    RxBus.getDefault().post(new OpenDoorSuccessEvent("",1,1));
+                }
+            }
         }
         sleep();
     }

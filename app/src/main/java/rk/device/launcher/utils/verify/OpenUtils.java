@@ -14,6 +14,7 @@ import rk.device.launcher.bean.TokenBo;
 import rk.device.launcher.db.DbRecordHelper;
 import rk.device.launcher.db.entity.Record;
 import rk.device.launcher.global.Constant;
+import rk.device.launcher.global.VerifyTypeConstant;
 import rk.device.launcher.utils.MD5;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.TimeUtils;
@@ -129,22 +130,22 @@ public class OpenUtils {
     private String openStatus(int type) {
         String data;
         switch (type) {
-            case 1:
+            case VerifyTypeConstant.TYPE_CARD:
                 data = "开门方式1 卡：录入卡号";
                 break;
-            case 2:
+            case VerifyTypeConstant.TYPE_FINGER:
                 data = "开门方式2 指纹：指纹ID";
                 break;
-            case 3:
+            case VerifyTypeConstant.TYPE_FACE:
                 data = "开门方式3 人脸：人脸ID";
                 break;
-            case 4:
+            case VerifyTypeConstant.TYPE_PASSWORD:
                 data = "开门方式4 密码：开门密码";
                 break;
-            case 5:
+            case VerifyTypeConstant.TYPE_QR_CODE:
                 data = "开门方式5 二维码：二维码开门";
                 break;
-            case 6:
+            case VerifyTypeConstant.TYPE_API:
                 data = "开门方式6 远程开门：远程开门";
                 break;
             default:

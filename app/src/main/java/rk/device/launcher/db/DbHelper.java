@@ -110,25 +110,25 @@ public class DbHelper {
      * @value 3 指纹3
      * @return
      */
-    public static int queryByFinger(int fingerId) {
+    public static User queryByFinger(int fingerId) {
         Query<User> query = getUserDao().queryBuilder()
                 .where(UserDao.Properties.FingerID1.eq(fingerId)).build();
         if (query.list().size() == 0) {
             query = getUserDao().queryBuilder().where(UserDao.Properties.FingerID2.eq(fingerId))
                     .build();
         } else {
-            return 1;
+            return query.list().get(0);
         }
         if (query.list().size() == 0) {
             query = getUserDao().queryBuilder().where(UserDao.Properties.FingerID3.eq(fingerId))
                     .build();
         } else {
-            return 2;
+            return query.list().get(0);
         }
         if (query.list().size() == 0) {
-            return -1;
+            return null;
         } else {
-            return 3;
+            return query.list().get(0);
         }
     }
 

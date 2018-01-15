@@ -23,18 +23,22 @@ import butterknife.ButterKnife;
 import rk.device.launcher.R;
 import rk.device.launcher.api.BaseApiImpl;
 import rk.device.launcher.bean.NetDismissBO;
+import rk.device.launcher.bean.event.OpenDoorSuccessEvent;
 import rk.device.launcher.service.BlueToothsBroadcastReceiver;
 import rk.device.launcher.service.RKLauncherPushIntentService;
 import rk.device.launcher.service.RKLauncherPushService;
 import rk.device.launcher.service.SleepTaskServer;
 import rk.device.launcher.ui.fragment.BaseDialogFragment;
+import rk.device.launcher.ui.fragment.VerifyNoticeDialogFragment;
 import rk.device.launcher.ui.fragment.WaitDialog;
 import rk.device.launcher.ui.setting.SetNetWorkActivity;
 import rk.device.launcher.ui.setting.SleepActivity;
 import rk.device.launcher.utils.AppManager;
 import rk.device.launcher.utils.rxjava.RxBus;
+import rx.Subscriber;
 import rx.Subscription;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -52,6 +56,11 @@ public abstract class BaseActivity extends RxAppCompatActivity {
 
     /* 提示弹窗*/
     private BaseDialogFragment hintDialog;
+
+    /**
+     * 验证成功或失败提示弹窗
+     */
+    private VerifyNoticeDialogFragment verifyNoticeDialogFragment = null;
 
     private Subscription subscription;
 
@@ -73,6 +82,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(getLayout());
         hideNavigationBar();
+        registerRxBus();
         ButterKnife.bind(this);
         SleepTaskServer.getSleepHandler(this).sendEmptyMessage(0x11);
         AppManager.getAppManager().addActivity(this);
@@ -109,6 +119,10 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         if (hintDialog != null && hintDialog.getDialog() != null
                 && hintDialog.getDialog().isShowing()) {
             hintDialog.dismiss();
+        }
+        if (verifyNoticeDialogFragment != null && verifyNoticeDialogFragment.getDialog() != null
+                && verifyNoticeDialogFragment.getDialog().isShowing()) {
+            verifyNoticeDialogFragment.dismiss();
         }
     }
 
@@ -447,5 +461,52 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         View view = findViewById(viewId);
         return (U) view;
     }
+
+
+    private void registerRxBus(){
+        RxBus.getDefault().toObserverable(OpenDoorSuccessEvent.class).subscribeOn(Schedulers.io()).subscribe(new Subscriber<OpenDoorSuccessEvent>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(OpenDoorSuccessEvent openDoorSuccessEvent) {
+                if(openDoorSuccessEvent.isSuccess == 1){
+//                    showSuccessDialog();
+                }else{
+//                    showFailDialog();
+                }
+            }
+        });
+    }
+
+    private void showSuccessDialog(){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(verifyNoticeDialogFragment == null){
+                    verifyNoticeDialogFragment = VerifyNoticeDialogFragment.newInstance();
+                }
+                verifyNoticeDialogFragment.setStatusMsg("验证成功").setStatusImg(R.drawable.icon_recovery_success);
+                verifyNoticeDialogFragment.showDialog(getSupportFragmentManager());
+            }
+        });
+    }
+
+    private void showFailDialog(){
+        if(verifyNoticeDialogFragment == null){
+            verifyNoticeDialogFragment = VerifyNoticeDialogFragment.newInstance();
+        }
+        verifyNoticeDialogFragment.setStatusMsg("验证失败").setStatusImg(R.drawable.icon_recovery_success);
+        verifyNoticeDialogFragment.showDialog(getSupportFragmentManager());
+    }
+
+
 
 }
