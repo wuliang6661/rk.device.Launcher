@@ -37,12 +37,11 @@ public class VerifyService extends Service {
     private void init() {
         Log.i(TAG, TAG + " init");
         isOpen = true;
-        Thread thread = new Thread(new Runnable() {
+        Thread nfcThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 while (isOpen) {
                     nfcService();
-                    fingerService();
                     Log.d(TAG,
                             TAG + android.os.Process.myPid() + " Thread: "
                                     + android.os.Process.myTid() + " name "
@@ -51,7 +50,16 @@ public class VerifyService extends Service {
                 }
             }
         });
-        thread.start();
+        nfcThread.start();
+        Thread fingerThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (isOpen) {
+                    fingerService();
+                }
+            }
+        });
+        fingerThread.start();
     }
 
     private String isTopActivity() {
@@ -66,7 +74,7 @@ public class VerifyService extends Service {
     private void fingerService() {
         if (LauncherApplication.sIsFingerAdd == 1 && isTopActivity().equals(FINGER_ADD_PAGE)) {
 
-        }else{
+        } else {
             int resultCode = FingerHelper.JNIFpFingerMatch();
             Log.i(TAG, TAG + " finger resultCode:" + resultCode);
         }
@@ -115,7 +123,6 @@ public class VerifyService extends Service {
             Log.i(TAG, TAG + " read nfc failed.");
         }
         sleep();
-
     }
 
     private void sleep() {

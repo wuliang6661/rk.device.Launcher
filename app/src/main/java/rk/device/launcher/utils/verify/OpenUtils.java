@@ -50,7 +50,7 @@ public class OpenUtils {
      * @param type 1 : nfc,2 : 指纹,3 : 人脸,4 : 密码,5 : 二维码,6 : 远程开门
      * @param personId
      * @param personName
-     * @param time 验资时间，比如刷卡，按指纹时间
+     * @param time 验证时间，比如刷卡，按指纹时间
      * @step 1 验证通过之后，调取开门接口（接口1）
      * @result 1.1 token过期，需要重新获取token，并重新请求开门（接口2）
      * @result 1.2 验证通过
