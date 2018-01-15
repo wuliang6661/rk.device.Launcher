@@ -25,6 +25,7 @@ public class TimeUtils {
 
     /**
      * 获取当前时间
+     *
      * @return
      */
     public static Date getCurrentTime() {
@@ -51,7 +52,7 @@ public class TimeUtils {
      * 根据时间戳获取指定格式的时间，如2011-11-30 08:40
      *
      * @param timestamp 时间戳 单位为毫秒
-     * @param format 指定格式 如果为null或空串则使用默认格式"yyyy-MM-dd HH:MM"
+     * @param format    指定格式 如果为null或空串则使用默认格式"yyyy-MM-dd HH:MM"
      * @return
      */
     public static String getFormatTimeFromTimestamp(long timestamp, String format) {
@@ -105,7 +106,7 @@ public class TimeUtils {
 
     /**
      * 获取当前时间戳
-     * 
+     *
      * @return
      */
     public static int getTimeStamp() {
@@ -114,9 +115,10 @@ public class TimeUtils {
 
     /**
      * 将时间戳转换为日期
-     * @param timeStamp 时间戳, 单位为秒
+     *
      * @return 日期
      */
+
     public static Date formatTimeStamp(long timeStamp) {
         if (timeStamp == 0) {
             return null;

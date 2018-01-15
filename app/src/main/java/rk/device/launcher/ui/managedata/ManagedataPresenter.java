@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.PopupWindow;
 
 import org.greenrobot.greendao.query.Query;
+import org.greenrobot.greendao.rx.RxDao;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,10 @@ import rk.device.launcher.ui.managedata.popup.SelectTypePopupWindow;
 import rk.device.launcher.ui.managedata.rv.ManageDataItemDecoration;
 import rk.device.launcher.ui.managedata.rv.ManageDataRvAdapter;
 import rk.device.launcher.utils.MD5;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 /**
  * MVPPlugin
@@ -43,13 +48,12 @@ public class ManagedataPresenter extends BasePresenterImpl<ManagedataContract.Vi
     @Override
     public void initData(RecyclerView recyclerView) {
         mDataList = new ArrayList<>();
+        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.addItemDecoration(new ManageDataItemDecoration(mContext, R.color.color_171f36));
-        testInsertData();
-        loadData();
-        mRvAdapter = new ManageDataRvAdapter(mDataList);
-        recyclerView.setAdapter(mRvAdapter);
-        recyclerView.setHasFixedSize(true);
+//        testInsertData();
+        loadData(recyclerView);
+
 
         View contentView = View.inflate(mContext, R.layout.layout_popup_selecttype, null);
         mSelectTypePopupWindow = new SelectTypePopupWindow(contentView, mContext);
@@ -74,10 +78,28 @@ public class ManagedataPresenter extends BasePresenterImpl<ManagedataContract.Vi
         mSelectTypePopupWindow.showAsDropDown(anchor);
     }
 
-    private void loadData() {
-        List<Record> dbRecordList = DbRecordHelper.loadAll();
-        mDataList.clear();
-        mDataList.addAll(dbRecordList);
+    private void loadData(RecyclerView recyclerView) {
+        RxDao<Record, Long> recordRxDao = DbRecordHelper.getRecordDao().rx();
+        recordRxDao.loadAll()
+                .subscribeOn(Schedulers.io())
+                .doOnSubscribe(new Action0() {
+                    @Override
+                    public void call() {
+                        mView.showProgress();
+                    }
+                })
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<List<Record>>() {
+                    @Override
+                    public void call(List<Record> records) {
+                        mView.hideProgress();
+                        mDataList.clear();
+                        mDataList.addAll(records);
+                        mRvAdapter = new ManageDataRvAdapter(mDataList);
+                        recyclerView.setAdapter(mRvAdapter);
+                    }
+                });
     }
 
     @Override

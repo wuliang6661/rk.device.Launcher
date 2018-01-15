@@ -18,7 +18,9 @@ import rk.device.launcher.global.Constant;
 import rk.device.launcher.mvp.MVPBaseActivity;
 import rk.device.launcher.ui.setting.SetBasicInfoActivity;
 import rk.device.launcher.ui.setting.SetNetWorkActivity;
+import rk.device.launcher.ui.settingmangerpwd.SettingMangerPwdActivity;
 import rk.device.launcher.utils.DeviceUtils;
+import rk.device.launcher.utils.NetWorkUtil;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.StringUtils;
 import rk.device.launcher.utils.key.KeyUtils;
@@ -66,8 +68,12 @@ public class KeyActivity extends MVPBaseActivity<KeyContract.View, KeyPresenter>
                 if (StringUtils.isEmpty(key) || key.length() < 14) {
                     onRequestError("请输入正确激活码");
                 } else {
-                    mPresenter.activationDiveces(new DeviceUuidFactory(this).getUuid() + "", DeviceUtils.getMacAddress(), key);
-                    showWaitProgress("正在激活...");
+                    if (NetWorkUtil.isNetConnected(this)) {
+                        mPresenter.activationDiveces(new DeviceUuidFactory(this).getUuid() + "", DeviceUtils.getMacAddress(), key);
+                        showWaitProgress("正在激活...");
+                    } else {
+                        onRequestError("网络未连接");
+                    }
                 }
                 break;
             case R.id.go_net:
@@ -94,9 +100,10 @@ public class KeyActivity extends MVPBaseActivity<KeyContract.View, KeyPresenter>
     public void onSuress() {
         hintWaitProgress();
         if (KeyUtils.saveKey(key)) {
-            Log.d("wuliang", KeyUtils.getKey());
             SPUtils.put(Constant.SETTING_NUM, Constant.SETTING_TYPE3);
-            gotoActivity(SetBasicInfoActivity.class, true);
+            gotoActivity(SettingMangerPwdActivity.class, true);
+        } else {
+            onRequestError("激活流程出现错误，请重新激活");
         }
     }
 

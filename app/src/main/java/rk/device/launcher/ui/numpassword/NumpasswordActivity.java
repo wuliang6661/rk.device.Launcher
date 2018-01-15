@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -125,10 +126,8 @@ public class NumpasswordActivity extends MVPBaseActivity<NumpasswordContract.Vie
             }
         };
         adapter.setOnItemClickListener(R.id.call_layout, (view, position) -> {
-            if (commitText.length() < 6) {
-                commitText.append(callbutton.get(position));
-                editText.setText(commitText.toString());
-            }
+            commitText.append(callbutton.get(position));
+            editText.setText(commitText.toString());
         });
         recycle.setAdapter(adapter);
     }
@@ -150,7 +149,9 @@ public class NumpasswordActivity extends MVPBaseActivity<NumpasswordContract.Vie
                 }
                 break;
             case R.id.call_commit:    //确定密码
-                List<User> users = DbHelper.queryByPassword(commitText.toString());
+                String[] passwords = commitText.toString().split("#");
+                List<User> users = DbHelper.queryByPassword(passwords[passwords.length - 1]);
+                Log.d("wuliang", users.size() + "");
                 if (users.isEmpty()) {
                     showMessageDialog("密码错误，请重新输入");
                 } else {

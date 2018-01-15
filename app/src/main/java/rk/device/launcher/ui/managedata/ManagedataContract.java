@@ -16,6 +16,11 @@ public class ManagedataContract {
         void refreshTypeText(String name);
 
         void dismissPopupWindow();
+
+        void showProgress();
+
+        void hideProgress();
+
     }
 
     interface  Presenter extends BasePresenter<View> {

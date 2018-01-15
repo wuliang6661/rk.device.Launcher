@@ -1,10 +1,11 @@
 package rk.device.launcher.bean;
 
 /**
- * Created by hanbin on 2018/1/13.
+ * Created by Administrator on 2018/1/13.
  */
 
 public class TokenBo {
+
     /**
      * @params access_token : token
      * @params expires_in :

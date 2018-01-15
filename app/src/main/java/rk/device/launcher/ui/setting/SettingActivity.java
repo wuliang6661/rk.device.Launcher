@@ -16,12 +16,15 @@ import android.widget.TextView;
 
 import com.android.internal.os.storage.ExternalStorageFormatter;
 
+import java.io.File;
+
 import butterknife.Bind;
 import rk.device.launcher.R;
 import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.ui.fragment.RecoveryDialogFragment;
 import rk.device.launcher.ui.managedata.ManagedataActivity;
 import rk.device.launcher.ui.personmanage.PersonManageActivity;
+import rk.device.launcher.utils.FileUtils;
 import rk.device.launcher.utils.SettingUtils;
 
 /**
@@ -175,7 +178,7 @@ public class SettingActivity extends BaseActivity {
                                 if (SettingUtils.isMonkeyRunning()) {
                                     return;
                                 }
-
+                                clearFile();
                                 final PersistentDataBlockManager pdbManager = (PersistentDataBlockManager)
                                         SettingActivity.this.getSystemService("persistent_data_block");
 
@@ -215,6 +218,23 @@ public class SettingActivity extends BaseActivity {
             }
         });
     }
+
+
+    /**
+     * 清除本地所有文件
+     */
+    private void clearFile() {
+        FileUtils.deleteDir("/data/rk_backup/face");
+        FileUtils.deleteFile("/data/rk_backup/key");
+        FileUtils.deleteFile("/data/rk_backup/sp_config.xml");
+        if (new File("/data/rk_backup/rk.db").exists()) {
+            FileUtils.deleteFile("/data/rk_backup/rk.db");
+        }
+        if (new File("/data/rk_backup/rk.db-journal").exists()) {
+            FileUtils.deleteFile("/data/rk_backup/rk.db-journal");
+        }
+    }
+
 
     private ProgressDialog getProgressDialog() {
         final ProgressDialog progressDialog = new ProgressDialog(this);

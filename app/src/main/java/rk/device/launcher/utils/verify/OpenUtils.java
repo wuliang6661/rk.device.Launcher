@@ -122,7 +122,7 @@ public class OpenUtils {
 
     /**
      * 获取开门方式对应的文案
-     * 
+     *
      * @param type
      * @return
      */
@@ -157,7 +157,7 @@ public class OpenUtils {
 
     /**
      * 插入本地数据库
-     * 
+     *
      * @param type
      * @param personId
      * @param personName
@@ -176,7 +176,7 @@ public class OpenUtils {
 
     /**
      * 同步开门记录
-     * 
+     *
      * @param token
      * @param type
      * @param personId
