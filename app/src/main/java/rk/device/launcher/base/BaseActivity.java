@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -497,17 +498,25 @@ public abstract class BaseActivity extends RxAppCompatActivity {
                     verifyNoticeDialogFragment = VerifyNoticeDialogFragment.newInstance();
                 }
                 verifyNoticeDialogFragment.setStatusMsg("验证成功").setStatusImg(R.drawable.icon_recovery_success);
-                verifyNoticeDialogFragment.showDialog(getSupportFragmentManager());
+                verifyNoticeDialogFragment.showDialog(((FragmentActivity)AppManager.getAppManager().curremtActivity()).getSupportFragmentManager());
             }
         });
     }
 
+    /**
+     * 验证失败dialog
+     */
     private void showFailDialog(){
-        if(verifyNoticeDialogFragment == null){
-            verifyNoticeDialogFragment = VerifyNoticeDialogFragment.newInstance();
-        }
-        verifyNoticeDialogFragment.setStatusMsg("验证失败").setStatusImg(R.drawable.icon_recovery_success);
-        verifyNoticeDialogFragment.showDialog(getSupportFragmentManager());
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (verifyNoticeDialogFragment == null) {
+                    verifyNoticeDialogFragment = VerifyNoticeDialogFragment.newInstance();
+                }
+                verifyNoticeDialogFragment.setStatusMsg("验证失败").setStatusImg(R.drawable.icon_recovery_success);
+                verifyNoticeDialogFragment.showDialog(((FragmentActivity)AppManager.getAppManager().curremtActivity()).getSupportFragmentManager());
+            }
+        });
     }
 
 

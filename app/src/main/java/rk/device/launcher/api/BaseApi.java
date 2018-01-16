@@ -66,7 +66,7 @@ public interface BaseApi {
      * @param requestBody
      * @return
      */
-    @POST("/public/rest/face/openDoor")
+    @POST("/tenantcenter/a/public/rest/face1/openDoor")
     Observable<BaseResult<StatusBo>> openDoor(@Body RequestBody requestBody);
 
     /**
@@ -87,14 +87,14 @@ public interface BaseApi {
      * @param requestBody
      * @return
      */
-    @POST("/public/rest/face/openHistory")
+    @POST("/tenantcenter/a/public/rest/face1/openHistory")
     Observable<BaseResult<StatusBo>> syncRecords(RequestBody requestBody);
 
 
     /**
      * 提交新增用户接口
      */
-    @POST("/public/rest/face/upAuthlist")
+    @POST("/tenantcenter/a/public/rest/face1/upAuthlist")
     Observable<BaseResult<String>> syncPerson(@Body RequestBody requestBody);
 
 }
