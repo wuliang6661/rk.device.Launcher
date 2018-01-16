@@ -84,8 +84,8 @@ public class VerifyService extends Service {
                 User user = VerifyUtils.getInstance().verifyByFinger(resultCode);
                 if (user != null) {
                     Log.i(TAG, TAG + " user " + user.getName());
-                    OpenUtils.getInstance().open(VerifyTypeConstant.TYPE_FINGER,
-                            user.getUniqueId(), user.getName());
+                    OpenUtils.getInstance().open(VerifyTypeConstant.TYPE_FINGER, user.getUniqueId(),
+                            user.getName());
                 } else {
                     Log.i(TAG, TAG + " user is null");
                 }

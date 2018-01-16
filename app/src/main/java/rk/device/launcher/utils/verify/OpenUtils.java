@@ -10,7 +10,6 @@ import java.util.UUID;
 import rk.device.launcher.api.BaseApiImpl;
 import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.bean.StatusBo;
-import rk.device.launcher.bean.TokenBo;
 import rk.device.launcher.db.DbRecordHelper;
 import rk.device.launcher.db.entity.Record;
 import rk.device.launcher.global.Constant;
@@ -63,33 +62,6 @@ public class OpenUtils {
         openDoor(token, type, personId, personName);
     }
 
-    /**
-     * 设备开门鉴权token请求接口
-     *
-     * @param type
-     * @param personId
-     * @param personName
-     * @param time
-     */
-    private void obtainToken(int type, String personId, String personName, int time) {
-        BaseApiImpl.postToken(deviceUuidFactory.getUuid().toString(), "")
-                .subscribe(new Subscriber<TokenBo>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(TokenBo tokenBo) {
-                        openDoor(tokenBo.getAccess_token(), type, personId, personName);
-                    }
-                });
-    }
 
     /**
      * 开门接口
@@ -112,7 +84,6 @@ public class OpenUtils {
 
                     @Override
                     public void onNext(StatusBo statusBo) {
-
                         String data = openStatus(type);
                         insertToLocalDB(type, personId, personName,
                                 TimeUtils.getTimeStamp(), data);
