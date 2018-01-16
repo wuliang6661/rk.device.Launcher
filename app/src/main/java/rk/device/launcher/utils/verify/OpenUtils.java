@@ -81,7 +81,6 @@ public class OpenUtils {
 
                     @Override
                     public void onError(Throwable e) {
-
                     }
 
                     @Override

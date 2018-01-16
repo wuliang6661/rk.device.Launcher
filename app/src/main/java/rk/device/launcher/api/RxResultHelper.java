@@ -28,7 +28,7 @@ public class RxResultHelper {
                                     return createData(baseResult.getData());
                                 } else {
                                     Log.e("wuliang", "请求报错啦！");
-                                    return Observable.error(new RuntimeException(baseResult.getMessage()));
+                                    return Observable.error(new RuntimeException(baseResult.getCode() + ""));
                                 }
                             }
                         }

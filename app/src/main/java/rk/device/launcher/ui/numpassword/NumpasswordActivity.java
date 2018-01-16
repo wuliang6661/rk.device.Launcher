@@ -19,7 +19,9 @@ import butterknife.Bind;
 import rk.device.launcher.R;
 import rk.device.launcher.db.DbHelper;
 import rk.device.launcher.db.entity.User;
+import rk.device.launcher.global.VerifyTypeConstant;
 import rk.device.launcher.mvp.MVPBaseActivity;
+import rk.device.launcher.utils.verify.OpenUtils;
 import rk.device.launcher.widget.lgrecycleadapter.LGRecycleViewAdapter;
 import rk.device.launcher.widget.lgrecycleadapter.LGViewHolder;
 
@@ -157,7 +159,7 @@ public class NumpasswordActivity extends MVPBaseActivity<NumpasswordContract.Vie
                 } else {
                     long time = System.currentTimeMillis();
                     if (users.get(0).getStartTime() < time && users.get(0).getEndTime() > time) {    //在有效时间内，则开门
-                        mPresenter.openDoor();
+                        OpenUtils.getInstance().open(VerifyTypeConstant.TYPE_PASSWORD, users.get(0).getUniqueId(), users.get(0).getName());
                     }
                 }
                 break;
