@@ -30,6 +30,7 @@ import rk.device.launcher.bean.WeatherBO;
 import rk.device.launcher.db.DbHelper;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.global.Constant;
+import rk.device.launcher.global.VerifyTypeConstant;
 import rk.device.launcher.mvp.BasePresenterImpl;
 import rk.device.launcher.service.ElectricBroadcastReceiver;
 import rk.device.launcher.service.NetBroadcastReceiver;
@@ -343,8 +344,8 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
             if (!users.isEmpty()) {
                 long time = System.currentTimeMillis();
                 if (users.get(0).getStartTime() < time && users.get(0).getEndTime() > time) {    //在有效时间内，则开门
-                    mView.showSuress(users.get(0).getName());
-//                    OpenUtils.getInstance().open(3, 1, users.get(0).getName(), TimeUtils.getTimeStamp());
+//                    mView.showSuress(users.get(0).getName());
+                    OpenUtils.getInstance().open(VerifyTypeConstant.TYPE_FACE, users.get(0).getUniqueId(), users.get(0).getName());
                 }
             }
         });
