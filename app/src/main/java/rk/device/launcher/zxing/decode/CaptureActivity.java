@@ -20,7 +20,6 @@ import com.google.zxing.Result;
 
 import org.greenrobot.greendao.query.Query;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -52,7 +51,6 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback,
     private InactivityTimer inactivityTimer;
     private BeepManager beepManager;
     private AmbientLightManager ambientLightManager;
-    public static Camera camera;
     private Camera.Parameters parameters;
     private ImageView mIvBack;
     private TextView mTvTitle;
@@ -151,38 +149,9 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback,
 
     @Override
     protected void onDestroy() {
-        long t1 = System.currentTimeMillis();
         inactivityTimer.shutdown();
-        long t2 = System.currentTimeMillis();
-        Log.d(TAG, "onDestroy: costTime = " + (t2 - t1));
         super.onDestroy();
     }
-
-
-
-    /**
-     * 第一次进入页面，开始打开camera
-     */
-    private void openCamera(SurfaceHolder holder) throws IOException {
-        // 获取camera对象
-        int cameraCount = Camera.getNumberOfCameras();
-        Log.d(TAG, cameraCount + "");
-        if (cameraCount == 2) {
-            camera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
-        }
-        if (null != camera) {
-//            // 设置预览监听
-//            camera.setPreviewDisplay(holder);
-//            // 启动摄像头预览
-//            camera.startPreview();
-//            camera.setPreviewCallback((data, camera1) -> {
-//                if (callBack != null) {
-//                    callBack.callMessage(data, camera.getParameters().getPreviewSize().width, camera.getParameters().getPreviewSize().height);
-//                }
-//            });
-        }
-    }
-
 
     private void initCamera(SurfaceHolder surfaceHolder) {
         if (surfaceHolder == null) {
@@ -254,7 +223,6 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback,
                     showWarning("未授权用户，请联系管理员");
                     return;
                 }
-                // todo 用户未进行授权该门禁+系统不存在该用户，提示：“未授权用户，请联系管理员”
                 // 调用开门接口, 假如成功, 执行开门逻辑, 显示文字：验证成功；1.5s后跳转首页
                 T.showShort("开门成功");
             }

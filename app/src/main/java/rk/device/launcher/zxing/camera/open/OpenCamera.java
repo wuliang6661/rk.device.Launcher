@@ -21,7 +21,7 @@ import android.hardware.Camera;
 public final class OpenCamera {
   
   private final int index;
-  private final Camera camera;
+  private Camera camera;
   private final CameraFacing facing;
   private final int orientation;
   
@@ -34,6 +34,10 @@ public final class OpenCamera {
 
   public Camera getCamera() {
     return camera;
+  }
+
+  public void setCamera(Camera camera) {
+    this.camera = camera;
   }
 
   public CameraFacing getFacing() {

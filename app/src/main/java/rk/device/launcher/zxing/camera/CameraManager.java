@@ -142,11 +142,13 @@ public final class CameraManager {
 
         if (camera != null) {
 //            camera.getCamera().release();
+            camera.setCamera(null);
             camera = null;
             // Make sure to clear these each time we close the camera, so that any scanning rect
             // requested by intent is forgotten.
             framingRect = null;
             framingRectInPreview = null;
+            System.gc();
         }
     }
 
