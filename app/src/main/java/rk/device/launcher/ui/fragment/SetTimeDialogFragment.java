@@ -114,7 +114,7 @@ public class SetTimeDialogFragment extends DialogFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		mSelectedColor = getResources().getColor(R.color.blue_338eff);
-		getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
+//		getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
 		View view = inflater.inflate(R.layout.view_dialog_set_time, container, false);
 
 		initView(view);

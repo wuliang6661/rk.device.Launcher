@@ -77,5 +77,6 @@
     <string name="delete_fail">删除失败</string>
     <string name="finger_add_error">指纹信息录入失败，请重新录入</string>
     <string name="notice">提示</string>
+    <string name="verify_success">验证通过</string>
 
 </resources>

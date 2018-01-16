@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import butterknife.Bind;
+import peripherals.FingerHelper;
 import rk.device.launcher.R;
 import rk.device.launcher.db.DbHelper;
 import rk.device.launcher.db.entity.User;
@@ -24,6 +26,7 @@ import rk.device.launcher.ui.personface.PersonFaceActivity;
 import rk.device.launcher.utils.FileUtils;
 import rk.device.launcher.utils.StringUtils;
 import rk.device.launcher.utils.TimeUtils;
+import rk.device.launcher.utils.TypeTranUtils;
 import rk.device.launcher.utils.verify.FaceUtils;
 import rk.device.launcher.utils.verify.SyncPersonUtils;
 
@@ -197,6 +200,16 @@ public class Person_addActivity
                         FaceUtils faceUtils = FaceUtils.getInstance();
                         faceUtils.delete(user.getFaceID());
                         FileUtils.deleteFile("/data/rk_backup/face/" + user.getFaceID() + ".png");
+                    }
+                    //删除指纹
+                    if(!TextUtils.isEmpty(user.getFingerID1())){
+                        FingerHelper.JNIFpDelUserByID(TypeTranUtils.str2Int(user.getFingerID1()));
+                    }
+                    if(!TextUtils.isEmpty(user.getFingerID2())){
+                        FingerHelper.JNIFpDelUserByID(TypeTranUtils.str2Int(user.getFingerID2()));
+                    }
+                    if(!TextUtils.isEmpty(user.getFingerID3())){
+                        FingerHelper.JNIFpDelUserByID(TypeTranUtils.str2Int(user.getFingerID3()));
                     }
                     DbHelper.delete(user);
                     dissmissMessageDialog();
