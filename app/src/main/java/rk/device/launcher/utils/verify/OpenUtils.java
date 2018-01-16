@@ -51,7 +51,6 @@ public class OpenUtils {
      * @param type 1 : nfc,2 : 指纹,3 : 人脸,4 : 密码,5 : 二维码,6 : 远程开门
      * @param personId
      * @param personName
-     * @param time 验证时间，比如刷卡，按指纹时间
      * @step 1 验证通过之后，调取开门接口（接口1）
      * @result 1.1 token过期，需要重新获取token，并重新请求开门（接口2）
      * @result 1.2 验证通过
@@ -59,9 +58,9 @@ public class OpenUtils {
      * @step 3 开门记录同步到服务端(接口3)
      *       <p/>
      */
-    public void open(int type, String personId, String personName, int time) {
+    public void open(int type, String personId, String personName) {
         String token = SPUtils.getString(Constant.ACCENT_TOKEN);
-        openDoor(token, type, personId, personName, time);
+        openDoor(token, type, personId, personName);
     }
 
     /**
@@ -87,7 +86,7 @@ public class OpenUtils {
 
                     @Override
                     public void onNext(TokenBo tokenBo) {
-                        openDoor(tokenBo.getAccess_token(), type, personId, personName, time);
+                        openDoor(tokenBo.getAccess_token(), type, personId, personName);
                     }
                 });
     }
@@ -98,7 +97,7 @@ public class OpenUtils {
      * @param token
      * @param type
      */
-    private void openDoor(String token, int type, String personId, String personName, int time) {
+    private void openDoor(String token, int type, String personId, String personName) {
         BaseApiImpl.openDoor(token, deviceUuidFactory.getUuid().toString(), type,
                 TimeUtils.getTimeStamp()).subscribe(new Subscriber<StatusBo>() {
                     @Override
@@ -115,8 +114,9 @@ public class OpenUtils {
                     public void onNext(StatusBo statusBo) {
 
                         String data = openStatus(type);
-                        insertToLocalDB(type, personId, personName, time, data);
-                        syncRecords(token, type, personId, personName, time, data);
+                        insertToLocalDB(type, personId, personName,
+                                TimeUtils.getTimeStamp(), data);
+                        syncRecords(token, type, personId, personName, TimeUtils.getTimeStamp(), data);
                     }
                 });
     }

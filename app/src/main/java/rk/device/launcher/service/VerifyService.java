@@ -15,7 +15,6 @@ import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.bean.event.NFCAddEvent;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.global.VerifyTypeConstant;
-import rk.device.launcher.utils.TimeUtils;
 import rk.device.launcher.utils.rxjava.RxBus;
 import rk.device.launcher.utils.verify.OpenUtils;
 import rk.device.launcher.utils.verify.VerifyUtils;
@@ -86,7 +85,7 @@ public class VerifyService extends Service {
                 if (user != null) {
                     Log.i(TAG, TAG + " user " + user.getName());
                     OpenUtils.getInstance().open(VerifyTypeConstant.TYPE_FINGER,
-                            user.getUniqueId(), user.getName(), TimeUtils.getTimeStamp());
+                            user.getUniqueId(), user.getName());
                 } else {
                     Log.i(TAG, TAG + " user is null");
                 }
