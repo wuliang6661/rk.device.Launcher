@@ -26,6 +26,7 @@ import android.util.Log;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -428,4 +429,24 @@ public class BitmapUtil {
         }
     }
 
+
+    /**
+     * 保存方法
+     */
+    public static void saveBitmap(String picName, Bitmap bm) {
+        File f = new File("/data/rk_backup/face/", picName);
+        if (f.exists()) {
+            f.delete();
+        }
+        try {
+            FileOutputStream out = new FileOutputStream(f);
+            bm.compress(Bitmap.CompressFormat.PNG, 90, out);
+            out.flush();
+            out.close();
+            FileUtils.setPermission(f.getAbsolutePath());
+            Log.i(TAG, "已经保存");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

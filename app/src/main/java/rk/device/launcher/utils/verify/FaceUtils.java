@@ -381,7 +381,7 @@ public class FaceUtils {
     }
 
 
-    public class FaceRegist {
+    private class FaceRegist {
         String mName;
         List<AFR_FSDKFace> mFaceList;
 
@@ -500,7 +500,7 @@ public class FaceUtils {
                 final String age = ages.get(0).getAge() == 0 ? "年龄未知" : ages.get(0).getAge() + "岁";
                 final String gender = genders.get(0).getGender() == -1 ? "性别未知" : (genders.get(0).getGender() == 0 ? "男" : "女");
 
-                if (max > 0.6f) {
+                if (max > 0.7f) {
                     //fr success.
                     Log.d("wuliang", "fit Score:" + max + ", NAME:" + name + ",age:" + age + ",gender:" + gender);
                     if (featureFace != null) {

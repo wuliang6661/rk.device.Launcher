@@ -311,7 +311,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
                 }
             } else {
                 initError.setVisibility(View.VISIBLE);
-                initDialog.setStatus(cvcStatus, LedStatus, 0, NfcStatus, mHandler);
+                initDialog.setStatus(cvcStatus, LedStatus, 0, NfcStatus);
                 if (initDialog != null && initDialog.isVisible()) {
                     T.showShort("部分设备初始化失败！建议重启设备！");
                     initDialog.setInitFinish();
