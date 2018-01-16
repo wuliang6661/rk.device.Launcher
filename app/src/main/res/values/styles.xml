@@ -41,6 +41,11 @@
         <item name="android:windowExitAnimation">@anim/slide_out_to_right</item>
     </style>
 
+    <style name="alphaDialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/alpha_from_disappear</item>
+        <item name="android:windowExitAnimation">@anim/alpha_to_disappear</item>
+    </style>
+
     <style name="BottomDialog" parent="@style/AppTheme">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

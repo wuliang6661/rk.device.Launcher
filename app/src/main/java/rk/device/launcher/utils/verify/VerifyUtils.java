@@ -49,9 +49,9 @@ public class VerifyUtils {
      * @param fingerId
      * @return
      */
-    public int verifyByFinger(int fingerId) {
+    public User verifyByFinger(int fingerId) {
         if (fingerId == 0) {
-            return -2;
+            return null;
         }
         return DbHelper.queryByFinger(fingerId);
     }
