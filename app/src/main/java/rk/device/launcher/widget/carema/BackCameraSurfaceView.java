@@ -17,15 +17,24 @@ public class BackCameraSurfaceView extends SurfaceView {
 
     Context mContext;
     SurfaceHolder mSurfaceHolder;
+    SurfaceHolderCaremaBack surface;
 
     public BackCameraSurfaceView(Context context, AttributeSet attrs) {
         super(context, attrs);
         // TODO Auto-generated constructor stub
+        surface = new SurfaceHolderCaremaBack();
         mContext = context;
         mSurfaceHolder = getHolder();
         mSurfaceHolder.setFormat(PixelFormat.TRANSPARENT);
         mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-        mSurfaceHolder.addCallback(new SurfaceHolderCaremaBack());
+        mSurfaceHolder.addCallback(surface);
+    }
+
+
+    public void setDisplay(boolean isDisplay) {
+        if(!isDisplay){
+            surface.setCloseDisplay();
+        }
     }
 
 }

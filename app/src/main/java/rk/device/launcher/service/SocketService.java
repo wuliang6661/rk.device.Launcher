@@ -77,7 +77,7 @@ public class SocketService extends Service {
 		mThreadPool = Executors.newCachedThreadPool();
 		uuidFactory = new DeviceUuidFactory(this);
 		uuid = uuidFactory.getUuid() + "";
-		Log.i("SocketService", "mac:" + DeviceUtils.getMacAddress());
+		Log.i("SocketService", "mac:" + DeviceUtils.getLocalMacAddress());
 		Log.i("SocketService", "uuid:" + uuid);
 	}
 	
