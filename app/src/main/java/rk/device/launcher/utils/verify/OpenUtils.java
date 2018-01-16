@@ -59,7 +59,7 @@ public class OpenUtils {
      * @step 3 开门记录同步到服务端(接口3)
      *       <p/>
      */
-    public void open(int type, int personId, String personName, int time) {
+    public void open(int type, String personId, String personName, int time) {
         String token = SPUtils.getString(Constant.ACCENT_TOKEN);
         openDoor(token, type, personId, personName, time);
     }
@@ -72,7 +72,7 @@ public class OpenUtils {
      * @param personName
      * @param time
      */
-    private void obtainToken(int type, int personId, String personName, int time) {
+    private void obtainToken(int type, String personId, String personName, int time) {
         BaseApiImpl.postToken(deviceUuidFactory.getUuid().toString(), "")
                 .subscribe(new Subscriber<TokenBo>() {
                     @Override
@@ -98,7 +98,7 @@ public class OpenUtils {
      * @param token
      * @param type
      */
-    private void openDoor(String token, int type, int personId, String personName, int time) {
+    private void openDoor(String token, int type, String personId, String personName, int time) {
         BaseApiImpl.openDoor(token, deviceUuidFactory.getUuid().toString(), type,
                 TimeUtils.getTimeStamp()).subscribe(new Subscriber<StatusBo>() {
                     @Override
@@ -164,9 +164,9 @@ public class OpenUtils {
      * @param personName
      * @param time
      */
-    private void insertToLocalDB(int type, int personId, String personName, int time, String data) {
+    private void insertToLocalDB(int type, String personId, String personName, int time, String data) {
         Record record = new Record(null, MD5.get16Lowercase(UUID.randomUUID().toString()),
-                personName, String.valueOf(personId), type, data, time, TimeUtils.getTimeStamp());
+                personName, personId, type, data, time, TimeUtils.getTimeStamp());
         int recordId = (int) DbRecordHelper.insert(record);
         if (recordId > 0) {
             Log.i(TAG, TAG + " insert record to local db success.");
@@ -185,7 +185,7 @@ public class OpenUtils {
      * @param time
      * @param data
      */
-    private void syncRecords(String token, int type, int personId, String personName, int time,
+    private void syncRecords(String token, int type, String personId, String personName, int time,
                              String data) {
         JSONObject params = new JSONObject();
         try {

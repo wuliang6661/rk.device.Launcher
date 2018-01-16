@@ -478,14 +478,17 @@ public abstract class BaseActivity extends RxAppCompatActivity {
             @Override
             public void onNext(OpenDoorSuccessEvent openDoorSuccessEvent) {
                 if(openDoorSuccessEvent.isSuccess == 1){
-//                    showSuccessDialog();
+                    showSuccessDialog();
                 }else{
-//                    showFailDialog();
+                    showFailDialog();
                 }
             }
         });
     }
 
+    /**
+     * 验证通过dialog
+     */
     private void showSuccessDialog(){
         runOnUiThread(new Runnable() {
             @Override
