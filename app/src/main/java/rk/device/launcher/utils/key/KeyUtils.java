@@ -48,6 +48,9 @@ public class KeyUtils {
     }
 
 
+    /**
+     * 机器是否已激活
+     */
     public static boolean isHaveKey() {
         return FileUtils.getFileByPath(keyPath).exists();
     }

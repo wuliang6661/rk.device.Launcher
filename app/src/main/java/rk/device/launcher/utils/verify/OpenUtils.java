@@ -1,5 +1,6 @@
 package rk.device.launcher.utils.verify;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -8,8 +9,11 @@ import org.json.JSONObject;
 import java.util.UUID;
 
 import rk.device.launcher.api.BaseApiImpl;
+import rk.device.launcher.api.HttpResultCode;
 import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.bean.StatusBo;
+import rk.device.launcher.bean.TokenBo;
+import rk.device.launcher.bean.event.OpenDoorSuccessEvent;
 import rk.device.launcher.db.DbRecordHelper;
 import rk.device.launcher.db.entity.Record;
 import rk.device.launcher.global.Constant;
@@ -17,6 +21,8 @@ import rk.device.launcher.global.VerifyTypeConstant;
 import rk.device.launcher.utils.MD5;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.TimeUtils;
+import rk.device.launcher.utils.key.KeyUtils;
+import rk.device.launcher.utils.rxjava.RxBus;
 import rk.device.launcher.utils.uuid.DeviceUuidFactory;
 import rx.Subscriber;
 
@@ -59,9 +65,40 @@ public class OpenUtils {
      */
     public void open(int type, String personId, String personName) {
         String token = SPUtils.getString(Constant.ACCENT_TOKEN);
-        openDoor(token, type, personId, personName);
+        if(TextUtils.isEmpty(token)){
+            obtainToken(type,personId,personName);
+        }else{
+            openDoor(token, type, personId, personName);
+        }
     }
 
+    /**
+     * 设备开门鉴权token请求接口
+     *
+     * @param type
+     * @param personId
+     * @param personName
+     */
+    private void obtainToken(int type, String personId, String personName) {
+        BaseApiImpl.postToken(deviceUuidFactory.getUuid().toString(), KeyUtils.getKey())
+                .subscribe(new Subscriber<TokenBo>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(TokenBo tokenBo) {
+                        SPUtils.put(Constant.ACCENT_TOKEN,tokenBo.getAccess_token());
+                        openDoor(tokenBo.getAccess_token(), type, personId, personName);
+                    }
+                });
+    }
 
     /**
      * 开门接口
@@ -79,15 +116,18 @@ public class OpenUtils {
 
                     @Override
                     public void onError(Throwable e) {
-
+                        if (e.getMessage().equals(HttpResultCode.TOKEN_INVALID)) {
+                            obtainToken(type, personId, personName);
+                        }
                     }
 
                     @Override
                     public void onNext(StatusBo statusBo) {
                         String data = openStatus(type);
-                        insertToLocalDB(type, personId, personName,
-                                TimeUtils.getTimeStamp(), data);
-                        syncRecords(token, type, personId, personName, TimeUtils.getTimeStamp(), data);
+                        RxBus.getDefault().post(new OpenDoorSuccessEvent(personName, type, 1));
+                        insertToLocalDB(type, personId, personName, TimeUtils.getTimeStamp(), data);
+                        syncRecords(token, type, personId, personName, TimeUtils.getTimeStamp(),
+                                data);
                     }
                 });
     }
@@ -135,7 +175,8 @@ public class OpenUtils {
      * @param personName
      * @param time
      */
-    private void insertToLocalDB(int type, String personId, String personName, int time, String data) {
+    private void insertToLocalDB(int type, String personId, String personName, int time,
+                                 String data) {
         Record record = new Record(null, MD5.get16Lowercase(UUID.randomUUID().toString()),
                 personName, personId, type, data, time, TimeUtils.getTimeStamp());
         int recordId = (int) DbRecordHelper.insert(record);

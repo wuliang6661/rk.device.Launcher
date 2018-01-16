@@ -132,6 +132,6 @@ public class VerifyNoticeDialogFragment extends DialogFragment {
         if (dialogFragment == null) {
             return;
         }
-        dialogFragment.dismiss();
+        dialogFragment.dismissAllowingStateLoss();
     }
 }
