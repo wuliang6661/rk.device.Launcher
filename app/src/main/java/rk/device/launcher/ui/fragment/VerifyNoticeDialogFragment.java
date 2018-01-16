@@ -6,8 +6,9 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
+import android.support.v4.app.FragmentTransaction;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -100,35 +101,37 @@ public class VerifyNoticeDialogFragment extends DialogFragment {
         return dialogFragment;
     }
 
+    private boolean isShowing = false;
+
     public void showDialog(FragmentManager supportFragmentManager) {
         if (dialogFragment == null) {
             return;
         }
-        if (supportFragmentManager.findFragmentByTag("verifyNotice") == null) {
-            dialogFragment.show(supportFragmentManager, "verifyNotice");
+        if (!isShowing) {
+            isShowing = true;
+            FragmentTransaction ft = supportFragmentManager.beginTransaction();
+            ft.add(dialogFragment, "verifyNotice");
+            ft.commitAllowingStateLoss();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (isShowing) {
+                        isShowing = false;
+                        Fragment fragment = supportFragmentManager
+                                .findFragmentByTag("verifyNotice");
+                        if (fragment != null) {
+                            dialogFragment.hideDialog();
+                        }
+                    }
+                }
+            }, 2000);
         }
-        if(dialogFragment.getDialog().isShowing()){
-            Log.i("dialogFragment","dialogFragment isShowing");
-        }else{
-            Log.i("dialogFragment","dialogFragment is not Showing");
-        }
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                dialogFragment.hideDialog();
-            }
-        },2000);
     }
 
     public void hideDialog() {
         if (dialogFragment == null) {
             return;
         }
-        dialogFragment.dismiss();
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
+        dialogFragment.dismissAllowingStateLoss();
     }
 }

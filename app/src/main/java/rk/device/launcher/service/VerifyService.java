@@ -6,7 +6,6 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.util.Log;
 
 import peripherals.FingerHelper;
@@ -15,7 +14,9 @@ import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.bean.event.NFCAddEvent;
 import rk.device.launcher.bean.event.OpenDoorSuccessEvent;
 import rk.device.launcher.db.entity.User;
+import rk.device.launcher.global.VerifyTypeConstant;
 import rk.device.launcher.utils.rxjava.RxBus;
+import rk.device.launcher.utils.verify.OpenUtils;
 import rk.device.launcher.utils.verify.VerifyUtils;
 
 /**
@@ -81,10 +82,13 @@ public class VerifyService extends Service {
             Log.i(TAG, TAG + " fingerId:" + resultCode);
             if (resultCode > 0) {
                 User user = VerifyUtils.getInstance().verifyByFinger(resultCode);
-                if (user != null) {
-//                    OpenUtils.getInstance().open(VerifyTypeConstant.TYPE_FINGER,user.getId().intValue(),user.getName(), TimeUtils.getTimeStamp());
-                    RxBus.getDefault().post(new OpenDoorSuccessEvent("",1,1));
+                if (user == null) {
+                    Log.i(TAG, TAG + " user is null");
+                    return;
                 }
+                Log.i(TAG, TAG + " user " + user.getName());
+                OpenUtils.getInstance().open(VerifyTypeConstant.TYPE_FINGER, user.getUniqueId(),
+                        user.getName());
             }
         }
         sleep();
@@ -122,11 +126,9 @@ public class VerifyService extends Service {
                 if (user == null) {
                     return;
                 }
-                if (TextUtils.isEmpty(user.getPopedomType())) {
-                    Log.i(TAG, TAG + ": User is not exist.");
-                } else {
-                    Log.i(TAG, TAG + ": User is exist.");
-                }
+                //TextUtils.isEmpty(user.getPopedomType())
+//                OpenUtils.getInstance().open(VerifyTypeConstant.TYPE_CARD, user.getUniqueId(),user.getName());
+                RxBus.getDefault().post(new OpenDoorSuccessEvent("", VerifyTypeConstant.TYPE_CARD, 1));
             }
         } else {
             Log.i(TAG, TAG + " read nfc failed.");
@@ -199,6 +201,12 @@ public class VerifyService extends Service {
             Log.i(TAG, TAG + ": Nfc deinit success.");
         } else {
             Log.i(TAG, TAG + ": Nfc deinit failed.");
+        }
+        status = FingerHelper.JNIFpDeInit();
+        if (status == 0) {
+            Log.i(TAG, TAG + ": finger deinit success.");
+        } else {
+            Log.i(TAG, TAG + ": finger deinit failed.");
         }
     }
 

@@ -21,11 +21,13 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -425,6 +427,51 @@ public class BitmapUtil {
                     e2.printStackTrace();
                 }
             }
+        }
+    }
+
+
+    /**
+     * 保存方法
+     */
+    public static void saveBitmap(String picName, Bitmap bm) {
+        File f = new File("/data/rk_backup/face/", picName);
+        if (f.exists()) {
+            f.delete();
+        }
+        try {
+            FileOutputStream out = new FileOutputStream(f);
+            bm.compress(Bitmap.CompressFormat.PNG, 90, out);
+            out.flush();
+            out.close();
+            FileUtils.setPermission(f.getAbsolutePath());
+            Log.i(TAG, "已经保存");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * bitmap转为base64编码
+     */
+    public static String bitmapToString(String name) {
+        File f = new File("/data/rk_backup/face/", name + ".png");
+        if (!f.exists()) {
+            return null;
+        } else {
+            Bitmap bitmap = BitmapFactory.decodeFile(f.getAbsolutePath());
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            try {
+                out.flush();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);//转换为png格式的
+                out.close();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            byte[] buffer = out.toByteArray();
+            byte[] encode = Base64.decode(buffer, Base64.DEFAULT);
+            return new String(encode);
         }
     }
 

@@ -1,5 +1,6 @@
 package rk.device.launcher.utils.verify;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -8,9 +9,11 @@ import org.json.JSONObject;
 import java.util.UUID;
 
 import rk.device.launcher.api.BaseApiImpl;
+import rk.device.launcher.api.HttpResultCode;
 import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.bean.StatusBo;
 import rk.device.launcher.bean.TokenBo;
+import rk.device.launcher.bean.event.OpenDoorSuccessEvent;
 import rk.device.launcher.db.DbRecordHelper;
 import rk.device.launcher.db.entity.Record;
 import rk.device.launcher.global.Constant;
@@ -18,6 +21,8 @@ import rk.device.launcher.global.VerifyTypeConstant;
 import rk.device.launcher.utils.MD5;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.TimeUtils;
+import rk.device.launcher.utils.key.KeyUtils;
+import rk.device.launcher.utils.rxjava.RxBus;
 import rk.device.launcher.utils.uuid.DeviceUuidFactory;
 import rx.Subscriber;
 
@@ -51,7 +56,6 @@ public class OpenUtils {
      * @param type 1 : nfc,2 : 指纹,3 : 人脸,4 : 密码,5 : 二维码,6 : 远程开门
      * @param personId
      * @param personName
-     * @param time 验证时间，比如刷卡，按指纹时间
      * @step 1 验证通过之后，调取开门接口（接口1）
      * @result 1.1 token过期，需要重新获取token，并重新请求开门（接口2）
      * @result 1.2 验证通过
@@ -59,9 +63,13 @@ public class OpenUtils {
      * @step 3 开门记录同步到服务端(接口3)
      *       <p/>
      */
-    public void open(int type, int personId, String personName, int time) {
+    public void open(int type, String personId, String personName) {
         String token = SPUtils.getString(Constant.ACCENT_TOKEN);
-        openDoor(token, type, personId, personName, time);
+        if(TextUtils.isEmpty(token)){
+            obtainToken(type,personId,personName);
+        }else{
+            openDoor(token, type, personId, personName);
+        }
     }
 
     /**
@@ -70,10 +78,9 @@ public class OpenUtils {
      * @param type
      * @param personId
      * @param personName
-     * @param time
      */
-    private void obtainToken(int type, int personId, String personName, int time) {
-        BaseApiImpl.postToken(deviceUuidFactory.getUuid().toString(), "")
+    private void obtainToken(int type, String personId, String personName) {
+        BaseApiImpl.postToken(deviceUuidFactory.getUuid().toString(), KeyUtils.getKey())
                 .subscribe(new Subscriber<TokenBo>() {
                     @Override
                     public void onCompleted() {
@@ -87,7 +94,8 @@ public class OpenUtils {
 
                     @Override
                     public void onNext(TokenBo tokenBo) {
-                        openDoor(tokenBo.getAccess_token(), type, personId, personName, time);
+                        SPUtils.put(Constant.ACCENT_TOKEN,tokenBo.getAccess_token());
+                        openDoor(tokenBo.getAccess_token(), type, personId, personName);
                     }
                 });
     }
@@ -98,7 +106,7 @@ public class OpenUtils {
      * @param token
      * @param type
      */
-    private void openDoor(String token, int type, int personId, String personName, int time) {
+    private void openDoor(String token, int type, String personId, String personName) {
         BaseApiImpl.openDoor(token, deviceUuidFactory.getUuid().toString(), type,
                 TimeUtils.getTimeStamp()).subscribe(new Subscriber<StatusBo>() {
                     @Override
@@ -108,15 +116,18 @@ public class OpenUtils {
 
                     @Override
                     public void onError(Throwable e) {
-
+                        if (e.getMessage().equals(HttpResultCode.TOKEN_INVALID)) {
+                            obtainToken(type, personId, personName);
+                        }
                     }
 
                     @Override
                     public void onNext(StatusBo statusBo) {
-
                         String data = openStatus(type);
-                        insertToLocalDB(type, personId, personName, time, data);
-                        syncRecords(token, type, personId, personName, time, data);
+                        RxBus.getDefault().post(new OpenDoorSuccessEvent(personName, type, 1));
+                        insertToLocalDB(type, personId, personName, TimeUtils.getTimeStamp(), data);
+                        syncRecords(token, type, personId, personName, TimeUtils.getTimeStamp(),
+                                data);
                     }
                 });
     }
@@ -164,9 +175,10 @@ public class OpenUtils {
      * @param personName
      * @param time
      */
-    private void insertToLocalDB(int type, int personId, String personName, int time, String data) {
+    private void insertToLocalDB(int type, String personId, String personName, int time,
+                                 String data) {
         Record record = new Record(null, MD5.get16Lowercase(UUID.randomUUID().toString()),
-                personName, String.valueOf(personId), type, data, time, TimeUtils.getTimeStamp());
+                personName, personId, type, data, time, TimeUtils.getTimeStamp());
         int recordId = (int) DbRecordHelper.insert(record);
         if (recordId > 0) {
             Log.i(TAG, TAG + " insert record to local db success.");
@@ -185,7 +197,7 @@ public class OpenUtils {
      * @param time
      * @param data
      */
-    private void syncRecords(String token, int type, int personId, String personName, int time,
+    private void syncRecords(String token, int type, String personId, String personName, int time,
                              String data) {
         JSONObject params = new JSONObject();
         try {

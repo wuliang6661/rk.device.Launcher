@@ -12,16 +12,20 @@ import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Retrofit;
 import rk.device.launcher.base.BaseActivity;
-import rk.device.launcher.bean.TokenBo;
-import rk.device.launcher.global.Config;
 import rk.device.launcher.bean.DeviceInfoBO;
 import rk.device.launcher.bean.StatusBo;
+import rk.device.launcher.bean.TokenBo;
 import rk.device.launcher.bean.VerifyBO;
 import rk.device.launcher.bean.VersionBO;
 import rk.device.launcher.bean.WeatherBO;
+import rk.device.launcher.db.entity.User;
+import rk.device.launcher.global.Config;
 import rk.device.launcher.global.Constant;
+import rk.device.launcher.utils.BitmapUtil;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.StringUtils;
+import rk.device.launcher.utils.Utils;
+import rk.device.launcher.utils.uuid.DeviceUuidFactory;
 import rx.Observable;
 
 /**
@@ -146,7 +150,7 @@ public class BaseApiImpl {
         return weatherFactorys().openDoor(requestBody).compose(RxResultHelper.httpResult()).compose(activity.bindUntilEvent(ActivityEvent.DESTROY));
     }
 
-    /*
+    /**
      * 激活设备
      */
     public static Observable<Object> activationDiveces(String uuid, String mac, String license) {
@@ -189,5 +193,35 @@ public class BaseApiImpl {
     public static Observable<StatusBo> syncRecords(JSONObject params) {
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), params.toString());
         return weatherFactorys().syncRecords(requestBody).compose(RxResultHelper.httpResult()).compose(activity.bindUntilEvent(ActivityEvent.DESTROY));
+    }
+
+
+    /**
+     * 新增用户接口
+     */
+    public static Observable<String> syncPersons(User user) {
+        JSONObject object = new JSONObject();
+        try {
+            object.put("peopleId", user.getUniqueId());
+            object.put("popeName", user.getName());
+            object.put("popedomType", user.getPopedomType());
+            object.put("startTime", user.getStartTime());
+            object.put("endTime", user.getEndTime());
+            object.put("createTime", user.getCreateTime());
+            object.put("cardNo", user.getCardNo());
+            object.put("fingerID1", user.getFingerID1());
+            object.put("fingerID2", user.getFingerID2());
+            object.put("fingerID3", user.getFingerID3());
+            object.put("password", user.getPassWord());
+            if (!StringUtils.isEmpty(user.getFaceID())) {
+                object.put("faceID", BitmapUtil.bitmapToString(user.getFaceID()));
+            }
+            object.put("access_token", SPUtils.getString(Constant.ACCENT_TOKEN));
+            object.put("uuid", new DeviceUuidFactory(Utils.getContext()).getUuid() + "");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), object.toString());
+        return weatherFactorys().syncPerson(requestBody).compose(RxResultHelper.httpResult()).compose(activity.bindUntilEvent(ActivityEvent.DESTROY));
     }
 }

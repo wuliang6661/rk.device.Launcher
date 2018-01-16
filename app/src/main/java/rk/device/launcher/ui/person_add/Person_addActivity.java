@@ -23,10 +23,12 @@ import rk.device.launcher.ui.fingeradd.FingeraddActivity;
 import rk.device.launcher.ui.fragment.InputWifiPasswordDialogFragment;
 import rk.device.launcher.ui.nfcadd.NfcaddActivity;
 import rk.device.launcher.ui.personface.PersonFaceActivity;
+import rk.device.launcher.utils.FileUtils;
 import rk.device.launcher.utils.StringUtils;
 import rk.device.launcher.utils.TimeUtils;
 import rk.device.launcher.utils.TypeTranUtils;
 import rk.device.launcher.utils.verify.FaceUtils;
+import rk.device.launcher.utils.verify.SyncPersonUtils;
 
 /**
  * MVPPlugin
@@ -182,20 +184,22 @@ public class Person_addActivity
                     user.setStartTime(TimeUtils.string2Millis(tvTimeStart.getText().toString().trim()));
                     user.setEndTime(TimeUtils.string2Millis(tvTimeEnd.getText().toString().trim()));
                     DbHelper.insertUser(user);
+                    SyncPersonUtils.getInstance().syncPerosn();
                     finish();
                 }
                 break;
             case R.id.ll_set_time:    //开始时间
-                getTimeDialog(tvTimeStart);
+                getTimeDialog(tvTimeStart, 0);
                 break;
             case R.id.time_end:      //结束时间
-                getTimeDialog(tvTimeEnd);
+                getTimeDialog(tvTimeEnd, 1);
                 break;
             case R.id.title_right:     //删除用户
                 showMessageDialog("是否确认删除该用户\n\n删除后所有录入信息都被删除", "确定", v -> {
                     if (!StringUtils.isEmpty(user.getFaceID())) {    //删除本地人脸
                         FaceUtils faceUtils = FaceUtils.getInstance();
                         faceUtils.delete(user.getFaceID());
+                        FileUtils.deleteFile("/data/rk_backup/face/" + user.getFaceID() + ".png");
                     }
                     //删除指纹
                     if(!TextUtils.isEmpty(user.getFingerID1())){
@@ -241,12 +245,22 @@ public class Person_addActivity
     /**
      * 设置时间选择器
      */
-    private void getTimeDialog(TextView timeText) {
+    private void getTimeDialog(TextView timeText, int type) {
         String time = timeText.getText().toString().trim();
         SetFullTimeDialogFragment fragment = SetFullTimeDialogFragment.newInstance();
         fragment.setSelectedTime(TimeUtils.stringToFormat(time, "yyyy"), TimeUtils.stringToFormat(time, "MM"), TimeUtils.stringToFormat(time, "dd"),
                 TimeUtils.stringToFormat(time, "HH"), TimeUtils.stringToFormat(time, "mm"));
-        fragment.setOnConfirmDialogListener((year, month, day, hour, minute) -> timeText.setText(year + "-" + month + "-" + day + " " + hour + ":" + minute));
+        fragment.setOnConfirmDialogListener((year, month, day, hour, minute) -> {
+            if (type == 1) {    //结束时间
+                long endTime = TimeUtils.string2Millis(year + "-" + month + "-" + day + " " + hour + ":" + minute);
+                long staTime = TimeUtils.string2Millis(tvTimeStart.getText().toString());
+                if (endTime <= staTime) {
+                    showMessageDialog("结束时间必须大于开始时间");
+                    return;
+                }
+            }
+            timeText.setText(year + "-" + month + "-" + day + " " + hour + ":" + minute);
+        });
         fragment.show(getSupportFragmentManager(), "");
     }
 
@@ -267,6 +281,7 @@ public class Person_addActivity
                 List<User> users = DbHelper.queryByPassword(content);
                 if (users.isEmpty()) {
                     user.setPassWord(Integer.parseInt(content));
+                    user.setUploadStatus(0);
                     DbHelper.insertUser(user);
                     dialogFragment.dismiss();
                     loadUser();

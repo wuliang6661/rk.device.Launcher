@@ -15,7 +15,6 @@ import retrofit2.http.QueryMap;
 import rk.device.launcher.bean.BaseResult;
 import rk.device.launcher.bean.DeviceInfoBO;
 import rk.device.launcher.bean.StatusBo;
-import rk.device.launcher.bean.SyncOpendoorHistoryBO;
 import rk.device.launcher.bean.TokenBo;
 import rk.device.launcher.bean.VerifyBO;
 import rk.device.launcher.bean.VersionBO;
@@ -32,7 +31,7 @@ public interface BaseApi {
     /**
      * 天气接口
      */
-    @Headers({ "Content-Type: application/json", "Accept: application/json" })
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
     @GET(ApiName.WEATHER)
     Observable<BaseResult<List<WeatherBO>>> weather(@QueryMap Map<String, Object> params);
 
@@ -62,34 +61,12 @@ public interface BaseApi {
     Observable<BaseResult<VerifyBO>> verify(@FieldMap Map<String, Object> params);
 
     /**
-     * 开门授权同步接口
-     *
-     * @param access_token
-     * @param uuid
-     * @param peopleId
-     * @param popeName
-     * @param popedomType
-     * @param type
-     * @param data
-     * @return
-     */
-    @FormUrlEncoded
-    @POST("/public/rest/face/upAuthlist")
-    Observable<BaseResult<SyncOpendoorHistoryBO>> upAuthlist(@Field("access_token") String access_token,
-                                                             @Field("uuid") String uuid,
-                                                             @Field("peopleId") String peopleId,
-                                                             @Field("popeName") String popeName,
-                                                             @Field("popedomType") String popedomType,
-                                                             @Field("type") String type,
-                                                             @Field("data") String data);
-
-    /**
      * 开门
      *
      * @param requestBody
      * @return
      */
-    @POST("/public/rest/face/openDoor")
+    @POST("/tenantcenter/a/public/rest/face1/openDoor")
     Observable<BaseResult<StatusBo>> openDoor(@Body RequestBody requestBody);
 
     /**
@@ -110,6 +87,14 @@ public interface BaseApi {
      * @param requestBody
      * @return
      */
-    @POST("/public/rest/face/openHistory")
+    @POST("/tenantcenter/a/public/rest/face1/openHistory")
     Observable<BaseResult<StatusBo>> syncRecords(RequestBody requestBody);
+
+
+    /**
+     * 提交新增用户接口
+     */
+    @POST("/tenantcenter/a/public/rest/face1/upAuthlist")
+    Observable<BaseResult<String>> syncPerson(@Body RequestBody requestBody);
+
 }

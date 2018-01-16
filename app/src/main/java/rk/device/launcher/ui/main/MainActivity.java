@@ -57,6 +57,7 @@ import rk.device.launcher.utils.rxjava.RxBus;
 import rk.device.launcher.utils.verify.FaceUtils;
 import rk.device.launcher.widget.BatteryView;
 import rk.device.launcher.widget.GifView;
+import rk.device.launcher.widget.carema.BackCameraSurfaceView;
 import rk.device.launcher.widget.carema.DetectedFaceView;
 import rk.device.launcher.widget.carema.SurfaceHolderCaremaBack;
 import rk.device.launcher.widget.carema.SurfaceHolderCaremaFont;
@@ -112,6 +113,9 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
     TextView suressText;
     @Bind(R.id.suress_layout)
     LinearLayout suressLayout;
+    @Bind(R.id.camera_surfaceview1)
+    BackCameraSurfaceView cameraSurfaceview1;
+
 
     JniHandler mHandler;
 
@@ -209,6 +213,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
         mStaticHandler.post(mRefreshTimeRunnable);
         caremaBg.setPaused(false);
         deviceNameBg.setPaused(false);
+        cameraSurfaceview1.setDisplay(false);
     }
 
 
@@ -242,7 +247,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
         SurfaceHolderCaremaBack.stopCarema();
         FaceUtils.getInstance().stopFaceFR();
         stopService(new Intent(this, SocketService.class));
-//        stopService(new Intent(this, VerifyService.class));
+        stopService(new Intent(this, VerifyService.class));
         super.onDestroy();
     }
 
@@ -311,7 +316,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
                 }
             } else {
                 initError.setVisibility(View.VISIBLE);
-                initDialog.setStatus(cvcStatus, LedStatus, 0, NfcStatus, mHandler);
+                initDialog.setStatus(cvcStatus, LedStatus, 0, NfcStatus);
                 if (initDialog != null && initDialog.isVisible()) {
                     T.showShort("部分设备初始化失败！建议重启设备！");
                     initDialog.setInitFinish();

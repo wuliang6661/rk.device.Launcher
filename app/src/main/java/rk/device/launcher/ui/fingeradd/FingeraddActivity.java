@@ -172,6 +172,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_add_finger:
+                Log.i(TAG,TAG+" finger add");
                 /**
                  * 新增指纹
                  *
@@ -207,6 +208,12 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
     protected void onDestroy() {
         super.onDestroy();
         LauncherApplication.sIsFingerAdd = 0;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LauncherApplication.sIsFingerAdd = 1;
     }
 
     /**
@@ -260,6 +267,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
      * 发起添加指纹指令
      */
     private void addFinger() {
+        Log.i(TAG,TAG+" finger addFinger");
         Message msg = new Message();
         msg.what = MSG_FINGER_ADD;
         fingerAddHandler.sendMessageDelayed(msg, 500);
@@ -269,6 +277,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
      * 发起判断是否能够录入指纹指令
      */
     private void readFingerInfo() {
+        Log.i(TAG,TAG+" finger readFingerInfo");
         Message msg = new Message();
         msg.what = MSG_READ_FINGER_INFO;
         fingerAddHandler.sendMessageDelayed(msg, 500);
@@ -296,6 +305,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
                     doAddFinger();
                     break;
                 case MSG_READ_FINGER_INFO://判断是否能够录入指纹
+                    Log.i(TAG,TAG+" finger MSG_READ_FINGER_INFO");
                     checkCanAddFinger();
                     break;
                 case MSG_DELETE_FINGER://删除指纹信息
@@ -334,6 +344,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
                     break;
             }
             if (doDeleteJniFinger(uId)) {
+                eUser.setUploadStatus(0);
                 DbHelper.update(eUser);
                 showToastMsg(getResources().getString(R.string.delete_success));
                 finish();
@@ -393,6 +404,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
      * @step 2 手指还未录入的情况下，才能录入该指纹头
      */
     private void doAddFinger() {
+        Log.i(TAG,TAG+" finger doAddFinger");
         if (isAdd) {
             return;
         }
@@ -504,6 +516,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
      * 保存指纹到本地
      */
     private void doSaveFinger(boolean isRename) {
+        Log.i(TAG,TAG+" finger doSaveFinger");
         if (fingerId.equals(FINGER_ERROR)) {
             showToastMsg(getResources().getString(R.string.finger_add_error));
             return;
@@ -554,6 +567,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
                 eUser.setFingerName3(fingerName == null ? "指纹3" : fingerName);
                 break;
         }
+        eUser.setUploadStatus(0);
         DbHelper.update(eUser);
         showToastMsg("已成功录入指纹");
         finish();

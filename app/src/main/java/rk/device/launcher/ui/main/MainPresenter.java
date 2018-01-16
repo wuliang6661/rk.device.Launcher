@@ -30,6 +30,7 @@ import rk.device.launcher.bean.WeatherBO;
 import rk.device.launcher.db.DbHelper;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.global.Constant;
+import rk.device.launcher.global.VerifyTypeConstant;
 import rk.device.launcher.mvp.BasePresenterImpl;
 import rk.device.launcher.service.ElectricBroadcastReceiver;
 import rk.device.launcher.service.NetBroadcastReceiver;
@@ -43,6 +44,7 @@ import rk.device.launcher.utils.oss.AliYunOssUtils;
 import rk.device.launcher.utils.oss.OssUploadListener;
 import rk.device.launcher.utils.uuid.DeviceUuidFactory;
 import rk.device.launcher.utils.verify.FaceUtils;
+import rk.device.launcher.utils.verify.OpenUtils;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -77,7 +79,7 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
         JniHandler mHandler = JniHandler.getInstance();
         Message msg = new Message();
         msg.what = EventUtil.INIT_JNI;
-        mHandler.sendMessageDelayed(msg, 10);
+        mHandler.sendMessage(msg);
         return mHandler;
     }
 
@@ -342,7 +344,8 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
             if (!users.isEmpty()) {
                 long time = System.currentTimeMillis();
                 if (users.get(0).getStartTime() < time && users.get(0).getEndTime() > time) {    //在有效时间内，则开门
-                    mView.showSuress(users.get(0).getName());
+//                    mView.showSuress(users.get(0).getName());
+                    OpenUtils.getInstance().open(VerifyTypeConstant.TYPE_FACE, users.get(0).getUniqueId(), users.get(0).getName());
                 }
             }
         });

@@ -73,6 +73,7 @@ public class DbHelper {
     }
 
     public static void update(User user) {
+        user.setUpdateTime(System.currentTimeMillis());
         getUserDao().update(user);
     }
 
@@ -115,10 +116,10 @@ public class DbHelper {
      * 通过指纹ID 获取当前记录
      *
      * @param fingerId
+     * @return
      * @value 1 指纹1
      * @value 2 指纹2
      * @value 3 指纹3
-     * @return
      */
     public static User queryByFinger(int fingerId) {
         Query<User> query = getUserDao().queryBuilder()
@@ -185,8 +186,10 @@ public class DbHelper {
         //        }
         if (user.getId() == null) {
             user.setUniqueId(MD5.get16Lowercase(UUID.randomUUID().toString()));
+            user.setCreateTime(System.currentTimeMillis());
             return getUserDao().insert(user);
         } else {
+            user.setUpdateTime(System.currentTimeMillis());
             getUserDao().update(user);
             return Constant.UPDATE_SUCCESS;
         }
@@ -213,5 +216,18 @@ public class DbHelper {
                 .build();
         return query.list();
     }
+
+
+    /**
+     * 查询未同步到服务器的所有user
+     */
+    public static List<User> queryUserByUpdate() {
+        UserDao userDao = DbHelper.getUserDao();
+        // where里面是可变参数
+        Query<User> query = userDao.queryBuilder().where(UserDao.Properties.UploadStatus.eq(0))
+                .build();
+        return query.list();
+    }
+
 
 }

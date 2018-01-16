@@ -207,6 +207,7 @@ public class NfcaddActivity extends MVPBaseActivity<NfcaddContract.View, NfcaddP
                 User eUser = VerifyUtils.getInstance().queryUserByUniqueId(uniqueId);
                 if (eUser != null) {
                     eUser.setCardNo(cardNumber);
+                    eUser.setUploadStatus(0);
                     DbHelper.update(eUser);
                     T.showShort("已成功绑定该卡");
                     finish();
@@ -237,6 +238,7 @@ public class NfcaddActivity extends MVPBaseActivity<NfcaddContract.View, NfcaddP
         User eUser = VerifyUtils.getInstance().queryUserByUniqueId(uniqueId);
         if (eUser != null) {
             eUser.setCardNo("");
+            eUser.setUploadStatus(0);
             DbHelper.update(eUser);
             T.showShort("删除成功");
             finish();
