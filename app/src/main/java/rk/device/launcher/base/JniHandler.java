@@ -120,6 +120,15 @@ public class JniHandler extends Handler {
 //        if (MdStatus != 0) {
 //            MdStatus = MdHelper.PER_mdInit();
 //        }
+        int carema01 = MediacHelper.MEDIAC_init(0, carmer01);
+        int carema02 = MediacHelper.MEDIAC_init(1, carmer02);
+        Log.i("wuliang", "cvcStatus == " + cvcStatus + "LedStatus == " + LedStatus + "NfcStatus == " + NfcStatus +
+                "carema01 == " + carema01 + "carema02 ==" + carema02);
+        int faceSuress = CvcHelper.CVC_setLivingFaceThreshold(faceThreshold);
+        if (faceSuress == 0) {
+            Log.i("wuliang", "faceThreshold suress  " + faceThreshold);
+        }
+        int callsuress = NumberpadHelper.PER_numberpadInit();
         //init finger
         if (fingerStatus != 0) {
             fingerStatus = FingerHelper.JNIFpInit();
@@ -127,18 +136,6 @@ public class JniHandler extends Handler {
         if (NfcStatus != 0) {
             NfcStatus = NfcHelper.PER_nfcInit();
         }
-        int carema01 = MediacHelper.MEDIAC_init(0, carmer01);
-        int carema02 = MediacHelper.MEDIAC_init(1, carmer02);
-        Log.i("wuliang", "cvcStatus == " + cvcStatus + "LedStatus == " + LedStatus + "NfcStatus == " + NfcStatus +
-                "carema01 == " + carema01 + "carema02 ==" + carema02);
-        if (cvcStatus == 0 && LedStatus == 0 && NfcStatus == 0 && fingerStatus == 0) {
-            Log.i("wuliang", "all device init surecc!!!!");
-        }
-        int faceSuress = CvcHelper.CVC_setLivingFaceThreshold(faceThreshold);
-        if (faceSuress == 0) {
-            Log.i("wuliang", "faceThreshold suress  " + faceThreshold);
-        }
-        int callsuress = NumberpadHelper.PER_numberpadInit();
         Log.i("wuliang", "call  " + callsuress);
         if (initListener != null) {
             initListener.initCallBack(cvcStatus, LedStatus, NfcStatus);

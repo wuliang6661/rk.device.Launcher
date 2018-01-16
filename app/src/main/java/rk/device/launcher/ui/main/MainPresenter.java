@@ -43,6 +43,7 @@ import rk.device.launcher.utils.oss.AliYunOssUtils;
 import rk.device.launcher.utils.oss.OssUploadListener;
 import rk.device.launcher.utils.uuid.DeviceUuidFactory;
 import rk.device.launcher.utils.verify.FaceUtils;
+import rk.device.launcher.utils.verify.OpenUtils;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -77,7 +78,7 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
         JniHandler mHandler = JniHandler.getInstance();
         Message msg = new Message();
         msg.what = EventUtil.INIT_JNI;
-        mHandler.sendMessageDelayed(msg, 10);
+        mHandler.sendMessage(msg);
         return mHandler;
     }
 
@@ -343,6 +344,7 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
                 long time = System.currentTimeMillis();
                 if (users.get(0).getStartTime() < time && users.get(0).getEndTime() > time) {    //在有效时间内，则开门
                     mView.showSuress(users.get(0).getName());
+//                    OpenUtils.getInstance().open(3, 1, users.get(0).getName(), TimeUtils.getTimeStamp());
                 }
             }
         });

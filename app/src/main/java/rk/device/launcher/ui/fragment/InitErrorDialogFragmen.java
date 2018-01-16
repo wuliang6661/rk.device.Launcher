@@ -85,6 +85,7 @@ public class InitErrorDialogFragmen extends DialogFragment implements View.OnCli
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        jniHandler = JniHandler.getInstance();
         setViewVisable(cvcError, cvcStatus);
         setViewVisable(ledError, ledStatus);
         setViewVisable(nfcError, nfcStatus);
@@ -115,12 +116,11 @@ public class InitErrorDialogFragmen extends DialogFragment implements View.OnCli
     }
 
 
-    public void setStatus(int cvcStatus, int LedStatus, int MdStatus, int NfcStatus, JniHandler handler) {
+    public void setStatus(int cvcStatus, int LedStatus, int MdStatus, int NfcStatus) {
         this.cvcStatus = cvcStatus;
         this.ledStatus = LedStatus;
         this.mdStatus = MdStatus;
         this.nfcStatus = NfcStatus;
-        jniHandler = handler;
     }
 
 
