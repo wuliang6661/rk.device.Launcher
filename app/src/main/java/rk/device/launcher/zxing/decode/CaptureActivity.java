@@ -1,6 +1,5 @@
 package rk.device.launcher.zxing.decode;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.os.Bundle;
@@ -25,10 +24,12 @@ import java.util.Collection;
 import java.util.Date;
 
 import rk.device.launcher.R;
+import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.bean.QrCodeBO;
 import rk.device.launcher.db.DbHelper;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.db.entity.UserDao;
+import rk.device.launcher.global.VerifyTypeConstant;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.TimeUtils;
 import rk.device.launcher.utils.encrypt.RSAUtils;
@@ -38,7 +39,7 @@ import rk.device.launcher.zxing.camera.CameraManager;
 import rk.device.launcher.zxing.view.ViewfinderView;
 
 
-public class CaptureActivity extends Activity implements SurfaceHolder.Callback, View.OnClickListener {
+public class CaptureActivity extends BaseActivity implements SurfaceHolder.Callback, View.OnClickListener {
 
     private static final String TAG = CaptureActivity.class.getSimpleName();
 
@@ -70,9 +71,14 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback,
     }
 
     @Override
+    protected int getLayout() {
+        return R.layout.activity_capture;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_capture);
+//        setContentView(R.layout.activity_capture);
         initView();
         hasSurface = false;
         inactivityTimer = new InactivityTimer(this);
@@ -83,9 +89,9 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback,
     }
 
     private void initView() {
-        mIvBack = findViewById(R.id.iv_back);
-        mTvTitle = findViewById(R.id.tv_title);
-        mTvWarning = findViewById(R.id.tv_warning);
+        mIvBack = (ImageView) findViewById(R.id.iv_back);
+        mTvTitle = (TextView) findViewById(R.id.tv_title);
+        mTvWarning = (TextView) findViewById(R.id.tv_warning);
         mTvTitle.setText("二维码扫描");
         mIvBack.setOnClickListener(this);
     }
@@ -101,7 +107,7 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback,
         // off screen.
         cameraManager = new CameraManager(getApplication());
 
-        viewfinderView = findViewById(R.id.viewfinderView);
+        viewfinderView = (ViewfinderView) findViewById(R.id.viewfinderView);
         viewfinderView.setCameraManager(cameraManager);
         handler = null;
 
@@ -113,7 +119,7 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback,
         decodeFormats = null;
         characterSet = null;
 
-        SurfaceView surfaceView = findViewById(R.id.preview_view);
+        SurfaceView surfaceView = (SurfaceView) findViewById(R.id.preview_view);
         SurfaceHolder surfaceHolder = surfaceView.getHolder();
         surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         if (hasSurface) {
@@ -238,7 +244,7 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback,
                     return;
                 }
                 // 调用开门接口, 假如成功, 执行开门逻辑, 显示文字：验证成功；1.5s后跳转首页
-                OpenUtils.getInstance().open(6, peopleId, user.getName());
+                OpenUtils.getInstance().open(VerifyTypeConstant.TYPE_QR_CODE, peopleId, user.getName());
             }
 
         } catch (Exception e) {
