@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -25,6 +26,7 @@ import rk.device.launcher.R;
 import rk.device.launcher.api.BaseApiImpl;
 import rk.device.launcher.bean.NetDismissBO;
 import rk.device.launcher.bean.event.OpenDoorSuccessEvent;
+import rk.device.launcher.global.VerifyTypeConstant;
 import rk.device.launcher.service.BlueToothsBroadcastReceiver;
 import rk.device.launcher.service.RKLauncherPushIntentService;
 import rk.device.launcher.service.RKLauncherPushService;
@@ -36,6 +38,7 @@ import rk.device.launcher.ui.setting.SetNetWorkActivity;
 import rk.device.launcher.ui.setting.SleepActivity;
 import rk.device.launcher.utils.AppManager;
 import rk.device.launcher.utils.rxjava.RxBus;
+import rk.device.launcher.zxing.decode.CaptureActivity;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.functions.Action1;
@@ -479,6 +482,14 @@ public abstract class BaseActivity extends RxAppCompatActivity {
             @Override
             public void onNext(OpenDoorSuccessEvent openDoorSuccessEvent) {
                 if(openDoorSuccessEvent.isSuccess == 1){
+                    if(openDoorSuccessEvent.type == VerifyTypeConstant.TYPE_QR_CODE &&  (AppManager.getAppManager().curremtActivity()) instanceof CaptureActivity){
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                (AppManager.getAppManager().curremtActivity()).finish();
+                            }
+                        },2500);
+                    }
                     showSuccessDialog();
                 }else{
                     showFailDialog();

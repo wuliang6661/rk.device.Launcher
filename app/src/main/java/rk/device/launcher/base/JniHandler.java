@@ -132,6 +132,9 @@ public class JniHandler extends Handler {
         //init finger
         if (fingerStatus != 0) {
             fingerStatus = FingerHelper.JNIFpInit();
+            if(fingerStatus == 0){
+                LauncherApplication.sInitFingerSuccess = 0;
+            }
         }
         if (NfcStatus != 0) {
             NfcStatus = NfcHelper.PER_nfcInit();
