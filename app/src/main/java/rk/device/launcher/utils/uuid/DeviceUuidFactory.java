@@ -32,8 +32,8 @@ public class DeviceUuidFactory {
         if (uuid == null) {
             synchronized (DeviceUuidFactory.class) {
                 if (uuid == null) {
-                    final SharedPreferences prefs = context.getSharedPreferences(PREFS_FILE, 0);
-                    final String id = prefs.getString(PREFS_DEVICE_ID, null);
+                    final SharedPreferences sp = context.getSharedPreferences(PREFS_FILE, Context.MODE_PRIVATE);
+                    final String id = sp.getString(PREFS_DEVICE_ID, null);
                     if (id != null) {
                         uuid = UUID.fromString(id);
                     } else {
@@ -67,7 +67,7 @@ public class DeviceUuidFactory {
                                 throw new RuntimeException(e);
                             }
                         }
-                        prefs.edit().putString(PREFS_DEVICE_ID, uuid.toString()).commit();
+                        sp.edit().putString(PREFS_DEVICE_ID, uuid.toString()).commit();
                     }
                 }
             }
@@ -76,11 +76,11 @@ public class DeviceUuidFactory {
 
     private static String recoverDeviceUuidFromSD() {
         try {
-            String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath();
-            File dir = new File(dirPath);
-            File uuidFile = new File(dir, DEVICE_UUID_FILE_NAME);
+            String sdcardPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+            File sdCardFolder = new File(sdcardPath);
+            File uuidFile = new File(sdCardFolder, DEVICE_UUID_FILE_NAME);
             Log.d("wuliang", uuidFile.getAbsolutePath());
-            if (!dir.exists() || !uuidFile.exists()) {
+            if (!sdCardFolder.exists() || !uuidFile.exists()) {
                 return null;
             }
             FileReader fileReader = new FileReader(uuidFile);
