@@ -10,7 +10,9 @@ import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.QueryMap;
 import rk.device.launcher.bean.BaseResult;
 import rk.device.launcher.bean.DeviceInfoBO;
@@ -96,5 +98,12 @@ public interface BaseApi {
      */
     @POST("/tenantcenter/a/public/rest/face/upAuthlist")
     Observable<BaseResult<Object>> syncPerson(@Body RequestBody requestBody);
+
+    /**
+     * 上传用户图片
+     */
+    @Multipart
+    @POST("/tenantcenter/a/public/rest/face/upload")
+    Observable<BaseResult<String>> uploadFile(@Part("headerImage\"; filename=\"avatar.jpg") RequestBody file);
 
 }

@@ -213,15 +213,23 @@ public class BaseApiImpl {
             object.put("fingerID2", user.getFingerID2());
             object.put("fingerID3", user.getFingerID3());
             object.put("password", user.getPassWord());
+            object.put("access_token", SPUtils.getString(Constant.ACCENT_TOKEN));
+            object.put("uuid", new DeviceUuidFactory(Utils.getContext()).getUuid() + "");
             if (!StringUtils.isEmpty(user.getFaceID())) {
                 object.put("faceID", BitmapUtil.bitmapToString(user.getFaceID()));
             }
-            object.put("access_token", SPUtils.getString(Constant.ACCENT_TOKEN));
-            object.put("uuid", new DeviceUuidFactory(Utils.getContext()).getUuid() + "");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), object.toString());
         return weatherFactorys().syncPerson(requestBody).compose(RxResultHelper.httpResult()).compose(activity.bindUntilEvent(ActivityEvent.DESTROY));
     }
+
+    /**
+     * 上传用户人脸
+     */
+    public static Observable<String> updataImage(RequestBody requestBody) {
+        return weatherFactorys().uploadFile(requestBody).compose(RxResultHelper.httpResult()).compose(activity.bindUntilEvent(ActivityEvent.DESTROY));
+    }
+
 }

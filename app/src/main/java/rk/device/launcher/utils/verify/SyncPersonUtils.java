@@ -1,7 +1,10 @@
 package rk.device.launcher.utils.verify;
 
+import java.io.File;
 import java.util.List;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import rk.device.launcher.api.BaseApiImpl;
 import rk.device.launcher.bean.TokenBo;
 import rk.device.launcher.db.DbHelper;
@@ -47,7 +50,11 @@ public class SyncPersonUtils {
         } else {
             List<User> users = DbHelper.queryUserByUpdate();
             if (!users.isEmpty()) {
-                updatePerson(users.get(0));
+                if (!StringUtils.isEmpty(users.get(0).getFaceID())) {
+                    uploadImage(users.get(0).getFaceID());
+                } else {
+                    updatePerson(users.get(0));
+                }
             }
         }
     }
@@ -75,6 +82,35 @@ public class SyncPersonUtils {
                         syncPerosn();
                     }
                 });
+    }
+
+
+    /**
+     * 上传人脸图片
+     */
+    private void uploadImage(String face) {
+        File file = new File("/data/rk_backup/face/", face + ".png");
+        if (!file.exists()) {
+            return;
+        }
+        // 创建 RequestBody，用于封装构建RequestBody
+        RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), file);
+        BaseApiImpl.updataImage(requestBody).subscribe(new Subscriber<String>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(String s) {
+
+            }
+        });
     }
 
 

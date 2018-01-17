@@ -27,7 +27,6 @@ import android.util.Log;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -473,5 +472,4 @@ public class BitmapUtil {
             return Base64.encodeToString(buffer, Base64.DEFAULT);
         }
     }
-
 }
