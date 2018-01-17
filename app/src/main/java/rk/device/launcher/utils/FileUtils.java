@@ -1298,7 +1298,7 @@ public class FileUtils {
      */
     public static void setPermission(String filePath) {
         try {
-            Runtime.getRuntime().exec("chmod 777 " + filePath);
+            Runtime.getRuntime().exec("chmod -R 777 " + filePath);
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

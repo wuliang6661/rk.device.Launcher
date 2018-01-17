@@ -16,7 +16,7 @@
             android:layout_width="@dimen/dp_150"
             android:layout_height="@dimen/dp_150"
             android:scaleType="centerInside"
-            android:src="@drawable/icon_recovery_success"/>
+            android:src="@mipmap/verify_success"/>
 
         <TextView
             android:id="@+id/tv_notice"
@@ -25,7 +25,7 @@
             android:layout_marginTop="@dimen/dp_50"
             android:gravity="center"
             android:text="@string/verify_success"
-            android:textColor="@color/white"
+            android:textColor="@color/verify_sucess"
             android:textSize="@dimen/sp_27"/>
     </LinearLayout>
 

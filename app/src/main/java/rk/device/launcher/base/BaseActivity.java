@@ -497,7 +497,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
                 if(verifyNoticeDialogFragment == null){
                     verifyNoticeDialogFragment = VerifyNoticeDialogFragment.newInstance();
                 }
-                verifyNoticeDialogFragment.setStatusMsg("验证成功").setStatusImg(R.drawable.icon_recovery_success);
+                verifyNoticeDialogFragment.setStatusMsg("验证成功").setStatusImg(R.mipmap.verify_success);
                 verifyNoticeDialogFragment.showDialog(((FragmentActivity)AppManager.getAppManager().curremtActivity()).getSupportFragmentManager());
             }
         });
