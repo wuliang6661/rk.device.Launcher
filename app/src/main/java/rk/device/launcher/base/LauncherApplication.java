@@ -97,7 +97,7 @@ public class LauncherApplication extends Application implements CustomActivityOn
         public void run() {
             try {
                 File dbFolder = new File(DB_FOLDER);
-                if (!dbFolder.mkdirs()) {
+                if (!dbFolder.exists()) {
                     dbFolder.mkdirs();
                 }
                 File dbFile = new File(dbFolder, DB_NAME);

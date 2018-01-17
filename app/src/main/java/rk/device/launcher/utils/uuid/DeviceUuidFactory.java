@@ -40,7 +40,7 @@ public class DeviceUuidFactory {
                         if (recoverDeviceUuidFromSD() != null) {
                             uuid = UUID.fromString(recoverDeviceUuidFromSD());
                         } else {
-                            String macAddress = DeviceUtils.getMacAddress();
+                            String macAddress = DeviceUtils.getLocalMacAddress();
                             // todo fixme
                             if (TextUtils.isEmpty(macAddress)) {
                                 macAddress = "00:00:00:00:00:00";

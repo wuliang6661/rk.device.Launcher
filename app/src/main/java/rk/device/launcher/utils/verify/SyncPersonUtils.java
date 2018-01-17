@@ -90,7 +90,9 @@ public class SyncPersonUtils {
 
             @Override
             public void onError(Throwable e) {
-
+                if (e.getMessage().equals("40004")) {     //token失效
+                    syncToken();
+                }
             }
 
             @Override

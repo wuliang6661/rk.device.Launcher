@@ -2,7 +2,6 @@ package rk.device.launcher.api;
 
 import com.trello.rxlifecycle.ActivityEvent;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -13,15 +12,16 @@ import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Retrofit;
 import rk.device.launcher.base.BaseActivity;
-import rk.device.launcher.bean.TokenBo;
-import rk.device.launcher.db.entity.User;
-import rk.device.launcher.global.Config;
 import rk.device.launcher.bean.DeviceInfoBO;
 import rk.device.launcher.bean.StatusBo;
+import rk.device.launcher.bean.TokenBo;
 import rk.device.launcher.bean.VerifyBO;
 import rk.device.launcher.bean.VersionBO;
 import rk.device.launcher.bean.WeatherBO;
+import rk.device.launcher.db.entity.User;
+import rk.device.launcher.global.Config;
 import rk.device.launcher.global.Constant;
+import rk.device.launcher.utils.BitmapUtil;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.StringUtils;
 import rk.device.launcher.utils.Utils;
@@ -208,6 +208,14 @@ public class BaseApiImpl {
             object.put("startTime", user.getStartTime());
             object.put("endTime", user.getEndTime());
             object.put("createTime", user.getCreateTime());
+            object.put("cardNo", user.getCardNo());
+            object.put("fingerID1", user.getFingerID1());
+            object.put("fingerID2", user.getFingerID2());
+            object.put("fingerID3", user.getFingerID3());
+            object.put("password", user.getPassWord());
+            if (!StringUtils.isEmpty(user.getFaceID())) {
+                object.put("faceID", BitmapUtil.bitmapToString(user.getFaceID()));
+            }
             object.put("access_token", SPUtils.getString(Constant.ACCENT_TOKEN));
             object.put("uuid", new DeviceUuidFactory(Utils.getContext()).getUuid() + "");
         } catch (Exception ex) {

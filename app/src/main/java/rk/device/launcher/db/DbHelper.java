@@ -4,12 +4,15 @@ import android.text.TextUtils;
 
 import org.greenrobot.greendao.query.Query;
 
+import java.io.File;
 import java.util.List;
 import java.util.UUID;
 
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.db.entity.UserDao;
 import rk.device.launcher.global.Constant;
+import rk.device.launcher.utils.FileUtils;
+import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.MD5;
 
 /**
@@ -20,13 +23,20 @@ import rk.device.launcher.utils.MD5;
  */
 
 public class DbHelper {
+    private static final String DB_NAME = "/data/rk_backup/rk.db";
+    private static final String DB_PATH_JOUR = "/data/rk_backup/rk.db-journal";
 
     private static UserDao sUserDao;
+    private static final String TAG = "DbHelper";
 
     public static UserDao getUserDao() {
         if (sUserDao == null) {
             sUserDao = DbManager.getInstance().getUserDao();
         }
+        File dbFile = new File(DB_NAME);
+        LogUtil.d(TAG, "dbFile.exists() = " + dbFile.exists());
+        FileUtils.setPermission(DB_NAME);
+        FileUtils.setPermission(DB_PATH_JOUR);
         return sUserDao;
     }
 
