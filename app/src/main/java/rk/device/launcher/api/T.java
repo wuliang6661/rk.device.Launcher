@@ -60,6 +60,19 @@ public class T {
     }
 
     /**
+     * 长时间显示Toast
+     *
+     * @param message
+     */
+    public static void showLong(String message) {
+        toast.setDuration(Toast.LENGTH_LONG);
+        toast.setText(message);
+        toast.show();
+    }
+
+
+
+    /**
      * @param duration
      * @param message
      * @param args

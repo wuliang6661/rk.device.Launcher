@@ -12,7 +12,6 @@ import peripherals.FingerHelper;
 import peripherals.NfcHelper;
 import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.bean.event.NFCAddEvent;
-import rk.device.launcher.bean.event.OpenDoorSuccessEvent;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.global.VerifyTypeConstant;
 import rk.device.launcher.utils.rxjava.RxBus;
@@ -74,6 +73,10 @@ public class VerifyService extends Service {
      * finger service
      */
     private void fingerService() {
+        if(LauncherApplication.sInitFingerSuccess == -1){
+            Log.i(TAG, TAG + " finger init failed.");
+            return;
+        }
         if (LauncherApplication.sIsFingerAdd == 1 && isTopActivity().equals(FINGER_ADD_PAGE)) {
             Log.i(TAG, TAG + " model:finger add");
         } else {
@@ -127,8 +130,8 @@ public class VerifyService extends Service {
                     return;
                 }
                 //TextUtils.isEmpty(user.getPopedomType())
-//                OpenUtils.getInstance().open(VerifyTypeConstant.TYPE_CARD, user.getUniqueId(),user.getName());
-                RxBus.getDefault().post(new OpenDoorSuccessEvent("", VerifyTypeConstant.TYPE_CARD, 1));
+                OpenUtils.getInstance().open(VerifyTypeConstant.TYPE_CARD, user.getUniqueId(),user.getName());
+//                RxBus.getDefault().post(new OpenDoorSuccessEvent("", VerifyTypeConstant.TYPE_CARD, 1));
             }
         } else {
             Log.i(TAG, TAG + " read nfc failed.");

@@ -20,6 +20,7 @@ import rk.device.launcher.global.Constant;
 import rk.device.launcher.global.VerifyTypeConstant;
 import rk.device.launcher.utils.MD5;
 import rk.device.launcher.utils.SPUtils;
+import rk.device.launcher.utils.SoundPlayUtils;
 import rk.device.launcher.utils.TimeUtils;
 import rk.device.launcher.utils.key.KeyUtils;
 import rk.device.launcher.utils.rxjava.RxBus;
@@ -32,12 +33,13 @@ import rx.Subscriber;
 
 public class OpenUtils {
 
-    public static final String TAG               = "OpenUtils";
+    public static final String    TAG               = "OpenUtils";
 
-    DeviceUuidFactory          deviceUuidFactory = new DeviceUuidFactory(
+    DeviceUuidFactory             deviceUuidFactory = new DeviceUuidFactory(
             LauncherApplication.getContext());
 
-    private static OpenUtils   openUtils         = null;
+    private static OpenUtils      openUtils         = null;
+    private static SoundPlayUtils soundPlayUtils    = null;
 
     public static OpenUtils getInstance() {
         if (openUtils == null) {
@@ -48,6 +50,12 @@ public class OpenUtils {
             }
         }
         return openUtils;
+    }
+
+    public OpenUtils() {
+        if (soundPlayUtils == null) {
+            soundPlayUtils = SoundPlayUtils.init(LauncherApplication.getContext());
+        }
     }
 
     /**
@@ -65,9 +73,9 @@ public class OpenUtils {
      */
     public void open(int type, String personId, String personName) {
         String token = SPUtils.getString(Constant.ACCENT_TOKEN);
-        if(TextUtils.isEmpty(token)){
-            obtainToken(type,personId,personName);
-        }else{
+        if (TextUtils.isEmpty(token)) {
+            obtainToken(type, personId, personName);
+        } else {
             openDoor(token, type, personId, personName);
         }
     }
@@ -94,7 +102,7 @@ public class OpenUtils {
 
                     @Override
                     public void onNext(TokenBo tokenBo) {
-                        SPUtils.put(Constant.ACCENT_TOKEN,tokenBo.getAccess_token());
+                        SPUtils.put(Constant.ACCENT_TOKEN, tokenBo.getAccess_token());
                         openDoor(tokenBo.getAccess_token(), type, personId, personName);
                     }
                 });
@@ -107,6 +115,7 @@ public class OpenUtils {
      * @param type
      */
     private void openDoor(String token, int type, String personId, String personName) {
+        int time = TimeUtils.getTimeStamp();
         BaseApiImpl.openDoor(token, deviceUuidFactory.getUuid().toString(), type,
                 TimeUtils.getTimeStamp()).subscribe(new Subscriber<StatusBo>() {
                     @Override
@@ -125,9 +134,10 @@ public class OpenUtils {
                     public void onNext(StatusBo statusBo) {
                         String data = openStatus(type);
                         RxBus.getDefault().post(new OpenDoorSuccessEvent(personName, type, 1));
-                        insertToLocalDB(type, personId, personName, TimeUtils.getTimeStamp(), data);
                         syncRecords(token, type, personId, personName, TimeUtils.getTimeStamp(),
                                 data);
+                        insertToLocalDB(type, personId, personName, time, data);
+                        soundPlayUtils.play(3);
                     }
                 });
     }
@@ -177,9 +187,15 @@ public class OpenUtils {
      */
     private void insertToLocalDB(int type, String personId, String personName, int time,
                                  String data) {
-        Record record = new Record(null, MD5.get16Lowercase(UUID.randomUUID().toString()),
-                personName, personId, type, data, time, TimeUtils.getTimeStamp());
-        int recordId = (int) DbRecordHelper.insert(record);
+        Record record = new Record();
+        record.setUniqueId(MD5.get16Lowercase(UUID.randomUUID().toString()));
+        record.setPopeName(personName);
+        record.setPeopleId(personId);
+        record.setOpenType(type);
+        record.setData(data);
+        record.setSlide_data(time);
+        record.setCdate(TimeUtils.getTimeStamp());
+        long recordId = DbRecordHelper.insert(record);
         if (recordId > 0) {
             Log.i(TAG, TAG + " insert record to local db success.");
         } else {
@@ -204,7 +220,7 @@ public class OpenUtils {
             params.put("access_token", token);
             params.put("uuid", deviceUuidFactory.getUuid());
             params.put("peopleId", personId);
-            params.put("popeName", personName);
+            params.put("peopleName", personName);
             params.put("openType", type);
             params.put("data", data);
             params.put("cdate", time);

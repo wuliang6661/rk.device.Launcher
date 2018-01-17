@@ -87,8 +87,8 @@ public interface BaseApi {
      * @param requestBody
      * @return
      */
-    @POST("/tenantcenter/a/public/rest/face1/openHistory")
-    Observable<BaseResult<StatusBo>> syncRecords(RequestBody requestBody);
+    @POST("/tenantcenter/a/public/rest/face/openHistory")
+    Observable<BaseResult<StatusBo>> syncRecords(@Body RequestBody requestBody);
 
 
     /**

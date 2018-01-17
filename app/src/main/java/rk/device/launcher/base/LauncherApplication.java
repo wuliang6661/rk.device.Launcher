@@ -49,6 +49,13 @@ public class LauncherApplication extends Application implements CustomActivityOn
      */
     public static int sIsNFCAdd;
 
+    /**
+     * 记录指纹模块是否初始化成功
+     * @value -1 失败
+     * @value 0 成功
+     */
+    public static int sInitFingerSuccess = -1;
+
     private final String DB_FOLDER = "/data/rk_backup/";
     private final String DB_NAME = "rk.db";
     private final String TEMP_DB_NAME = "temp.db";
@@ -97,7 +104,7 @@ public class LauncherApplication extends Application implements CustomActivityOn
         public void run() {
             try {
                 File dbFolder = new File(DB_FOLDER);
-                if (!dbFolder.mkdirs()) {
+                if (!dbFolder.exists()) {
                     dbFolder.mkdirs();
                 }
                 File dbFile = new File(dbFolder, DB_NAME);

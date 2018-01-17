@@ -8,7 +8,6 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.storage.StorageManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -17,6 +16,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import rk.device.launcher.api.T;
 import rk.device.launcher.bean.event.SleepImageEvent;
 import rk.device.launcher.utils.FileUtils;
 import rk.device.launcher.utils.LogUtil;
@@ -25,7 +25,6 @@ import rk.device.launcher.utils.carema.utils.FileUtil;
 import rk.device.launcher.utils.rxjava.RxBus;
 
 import static android.content.Context.STORAGE_SERVICE;
-import static com.igexin.sdk.GTServiceManager.context;
 
 
 public class UsbBroadCastReceiver extends BroadcastReceiver {
@@ -35,7 +34,7 @@ public class UsbBroadCastReceiver extends BroadcastReceiver {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 0:
-                    Toast.makeText(context, "复制完毕", Toast.LENGTH_LONG).show();
+                    T.showLong("复制完毕");
                     if (!mPicFileList.isEmpty()) {
                         RxBus.getDefault().post(new SleepImageEvent(mPicFileList));
                     }
@@ -84,6 +83,9 @@ public class UsbBroadCastReceiver extends BroadcastReceiver {
                 return;
             }
             File roombankerDir = new File(sdCardDirPath, "roombanker");
+            if (!roombankerDir.exists()) {
+                return;
+            }
             List<File> encryptedFileList = FileUtils.listFilesInDirWithFilter(roombankerDir, ".ao", true);
             if (encryptedFileList == null || encryptedFileList.isEmpty()) {
                 return;
