@@ -184,8 +184,9 @@ public class Person_addActivity
                     user.setStartTime(TimeUtils.string2Millis(tvTimeStart.getText().toString().trim()));
                     user.setEndTime(TimeUtils.string2Millis(tvTimeEnd.getText().toString().trim()));
                     DbHelper.insertUser(user);
-                    SyncPersonUtils.getInstance().syncPerosn();
-                    finish();
+                    SyncPersonUtils.getInstance().syncToken();
+//                    SyncPersonUtils.getInstance().syncPerosn();
+//                    finish();
                 }
                 break;
             case R.id.ll_set_time:    //开始时间

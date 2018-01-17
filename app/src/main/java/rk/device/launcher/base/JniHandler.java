@@ -72,6 +72,7 @@ public class JniHandler extends Handler {
 
     @Override
     public void handleMessage(Message msg) {
+        Log.d("wuliang", "jniHandler msg.what = " + msg.what);
         switch (msg.what) {
             case EventUtil.INIT_JNI:    //初始化所有外设的jni库
                 initSuress();
@@ -149,6 +150,7 @@ public class JniHandler extends Handler {
      * 开启摄像头
      */
     private void openCarema() {
+        Log.d("wuliang", "open carema");
         int open = MediacHelper.MEDIAC_open(carmer01[0]);
         if (open == 0) {
             MediacHelper.MEDIAC_setFormat(carmer01[0], 640, 480);
@@ -165,7 +167,9 @@ public class JniHandler extends Handler {
      * 关闭摄像头
      */
     private void closeCarema() {
+        Log.d("wuliang", "close carema");
         int stop = MediacHelper.MEDIAC_stopStreaming(carmer01[0]);
+        Log.d("wuliang", "close carema" + stop);
         if (stop == 0) {
             MediacHelper.MEDIAC_close(carmer01[0]);
         }

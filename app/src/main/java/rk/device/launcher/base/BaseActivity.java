@@ -299,7 +299,6 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     public void hintWaitProgress() {
         if (dialog != null && dialog.getDialog() != null
                 && dialog.getDialog().isShowing()) {
-            Log.d("wuliang", "隐藏转转弹窗");
             dialog.dismiss();
         }
     }
@@ -338,7 +337,6 @@ public abstract class BaseActivity extends RxAppCompatActivity {
             if (hintDialog != null) {
                 return null;
             }
-            Log.d("wuliang", "net dialog show!!");
             hintDialog = BaseDialogFragment.newInstance();
             hintDialog.setCancleable(false);
             hintDialog.setMessage("网络已断开，请重新连接");

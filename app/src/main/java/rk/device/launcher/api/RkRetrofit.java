@@ -1,5 +1,7 @@
 package rk.device.launcher.api;
 
+import com.google.gson.Gson;
+
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
@@ -46,7 +48,7 @@ public class RkRetrofit {
         Retrofit retrofit = new Retrofit
                 .Builder()
                 .baseUrl(baseUrl)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(new Gson()))
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .client(apiClient).build();
         return retrofit;

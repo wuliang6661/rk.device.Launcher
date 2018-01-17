@@ -94,7 +94,7 @@ public interface BaseApi {
     /**
      * 提交新增用户接口
      */
-    @POST("/tenantcenter/a/public/rest/face1/upAuthlist")
-    Observable<BaseResult<String>> syncPerson(@Body RequestBody requestBody);
+    @POST("/tenantcenter/a/public/rest/face/upAuthlist")
+    Observable<BaseResult<Object>> syncPerson(@Body RequestBody requestBody);
 
 }

@@ -220,6 +220,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
     @Override
     protected void onResume() {
         super.onResume();
+
         tvPlaceName.setText(SPUtils.getString(Constant.DEVICE_NAME));
         new Handler().postDelayed(() -> {
             if (!KeyUtils.isHaveKey()) {
@@ -301,7 +302,6 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
             }
         });
     }
-
 
     /**
      * Jni初始化的返回值
