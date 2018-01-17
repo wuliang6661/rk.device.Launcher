@@ -199,7 +199,7 @@ public class BaseApiImpl {
     /**
      * 新增用户接口
      */
-    public static Observable<String> syncPersons(User user) {
+    public static Observable<Object> syncPersons(User user) {
         JSONObject object = new JSONObject();
         try {
             object.put("peopleId", user.getUniqueId());
