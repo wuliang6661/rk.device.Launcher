@@ -151,6 +151,7 @@ public class SurfaceHolderCaremaFont implements SurfaceHolder.Callback {
 
     public static void closeSteram() {
         if (camera != null) {
+            camera.setPreviewCallback(null);
             camera.stopPreview();
         }
     }

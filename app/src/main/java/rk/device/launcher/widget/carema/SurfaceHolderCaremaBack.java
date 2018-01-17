@@ -108,8 +108,6 @@ public class SurfaceHolderCaremaBack implements SurfaceHolder.Callback {
             }
             // 启动摄像头预览
             camera.startPreview();
-            camera.setPreviewCallback((data, camera1) -> {
-            });
         }
     }
 
@@ -129,6 +127,7 @@ public class SurfaceHolderCaremaBack implements SurfaceHolder.Callback {
 
     public static void closeSteram() {
         if (camera != null) {
+            camera.setPreviewCallback(null);
             camera.stopPreview();
         }
     }

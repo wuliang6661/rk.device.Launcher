@@ -203,11 +203,11 @@ public class BaseApiImpl {
         JSONObject object = new JSONObject();
         try {
             object.put("peopleId", user.getUniqueId());
-            object.put("popeName", user.getName());
+            object.put("peopleName", user.getName());
             object.put("popedomType", user.getPopedomType());
-            object.put("startTime", user.getStartTime());
-            object.put("endTime", user.getEndTime());
-            object.put("createTime", user.getCreateTime());
+            object.put("startTime", user.getStartTime() / 1000);
+            object.put("endTime", user.getEndTime() / 1000);
+            object.put("createTime", user.getCreateTime() / 1000);
             object.put("cardNo", user.getCardNo());
             object.put("fingerID1", user.getFingerID1());
             object.put("fingerID2", user.getFingerID2());
