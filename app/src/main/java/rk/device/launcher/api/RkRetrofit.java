@@ -38,8 +38,8 @@ public class RkRetrofit {
         apiClient = new OkHttpClient
                 .Builder()
                 .cache(FileUtil.getCache())
-                .readTimeout(20000, TimeUnit.MILLISECONDS)
-                .connectTimeout(20000, TimeUnit.MILLISECONDS)
+                .readTimeout(30000, TimeUnit.MILLISECONDS)
+                .connectTimeout(30000, TimeUnit.MILLISECONDS)
                 .addInterceptor(logging)
                 .addInterceptor(new CacheControlInterceptor())
                 .addNetworkInterceptor(new HttpCacheInterceptor())
