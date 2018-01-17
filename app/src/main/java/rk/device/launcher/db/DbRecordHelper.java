@@ -21,8 +21,13 @@ public class DbRecordHelper {
     }
 
     public static long insert(Record record) {
-        long rowId = getRecordDao().insert(record);
-        return rowId;
+        try {
+            long rowId = getRecordDao().insert(record);
+            return rowId;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 
     public static void delete(Record record) {

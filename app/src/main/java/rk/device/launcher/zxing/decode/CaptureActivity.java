@@ -6,6 +6,7 @@ import android.hardware.Camera;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -22,10 +23,8 @@ import org.greenrobot.greendao.query.Query;
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 import rk.device.launcher.R;
-import rk.device.launcher.api.T;
 import rk.device.launcher.bean.QrCodeBO;
 import rk.device.launcher.db.DbHelper;
 import rk.device.launcher.db.entity.User;
@@ -33,6 +32,8 @@ import rk.device.launcher.db.entity.UserDao;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.TimeUtils;
 import rk.device.launcher.utils.encrypt.RSAUtils;
+import rk.device.launcher.utils.uuid.DeviceUuidFactory;
+import rk.device.launcher.utils.verify.OpenUtils;
 import rk.device.launcher.zxing.camera.CameraManager;
 import rk.device.launcher.zxing.view.ViewfinderView;
 
@@ -210,21 +211,34 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback,
             Date endDate = TimeUtils.formatTimeStamp(endTime);
 //            T.showShort("获取到结束时间");
             Date currentDate = TimeUtils.getCurrentTime();
+            String qrUuids = qrCodeBO.uuid;
+            String[] qrUuidArr = qrUuids.split(",");
+            DeviceUuidFactory deviceUuidFactory = new DeviceUuidFactory(this);
+            String deviceUuid = deviceUuidFactory.getUuid().toString();
+            boolean isThisDevice = false;
+            for (String qrUuid : qrUuidArr) {
+                if (TextUtils.equals(qrUuid, deviceUuid)) {
+                    isThisDevice = true;
+                    break;
+                }
+            }
             // 授权时间已过期
             if (currentDate.after(endDate)) {
                 showWarning("授权已过期, 请联系管理员");
+            } else if (!isThisDevice){
+                showWarning("未授权该门禁");
             } else {
                 UserDao userDao = DbHelper.getUserDao();
                 Query<User> query = userDao.queryBuilder()
                         .where(UserDao.Properties.UniqueId.eq(peopleId))
                         .build();
-                List<User> userList = query.list();
-                if (userList == null || userList.isEmpty()) {
+                User user = query.unique();
+                if (user == null) {
                     showWarning("未授权用户，请联系管理员");
                     return;
                 }
                 // 调用开门接口, 假如成功, 执行开门逻辑, 显示文字：验证成功；1.5s后跳转首页
-                T.showShort("开门成功");
+                OpenUtils.getInstance().open(6, peopleId, user.getName());
             }
 
         } catch (Exception e) {

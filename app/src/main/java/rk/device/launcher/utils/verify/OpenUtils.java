@@ -195,7 +195,7 @@ public class OpenUtils {
         record.setData(data);
         record.setSlide_data(time);
         record.setCdate(TimeUtils.getTimeStamp());
-        int recordId = (int) DbRecordHelper.insert(record);
+        long recordId = DbRecordHelper.insert(record);
         if (recordId > 0) {
             Log.i(TAG, TAG + " insert record to local db success.");
         } else {
