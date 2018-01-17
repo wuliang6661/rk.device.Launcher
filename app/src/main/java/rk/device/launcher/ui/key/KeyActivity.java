@@ -69,7 +69,7 @@ public class KeyActivity extends MVPBaseActivity<KeyContract.View, KeyPresenter>
                     onRequestError("请输入正确激活码");
                 } else {
                     if (NetWorkUtil.isNetConnected(this)) {
-                        mPresenter.activationDiveces(new DeviceUuidFactory(this).getUuid() + "", DeviceUtils.getMacAddress(), key);
+                        mPresenter.activationDiveces(new DeviceUuidFactory(this).getUuid() + "", DeviceUtils.getLocalMacAddress(), key);
                         showWaitProgress("正在激活...");
                     } else {
                         onRequestError("网络未连接");

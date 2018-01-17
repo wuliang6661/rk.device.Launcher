@@ -73,6 +73,10 @@ public class VerifyService extends Service {
      * finger service
      */
     private void fingerService() {
+        if(LauncherApplication.sInitFingerSuccess == -1){
+            Log.i(TAG, TAG + " finger init failed.");
+            return;
+        }
         if (LauncherApplication.sIsFingerAdd == 1 && isTopActivity().equals(FINGER_ADD_PAGE)) {
             Log.i(TAG, TAG + " model:finger add");
         } else {

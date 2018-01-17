@@ -172,17 +172,19 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_add_finger:
-                Log.i(TAG,TAG+" finger add");
+                Log.i(TAG, TAG + " finger add");
                 /**
                  * 新增指纹
                  *
                  * @step 判断指纹头能否录入指纹
                  * @step 录入指纹
                  */
-                if (!isDetail) {
-                    readFingerInfo();
-                } else {
-                    doSaveFinger(true);
+                if (checkFingerModular()) {
+                    if (!isDetail) {
+                        readFingerInfo();
+                    } else {
+                        doSaveFinger(true);
+                    }
                 }
                 break;
             case R.id.tv_rename:
@@ -192,14 +194,16 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
                 doSaveFinger(false);
                 break;
             case R.id.iv_search://删除
-                showMessageDialog(getResources().getString(R.string.notice),
-                        getResources().getString(R.string.notice_delete_finger),
-                        getResources().getString(R.string.sure), new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                deleteFinger();
-                            }
-                        });
+                if (checkFingerModular()) {
+                    showMessageDialog(getResources().getString(R.string.notice),
+                            getResources().getString(R.string.notice_delete_finger),
+                            getResources().getString(R.string.sure), new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    deleteFinger();
+                                }
+                            });
+                }
                 break;
         }
     }
@@ -267,7 +271,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
      * 发起添加指纹指令
      */
     private void addFinger() {
-        Log.i(TAG,TAG+" finger addFinger");
+        Log.i(TAG, TAG + " finger addFinger");
         Message msg = new Message();
         msg.what = MSG_FINGER_ADD;
         fingerAddHandler.sendMessageDelayed(msg, 500);
@@ -277,7 +281,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
      * 发起判断是否能够录入指纹指令
      */
     private void readFingerInfo() {
-        Log.i(TAG,TAG+" finger readFingerInfo");
+        Log.i(TAG, TAG + " finger readFingerInfo");
         Message msg = new Message();
         msg.what = MSG_READ_FINGER_INFO;
         fingerAddHandler.sendMessageDelayed(msg, 500);
@@ -305,7 +309,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
                     doAddFinger();
                     break;
                 case MSG_READ_FINGER_INFO://判断是否能够录入指纹
-                    Log.i(TAG,TAG+" finger MSG_READ_FINGER_INFO");
+                    Log.i(TAG, TAG + " finger MSG_READ_FINGER_INFO");
                     checkCanAddFinger();
                     break;
                 case MSG_DELETE_FINGER://删除指纹信息
@@ -404,7 +408,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
      * @step 2 手指还未录入的情况下，才能录入该指纹头
      */
     private void doAddFinger() {
-        Log.i(TAG,TAG+" finger doAddFinger");
+        Log.i(TAG, TAG + " finger doAddFinger");
         if (isAdd) {
             return;
         }
@@ -457,7 +461,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
                                         addFingerBtn.setVisibility(View.GONE);
                                         buttonLL.setVisibility(View.VISIBLE);
                                         saveTv.setVisibility(View.VISIBLE);
-                                        showNoticeMsg("指纹录入成功",true);
+                                        showNoticeMsg("指纹录入成功", true);
                                         dialogFragment.dismiss();
                                     }
                                 });
@@ -483,12 +487,12 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
             public void run() {
                 if (isSuccess) {
                     noticeTv.setText(msg);
-                    noticeTv.setBackground(getResources()
-                            .getDrawable(R.drawable.shape_finger_add_success));
-                }else{
+                    noticeTv.setBackground(
+                            getResources().getDrawable(R.drawable.shape_finger_add_success));
+                } else {
                     noticeTv.setText(msg);
-                    noticeTv.setBackground(getResources()
-                            .getDrawable(R.drawable.shape_finger_add_fail));
+                    noticeTv.setBackground(
+                            getResources().getDrawable(R.drawable.shape_finger_add_fail));
                 }
             }
         });
@@ -516,7 +520,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
      * 保存指纹到本地
      */
     private void doSaveFinger(boolean isRename) {
-        Log.i(TAG,TAG+" finger doSaveFinger");
+        Log.i(TAG, TAG + " finger doSaveFinger");
         if (fingerId.equals(FINGER_ERROR)) {
             showToastMsg(getResources().getString(R.string.finger_add_error));
             return;
@@ -573,4 +577,12 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
         finish();
     }
 
+    private boolean checkFingerModular() {
+        if (LauncherApplication.sInitFingerSuccess == -1) {
+            showMessageDialog("请添加指纹模块");
+            Log.i(TAG, TAG + " finger init failed.");
+            return false;
+        }
+        return true;
+    }
 }

@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -80,6 +81,7 @@ public class SleepActivity extends BaseActivity {
         super.onResume();
 //        SurfaceHolderCaremaBack.closeSteram();
 //        SurfaceHolderCaremaFont.closeSteram();
+//        System.gc();
         setCrema(EventUtil.MEDIA_CLOSE);
     }
 
@@ -143,6 +145,7 @@ public class SleepActivity extends BaseActivity {
 
 
     private void setCrema(int status) {
+        Log.d("wuliang", "set Carema = " + status);
         JniHandler mHandler = JniHandler.getInstance();
         Message msg = new Message();
         msg.what = status;

@@ -33,13 +33,13 @@ import rx.Subscriber;
 
 public class OpenUtils {
 
-    public static final String TAG               = "OpenUtils";
+    public static final String    TAG               = "OpenUtils";
 
-    DeviceUuidFactory          deviceUuidFactory = new DeviceUuidFactory(
+    DeviceUuidFactory             deviceUuidFactory = new DeviceUuidFactory(
             LauncherApplication.getContext());
 
-    private static OpenUtils   openUtils         = null;
-    private static SoundPlayUtils soundPlayUtils         = null;
+    private static OpenUtils      openUtils         = null;
+    private static SoundPlayUtils soundPlayUtils    = null;
 
     public static OpenUtils getInstance() {
         if (openUtils == null) {
@@ -52,8 +52,8 @@ public class OpenUtils {
         return openUtils;
     }
 
-    public OpenUtils(){
-        if(soundPlayUtils == null){
+    public OpenUtils() {
+        if (soundPlayUtils == null) {
             soundPlayUtils = SoundPlayUtils.init(LauncherApplication.getContext());
         }
     }
@@ -73,9 +73,9 @@ public class OpenUtils {
      */
     public void open(int type, String personId, String personName) {
         String token = SPUtils.getString(Constant.ACCENT_TOKEN);
-        if(TextUtils.isEmpty(token)){
-            obtainToken(type,personId,personName);
-        }else{
+        if (TextUtils.isEmpty(token)) {
+            obtainToken(type, personId, personName);
+        } else {
             openDoor(token, type, personId, personName);
         }
     }
@@ -102,7 +102,7 @@ public class OpenUtils {
 
                     @Override
                     public void onNext(TokenBo tokenBo) {
-                        SPUtils.put(Constant.ACCENT_TOKEN,tokenBo.getAccess_token());
+                        SPUtils.put(Constant.ACCENT_TOKEN, tokenBo.getAccess_token());
                         openDoor(tokenBo.getAccess_token(), type, personId, personName);
                     }
                 });
