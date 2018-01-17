@@ -470,8 +470,7 @@ public class BitmapUtil {
                 e.printStackTrace();
             }
             byte[] buffer = out.toByteArray();
-            byte[] encode = Base64.decode(buffer, Base64.DEFAULT);
-            return new String(encode);
+            return Base64.encodeToString(buffer, Base64.DEFAULT);
         }
     }
 

@@ -56,7 +56,7 @@ public class SyncPersonUtils {
     /**
      * 获取token
      */
-    private void syncToken() {
+    public void syncToken() {
         BaseApiImpl.postToken(factory.getUuid().toString(), KeyUtils.getKey())
                 .subscribe(new Subscriber<TokenBo>() {
                     @Override
@@ -82,7 +82,7 @@ public class SyncPersonUtils {
      * 上传到服务器
      */
     private void updatePerson(User user) {
-        BaseApiImpl.syncPersons(user).subscribe(new Subscriber<String>() {
+        BaseApiImpl.syncPersons(user).subscribe(new Subscriber<Object>() {
             @Override
             public void onCompleted() {
 
@@ -96,7 +96,7 @@ public class SyncPersonUtils {
             }
 
             @Override
-            public void onNext(String s) {
+            public void onNext(Object s) {
                 user.setUploadStatus(1);
                 DbHelper.insertUser(user);
                 syncPerosn();
