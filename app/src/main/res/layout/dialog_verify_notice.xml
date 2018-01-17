@@ -8,14 +8,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_marginBottom="200dp"
+        android:layout_marginBottom="@dimen/dp_250"
         android:orientation="vertical">
 
         <ImageView
             android:id="@+id/img_status"
-            android:layout_width="@dimen/dp_150"
-            android:layout_height="@dimen/dp_150"
-            android:scaleType="centerInside"
+            android:layout_width="@dimen/dp_250"
+            android:layout_height="@dimen/dp_250"
+            android:scaleType="centerCrop"
             android:src="@mipmap/verify_success"/>
 
         <TextView
@@ -26,7 +26,7 @@
             android:gravity="center"
             android:text="@string/verify_success"
             android:textColor="@color/verify_sucess"
-            android:textSize="@dimen/sp_27"/>
+            android:textSize="@dimen/sp_46"/>
     </LinearLayout>
 
 
