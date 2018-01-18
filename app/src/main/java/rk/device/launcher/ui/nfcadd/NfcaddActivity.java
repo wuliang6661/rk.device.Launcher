@@ -3,7 +3,6 @@ package rk.device.launcher.ui.nfcadd;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.Button;
@@ -19,6 +18,7 @@ import rk.device.launcher.bean.event.NFCAddEvent;
 import rk.device.launcher.db.DbHelper;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.mvp.MVPBaseActivity;
+import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.WindowManagerUtils;
 import rk.device.launcher.utils.rxjava.RxBus;
 import rk.device.launcher.utils.verify.VerifyUtils;
@@ -130,7 +130,7 @@ public class NfcaddActivity extends MVPBaseActivity<NfcaddContract.View, NfcaddP
                             });
                             return;
                         }
-                        Log.i("VerifyService", "VerifyService NFCAddEvent:" + nfcAddEvent.NFCCard);
+                        LogUtil.i("VerifyService", "VerifyService NFCAddEvent:" + nfcAddEvent.NFCCard);
                         T.showShort(nfcAddEvent.NFCCard);
                     }
                 }));
