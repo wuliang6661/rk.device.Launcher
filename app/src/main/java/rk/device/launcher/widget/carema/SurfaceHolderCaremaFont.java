@@ -85,14 +85,14 @@ public class SurfaceHolderCaremaFont implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        Log.d(TAG, "surface被干掉了！！！！！");
-        if (camera != null) {
-            try {
-                camera.setPreviewDisplay(null);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+//        Log.d(TAG, "surface被干掉了！！！！！");
+//        if (camera != null) {
+//            try {
+//                camera.setPreviewDisplay(null);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
 

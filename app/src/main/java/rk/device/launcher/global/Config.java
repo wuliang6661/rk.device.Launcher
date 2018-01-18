@@ -29,7 +29,7 @@ public class Config {
                 APP_WEATHER = "https://app.roombanker.cn:9092";
                 break;
             case PROGRAM_TEST_MODE:
-                APP_WEATHER = "http://192.168.10.121:8083";
+                APP_WEATHER = "http://192.168.10.49:8080";
                 break;
             case PROGRAM_DEV_MODE:
                 break;

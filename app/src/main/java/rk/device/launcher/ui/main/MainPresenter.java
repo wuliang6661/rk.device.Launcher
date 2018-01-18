@@ -332,6 +332,7 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
         });
     }
 
+
     /**
      * 启动人脸检测
      */
@@ -342,12 +343,19 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
         faceUtils.setFaceFeature((name, max_score) -> {
             List<User> users = DbHelper.queryByFaceId(name);
             if (!users.isEmpty()) {
-                long time = System.currentTimeMillis();
-                if (users.get(0).getStartTime() < time && users.get(0).getEndTime() > time) {    //在有效时间内，则开门
-//                    mView.showSuress(users.get(0).getName());
-                    OpenUtils.getInstance().open(VerifyTypeConstant.TYPE_FACE, users.get(0).getUniqueId(), users.get(0).getName());
-                }
+                openDoor(users.get(0));
             }
         });
     }
+
+    /**
+     * 验证开门
+     */
+    private void openDoor(User user) {
+        long time = System.currentTimeMillis();
+        if (user.getStartTime() < time && user.getEndTime() > time) {    //在有效时间内，则开门
+            OpenUtils.getInstance().open(VerifyTypeConstant.TYPE_FACE, user.getUniqueId(), user.getName());
+        }
+    }
+
 }

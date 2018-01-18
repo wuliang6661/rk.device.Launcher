@@ -178,6 +178,7 @@ public class CaptureActivity extends BaseActivity implements SurfaceHolder.Callb
         } catch (Exception ioe) {
             Log.w(TAG, ioe);
         }
+
     }
 
     public void drawViewfinder() {
