@@ -39,7 +39,7 @@ public class InitErrorDialogFragmen extends DialogFragment implements View.OnCli
     @Bind(R.id.nfc_error)
     ImageView nfcError;
     @Bind(R.id.md_error)
-    ImageView mdError;
+    ImageView finderError;
     @Bind(R.id.btn_cancel)
     Button btnCancel;
     @Bind(R.id.led_progress)
@@ -53,7 +53,7 @@ public class InitErrorDialogFragmen extends DialogFragment implements View.OnCli
 
     private int ledStatus = 0;
     private int cvcStatus = 0;
-    private int mdStatus = 0;
+    private int finderStarus = 0;
     private int nfcStatus = 0;
 
     private JniHandler jniHandler;
@@ -89,7 +89,7 @@ public class InitErrorDialogFragmen extends DialogFragment implements View.OnCli
         setViewVisable(cvcError, cvcStatus);
         setViewVisable(ledError, ledStatus);
         setViewVisable(nfcError, nfcStatus);
-        setViewVisable(mdError, mdStatus);
+        setViewVisable(finderError, finderStarus);
         btnCancel.setOnClickListener(this);
     }
 
@@ -116,10 +116,10 @@ public class InitErrorDialogFragmen extends DialogFragment implements View.OnCli
     }
 
 
-    public void setStatus(int cvcStatus, int LedStatus, int MdStatus, int NfcStatus) {
+    public void setStatus(int cvcStatus, int LedStatus, int finderStarus, int NfcStatus) {
         this.cvcStatus = cvcStatus;
         this.ledStatus = LedStatus;
-        this.mdStatus = MdStatus;
+        this.finderStarus = finderStarus;
         this.nfcStatus = NfcStatus;
     }
 
@@ -133,7 +133,7 @@ public class InitErrorDialogFragmen extends DialogFragment implements View.OnCli
         setViewVisable(cvcError, cvcStatus);
         setViewVisable(ledError, ledStatus);
         setViewVisable(nfcError, nfcStatus);
-        setViewVisable(mdError, mdStatus);
+        setViewVisable(finderError, finderStarus);
     }
 
 
@@ -151,7 +151,7 @@ public class InitErrorDialogFragmen extends DialogFragment implements View.OnCli
 
         setProgress(cvcProgress, cvcError, cvcStatus);
         setProgress(nfcProgress, nfcError, nfcStatus);
-        setProgress(mdProgress, mdError, mdStatus);
+        setProgress(mdProgress, finderError, finderStarus);
         setProgress(ledProgress, ledError, ledStatus);
     }
 
