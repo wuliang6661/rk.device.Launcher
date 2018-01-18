@@ -30,6 +30,7 @@ import rk.device.launcher.db.DbHelper;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.db.entity.UserDao;
 import rk.device.launcher.global.VerifyTypeConstant;
+import rk.device.launcher.utils.DateUtil;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.TimeUtils;
 import rk.device.launcher.utils.encrypt.RSAUtils;
@@ -216,7 +217,7 @@ public class CaptureActivity extends BaseActivity implements SurfaceHolder.Callb
             String peopleId = qrCodeBO.peopleId;
             Date endDate = TimeUtils.formatTimeStamp(endTime);
 //            T.showShort("获取到结束时间");
-            Date currentDate = TimeUtils.getCurrentTime();
+            Date currentDate = DateUtil.getCurrentTime();
             String qrUuids = qrCodeBO.uuid;
             String[] qrUuidArr = qrUuids.split(",");
             DeviceUuidFactory deviceUuidFactory = new DeviceUuidFactory(this);

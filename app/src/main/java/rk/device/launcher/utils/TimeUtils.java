@@ -23,15 +23,6 @@ public class TimeUtils {
         return date.getHours();
     }
 
-    /**
-     * 获取当前时间
-     *
-     * @return
-     */
-    public static Date getCurrentTime() {
-        return new Date();
-    }
-
 
     /**
      * 获取当前手机时间
