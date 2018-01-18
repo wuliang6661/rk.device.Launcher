@@ -10,7 +10,7 @@ public class OpenDoorSuccessEvent {
 
     public String name;
     public int    type;
-    public int    isSuccess;//1：成功，-1：失败
+    public int    isSuccess;//1：成功，0：失败
 
     public OpenDoorSuccessEvent(String name, int type, int isSuccess) {
         this.name = name;

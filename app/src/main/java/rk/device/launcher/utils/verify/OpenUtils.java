@@ -133,7 +133,7 @@ public class OpenUtils {
                     @Override
                     public void onNext(StatusBo statusBo) {
                         String data = openStatus(type);
-                        RxBus.getDefault().post(new OpenDoorSuccessEvent(personName, type, 1));
+                        RxBus.getDefault().post(new OpenDoorSuccessEvent(personName, type, statusBo.getStatus()));
                         syncRecords(token, type, personId, personName, TimeUtils.getTimeStamp(),
                                 data);
                         insertToLocalDB(type, personId, personName, time, data);
