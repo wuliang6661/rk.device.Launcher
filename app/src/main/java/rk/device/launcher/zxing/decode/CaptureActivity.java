@@ -33,7 +33,7 @@ import rk.device.launcher.global.VerifyTypeConstant;
 import rk.device.launcher.utils.DateUtil;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.TimeUtils;
-import rk.device.launcher.utils.encrypt.RSAUtils;
+import rk.device.launcher.utils.encrypt.AESOperator;
 import rk.device.launcher.utils.uuid.DeviceUuidFactory;
 import rk.device.launcher.utils.verify.OpenUtils;
 import rk.device.launcher.zxing.camera.CameraManager;
@@ -42,7 +42,7 @@ import rk.device.launcher.zxing.view.ViewfinderView;
 
 public class CaptureActivity extends BaseActivity implements SurfaceHolder.Callback, View.OnClickListener {
 
-    private static final String TAG = CaptureActivity.class.getSimpleName();
+    private static final String TAG = "CaptureActivity";
 
 
     private CameraManager cameraManager;
@@ -187,11 +187,11 @@ public class CaptureActivity extends BaseActivity implements SurfaceHolder.Callb
     }
 
     public void handleDecode(Result rawResult, Bitmap barcode, float scaleFactor) {
-        Log.d("wxl", "rawResult=" + rawResult);
 
         boolean fromLiveScan = barcode != null;
         if (fromLiveScan) {
             String resultString = rawResult.getText();
+            LogUtil.d(TAG, "resultString = " + resultString);
 //            // Then not from history, so beep/vibrate and we have an image to draw on
 //            beepManager.playBeepSoundAndVibrate();
 //            Intent intent = new Intent();
@@ -210,8 +210,9 @@ public class CaptureActivity extends BaseActivity implements SurfaceHolder.Callb
 
     private void parseResult(String resultString) {
         try {
-            String decryptedString = RSAUtils.decrypt(resultString);
-            LogUtil.d("decryptedString = " + decryptedString);
+//            String decryptedString = RSAUtils.decrypt(resultString);
+            String decryptedString = AESOperator.decode(resultString);
+            LogUtil.d(TAG, "decryptedString = " + decryptedString);
             QrCodeBO qrCodeBO = JSON.parseObject(decryptedString, QrCodeBO.class);
             long endTime = qrCodeBO.endTime;
             long startTime = qrCodeBO.startTime;
@@ -245,6 +246,7 @@ public class CaptureActivity extends BaseActivity implements SurfaceHolder.Callb
                     showWarning("未授权用户，请联系管理员");
                     return;
                 }
+                LogUtil.d(TAG, "二维码解析成功, 正在发送请求");
                 // 调用开门接口, 假如成功, 执行开门逻辑, 显示文字：验证成功；1.5s后跳转首页
                 OpenUtils.getInstance().open(VerifyTypeConstant.TYPE_QR_CODE, peopleId, user.getName());
             }

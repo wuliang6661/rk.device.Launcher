@@ -50,7 +50,7 @@ public class FingerHelper {
 
     // Used to load the 'native-lib' library on application startup.
     static {
-        System.loadLibrary("finger");
+        System.loadLibrary("peripherals");
     }
 
     /*
