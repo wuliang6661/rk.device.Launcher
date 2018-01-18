@@ -65,13 +65,13 @@ public class SurfaceHolderCaremaBack implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        if (camera != null) {
-            try {
-                camera.setPreviewDisplay(null);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+//        if (camera != null) {
+//            try {
+//                camera.setPreviewDisplay(null);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
 

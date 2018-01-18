@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 import okhttp3.MediaType;
-import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Retrofit;
 import rk.device.launcher.base.BaseActivity;
@@ -22,7 +21,6 @@ import rk.device.launcher.bean.WeatherBO;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.global.Config;
 import rk.device.launcher.global.Constant;
-import rk.device.launcher.utils.BitmapUtil;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.StringUtils;
 import rk.device.launcher.utils.Utils;
@@ -200,7 +198,7 @@ public class BaseApiImpl {
     /**
      * 新增用户接口
      */
-    public static Observable<Object> syncPersons(User user) {
+    public static Observable<Object> syncPersons(User user, String url) {
         JSONObject object = new JSONObject();
         try {
             object.put("peopleId", user.getUniqueId());
@@ -216,21 +214,21 @@ public class BaseApiImpl {
             object.put("password", user.getPassWord());
             object.put("access_token", SPUtils.getString(Constant.ACCENT_TOKEN));
             object.put("uuid", new DeviceUuidFactory(Utils.getContext()).getUuid() + "");
-            if (!StringUtils.isEmpty(user.getFaceID())) {
-                object.put("faceID", BitmapUtil.bitmapToString(user.getFaceID()));
+            if (!StringUtils.isEmpty(url)) {
+                object.put("faceID", url);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), object.toString());
-        return weatherFactorys().syncPerson(requestBody).compose(RxResultHelper.httpResult()).compose(activity.bindUntilEvent(ActivityEvent.DESTROY));
+        return weatherFactorys().syncPerson(requestBody).compose(RxResultHelper.httpResult());
     }
 
     /**
      * 上传用户人脸
      */
     public static Observable<String> updataImage(RequestBody requestBody) {
-        return weatherFactorys().uploadFile(requestBody).compose(RxResultHelper.httpResult()).compose(activity.bindUntilEvent(ActivityEvent.DESTROY));
+        return weatherFactorys().uploadFile(requestBody).compose(RxResultHelper.httpResult());
     }
 
 }

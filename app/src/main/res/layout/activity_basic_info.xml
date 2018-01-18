@@ -150,7 +150,8 @@
 
         <LinearLayout
             android:id="@+id/ceshi"
-            style="@style/ll_set_item">
+            style="@style/ll_set_item"
+            android:visibility="gone">
 
             <TextView
                 style="@style/tv_set_label"
@@ -171,12 +172,9 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/divider_height"
+            android:visibility="gone"
             android:background="@color/blue_31598a" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/divider_height"
-            android:background="@color/blue_31598a" />
 
         <Button
             android:id="@+id/btn_finish_setting"

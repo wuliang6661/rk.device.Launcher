@@ -45,25 +45,27 @@ public class SyncPersonUtils {
      * 同步人员到服务器
      */
     public void syncPerosn() {
-//        if (StringUtils.isEmpty(SPUtils.getString(Constant.ACCENT_TOKEN))) {
-//            syncToken();
-//        } else {
-            List<User> users = DbHelper.queryUserByUpdate();
-            if (!users.isEmpty()) {
-                if (!StringUtils.isEmpty(users.get(0).getFaceID())) {
-                    uploadImage(users.get(0).getFaceID());
-                } else {
-                    updatePerson(users.get(0));
+        new Thread(() -> {
+            if (StringUtils.isEmpty(SPUtils.getString(Constant.ACCENT_TOKEN))) {
+                syncToken(null, "");
+            } else {
+                List<User> users = DbHelper.queryUserByUpdate();
+                if (!users.isEmpty()) {
+                    if (!StringUtils.isEmpty(users.get(0).getFaceID())) {
+                        uploadImage(users.get(0));
+                    } else {
+                        updatePerson(users.get(0), null);
+                    }
                 }
             }
-//        }
+        }).start();
     }
 
 
     /**
      * 获取token
      */
-    public void syncToken() {
+    public void syncToken(User user, String faceImgUrl) {
         BaseApiImpl.postToken(factory.getUuid().toString(), KeyUtils.getKey())
                 .subscribe(new Subscriber<TokenBo>() {
                     @Override
@@ -79,7 +81,11 @@ public class SyncPersonUtils {
                     @Override
                     public void onNext(TokenBo tokenBo) {
                         SPUtils.put(Constant.ACCENT_TOKEN, tokenBo.getAccess_token());
-                        syncPerosn();
+                        if (user != null) {
+                            updatePerson(user, faceImgUrl);
+                        } else {
+                            syncPerosn();
+                        }
                     }
                 });
     }
@@ -88,8 +94,8 @@ public class SyncPersonUtils {
     /**
      * 上传人脸图片
      */
-    private void uploadImage(String face) {
-        File file = new File("/data/rk_backup/face/", face + ".png");
+    private void uploadImage(User user) {
+        File file = new File("/data/rk_backup/face/", user.getFaceID() + ".png");
         if (!file.exists()) {
             return;
         }
@@ -108,7 +114,7 @@ public class SyncPersonUtils {
 
             @Override
             public void onNext(String s) {
-
+                updatePerson(user, s);
             }
         });
     }
@@ -117,8 +123,8 @@ public class SyncPersonUtils {
     /**
      * 上传到服务器
      */
-    private void updatePerson(User user) {
-        BaseApiImpl.syncPersons(user).subscribe(new Subscriber<Object>() {
+    private void updatePerson(User user, String faceImgUrl) {
+        BaseApiImpl.syncPersons(user, faceImgUrl).subscribe(new Subscriber<Object>() {
             @Override
             public void onCompleted() {
 
@@ -127,7 +133,7 @@ public class SyncPersonUtils {
             @Override
             public void onError(Throwable e) {
                 if (e.getMessage().equals("40004")) {     //token失效
-                    syncToken();
+                    syncToken(user, faceImgUrl);
                 }
             }
 

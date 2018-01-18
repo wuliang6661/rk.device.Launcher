@@ -185,8 +185,7 @@ public class Person_addActivity
                     user.setEndTime(TimeUtils.string2Millis(tvTimeEnd.getText().toString().trim()));
                     DbHelper.insertUser(user);
                     SyncPersonUtils.getInstance().syncPerosn();
-//                    SyncPersonUtils.getInstance().syncPerosn();
-//                    finish();
+                    finish();
                 }
                 break;
             case R.id.ll_set_time:    //开始时间
@@ -203,13 +202,13 @@ public class Person_addActivity
                         FileUtils.deleteFile("/data/rk_backup/face/" + user.getFaceID() + ".png");
                     }
                     //删除指纹
-                    if(!TextUtils.isEmpty(user.getFingerID1())){
+                    if (!TextUtils.isEmpty(user.getFingerID1())) {
                         FingerHelper.JNIFpDelUserByID(TypeTranUtils.str2Int(user.getFingerID1()));
                     }
-                    if(!TextUtils.isEmpty(user.getFingerID2())){
+                    if (!TextUtils.isEmpty(user.getFingerID2())) {
                         FingerHelper.JNIFpDelUserByID(TypeTranUtils.str2Int(user.getFingerID2()));
                     }
-                    if(!TextUtils.isEmpty(user.getFingerID3())){
+                    if (!TextUtils.isEmpty(user.getFingerID3())) {
                         FingerHelper.JNIFpDelUserByID(TypeTranUtils.str2Int(user.getFingerID3()));
                     }
                     DbHelper.delete(user);
@@ -271,13 +270,14 @@ public class Person_addActivity
     private void addNumPass() {
         if (isHasName()) {
             showDialogFragment("开门密码", content -> {
-                if (StringUtils.isEmpty(content)) {
-                    dialogFragment.showError("请输入开门密码！");
-                    return;
+                if (!StringUtils.isEmpty(content)) {
+                    if (content.length() != 6) {
+                        dialogFragment.showError("请输入6位数密码！");
+                        return;
+                    }
                 }
-                if (content.length() != 6) {
-                    dialogFragment.showError("请输入完整密码！");
-                    return;
+                if (StringUtils.isEmpty(content)) {
+                    content = "0";
                 }
                 List<User> users = DbHelper.queryByPassword(content);
                 if (users.isEmpty()) {
