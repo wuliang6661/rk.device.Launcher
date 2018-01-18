@@ -45,9 +45,9 @@ public class SyncPersonUtils {
      * 同步人员到服务器
      */
     public void syncPerosn() {
-        if (StringUtils.isEmpty(SPUtils.getString(Constant.ACCENT_TOKEN))) {
-            syncToken();
-        } else {
+//        if (StringUtils.isEmpty(SPUtils.getString(Constant.ACCENT_TOKEN))) {
+//            syncToken();
+//        } else {
             List<User> users = DbHelper.queryUserByUpdate();
             if (!users.isEmpty()) {
                 if (!StringUtils.isEmpty(users.get(0).getFaceID())) {
@@ -56,7 +56,7 @@ public class SyncPersonUtils {
                     updatePerson(users.get(0));
                 }
             }
-        }
+//        }
     }
 
 
