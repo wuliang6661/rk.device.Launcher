@@ -133,7 +133,7 @@ public class JniHandler extends Handler {
         //init finger
         if (fingerStatus != 0) {
             fingerStatus = FingerHelper.JNIFpInit();
-            if(fingerStatus == 0){
+            if (fingerStatus == 0) {
                 LauncherApplication.sInitFingerSuccess = 0;
             }
         }
@@ -142,7 +142,7 @@ public class JniHandler extends Handler {
         }
         Log.i("wuliang", "call  " + callsuress);
         if (initListener != null) {
-            initListener.initCallBack(cvcStatus, LedStatus, NfcStatus);
+            initListener.initCallBack(cvcStatus, LedStatus, NfcStatus, fingerStatus);
         }
     }
 
@@ -322,7 +322,7 @@ public class JniHandler extends Handler {
      */
     public interface OnInitListener {
 
-        void initCallBack(int cvcStatus, int LedStatus, int NfcStatus);
+        void initCallBack(int cvcStatus, int LedStatus, int NfcStatus, int fingerStatus);
     }
 
 

@@ -307,16 +307,16 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
      * Jni初始化的返回值
      */
     @Override
-    public void initCallBack(int cvcStatus, int LedStatus, int NfcStatus) {
+    public void initCallBack(int cvcStatus, int LedStatus, int NfcStatus, int finderStarus) {
         runOnUiThread(() -> {
-            if (cvcStatus == 0 && LedStatus == 0 && NfcStatus == 0) {
+            if (cvcStatus == 0 && LedStatus == 0 && NfcStatus == 0 && finderStarus == 0) {
                 initError.setVisibility(View.GONE);
                 if (initDialog != null && initDialog.isVisible()) {
                     initDialog.dismiss();
                 }
             } else {
                 initError.setVisibility(View.VISIBLE);
-                initDialog.setStatus(cvcStatus, LedStatus, 0, NfcStatus);
+                initDialog.setStatus(cvcStatus, LedStatus, finderStarus, NfcStatus);
                 if (initDialog != null && initDialog.isVisible()) {
                     T.showShort("部分设备初始化失败！建议重启设备！");
                     initDialog.setInitFinish();
