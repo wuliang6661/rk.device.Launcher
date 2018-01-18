@@ -270,13 +270,14 @@ public class Person_addActivity
     private void addNumPass() {
         if (isHasName()) {
             showDialogFragment("开门密码", content -> {
-                if (StringUtils.isEmpty(content)) {
-                    dialogFragment.showError("请输入开门密码！");
-                    return;
+                if (!StringUtils.isEmpty(content)) {
+                    if (content.length() != 6) {
+                        dialogFragment.showError("请输入6位数密码！");
+                        return;
+                    }
                 }
-                if (content.length() != 6) {
-                    dialogFragment.showError("请输入完整密码！");
-                    return;
+                if (StringUtils.isEmpty(content)) {
+                    content = "0";
                 }
                 List<User> users = DbHelper.queryByPassword(content);
                 if (users.isEmpty()) {

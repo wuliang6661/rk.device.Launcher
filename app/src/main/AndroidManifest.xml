@@ -254,7 +254,6 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
-
         <!-- 个推 -->
         <service
             android:name=".service.RKLauncherPushService"
