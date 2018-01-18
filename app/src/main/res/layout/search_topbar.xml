@@ -21,6 +21,7 @@
         android:src="@drawable/arrow_back"/>
 
     <rk.device.launcher.widget.ClearEditText
+        android:maxLength="10"
         android:singleLine="true"
         android:imeOptions="actionSearch"
         android:id="@+id/et"
