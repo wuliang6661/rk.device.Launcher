@@ -6,7 +6,6 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import peripherals.FingerHelper;
 import peripherals.NfcHelper;
@@ -14,6 +13,7 @@ import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.bean.event.NFCAddEvent;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.global.VerifyTypeConstant;
+import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.rxjava.RxBus;
 import rk.device.launcher.utils.verify.OpenUtils;
 import rk.device.launcher.utils.verify.VerifyUtils;
@@ -36,14 +36,14 @@ public class VerifyService extends Service {
     }
 
     private void init() {
-        Log.i(TAG, TAG + " init");
+        LogUtil.i(TAG, TAG + " init");
         isOpen = true;
         Thread nfcThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 while (isOpen) {
                     nfcService();
-                    Log.d(TAG,
+                    LogUtil.d(TAG,
                             TAG + android.os.Process.myPid() + " Thread: "
                                     + android.os.Process.myTid() + " name "
                                     + Thread.currentThread().getName());
@@ -74,22 +74,22 @@ public class VerifyService extends Service {
      */
     private void fingerService() {
         if(LauncherApplication.sInitFingerSuccess == -1){
-//            Log.i(TAG, TAG + " finger init failed.");
+//            LogUtil.i(TAG, TAG + " finger init failed.");
             return;
         }
         if (LauncherApplication.sIsFingerAdd == 1 && isTopActivity().equals(FINGER_ADD_PAGE)) {
-            Log.i(TAG, TAG + " model:finger add");
+            LogUtil.i(TAG, TAG + " model:finger add");
         } else {
-            Log.i(TAG, TAG + " model:finger verify");
+            LogUtil.i(TAG, TAG + " model:finger verify");
             int resultCode = FingerHelper.JNIFpFingerMatch();
-            Log.i(TAG, TAG + " fingerId:" + resultCode);
+            LogUtil.i(TAG, TAG + " fingerId:" + resultCode);
             if (resultCode > 0) {
                 User user = VerifyUtils.getInstance().verifyByFinger(resultCode);
                 if (user == null) {
-                    Log.i(TAG, TAG + " user is null");
+                    LogUtil.i(TAG, TAG + " user is null");
                     return;
                 }
-                Log.i(TAG, TAG + " user " + user.getName());
+                LogUtil.i(TAG, TAG + " user " + user.getName());
                 OpenUtils.getInstance().open(VerifyTypeConstant.TYPE_FINGER, user.getUniqueId(),
                         user.getName());
             }
@@ -105,20 +105,20 @@ public class VerifyService extends Service {
         byte[] cardNumber = new byte[16];
         //read nfc
         int resultCode = NfcHelper.PER_nfcGetCard(cardType, cardNumber);
-        Log.i(TAG, TAG + " resultCode:" + resultCode);
+        LogUtil.i(TAG, TAG + " resultCode:" + resultCode);
         if (resultCode == 0) {
             int type = cardType[0];
             if (type == 0) {
-                Log.i(TAG, TAG + ": no card.");
+                LogUtil.i(TAG, TAG + ": no card.");
                 sleep();
                 return;
             }
             String NFCCard = bytesToHexString(cardNumber, cardType[0]);
             if (NFCCard == null) {
-                Log.i(TAG, TAG + ": cardNumber is null.");
+                LogUtil.i(TAG, TAG + ": cardNumber is null.");
                 return;
             }
-            Log.i(TAG, TAG + "NfcCard:" + bytesToHexString(cardNumber, cardType[0]) + "NfcType:"
+            LogUtil.i(TAG, TAG + "NfcCard:" + bytesToHexString(cardNumber, cardType[0]) + "NfcType:"
                     + cardType[0]);
             //nfc add model
             if (LauncherApplication.sIsNFCAdd == 1 && isTopActivity().equals(NFC_ADD_PAGE)) {
@@ -134,7 +134,7 @@ public class VerifyService extends Service {
 //                RxBus.getDefault().post(new OpenDoorSuccessEvent("", VerifyTypeConstant.TYPE_CARD, 1));
             }
         } else {
-            Log.i(TAG, TAG + " read nfc failed.");
+            LogUtil.i(TAG, TAG + " read nfc failed.");
         }
         sleep();
     }
@@ -190,7 +190,7 @@ public class VerifyService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.i(TAG, TAG + " onStartCommand");
+        LogUtil.i(TAG, TAG + " onStartCommand");
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -198,18 +198,18 @@ public class VerifyService extends Service {
     public void onDestroy() {
         super.onDestroy();
         isOpen = false;
-        Log.i(TAG, TAG + ": onDestroy.");
+        LogUtil.i(TAG, TAG + ": onDestroy.");
         int status = NfcHelper.PER_nfcDeinit();
         if (status == 0) {
-            Log.i(TAG, TAG + ": Nfc deinit success.");
+            LogUtil.i(TAG, TAG + ": Nfc deinit success.");
         } else {
-            Log.i(TAG, TAG + ": Nfc deinit failed.");
+            LogUtil.i(TAG, TAG + ": Nfc deinit failed.");
         }
         status = FingerHelper.JNIFpDeInit();
         if (status == 0) {
-            Log.i(TAG, TAG + ": finger deinit success.");
+            LogUtil.i(TAG, TAG + ": finger deinit success.");
         } else {
-            Log.i(TAG, TAG + ": finger deinit failed.");
+            LogUtil.i(TAG, TAG + ": finger deinit failed.");
         }
     }
 
