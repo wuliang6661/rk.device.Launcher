@@ -225,6 +225,16 @@ public class DateUtil {
     }
 
     /**
+     * 获取当前时间
+     *
+     * @return
+     */
+    public static Date getCurrentTime() {
+        return new Date();
+    }
+
+
+    /**
      * 通过年份和月份 得到当月的日子
      *
      * @param year
