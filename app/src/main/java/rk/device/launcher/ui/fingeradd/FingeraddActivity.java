@@ -9,7 +9,6 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.text.InputType;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -27,6 +26,7 @@ import rk.device.launcher.db.DbHelper;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.mvp.MVPBaseActivity;
 import rk.device.launcher.ui.fragment.InputWifiPasswordDialogFragment;
+import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.TypeTranUtils;
 import rk.device.launcher.utils.WindowManagerUtils;
 import rk.device.launcher.utils.rxjava.RxBus;
@@ -135,7 +135,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
                     @Override
                     public void onNext(FingerRegisterProgressEvent fingerRegisterProgressEvent) {
                         int progress = fingerRegisterProgressEvent.progress;
-                        Log.i(TAG, TAG + " progress:" + progress);
+                        LogUtil.i(TAG, TAG + " progress:" + progress);
                         showAnimation(progress);
                     }
                 }));
@@ -172,7 +172,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_add_finger:
-                Log.i(TAG, TAG + " finger add");
+                LogUtil.i(TAG, TAG + " finger add");
                 /**
                  * 新增指纹
                  *
@@ -271,7 +271,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
      * 发起添加指纹指令
      */
     private void addFinger() {
-        Log.i(TAG, TAG + " finger addFinger");
+        LogUtil.i(TAG, TAG + " finger addFinger");
         Message msg = new Message();
         msg.what = MSG_FINGER_ADD;
         fingerAddHandler.sendMessageDelayed(msg, 500);
@@ -281,7 +281,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
      * 发起判断是否能够录入指纹指令
      */
     private void readFingerInfo() {
-        Log.i(TAG, TAG + " finger readFingerInfo");
+        LogUtil.i(TAG, TAG + " finger readFingerInfo");
         Message msg = new Message();
         msg.what = MSG_READ_FINGER_INFO;
         fingerAddHandler.sendMessageDelayed(msg, 500);
@@ -309,7 +309,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
                     doAddFinger();
                     break;
                 case MSG_READ_FINGER_INFO://判断是否能够录入指纹
-                    Log.i(TAG, TAG + " finger MSG_READ_FINGER_INFO");
+                    LogUtil.i(TAG, TAG + " finger MSG_READ_FINGER_INFO");
                     checkCanAddFinger();
                     break;
                 case MSG_DELETE_FINGER://删除指纹信息
@@ -389,7 +389,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
      */
     private boolean checkCanAddFinger() {
         int remainSpace = FingerHelper.JNIFpGetRemainSpace();
-        Log.i(TAG, TAG + " JNIFpGetRemainSpace :" + remainSpace);
+        LogUtil.i(TAG, TAG + " JNIFpGetRemainSpace :" + remainSpace);
         if (remainSpace <= 0) {
             showToastMsg("指纹头指纹信息已经录满，请清理指纹头中指纹信息");
             return false;
@@ -408,7 +408,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
      * @step 2 手指还未录入的情况下，才能录入该指纹头
      */
     private void doAddFinger() {
-        Log.i(TAG, TAG + " finger doAddFinger");
+        LogUtil.i(TAG, TAG + " finger doAddFinger");
         if (isAdd) {
             return;
         }
@@ -420,11 +420,11 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
         if (oFingerId > 0) {
             if (VerifyUtils.getInstance().verifyByFinger(oFingerId) == null) {
                 if (!doDeleteJniFinger(oFingerId)) {
-                    Log.i(TAG, TAG + " delete useless finger error!");
+                    LogUtil.i(TAG, TAG + " delete useless finger error!");
                     isAdd = false;
                     return;
                 } else {
-                    Log.i(TAG, TAG + " delete useless finger success!");
+                    LogUtil.i(TAG, TAG + " delete useless finger success!");
                 }
             } else {
                 isAdd = false;
@@ -433,11 +433,11 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
             }
         }
         int resultCode = FingerHelper.JNIUserRegisterMOFN();
-        Log.i(TAG, TAG + " finger add resultCode:" + resultCode);
+        LogUtil.i(TAG, TAG + " finger add resultCode:" + resultCode);
         switch (resultCode) {
             case FingerConstant.TIMEOUT:
             case FingerConstant.FAIL:
-                Log.i(TAG, TAG + " finger add fail:" + resultCode);
+                LogUtil.i(TAG, TAG + " finger add fail:" + resultCode);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -470,7 +470,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
                 dialogFragment.show(getSupportFragmentManager(), "");
                 isChange = true;
                 isAdd = false;
-                Log.i(TAG, TAG + " finger add success:" + resultCode);
+                LogUtil.i(TAG, TAG + " finger add success:" + resultCode);
                 break;
         }
 
@@ -520,7 +520,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
      * 保存指纹到本地
      */
     private void doSaveFinger(boolean isRename) {
-        Log.i(TAG, TAG + " finger doSaveFinger");
+        LogUtil.i(TAG, TAG + " finger doSaveFinger");
         if (fingerId.equals(FINGER_ERROR)) {
             showToastMsg(getResources().getString(R.string.finger_add_error));
             return;
@@ -580,7 +580,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
     private boolean checkFingerModular() {
         if (LauncherApplication.sInitFingerSuccess == -1) {
             showMessageDialog("请添加指纹模块");
-            Log.i(TAG, TAG + " finger init failed.");
+            LogUtil.i(TAG, TAG + " finger init failed.");
             return false;
         }
         return true;
