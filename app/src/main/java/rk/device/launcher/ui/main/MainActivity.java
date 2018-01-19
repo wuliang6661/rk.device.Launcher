@@ -179,7 +179,8 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
      * 注册各类事物
      */
     private void register() {
-        mHandler = mPresenter.initJni();
+        mHandler = JniHandler.getInstance();
+        mPresenter.initSO();
         mHandler.setOnInitListener(this);
         mPresenter.registerBatteryReceiver().setCallBack(this);
         mPresenter.registerNetReceiver().setCallBack(this);
@@ -189,7 +190,6 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
         mPresenter.initLocation(this);
         mPresenter.getData();
         startService(new Intent(this, SocketService.class));
-        startService(new Intent(this, VerifyService.class));
     }
 
 
@@ -283,7 +283,9 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
             @Override
             public void callMessage(byte[] data, int width, int height) {
                 if (width != 0 && height != 0) {
-                    FaceUtils.getInstance().caremeDataToFace(data, width, height);
+                    if (FaceUtils.getInstance().isStartFace()) {
+                        FaceUtils.getInstance().caremeDataToFace(data, width, height);
+                    }
                 }
 //                faceCount++;
 //                if (faceCount % 5 != 0) {

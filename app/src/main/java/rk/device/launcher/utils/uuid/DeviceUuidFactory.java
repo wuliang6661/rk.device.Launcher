@@ -79,7 +79,6 @@ public class DeviceUuidFactory {
             String sdcardPath = Environment.getExternalStorageDirectory().getAbsolutePath();
             File sdCardFolder = new File(sdcardPath);
             File uuidFile = new File(sdCardFolder, DEVICE_UUID_FILE_NAME);
-            Log.d("wuliang", uuidFile.getAbsolutePath());
             if (!sdCardFolder.exists() || !uuidFile.exists()) {
                 return null;
             }
@@ -102,7 +101,6 @@ public class DeviceUuidFactory {
     private static void saveDeviceUuidToSD(String uuid) {
         String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath();
         File targetFile = new File(dirPath, DEVICE_UUID_FILE_NAME);
-        Log.d("wuliang", targetFile.getAbsolutePath());
         if (targetFile != null) {
             if (targetFile.exists()) {
 

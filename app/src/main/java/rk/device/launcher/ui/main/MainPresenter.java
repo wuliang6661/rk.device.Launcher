@@ -35,10 +35,13 @@ import rk.device.launcher.mvp.BasePresenterImpl;
 import rk.device.launcher.service.ElectricBroadcastReceiver;
 import rk.device.launcher.service.NetBroadcastReceiver;
 import rk.device.launcher.service.NetChangeBroadcastReceiver;
+import rk.device.launcher.service.VerifyService;
 import rk.device.launcher.utils.AppUtils;
 import rk.device.launcher.utils.SPUtils;
+import rk.device.launcher.utils.StatSoFiles;
 import rk.device.launcher.utils.StringUtils;
 import rk.device.launcher.utils.TimeUtils;
+import rk.device.launcher.utils.Utils;
 import rk.device.launcher.utils.gps.GpsUtils;
 import rk.device.launcher.utils.oss.AliYunOssUtils;
 import rk.device.launcher.utils.oss.OssUploadListener;
@@ -337,8 +340,7 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
      */
     void registerFace() {
         FaceUtils faceUtils = FaceUtils.getInstance();
-        faceUtils.startFaceFR();
-        Log.d("wuliang", "人脸识别启动！");
+//        faceUtils.startFaceFR();
         faceUtils.setFaceFeature((name, max_score) -> {
             List<User> users = DbHelper.queryByFaceId(name);
             if (!users.isEmpty()) {
@@ -346,6 +348,7 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
             }
         });
     }
+
 
     /**
      * 验证开门
@@ -357,4 +360,19 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
         }
     }
 
+
+    /**
+     * 初始化so
+     */
+    void initSO() {
+        new Thread(() -> {
+            StatSoFiles statSoFiles = new StatSoFiles(Utils.getContext());
+            statSoFiles.verifyAndReleaseLibSo();
+            statSoFiles.initNativeDirectory(Utils.getContext());
+            FaceUtils.getInstance().init(Utils.getContext());
+            FaceUtils.getInstance().loadFaces();
+            initJni();
+            mView.getContext().startService(new Intent(mView.getContext(), VerifyService.class));
+        }).start();
+    }
 }

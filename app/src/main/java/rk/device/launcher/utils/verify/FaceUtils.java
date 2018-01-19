@@ -104,6 +104,8 @@ public class FaceUtils {
     private List<ASAE_FSDKAge> ages = new ArrayList<>();
     private List<ASGE_FSDKGender> genders = new ArrayList<>();
 
+    boolean isFaceStart = false;
+
 
     public static FaceUtils getInstance() {
         if (faceUtils == null) {
@@ -141,6 +143,13 @@ public class FaceUtils {
         registerFaceT();
         registerFaceGen();
         registerFaceAge();
+        startFaceFR();
+        isFaceStart = true;
+    }
+
+
+    public boolean isStartFace() {
+        return isFaceStart;
     }
 
 

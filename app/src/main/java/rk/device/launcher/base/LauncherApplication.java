@@ -14,6 +14,7 @@ import rk.device.launcher.utils.FileUtils;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.STUtils;
+import rk.device.launcher.utils.StatSoFiles;
 import rk.device.launcher.utils.Utils;
 import rk.device.launcher.utils.verify.FaceUtils;
 import rk.device.launcher.widget.carema.SurfaceHolderCaremaBack;
@@ -76,17 +77,13 @@ public class LauncherApplication extends Application implements CustomActivityOn
     public void onCreate() {
         super.onCreate();
 
-
         sContext = getApplicationContext();
-
         CustomActivityOnCrash.install(this);
         CustomActivityOnCrash.setShowErrorDetails(true);
         CustomActivityOnCrash.setDefaultErrorActivityDrawable(R.mipmap.ic_launcher);
         CustomActivityOnCrash.setEventListener(this);
         Utils.init(this);
         STUtils.init(this);
-        FaceUtils.getInstance().init(this);
-        FaceUtils.getInstance().loadFaces();
         SPUtils.inviSp();
         setDb();
     }
