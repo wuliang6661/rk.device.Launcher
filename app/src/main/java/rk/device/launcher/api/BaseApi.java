@@ -3,7 +3,6 @@ package rk.device.launcher.api;
 import java.util.List;
 import java.util.Map;
 
-import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
@@ -69,19 +68,19 @@ public interface BaseApi {
      * @param requestBody
      * @return
      */
-    @POST("/tenantcenter/a/public/rest/face1/openDoor")
+    @POST("/public/rest/face/openDoor")
     Observable<BaseResult<StatusBo>> openDoor(@Body RequestBody requestBody);
 
     /**
      * 激活设备接口
      */
-    @POST("/tenantcenter/a/public/rest/face1/activation")
+    @POST("/public/rest/face/activation")
     Observable<BaseResult<Object>> activationDiveces(@Body RequestBody requestBody);
 
     /**
      * 获取开门token
      */
-    @POST("/tenantcenter/a/public/rest/face1/token")
+    @POST("/public/rest/face/token")
     Observable<BaseResult<TokenBo>> getToken(@Body RequestBody requestBody);
 
     /**
@@ -90,21 +89,21 @@ public interface BaseApi {
      * @param requestBody
      * @return
      */
-    @POST("/tenantcenter/a/public/rest/face/openHistory")
+    @POST("/public/rest/face/openHistory")
     Observable<BaseResult<StatusBo>> syncRecords(@Body RequestBody requestBody);
 
 
     /**
      * 提交新增用户接口
      */
-    @POST("/tenantcenter/a/public/rest/face/upAuthlist")
+    @POST("/public/rest/face/upAuthlist")
     Observable<BaseResult<Object>> syncPerson(@Body RequestBody requestBody);
 
     /**
      * 上传用户图片
      */
     @Multipart
-    @POST("/tenantcenter/a/public/rest/face/upload")
+    @POST("/public/rest/face/upload")
     Observable<BaseResult<String>> uploadFile(@Part("headerImage\"; filename=\"avatar.jpg") RequestBody file);
 
 }
