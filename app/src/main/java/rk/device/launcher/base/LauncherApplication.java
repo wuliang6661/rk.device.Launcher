@@ -51,6 +51,7 @@ public class LauncherApplication extends Application implements CustomActivityOn
 
     /**
      * 记录指纹模块是否初始化成功
+     *
      * @value -1 失败
      * @value 0 成功
      */

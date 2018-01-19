@@ -18,7 +18,7 @@ android {
                 GETUI_APP_SECRET: "AeYuQZx1zd6TUDi0E2Rdv3"
         ]
         ndk {
-            abiFilters "armeabi", "armeabi-v7a"
+            abiFilters "armeabi-v7a"
         }
 
         javaCompileOptions {

@@ -332,10 +332,6 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
         });
     }
 
-
-    User user;
-
-
     /**
      * 启动人脸检测
      */
