@@ -87,6 +87,13 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
         uniqueId = getIntent().getStringExtra(EXTRA_UNIQUEID);
         number = getIntent().getIntExtra(EXTRA_NUMBER, 0);
         checkIsDetail();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                FingerHelper.JNIFpGetRemainSpace();
+                FingerHelper.JNIFpGetRemainSpace();
+            }
+        }).start();
     }
 
     private void initView() {
@@ -105,11 +112,8 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
                             getResources().getString(R.string.sure), new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    if (doDeleteJniFinger(TypeTranUtils.str2Int(fingerId))) {
-                                        finish();
-                                    } else {
-                                        T.showShort("delete jni finger error");
-                                    }
+                                    doDeleteJniFinger(TypeTranUtils.str2Int(fingerId));
+                                    finish();
                                 }
                             });
                 } else {
@@ -151,7 +155,8 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
                 switch (progress) {
                     case 0:
                         fingerImg.clearAnimation();
-                        fingerImg.setImageDrawable(getResources().getDrawable(R.mipmap.add_finger));
+                        fingerImg.setImageDrawable(
+                                getResources().getDrawable(R.drawable.finger_add_01));
                         break;
                     case 1:
                         fingerImg.setImageResource(R.drawable.animation_finger_add_one);
@@ -292,7 +297,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
         LogUtil.i(TAG, TAG + " finger readFingerInfo");
         Message msg = new Message();
         msg.what = MSG_READ_FINGER_INFO;
-        fingerAddHandler.sendMessageDelayed(msg, 500);
+        fingerAddHandler.sendMessage(msg);
     }
 
     /**
@@ -446,18 +451,36 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
         }
     }
 
+    /**
+     * 注册指纹
+     */
     private void doJniAddFinger() {
         int resultCode = FingerHelper.JNIUserRegisterMOFN();
         LogUtil.i(TAG, TAG + " finger add resultCode:" + resultCode);
-        if (resultCode == FingerConstant.TIMEOUT || resultCode == FingerConstant.FAIL) {
+        if (resultCode == FingerConstant.TIMEOUT) {
             LogUtil.i(TAG, TAG + " finger add fail:" + resultCode);
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     isAdd = false;
-                    addFingerBtn.setVisibility(View.VISIBLE);
-                    addFingerBtn.setText("重新录入");
-                    showNoticeMsg("指纹信息不完整，请重新按压手指", false);
+                    if (addFingerBtn != null) {
+                        addFingerBtn.setVisibility(View.VISIBLE);
+                        addFingerBtn.setText("重新录入");
+                        showNoticeMsg("指纹录入超时，请重新按压手指", false);
+                    }
+                }
+            });
+        } else if (resultCode == FingerConstant.FAIL) {
+            LogUtil.i(TAG, TAG + " finger add fail:" + resultCode);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    isAdd = false;
+                    if (addFingerBtn != null) {
+                        addFingerBtn.setVisibility(View.VISIBLE);
+                        addFingerBtn.setText("重新录入");
+                        showNoticeMsg("指纹信息不完整，请重新按压手指", false);
+                    }
                 }
             });
         } else if (resultCode > 0) {
