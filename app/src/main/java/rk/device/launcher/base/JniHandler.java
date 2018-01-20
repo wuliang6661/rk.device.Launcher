@@ -133,6 +133,7 @@ public class JniHandler extends Handler {
         //init finger
         if (fingerStatus != 0) {
             fingerStatus = FingerHelper.JNIFpInit();
+            Log.i("fingerStatus","fingerStatus "+fingerStatus);
             if (fingerStatus == 0) {
                 LauncherApplication.sInitFingerSuccess = 0;
             }

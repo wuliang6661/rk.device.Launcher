@@ -180,7 +180,8 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
      */
     private void register() {
         mHandler = JniHandler.getInstance();
-        mPresenter.initSO();
+//        mPresenter.initSO();
+        mPresenter.initJni();
         mHandler.setOnInitListener(this);
         mPresenter.registerBatteryReceiver().setCallBack(this);
         mPresenter.registerNetReceiver().setCallBack(this);
@@ -190,6 +191,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
         mPresenter.initLocation(this);
         mPresenter.getData();
         startService(new Intent(this, SocketService.class));
+//        startService(new Intent(this, VerifyService.class));
     }
 
 

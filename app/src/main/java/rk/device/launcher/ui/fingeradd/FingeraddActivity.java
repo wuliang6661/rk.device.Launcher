@@ -9,6 +9,7 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -414,6 +415,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
         }
         isAdd = true;
         int oFingerId = FingerHelper.JNIFpFingerMatch();
+        Log.i(TAG, TAG + " JNIFpFingerMatch " + oFingerId);
         //如果指纹已存在
         //step 1 判断该指纹是否已入库 1 提示已存在 0 删除该指纹
         //如果不存在，直接添加
@@ -424,56 +426,58 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
                     isAdd = false;
                     return;
                 } else {
+                    doJniAddFinger();
                     LogUtil.i(TAG, TAG + " delete useless finger success!");
+                    doJniAddFinger();
                 }
             } else {
                 isAdd = false;
                 showNoticeMsg("该指纹已录入，请更换手指", false);
                 return;
             }
+        } else {
+            doJniAddFinger();
         }
+    }
+
+    private void doJniAddFinger() {
         int resultCode = FingerHelper.JNIUserRegisterMOFN();
         LogUtil.i(TAG, TAG + " finger add resultCode:" + resultCode);
-        switch (resultCode) {
-            case FingerConstant.TIMEOUT:
-            case FingerConstant.FAIL:
-                LogUtil.i(TAG, TAG + " finger add fail:" + resultCode);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        isAdd = false;
-                        addFingerBtn.setVisibility(View.VISIBLE);
-                        addFingerBtn.setText("重新录入");
-                        showNoticeMsg("指纹信息不完整，请重新按压手指", false);
-                    }
-                });
-                break;
-            default:
-                fingerId = String.valueOf(resultCode);
-                showDialogFragment("指纹" + number,
-                        new InputWifiPasswordDialogFragment.OnConfirmClickListener() {
-                            @Override
-                            public void onConfirmClick(String content) {
-                                fingerName = content;
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        addFingerBtn.setVisibility(View.GONE);
-                                        buttonLL.setVisibility(View.VISIBLE);
-                                        saveTv.setVisibility(View.VISIBLE);
-                                        showNoticeMsg("指纹录入成功", true);
-                                        dialogFragment.dismiss();
-                                    }
-                                });
-                            }
-                        });
-                dialogFragment.show(getSupportFragmentManager(), "");
-                isChange = true;
-                isAdd = false;
-                LogUtil.i(TAG, TAG + " finger add success:" + resultCode);
-                break;
+        if (resultCode == FingerConstant.TIMEOUT || resultCode == FingerConstant.FAIL) {
+            LogUtil.i(TAG, TAG + " finger add fail:" + resultCode);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    isAdd = false;
+                    addFingerBtn.setVisibility(View.VISIBLE);
+                    addFingerBtn.setText("重新录入");
+                    showNoticeMsg("指纹信息不完整，请重新按压手指", false);
+                }
+            });
+        } else if (resultCode > 0) {
+            fingerId = String.valueOf(resultCode);
+            showDialogFragment("指纹" + number,
+                    new InputWifiPasswordDialogFragment.OnConfirmClickListener() {
+                        @Override
+                        public void onConfirmClick(String content) {
+                            fingerName = content;
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    addFingerBtn.setVisibility(View.GONE);
+                                    buttonLL.setVisibility(View.VISIBLE);
+                                    saveTv.setVisibility(View.VISIBLE);
+                                    showNoticeMsg("指纹录入成功", true);
+                                    dialogFragment.dismiss();
+                                }
+                            });
+                        }
+                    });
+            dialogFragment.show(getSupportFragmentManager(), "");
+            isChange = true;
+            isAdd = false;
+            LogUtil.i(TAG, TAG + " finger add success:" + resultCode);
         }
-
     }
 
     /**
