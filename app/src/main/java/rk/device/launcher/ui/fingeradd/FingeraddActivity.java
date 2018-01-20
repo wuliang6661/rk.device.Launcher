@@ -149,6 +149,10 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
             @Override
             public void run() {
                 switch (progress) {
+                    case 0:
+                        fingerImg.clearAnimation();
+                        fingerImg.setImageDrawable(getResources().getDrawable(R.mipmap.add_finger));
+                        break;
                     case 1:
                         fingerImg.setImageResource(R.drawable.animation_finger_add_one);
                         animationDrawable = (AnimationDrawable) fingerImg.getDrawable();
@@ -182,6 +186,9 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
                  */
                 if (checkFingerModular()) {
                     if (!isDetail) {
+                        noticeTv.setBackground(null);
+                        noticeTv.setText(getString(R.string.finger_add_notice));
+                        showAnimation(0);
                         readFingerInfo();
                     } else {
                         doSaveFinger(true);
@@ -426,7 +433,6 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
                     isAdd = false;
                     return;
                 } else {
-                    doJniAddFinger();
                     LogUtil.i(TAG, TAG + " delete useless finger success!");
                     doJniAddFinger();
                 }

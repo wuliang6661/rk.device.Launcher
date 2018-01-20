@@ -180,8 +180,8 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
      */
     private void register() {
         mHandler = JniHandler.getInstance();
-//        mPresenter.initSO();
-        mPresenter.initJni();
+        mPresenter.initSO();
+//        mPresenter.initJni();
         mHandler.setOnInitListener(this);
         mPresenter.registerBatteryReceiver().setCallBack(this);
         mPresenter.registerNetReceiver().setCallBack(this);

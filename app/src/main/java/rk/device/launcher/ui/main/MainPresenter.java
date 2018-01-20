@@ -369,23 +369,11 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
             StatSoFiles statSoFiles = new StatSoFiles(Utils.getContext());
             statSoFiles.verifyAndReleaseLibSo();
             statSoFiles.initNativeDirectory(Utils.getContext());
-            loadLibrary();
             FaceUtils.getInstance().init(Utils.getContext());
             FaceUtils.getInstance().loadFaces();
             initJni();
             mView.getContext().startService(new Intent(mView.getContext(), VerifyService.class));
         }).start();
-    }
-
-
-    private void loadLibrary() {
-        try {
-            System.loadLibrary("cvc");
-            System.loadLibrary("mediac");
-            System.loadLibrary("peripherals");
-        } catch (UnsatisfiedLinkError e) {
-            e.printStackTrace();
-        }
     }
 
 }
