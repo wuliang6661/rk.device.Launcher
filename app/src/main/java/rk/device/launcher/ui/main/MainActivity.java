@@ -194,7 +194,6 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
 //        startService(new Intent(this, VerifyService.class));
     }
 
-
     /**
      * 初始化布局显示
      */
