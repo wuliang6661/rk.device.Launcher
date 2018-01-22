@@ -91,7 +91,6 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
             @Override
             public void run() {
                 FingerHelper.JNIFpGetRemainSpace();
-                FingerHelper.JNIFpGetRemainSpace();
             }
         }).start();
     }
