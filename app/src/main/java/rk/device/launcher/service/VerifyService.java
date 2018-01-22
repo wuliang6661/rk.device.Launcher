@@ -92,7 +92,7 @@ public class VerifyService extends Service {
                 }
                 LogUtil.i(TAG, TAG + " user " + user.getName());
                 OpenUtils.getInstance().open(VerifyTypeConstant.TYPE_FINGER, user.getUniqueId(),
-                        user.getName());
+                        user.getName(),resultCode);
             }
         }
         sleep();
