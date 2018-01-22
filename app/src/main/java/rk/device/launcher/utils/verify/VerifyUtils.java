@@ -4,6 +4,7 @@ import java.util.List;
 
 import rk.device.launcher.db.DbHelper;
 import rk.device.launcher.db.entity.User;
+import rk.device.launcher.utils.LogUtil;
 
 /**
  * Created by hanbin on 2017/12/28.
@@ -65,6 +66,7 @@ public class VerifyUtils {
     public User queryUserByUniqueId(String uniqueId) {
         List<User> userList = DbHelper.queryByUniqueId(uniqueId);
         if (userList.size() > 0) {
+            LogUtil.i("VerifyUtils", "uniqueId:" + userList.get(0).getUniqueId());
             return userList.get(0);
         }
         return null;
