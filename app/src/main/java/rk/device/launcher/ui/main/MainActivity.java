@@ -37,6 +37,7 @@ import rk.device.launcher.service.SocketService;
 import rk.device.launcher.service.VerifyService;
 import rk.device.launcher.ui.bbs.BbsActivity;
 import rk.device.launcher.ui.call.CallActivity;
+import rk.device.launcher.ui.dialogactivity.DialogActivity;
 import rk.device.launcher.ui.fragment.InitErrorDialogFragmen;
 import rk.device.launcher.ui.fragment.InputWifiPasswordDialogFragment;
 import rk.device.launcher.ui.key.KeyActivity;
@@ -349,7 +350,9 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_setting:
-                setFirstLoder();
+                // todo
+//                setFirstLoder();
+                startActivity(new Intent(this, DialogActivity.class));
                 break;
             case R.id.rl_contact_manager:
                 if (!StringUtils.isEmpty(modilePhone)) {
