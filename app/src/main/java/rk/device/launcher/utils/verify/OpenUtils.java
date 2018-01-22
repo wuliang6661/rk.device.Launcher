@@ -16,6 +16,7 @@ import rk.device.launcher.bean.TokenBo;
 import rk.device.launcher.bean.event.OpenDoorSuccessEvent;
 import rk.device.launcher.db.DbRecordHelper;
 import rk.device.launcher.db.entity.Record;
+import rk.device.launcher.db.entity.User;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.global.VerifyTypeConstant;
 import rk.device.launcher.utils.MD5;
@@ -40,6 +41,7 @@ public class OpenUtils {
 
     private static OpenUtils      openUtils         = null;
     private static SoundPlayUtils soundPlayUtils    = null;
+    private int                   fingerId          = -1;
 
     public static OpenUtils getInstance() {
         if (openUtils == null) {
@@ -73,6 +75,16 @@ public class OpenUtils {
      */
     public void open(int type, String personId, String personName) {
         String token = SPUtils.getString(Constant.ACCENT_TOKEN);
+        if (TextUtils.isEmpty(token)) {
+            obtainToken(type, personId, personName);
+        } else {
+            openDoor(token, type, personId, personName);
+        }
+    }
+
+    public void open(int type, String personId, String personName, int fingerId) {
+        String token = SPUtils.getString(Constant.ACCENT_TOKEN);
+        this.fingerId = fingerId;
         if (TextUtils.isEmpty(token)) {
             obtainToken(type, personId, personName);
         } else {
@@ -132,8 +144,9 @@ public class OpenUtils {
 
                     @Override
                     public void onNext(StatusBo statusBo) {
-                        String data = openStatus(type);
-                        RxBus.getDefault().post(new OpenDoorSuccessEvent(personName, type, statusBo.getStatus()));
+                        String data = openStatus(type, personId);
+                        RxBus.getDefault().post(
+                                new OpenDoorSuccessEvent(personName, type, statusBo.getStatus()));
                         syncRecords(token, type, personId, personName, TimeUtils.getTimeStamp(),
                                 data);
                         insertToLocalDB(type, personId, personName, time, data);
@@ -145,36 +158,37 @@ public class OpenUtils {
     /**
      * 获取开门方式对应的文案
      *
+     * @param type 类型
      * @param type
      * @return
      */
-    private String openStatus(int type) {
+    private String openStatus(int type, String personId) {
+        User user = VerifyUtils.getInstance().queryUserByUniqueId(personId);
         String data;
         switch (type) {
-            case VerifyTypeConstant.TYPE_CARD:
-                data = "开门方式1 卡：录入卡号";
+            case VerifyTypeConstant.TYPE_CARD://卡
+                data = user.getCardNo();
                 break;
-            case VerifyTypeConstant.TYPE_FINGER:
-                data = "开门方式2 指纹：指纹ID";
+            case VerifyTypeConstant.TYPE_FINGER://指纹
+                data = String.valueOf(fingerId);
                 break;
-            case VerifyTypeConstant.TYPE_FACE:
-                data = "开门方式3 人脸：人脸ID";
+            case VerifyTypeConstant.TYPE_FACE://人脸
+                data = user.getFaceID();
                 break;
-            case VerifyTypeConstant.TYPE_PASSWORD:
-                data = "开门方式4 密码：开门密码";
+            case VerifyTypeConstant.TYPE_PASSWORD://密码
+                data = String.valueOf(user.getPassWord());
                 break;
-            case VerifyTypeConstant.TYPE_QR_CODE:
-                data = "开门方式5 二维码：二维码开门";
+            case VerifyTypeConstant.TYPE_QR_CODE://二维码
+                data = "";
                 break;
-            case VerifyTypeConstant.TYPE_API:
-                data = "开门方式6 远程开门：远程开门";
+            case VerifyTypeConstant.TYPE_API://远程开门
+                data = "";
                 break;
-            default:
-                data = "未知开门方式";
+            default://其他
+                data = "";
                 break;
         }
         return data;
-
     }
 
     /**

@@ -48,11 +48,11 @@ public class StatSoFiles {
         for (int i = 0; i < mApkSoFiles.size(); i++) {
             String soFile = mApkSoFiles.get(i);
             boolean inAppLib = isInAppLib(soFile);
-            if (inAppLib) {
-            } else {
+//            if (inAppLib) {
+//            } else {
                 //将so文件写到应用的包路径下
                 writeSoToDir(soFile);
-            }
+//            }
         }
         boolean testLoadLibrary = testLoadLibrary();
         return testLoadLibrary;

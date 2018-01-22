@@ -33,7 +33,7 @@
             android:paddingLeft="@dimen/dp_20"
             android:paddingRight="@dimen/dp_20"
             android:layout_gravity="center_horizontal"
-            android:text="请将手指放在指纹传感器上，待识别成功后抬起手指"
+            android:text="@string/finger_add_notice"
             android:textColor="@color/white"
             android:textSize="18sp"/>
 

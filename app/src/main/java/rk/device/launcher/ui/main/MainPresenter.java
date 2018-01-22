@@ -375,4 +375,5 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
             mView.getContext().startService(new Intent(mView.getContext(), VerifyService.class));
         }).start();
     }
+
 }

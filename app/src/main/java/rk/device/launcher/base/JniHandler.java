@@ -123,7 +123,7 @@ public class JniHandler extends Handler {
 //        }
         int carema01 = MediacHelper.MEDIAC_init(0, carmer01);
         int carema02 = MediacHelper.MEDIAC_init(1, carmer02);
-        Log.i("wuliang", "cvcStatus == " + cvcStatus + "LedStatus == " + LedStatus + "NfcStatus == " + NfcStatus +
+        Log.i("wuliang", "cvcStatus == " + cvcStatus + "LedStatus == " + LedStatus +
                 "carema01 == " + carema01 + "carema02 ==" + carema02);
         int faceSuress = CvcHelper.CVC_setLivingFaceThreshold(faceThreshold);
         if (faceSuress == 0) {
@@ -133,12 +133,14 @@ public class JniHandler extends Handler {
         //init finger
         if (fingerStatus != 0) {
             fingerStatus = FingerHelper.JNIFpInit();
+            Log.i("JniHandler","fingerStatus "+fingerStatus);
             if (fingerStatus == 0) {
                 LauncherApplication.sInitFingerSuccess = 0;
             }
         }
         if (NfcStatus != 0) {
             NfcStatus = NfcHelper.PER_nfcInit();
+            Log.i("JniHandler","NfcStatus "+NfcStatus);
         }
         Log.i("wuliang", "call  " + callsuress);
         if (initListener != null) {

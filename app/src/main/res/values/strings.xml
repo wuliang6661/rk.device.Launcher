@@ -78,5 +78,6 @@
     <string name="finger_add_error">指纹信息录入失败，请重新录入</string>
     <string name="notice">提示</string>
     <string name="verify_success">验证通过</string>
+    <string name="finger_add_notice">请将手指放在指纹传感器上，待识别成功后抬起手指</string>
 
 </resources>
