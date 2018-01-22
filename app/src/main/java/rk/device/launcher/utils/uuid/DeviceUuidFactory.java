@@ -19,6 +19,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.UUID;
 
 import rk.device.launcher.utils.DeviceUtils;
+import rk.device.launcher.utils.FileUtils;
 
 
 public class DeviceUuidFactory {
@@ -40,7 +41,7 @@ public class DeviceUuidFactory {
                         if (recoverDeviceUuidFromSD() != null) {
                             uuid = UUID.fromString(recoverDeviceUuidFromSD());
                         } else {
-                            String macAddress = DeviceUtils.getLocalMacAddress();
+                            String macAddress = FileUtils.readFile2String("/proc/board_sn", "UTF-8");
                             // todo fixme
                             if (TextUtils.isEmpty(macAddress)) {
                                 macAddress = "00:00:00:00:00:00";
@@ -55,7 +56,7 @@ public class DeviceUuidFactory {
                                     }
                                 } else {
 //                                    final String deviceId = ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE)).getM();
-                                    String deviceId = DeviceUtils.getMacAddress();
+                                    String deviceId = FileUtils.readFile2String("/proc/board_sn", "UTF-8");
                                     uuid = deviceId != null ? UUID.nameUUIDFromBytes(deviceId.getBytes("utf8")) : UUID.randomUUID();
                                     try {
                                         saveDeviceUuidToSD(EncryptUtils.encryptDES(uuid.toString(), KEY));

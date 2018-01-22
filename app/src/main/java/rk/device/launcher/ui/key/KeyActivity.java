@@ -20,6 +20,7 @@ import rk.device.launcher.ui.setting.SetBasicInfoActivity;
 import rk.device.launcher.ui.setting.SetNetWorkActivity;
 import rk.device.launcher.ui.settingmangerpwd.SettingMangerPwdActivity;
 import rk.device.launcher.utils.DeviceUtils;
+import rk.device.launcher.utils.FileUtils;
 import rk.device.launcher.utils.NetWorkUtil;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.StringUtils;
@@ -69,7 +70,7 @@ public class KeyActivity extends MVPBaseActivity<KeyContract.View, KeyPresenter>
                     onRequestError("请输入正确激活码");
                 } else {
                     if (NetWorkUtil.isNetConnected(this)) {
-                        mPresenter.activationDiveces(new DeviceUuidFactory(this).getUuid() + "", DeviceUtils.getLocalMacAddress(), key);
+                        mPresenter.activationDiveces(new DeviceUuidFactory(this).getUuid() + "", FileUtils.readFile2String("/proc/board_sn", "UTF-8"), key);
                         showWaitProgress("正在激活...");
                     } else {
                         onRequestError("网络未连接");
