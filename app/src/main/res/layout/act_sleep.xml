@@ -12,6 +12,8 @@
         android:layout_height="match_parent"
         android:background="@drawable/guanggao">
 
+        <!--android:background="@drawable/guanggao"-->
+
 
         <!-- 设置没有指示器 -->
         <com.donkingliang.banner.CustomBanner

@@ -8,6 +8,7 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -48,6 +49,7 @@ import rk.device.launcher.ui.setting.SetSysActivity;
 import rk.device.launcher.ui.setting.SettingActivity;
 import rk.device.launcher.ui.settingmangerpwd.SettingMangerPwdActivity;
 import rk.device.launcher.utils.DateUtil;
+import rk.device.launcher.utils.FileUtils;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.SoundPlayUtils;
 import rk.device.launcher.utils.StringUtils;
@@ -192,6 +194,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
         mPresenter.getData();
         startService(new Intent(this, SocketService.class));
 //        startService(new Intent(this, VerifyService.class));
+        Log.d("wuliang", FileUtils.readFile2String("/proc/board_sn", "UTF-8"));
     }
 
     /**

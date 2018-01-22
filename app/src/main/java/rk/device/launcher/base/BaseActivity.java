@@ -12,6 +12,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -36,6 +37,7 @@ import rk.device.launcher.ui.fragment.WaitDialog;
 import rk.device.launcher.ui.setting.SetNetWorkActivity;
 import rk.device.launcher.ui.setting.SleepActivity;
 import rk.device.launcher.utils.AppManager;
+import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.rxjava.RxBus;
 import rk.device.launcher.zxing.decode.CaptureActivity;
 import rx.Subscriber;
@@ -135,6 +137,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
      */
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
+        LogUtil.d("wuliang", "dispatchTouchEvent");
         if (this instanceof SleepActivity) {
             return super.dispatchTouchEvent(ev);
         }
@@ -464,7 +467,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     }
 
 
-    private void registerRxBus(){
+    private void registerRxBus() {
         RxBus.getDefault().toObserverable(OpenDoorSuccessEvent.class).subscribeOn(Schedulers.io()).subscribe(new Subscriber<OpenDoorSuccessEvent>() {
             @Override
             public void onCompleted() {
@@ -478,17 +481,17 @@ public abstract class BaseActivity extends RxAppCompatActivity {
 
             @Override
             public void onNext(OpenDoorSuccessEvent openDoorSuccessEvent) {
-                if(openDoorSuccessEvent.isSuccess == 1){
-                    if(openDoorSuccessEvent.type == VerifyTypeConstant.TYPE_QR_CODE &&  (AppManager.getAppManager().curremtActivity()) instanceof CaptureActivity){
+                if (openDoorSuccessEvent.isSuccess == 1) {
+                    if (openDoorSuccessEvent.type == VerifyTypeConstant.TYPE_QR_CODE && (AppManager.getAppManager().curremtActivity()) instanceof CaptureActivity) {
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
                                 (AppManager.getAppManager().curremtActivity()).finish();
                             }
-                        },2500);
+                        }, 2500);
                     }
                     showSuccessDialog();
-                }else{
+                } else {
                     showFailDialog();
                 }
             }
@@ -498,15 +501,15 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     /**
      * 验证通过dialog
      */
-    private void showSuccessDialog(){
+    private void showSuccessDialog() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if(verifyNoticeDialogFragment == null){
+                if (verifyNoticeDialogFragment == null) {
                     verifyNoticeDialogFragment = VerifyNoticeDialogFragment.newInstance();
                 }
                 verifyNoticeDialogFragment.setStatusMsg("验证成功").setStatusImg(R.mipmap.verify_success);
-                verifyNoticeDialogFragment.showDialog(((FragmentActivity)AppManager.getAppManager().curremtActivity()).getSupportFragmentManager());
+                verifyNoticeDialogFragment.showDialog(((FragmentActivity) AppManager.getAppManager().curremtActivity()).getSupportFragmentManager());
             }
         });
     }
@@ -514,7 +517,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     /**
      * 验证失败dialog
      */
-    private void showFailDialog(){
+    private void showFailDialog() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -522,11 +525,10 @@ public abstract class BaseActivity extends RxAppCompatActivity {
                     verifyNoticeDialogFragment = VerifyNoticeDialogFragment.newInstance();
                 }
                 verifyNoticeDialogFragment.setStatusMsg("验证失败").setStatusImg(R.drawable.icon_recovery_success);
-                verifyNoticeDialogFragment.showDialog(((FragmentActivity)AppManager.getAppManager().curremtActivity()).getSupportFragmentManager());
+                verifyNoticeDialogFragment.showDialog(((FragmentActivity) AppManager.getAppManager().curremtActivity()).getSupportFragmentManager());
             }
         });
     }
-
 
 
 }
