@@ -1,6 +1,8 @@
 package peripherals;
 
 
+import rk.device.launcher.bean.event.FingerRegisterProgressEvent;
+import rk.device.launcher.utils.rxjava.RxBus;
 
 public class FingerHelper{
 
@@ -27,6 +29,7 @@ public class FingerHelper{
     {
         //TODO
         System.out.printf("step %d\n", progress);
+        RxBus.getDefault().post(new FingerRegisterProgressEvent(progress));
     }
     
     /* Used to load the 'native-lib' library on application startup. */
