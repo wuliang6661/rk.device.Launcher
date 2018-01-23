@@ -34,6 +34,7 @@ import rk.device.launcher.utils.rxjava.RxBus;
 import rk.device.launcher.utils.verify.VerifyUtils;
 import rx.Subscriber;
 
+
 /**
  * MVPPlugin 邮箱 784787081@qq.com
  */
@@ -90,7 +91,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
         new Thread(new Runnable() {
             @Override
             public void run() {
-                FingerHelper.JNIFpGetRemainSpace();
+                FingerHelper.JNIFpGetRemainSpace(LauncherApplication.fingerModuleID);
             }
         }).start();
     }
@@ -388,7 +389,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
      * @return
      */
     private boolean doDeleteJniFinger(int uId) {
-        int resultCode = FingerHelper.JNIFpDelUserByID(uId);
+        int resultCode = FingerHelper.JNIFpDelUserByID(LauncherApplication.fingerModuleID,uId);
         if (resultCode == FingerConstant.SUCCESS) {
             return true;
         } else {
@@ -400,7 +401,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
      * 判断能否录入指纹
      */
     private boolean checkCanAddFinger() {
-        int remainSpace = FingerHelper.JNIFpGetRemainSpace();
+        int remainSpace = FingerHelper.JNIFpGetRemainSpace(LauncherApplication.fingerModuleID);
         LogUtil.i(TAG, TAG + " JNIFpGetRemainSpace :" + remainSpace);
         if (remainSpace <= 0) {
             showToastMsg("指纹头指纹信息已经录满，请清理指纹头中指纹信息");
@@ -425,7 +426,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
             return;
         }
         isAdd = true;
-        int oFingerId = FingerHelper.JNIFpFingerMatch();
+        int oFingerId = FingerHelper.JNIFpFingerMatch(LauncherApplication.fingerModuleID);
         Log.i(TAG, TAG + " JNIFpFingerMatch " + oFingerId);
         //如果指纹已存在
         //step 1 判断该指纹是否已入库 1 提示已存在 0 删除该指纹
@@ -454,7 +455,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
      * 注册指纹
      */
     private void doJniAddFinger() {
-        int resultCode = FingerHelper.JNIUserRegisterMOFN();
+        int resultCode = FingerHelper.JNIUserRegisterMOFN(LauncherApplication.fingerModuleID);
         LogUtil.i(TAG, TAG + " finger add resultCode:" + resultCode);
         if (resultCode == FingerConstant.TIMEOUT) {
             LogUtil.i(TAG, TAG + " finger add fail:" + resultCode);

@@ -16,6 +16,7 @@ import java.util.List;
 import butterknife.Bind;
 import peripherals.FingerHelper;
 import rk.device.launcher.R;
+import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.db.DbHelper;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.mvp.MVPBaseActivity;
@@ -203,13 +204,13 @@ public class Person_addActivity
                     }
                     //删除指纹
                     if (!TextUtils.isEmpty(user.getFingerID1())) {
-                        FingerHelper.JNIFpDelUserByID(TypeTranUtils.str2Int(user.getFingerID1()));
+                        FingerHelper.JNIFpDelUserByID(LauncherApplication.fingerModuleID,TypeTranUtils.str2Int(user.getFingerID1()));
                     }
                     if (!TextUtils.isEmpty(user.getFingerID2())) {
-                        FingerHelper.JNIFpDelUserByID(TypeTranUtils.str2Int(user.getFingerID2()));
+                        FingerHelper.JNIFpDelUserByID(LauncherApplication.fingerModuleID,TypeTranUtils.str2Int(user.getFingerID2()));
                     }
                     if (!TextUtils.isEmpty(user.getFingerID3())) {
-                        FingerHelper.JNIFpDelUserByID(TypeTranUtils.str2Int(user.getFingerID3()));
+                        FingerHelper.JNIFpDelUserByID(LauncherApplication.fingerModuleID,TypeTranUtils.str2Int(user.getFingerID3()));
                     }
                     DbHelper.delete(user);
                     dissmissMessageDialog();

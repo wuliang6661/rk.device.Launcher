@@ -14,7 +14,6 @@ import rk.device.launcher.utils.FileUtils;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.STUtils;
-import rk.device.launcher.utils.StatSoFiles;
 import rk.device.launcher.utils.Utils;
 import rk.device.launcher.utils.verify.FaceUtils;
 import rk.device.launcher.widget.carema.SurfaceHolderCaremaBack;
@@ -49,6 +48,11 @@ public class LauncherApplication extends Application implements CustomActivityOn
      * 记录是否在录入NFC卡
      */
     public static int sIsNFCAdd;
+
+    /**
+     * 当前指纹模块
+     */
+    public static int fingerModuleID;
 
     /**
      * 记录指纹模块是否初始化成功
@@ -141,7 +145,7 @@ public class LauncherApplication extends Application implements CustomActivityOn
         SurfaceHolderCaremaFont.stopCarema();
         SurfaceHolderCaremaBack.stopCarema();
         FaceUtils.getInstance().stopFaceFR();
-        FingerHelper.JNIFpDeInit();
+        FingerHelper.JNIFpDeInit(fingerModuleID);
 //        stopService(new Intent(this, SocketService.class));
 //        stopService(new Intent(this, VerifyService.class));
     }

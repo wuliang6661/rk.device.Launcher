@@ -82,7 +82,7 @@ public class VerifyService extends Service {
             LogUtil.i(TAG, TAG + " model:finger add");
         } else {
             LogUtil.i(TAG, TAG + " model:finger verify");
-            int resultCode = FingerHelper.JNIFpFingerMatch();
+            int resultCode = FingerHelper.JNIFpFingerMatch(LauncherApplication.fingerModuleID);
             LogUtil.i(TAG, TAG + " fingerId:" + resultCode);
             if (resultCode > 0) {
                 User user = VerifyUtils.getInstance().verifyByFinger(resultCode);
@@ -206,7 +206,7 @@ public class VerifyService extends Service {
         } else {
             LogUtil.i(TAG, TAG + ": Nfc deinit failed.");
         }
-        status = FingerHelper.JNIFpDeInit();
+        status = FingerHelper.JNIFpDeInit(LauncherApplication.fingerModuleID);
         if (status == 0) {
             LogUtil.i(TAG, TAG + ": finger deinit success.");
         } else {
