@@ -5,7 +5,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +19,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import cvc.EventUtil;
 import rk.device.launcher.R;
+import rk.device.launcher.base.BaseDialogFragment;
 import rk.device.launcher.base.JniHandler;
 import rk.device.launcher.utils.ScreenUtil;
 
@@ -29,7 +29,7 @@ import rk.device.launcher.utils.ScreenUtil;
  * 初始化外设失败的弹窗
  */
 
-public class InitErrorDialogFragmen extends DialogFragment implements View.OnClickListener {
+public class InitErrorDialogFragment extends BaseDialogFragment implements View.OnClickListener {
 
 
     @Bind(R.id.led_error)
@@ -61,8 +61,8 @@ public class InitErrorDialogFragmen extends DialogFragment implements View.OnCli
     /**
      * 获取dialog对象
      */
-    public static InitErrorDialogFragmen newInstance() {
-        return new InitErrorDialogFragmen();
+    public static InitErrorDialogFragment newInstance() {
+        return new InitErrorDialogFragment();
     }
 
     @Nullable

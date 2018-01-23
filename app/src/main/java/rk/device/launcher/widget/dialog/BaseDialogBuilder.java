@@ -21,7 +21,7 @@ abstract class BaseDialogBuilder<T extends BaseDialogBuilder<T>> {
 
     protected final Context mContext;
     protected final FragmentManager mFragmentManager;
-    protected final Class<? extends BaseDialogFragment> mClass;
+    protected final Class<? extends BaseWidgetDialogFragment> mClass;
 
     private Fragment mTargetFragment;
     private boolean                                     mCancelable                     = true;
@@ -34,7 +34,7 @@ abstract class BaseDialogBuilder<T extends BaseDialogBuilder<T>> {
     protected Bundle mBundle;
 
     public BaseDialogBuilder(Context context, FragmentManager fragmentManager,
-                             Class<? extends BaseDialogFragment> clazz) {
+                             Class<? extends BaseWidgetDialogFragment> clazz) {
         mFragmentManager = fragmentManager;
         mContext = context.getApplicationContext();
         mClass = clazz;
@@ -78,10 +78,10 @@ abstract class BaseDialogBuilder<T extends BaseDialogBuilder<T>> {
         return self();
     }
 
-    private BaseDialogFragment create() {
+    private BaseWidgetDialogFragment create() {
         final Bundle args = prepareArguments();
 
-        final BaseDialogFragment fragment = (BaseDialogFragment) Fragment.instantiate(mContext,
+        final BaseWidgetDialogFragment fragment = (BaseWidgetDialogFragment) Fragment.instantiate(mContext,
                 mClass.getName(), args);
 
         args.putBoolean(ARG_CANCELABLE_ON_TOUCH_OUTSIDE, mCancelableOnTouchOutside);
@@ -96,7 +96,7 @@ abstract class BaseDialogBuilder<T extends BaseDialogBuilder<T>> {
     }
 
     public DialogFragment show() {
-        BaseDialogFragment fragment = create();
+        BaseWidgetDialogFragment fragment = create();
         fragment.show(mFragmentManager, mTag);
         return fragment;
     }
@@ -109,7 +109,7 @@ abstract class BaseDialogBuilder<T extends BaseDialogBuilder<T>> {
      * unexpectedly on the user.
      */
     public DialogFragment showAllowingStateLoss() {
-        BaseDialogFragment fragment = create();
+        BaseWidgetDialogFragment fragment = create();
         fragment.showAllowingStateLoss(mFragmentManager, mTag);
         return fragment;
     }

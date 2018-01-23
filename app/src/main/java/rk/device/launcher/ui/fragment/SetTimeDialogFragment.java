@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,11 +20,12 @@ import java.util.Date;
 import java.util.List;
 
 import rk.device.launcher.R;
+import rk.device.launcher.base.BaseDialogFragment;
 import rk.device.launcher.utils.DateUtil;
 import rk.device.launcher.widget.EasyPickView;
 
 
-public class SetTimeDialogFragment extends DialogFragment {
+public class SetTimeDialogFragment extends BaseDialogFragment {
     private static final String DIALOG_LEFT = "dialog_left";
     private static final String DIALOG_RIGHT = "dialog_right";
     private static final String DIALOG_WHEEL = "dialog_wheel";
@@ -135,7 +135,12 @@ public class SetTimeDialogFragment extends DialogFragment {
 		return view;
 	}
 
-    private void initEvent() {
+	@Override
+	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+	}
+
+	private void initEvent() {
 //		mPickViewMin.setOnScrollChangedListener(new EasyPickView.OnScrollChangedListener() {
 //			@Override
 //			public void onScrollChanged(int curIndex) {

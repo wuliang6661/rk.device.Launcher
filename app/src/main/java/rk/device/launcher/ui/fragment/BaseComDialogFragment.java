@@ -15,8 +15,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import rk.device.launcher.R;
@@ -28,7 +26,7 @@ import rk.device.launcher.utils.ScreenUtil;
  * 提示用的Dialog弹窗
  */
 
-public class BaseDialogFragment extends DialogFragment {
+public class BaseComDialogFragment extends DialogFragment {
 
 
     @Bind(R.id.message)
@@ -50,17 +48,17 @@ public class BaseDialogFragment extends DialogFragment {
     private View.OnClickListener rightListener;
 
 
-    private static BaseDialogFragment dialogFragment;
+    private static BaseComDialogFragment dialogFragment;
 
     /**
      * 获取dialog对象
      */
-    public static BaseDialogFragment newInstance() {
-        return new BaseDialogFragment();
+    public static BaseComDialogFragment newInstance() {
+        return new BaseComDialogFragment();
     }
 
 
-    private BaseDialogFragment() {
+    private BaseComDialogFragment() {
         super();
     }
 
@@ -120,7 +118,7 @@ public class BaseDialogFragment extends DialogFragment {
     /**
      * 设置提示文本
      */
-    public BaseDialogFragment setMessage(CharSequence message) {
+    public BaseComDialogFragment setMessage(CharSequence message) {
         this.messageStr = message;
         return this;
     }
@@ -130,7 +128,7 @@ public class BaseDialogFragment extends DialogFragment {
      * @param title
      * @return
      */
-    public BaseDialogFragment setTitle(CharSequence title){
+    public BaseComDialogFragment setTitle(CharSequence title){
         this.titleStr = title;
         return this;
     }
@@ -140,7 +138,7 @@ public class BaseDialogFragment extends DialogFragment {
      * <p>
      * （如不设置默认隐藏）
      */
-    public BaseDialogFragment setRightButton(CharSequence message, View.OnClickListener listener) {
+    public BaseComDialogFragment setRightButton(CharSequence message, View.OnClickListener listener) {
         this.rightStr = message;
         this.rightListener = listener;
         return this;
@@ -152,7 +150,7 @@ public class BaseDialogFragment extends DialogFragment {
      * <p>
      * （如不设置默认显示 “知道啦” ，点击弹窗消失）
      */
-    public BaseDialogFragment setLeftButton(CharSequence message, View.OnClickListener listener) {
+    public BaseComDialogFragment setLeftButton(CharSequence message, View.OnClickListener listener) {
         this.leftStr = message;
         this.leftListener = listener;
         return this;
@@ -161,7 +159,7 @@ public class BaseDialogFragment extends DialogFragment {
     /**
      * 设置点击屏幕是否消失
      */
-    public BaseDialogFragment setCancleable(boolean cancleable) {
+    public BaseComDialogFragment setCancleable(boolean cancleable) {
         this.isCancleAble = cancleable;
         return this;
     }

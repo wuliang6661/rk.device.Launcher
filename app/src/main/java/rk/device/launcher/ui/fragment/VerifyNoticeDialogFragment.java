@@ -19,13 +19,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import rk.device.launcher.R;
+import rk.device.launcher.base.BaseDialogFragment;
 import rk.device.launcher.utils.ScreenUtil;
 
 /**
  * Created by hanbin on 2018/1/15.
  */
 
-public class VerifyNoticeDialogFragment extends DialogFragment {
+public class VerifyNoticeDialogFragment extends BaseDialogFragment {
 
     private static VerifyNoticeDialogFragment dialogFragment = null;
     private ImageView                         statusImg;
