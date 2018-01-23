@@ -23,6 +23,7 @@ import rk.device.launcher.global.Constant;
 import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.utils.CloseUtils;
 import rk.device.launcher.utils.DeviceUtils;
+import rk.device.launcher.utils.FileUtils;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.PackageUtils;
 import rk.device.launcher.utils.SPUtils;
@@ -77,7 +78,7 @@ public class SocketService extends Service {
 		mThreadPool = Executors.newCachedThreadPool();
 		uuidFactory = new DeviceUuidFactory(this);
 		uuid = uuidFactory.getUuid() + "";
-		Log.i("SocketService", "mac:" + DeviceUtils.getLocalMacAddress());
+		Log.i("SocketService", "mac:" + FileUtils.readFile2String("/proc/board_sn", "UTF-8"));
 		Log.i("SocketService", "uuid:" + uuid);
 	}
 	
@@ -166,7 +167,7 @@ public class SocketService extends Service {
 	private void sendSms() {
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("isCharge", LauncherApplication.sIsCharge);
-		jsonObject.put("mac", DeviceUtils.getMacAddress());
+		jsonObject.put("mac", FileUtils.readFile2String("/proc/board_sn", "UTF-8"));
 		jsonObject.put("uuid", uuid);
 		jsonObject.put("version", PackageUtils.getCurrentVersion());
 		jsonObject.put("battery", LauncherApplication.sLevel);
