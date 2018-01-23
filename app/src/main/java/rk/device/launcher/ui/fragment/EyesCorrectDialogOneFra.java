@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +18,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import rk.device.launcher.R;
 import rk.device.launcher.api.T;
+import rk.device.launcher.base.BaseDialogFragment;
 import rk.device.launcher.utils.ScreenUtil;
 import rk.device.launcher.utils.StringUtils;
 
@@ -28,7 +28,7 @@ import rk.device.launcher.utils.StringUtils;
  * 摄像头校验输入行列
  */
 
-public class EyesCorrectDialogOneFra extends DialogFragment implements View.OnClickListener {
+public class EyesCorrectDialogOneFra extends BaseDialogFragment implements View.OnClickListener {
 
 
     @Bind(R.id.close_dialog)

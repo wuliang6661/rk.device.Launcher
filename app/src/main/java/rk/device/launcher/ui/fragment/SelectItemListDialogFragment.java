@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +12,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import rk.device.launcher.R;
+import rk.device.launcher.base.BaseDialogFragment;
 
 
 /**
@@ -22,7 +22,7 @@ import rk.device.launcher.R;
  * @file : ConfirmDialogFragment.java
  */
 
-public class SelectItemListDialogFragment extends DialogFragment {
+public class SelectItemListDialogFragment extends BaseDialogFragment {
 
 
 	public static SelectItemListDialogFragment newInstance() {
@@ -69,5 +69,6 @@ public class SelectItemListDialogFragment extends DialogFragment {
 
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
 	}
 }

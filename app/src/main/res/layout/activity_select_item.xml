@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:orientation="vertical"
+<rk.device.launcher.widget.CustomFrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,15 +7,24 @@
     android:layout_height="match_parent"
     tools:context="rk.device.launcher.ui.setting.SelectItemListActivity">
 
-    <include layout="@layout/topbar"/>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv"
-        app:layoutManager="@string/linearlayoutmanager"
-        android:background="@drawable/shape_normal_bg"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </android.support.v7.widget.RecyclerView>
+        <include layout="@layout/topbar"/>
 
-</LinearLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv"
+            app:layoutManager="@string/linearlayoutmanager"
+            android:background="@drawable/shape_normal_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </android.support.v7.widget.RecyclerView>
+
+    </LinearLayout>
+
+
+
+</rk.device.launcher.widget.CustomFrameLayout>

@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +17,7 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import rk.device.launcher.R;
+import rk.device.launcher.base.BaseDialogFragment;
 import rk.device.launcher.utils.DrawableUtil;
 import rk.device.launcher.utils.ScreenUtil;
 
@@ -29,7 +29,7 @@ import rk.device.launcher.utils.ScreenUtil;
  * @file : ConfirmDialogFragment.java
  */
 
-public class WifiDetailDialogFragment extends DialogFragment {
+public class WifiDetailDialogFragment extends BaseDialogFragment {
 
 	@Bind(R.id.btn_left)
 	Button mBtnLeft;
@@ -138,6 +138,7 @@ public class WifiDetailDialogFragment extends DialogFragment {
 
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
 		mTvIp.setText(String.format("IP地址: %S", mIPAddress));
 		mTvNetMask.setText(String.format("子网掩码: %s", mNetMask));
 		mTvNetGate.setText(String.format("网关: %s", mNetGate));

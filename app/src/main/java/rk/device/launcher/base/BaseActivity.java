@@ -12,7 +12,6 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -31,7 +30,7 @@ import rk.device.launcher.service.BlueToothsBroadcastReceiver;
 import rk.device.launcher.service.RKLauncherPushIntentService;
 import rk.device.launcher.service.RKLauncherPushService;
 import rk.device.launcher.service.SleepTaskServer;
-import rk.device.launcher.ui.fragment.BaseDialogFragment;
+import rk.device.launcher.ui.fragment.BaseComDialogFragment;
 import rk.device.launcher.ui.fragment.VerifyNoticeDialogFragment;
 import rk.device.launcher.ui.fragment.WaitDialog;
 import rk.device.launcher.ui.setting.SetNetWorkActivity;
@@ -60,7 +59,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
 
 
     /* 提示弹窗*/
-    private BaseDialogFragment hintDialog;
+    private BaseComDialogFragment hintDialog;
 
     /**
      * 验证成功或失败提示弹窗
@@ -220,12 +219,12 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     /**
      * 显示提示弹窗
      */
-    protected BaseDialogFragment showMessageDialog(String message) {
+    protected BaseComDialogFragment showMessageDialog(String message) {
         if (hintDialog != null && hintDialog.getDialog() != null
                 && hintDialog.getDialog().isShowing()) {
             return null;
         }
-        hintDialog = BaseDialogFragment.newInstance();
+        hintDialog = BaseComDialogFragment.newInstance();
         hintDialog.setMessage(message);
         hintDialog.setCancleable(true);
         if (!hintDialog.isAdded()) {
@@ -238,12 +237,12 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     /**
      * 显示需要自定义的提示弹窗
      */
-    protected BaseDialogFragment showMessageDialog(String message, String right, View.OnClickListener listener) {
+    protected BaseComDialogFragment showMessageDialog(String message, String right, View.OnClickListener listener) {
         if (hintDialog != null && hintDialog.getDialog() != null
                 && hintDialog.getDialog().isShowing()) {
             return null;
         }
-        hintDialog = BaseDialogFragment.newInstance();
+        hintDialog = BaseComDialogFragment.newInstance();
         hintDialog.setMessage(message);
         hintDialog.setCancleable(true);
         hintDialog.setLeftButton("取消", view -> hintDialog.dismiss());
@@ -257,12 +256,12 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     /**
      * 显示需要自定义的提示弹窗
      */
-    protected BaseDialogFragment showMessageDialog(String title, String message, String right, View.OnClickListener listener) {
+    protected BaseComDialogFragment showMessageDialog(String title, String message, String right, View.OnClickListener listener) {
         if (hintDialog != null && hintDialog.getDialog() != null
                 && hintDialog.getDialog().isShowing()) {
             return null;
         }
-        hintDialog = BaseDialogFragment.newInstance();
+        hintDialog = BaseComDialogFragment.newInstance();
         hintDialog.setTitle(title);
         hintDialog.setMessage(message);
         hintDialog.setCancleable(true);
@@ -334,12 +333,12 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     /**
      * 显示断网提示
      */
-    private BaseDialogFragment showNetConnect() {
+    private BaseComDialogFragment showNetConnect() {
         synchronized (this) {
             if (hintDialog != null) {
                 return null;
             }
-            hintDialog = BaseDialogFragment.newInstance();
+            hintDialog = BaseComDialogFragment.newInstance();
             hintDialog.setCancleable(false);
             hintDialog.setMessage("网络已断开，请重新连接");
             hintDialog.setLeftButton("取消", view -> {

@@ -49,7 +49,7 @@ import rk.device.launcher.R;
  * 
  * @author David Vávra (david@inmite.eu)
  */
-public abstract class BaseDialogFragment extends DialogFragment {
+public abstract class BaseWidgetDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {

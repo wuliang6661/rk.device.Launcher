@@ -40,7 +40,7 @@ import rk.device.launcher.api.BaseApiImpl;
 import rk.device.launcher.api.T;
 import rk.device.launcher.bean.VersionBO;
 import rk.device.launcher.ui.fragment.CheckUpdateDialogFragment;
-import rk.device.launcher.widget.dialog.BaseDialogFragment;
+import rk.device.launcher.widget.dialog.BaseWidgetDialogFragment;
 import rx.Subscriber;
 import rx.subscriptions.CompositeSubscription;
 
@@ -239,7 +239,7 @@ public class UpdateManager {
      */
     private void showLatestOrFailDialog2(final int dialogType) {
         @SuppressLint("ValidFragment")
-        BaseDialogFragment fasd = new BaseDialogFragment() {
+        BaseWidgetDialogFragment fasd = new BaseWidgetDialogFragment() {
             @Override
             protected Builder build(Builder builder) {
                 builder.setTitle("系统提示");

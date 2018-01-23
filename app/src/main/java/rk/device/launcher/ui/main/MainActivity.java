@@ -38,7 +38,7 @@ import rk.device.launcher.service.SocketService;
 import rk.device.launcher.service.VerifyService;
 import rk.device.launcher.ui.bbs.BbsActivity;
 import rk.device.launcher.ui.call.CallActivity;
-import rk.device.launcher.ui.fragment.InitErrorDialogFragmen;
+import rk.device.launcher.ui.fragment.InitErrorDialogFragment;
 import rk.device.launcher.ui.fragment.InputWifiPasswordDialogFragment;
 import rk.device.launcher.ui.key.KeyActivity;
 import rk.device.launcher.ui.numpassword.NumpasswordActivity;
@@ -122,7 +122,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
     JniHandler mHandler;
 
     private boolean isNetWork = true;// 此状态保存上次网络是否连接，默认已连接
-    private InitErrorDialogFragmen initDialog;
+    private InitErrorDialogFragment initDialog;
     private InputWifiPasswordDialogFragment dialogFragment = null;
     SurfaceHolderCaremaFont callbackFont;
     private static final int REQUEST_CODE = 0x11;
@@ -168,7 +168,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
     private void invition() {
         caremaBg.setMovieResource(R.raw.camera_bg);
 //        deviceNameBg.setMovieResource(R.raw.device_name_bg);
-        initDialog = InitErrorDialogFragmen.newInstance();
+        initDialog = InitErrorDialogFragment.newInstance();
         SoundPlayUtils.init(this);
         settingTv.setOnClickListener(this);
         setOnClick(R.id.rl_contact_manager, R.id.init_error, R.id.num_pass_layout, R.id.call_layout, R.id.qr_code_layout, R.id.liuyan_layout);

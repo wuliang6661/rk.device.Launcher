@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -18,13 +17,14 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import rk.device.launcher.R;
+import rk.device.launcher.base.BaseDialogFragment;
 import rk.device.launcher.utils.ScreenUtil;
 
 /**
  * Created by mundane on 2017/12/21 下午1:43
  */
 
-public class CheckUpdateDialogFragment extends DialogFragment implements View.OnClickListener {
+public class CheckUpdateDialogFragment extends BaseDialogFragment implements View.OnClickListener {
 	
 	
 	@Bind(R.id.tv_title)
@@ -77,9 +77,10 @@ public class CheckUpdateDialogFragment extends DialogFragment implements View.On
 		ButterKnife.bind(this, rootView);
 		return rootView;
 	}
-	
+
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
 		if (!TextUtils.isEmpty(mMessage)) {
 			mTvMsg.setText(mMessage);
 		}
