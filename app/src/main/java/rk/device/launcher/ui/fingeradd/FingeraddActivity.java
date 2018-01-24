@@ -34,7 +34,6 @@ import rk.device.launcher.utils.rxjava.RxBus;
 import rk.device.launcher.utils.verify.VerifyUtils;
 import rx.Subscriber;
 
-
 /**
  * MVPPlugin 邮箱 784787081@qq.com
  */
@@ -389,7 +388,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
      * @return
      */
     private boolean doDeleteJniFinger(int uId) {
-        int resultCode = FingerHelper.JNIFpDelUserByID(LauncherApplication.fingerModuleID,uId);
+        int resultCode = FingerHelper.JNIFpDelUserByID(LauncherApplication.fingerModuleID, uId);
         if (resultCode == FingerConstant.SUCCESS) {
             return true;
         } else {
@@ -493,6 +492,10 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+                                    if (content.length() == 0 || content.length() > 10) {
+                                        T.showShort("指纹名称长度为1-10位");
+                                        return;
+                                    }
                                     addFingerBtn.setVisibility(View.GONE);
                                     buttonLL.setVisibility(View.VISIBLE);
                                     saveTv.setVisibility(View.VISIBLE);
@@ -569,6 +572,15 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
                         new InputWifiPasswordDialogFragment.OnConfirmClickListener() {
                             @Override
                             public void onConfirmClick(String content) {
+                                if (content.length() == 0 || content.length() > 10) {
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            T.showShort("指纹名称长度为1-10位");
+                                        }
+                                    });
+                                    return;
+                                }
                                 noticeTv.setText(content);
                                 fingerName = content;
                                 updateUser(eUser);
