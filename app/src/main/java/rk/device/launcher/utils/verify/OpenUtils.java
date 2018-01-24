@@ -44,6 +44,8 @@ public class OpenUtils {
     private static SoundPlayUtils soundPlayUtils = null;
     private int fingerId = -1;
 
+    private boolean openDoorSuress = false;    //默认门没开
+
     public static OpenUtils getInstance() {
         if (openUtils == null) {
             synchronized (OpenUtils.class) {
@@ -74,7 +76,10 @@ public class OpenUtils {
      * @step 3 开门记录同步到服务端(接口3)
      * <p/>
      */
-    public void open(int type, String personId, String personName) {
+    public synchronized void open(int type, String personId, String personName) {
+        if (!isOpen()) {
+            return;
+        }
         openDoorJni(type, personId, personName);
         String token = SPUtils.getString(Constant.ACCENT_TOKEN);
         if (TextUtils.isEmpty(token)) {
@@ -84,7 +89,10 @@ public class OpenUtils {
         }
     }
 
-    public void open(int type, String personId, String personName, int fingerId) {
+    public synchronized void open(int type, String personId, String personName, int fingerId) {
+        if (!isOpen()) {
+            return;
+        }
         openDoorJni(type, personId, personName);
         String token = SPUtils.getString(Constant.ACCENT_TOKEN);
         this.fingerId = fingerId;
@@ -94,6 +102,24 @@ public class OpenUtils {
             openDoor(token, type, personId, personName);
         }
     }
+
+
+    private long justTime = 0;
+
+    /**
+     * 判断上一次开门时间，5秒内不能多次开门
+     */
+    private synchronized boolean isOpen() {
+        if (justTime == 0) {
+            return true;
+        }
+        if (!openDoorSuress) {
+            return true;
+        }
+        long time = System.currentTimeMillis();
+        return (time - justTime) > 5000;
+    }
+
 
     /**
      * 设备开门鉴权token请求接口
@@ -147,6 +173,7 @@ public class OpenUtils {
 
             @Override
             public void onNext(StatusBo statusBo) {
+                justTime = System.currentTimeMillis();
                 String data = openStatus(type, personId);
                 RxBus.getDefault().post(
                         new OpenDoorSuccessEvent(personName, type, statusBo.getStatus()));
@@ -269,22 +296,27 @@ public class OpenUtils {
      * 使用本地jni方法开门
      */
     private void openDoorJni(int type, String personId, String personName) {
-        int relayOn = RelayHelper.RelaySetOff();
-        if (relayOn == 0) {
+        int relayOff = RelayHelper.RelaySetOff();
+        if (relayOff == 0) {
             try {
                 Thread.sleep(300);
             } catch (InterruptedException e) {
                 e.printStackTrace();
-
             }
-            RelayHelper.RelaySetOn();
-            String data = openStatus(type, personId);
-            RxBus.getDefault().post(
-                    new OpenDoorSuccessEvent(personName, type, 1));
+            int relayOn = RelayHelper.RelaySetOn();
+            if (relayOn == 0) {
+                justTime = System.currentTimeMillis();
+                openDoorSuress = true;
+                String data = openStatus(type, personId);
+                RxBus.getDefault().post(
+                        new OpenDoorSuccessEvent(personName, type, 1));
 //            syncRecords(token, type, personId, personName, TimeUtils.getTimeStamp(),
 //                    data);
-            insertToLocalDB(type, personId, personName, TimeUtils.getTimeStamp(), data);
-            soundPlayUtils.play(3);
+                insertToLocalDB(type, personId, personName, TimeUtils.getTimeStamp(), data);
+                soundPlayUtils.play(3);
+            } else {
+                openDoorSuress = false;
+            }
         }
     }
 }
