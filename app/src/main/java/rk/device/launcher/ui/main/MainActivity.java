@@ -159,7 +159,6 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
 
         invition();
         register();
-        mPresenter.registerFace();
     }
 
     /**
@@ -183,7 +182,6 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
     private void register() {
         mHandler = JniHandler.getInstance();
         mPresenter.initSO();
-//        mPresenter.initJni();
         mHandler.setOnInitListener(this);
         mPresenter.registerBatteryReceiver().setCallBack(this);
         mPresenter.registerNetReceiver().setCallBack(this);
@@ -193,8 +191,6 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
         mPresenter.initLocation(this);
         mPresenter.getData();
         startService(new Intent(this, SocketService.class));
-//        startService(new Intent(this, VerifyService.class));
-        Log.d("wuliang", FileUtils.readFile2String("/proc/board_sn", "UTF-8"));
     }
 
     /**
@@ -315,7 +311,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
     @Override
     public void initCallBack(int cvcStatus, int LedStatus, int NfcStatus, int finderStarus) {
         runOnUiThread(() -> {
-            if (cvcStatus == 0 && LedStatus == 0 && NfcStatus == 0 && finderStarus == 0) {
+            if (cvcStatus == 0 && LedStatus == 0 && NfcStatus == 0 && finderStarus > 0) {
                 initError.setVisibility(View.GONE);
                 if (initDialog != null && initDialog.isVisible()) {
                     initDialog.dismiss();

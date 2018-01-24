@@ -13,8 +13,10 @@ import cvc.EventUtil;
 import mediac.MediacHelper;
 import peripherals.FingerHelper;
 import peripherals.LedHelper;
+import peripherals.MdHelper;
 import peripherals.NfcHelper;
 import peripherals.NumberpadHelper;
+import peripherals.RelayHelper;
 
 /**
  * Created by wuliang on 2017/11/28.
@@ -40,7 +42,8 @@ public class JniHandler extends Handler {
     private int cvcStatus = 1;
     private int LedStatus = 1;
     private int NfcStatus = 1;
-    private int fingerStatus = 1;//指纹库
+    private int fingerStatus = -1;//指纹库
+    private int MdStatus = 1;   //人体感应
 
     private boolean isStopCorrect = false;
 
@@ -118,30 +121,30 @@ public class JniHandler extends Handler {
         if (LedStatus != 0) {
             LedStatus = LedHelper.PER_ledInit();
         }
-//        if (MdStatus != 0) {
-//            MdStatus = MdHelper.PER_mdInit();
-//        }
+        if (MdStatus != 0) {
+            MdStatus = MdHelper.PER_mdInit();
+        }
         int carema01 = MediacHelper.MEDIAC_init(0, carmer01);
         int carema02 = MediacHelper.MEDIAC_init(1, carmer02);
-        Log.i("wuliang", "cvcStatus == " + cvcStatus + "LedStatus == " + LedStatus +
-                "carema01 == " + carema01 + "carema02 ==" + carema02);
+        Log.i("wuliang", "cvcStatus == " + cvcStatus + "LedStatus == " + LedStatus
+                + "MdStatus == " + MdStatus + "carema01 == " + carema01 + "carema02 ==" + carema02);
         int faceSuress = CvcHelper.CVC_setLivingFaceThreshold(faceThreshold);
-        if (faceSuress == 0) {
-            Log.i("wuliang", "faceThreshold suress  " + faceThreshold);
-        }
         int callsuress = NumberpadHelper.PER_numberpadInit();
+        int relayStatus = RelayHelper.RelayInit();
+        int relayOn = RelayHelper.RelaySetOn();
+        Log.d("wuliang", "relayStatus == " + relayStatus);
         //init finger
-        if (fingerStatus != 0) {
+        if (fingerStatus <= 0) {
             fingerStatus = FingerHelper.JNIFpInit();
             LauncherApplication.fingerModuleID = fingerStatus;
-            Log.i("JniHandler","fingerStatus "+fingerStatus);
+            Log.i("JniHandler", "fingerStatus " + fingerStatus);
             if (fingerStatus > 0) {
                 LauncherApplication.sInitFingerSuccess = 0;
             }
         }
         if (NfcStatus != 0) {
             NfcStatus = NfcHelper.PER_nfcInit();
-            Log.i("JniHandler","NfcStatus "+NfcStatus);
+            Log.i("JniHandler", "NfcStatus " + NfcStatus);
         }
         Log.i("wuliang", "call  " + callsuress);
         if (initListener != null) {
