@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -24,6 +25,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import cvc.EventUtil;
+import peripherals.MdHelper;
 import rk.device.launcher.R;
 import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.base.JniHandler;
@@ -44,6 +46,8 @@ public class SleepActivity extends BaseActivity {
     RelativeLayout advertisingImg;
     @Bind(R.id.banner)
     CustomBanner mBanner;
+
+    private boolean isStartMd = true;
 
     @Override
     protected int getLayout() {
@@ -71,18 +75,50 @@ public class SleepActivity extends BaseActivity {
 
     protected void initData() {
         advertisingImg.setOnClickListener(view -> {
+            isStartMd = false;
             setCrema(EventUtil.MEDIA_OPEN);
             finish();
         });
     }
 
+
+    /**
+     * 开始活体检测线程
+     */
+    private void startMdRunable() {
+        int[] mdStaus = new int[1];
+        new Thread(() -> {
+            while (isStartMd) {
+                int mdStatus = MdHelper.PER_mdGet(1, mdStaus);
+                if (mdStatus == 0 && mdStaus[0] == 1) {
+                    isStartMd = false;
+                    setCrema(EventUtil.MEDIA_OPEN);
+                    finish();
+                }
+            }
+        }).start();
+    }
+
+
     @Override
     protected void onResume() {
         super.onResume();
-//        SurfaceHolderCaremaBack.closeSteram();
-//        SurfaceHolderCaremaFont.closeSteram();
-//        System.gc();
         setCrema(EventUtil.MEDIA_CLOSE);
+        //五秒后发送
+        handler.sendEmptyMessageDelayed(1, 500);
+    }
+
+
+    Handler handler = new Handler(msg -> {
+        startMdRunable();
+        return true;
+    });
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        handler.removeMessages(1);
     }
 
     /**

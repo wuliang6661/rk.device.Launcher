@@ -10,6 +10,7 @@ import android.view.View;
 import rk.device.launcher.R;
 import rk.device.launcher.service.SleepTaskServer;
 import rk.device.launcher.ui.setting.SleepActivity;
+import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.widget.CustomFrameLayout;
 
 /**
@@ -31,21 +32,6 @@ public class BaseDialogFragment extends DialogFragment implements CustomFrameLay
         }
 
         getDialog().setOnKeyListener(this);
-//        getView().setOnTouchListener((v, event) -> {
-//            LogUtil.d("wuliang", " getView dialogFragment OnTouchListener");
-//            if (getActivity() instanceof SleepActivity) {
-//                return false;
-//            }
-//            SleepTaskServer.getSleepHandler(getActivity()).sendEmptyMessage(0x11);
-//            return true;
-//        });
-//        getDialog().getWindow().getDecorView().setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                LogUtil.d("wuliang", "dialogFragment OnTouchListener");
-//                return false;
-//            }
-//        });
     }
 
     @Override

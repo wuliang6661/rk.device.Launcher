@@ -136,7 +136,6 @@ public abstract class BaseActivity extends RxAppCompatActivity {
      */
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        LogUtil.d("wuliang", "dispatchTouchEvent");
         if (this instanceof SleepActivity) {
             return super.dispatchTouchEvent(ev);
         }

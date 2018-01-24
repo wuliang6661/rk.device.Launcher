@@ -340,7 +340,6 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
      */
     void registerFace() {
         FaceUtils faceUtils = FaceUtils.getInstance();
-//        faceUtils.startFaceFR();
         faceUtils.setFaceFeature((name, max_score) -> {
             List<User> users = DbHelper.queryByFaceId(name);
             if (!users.isEmpty()) {
@@ -371,6 +370,7 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
             statSoFiles.initNativeDirectory(Utils.getContext());
             FaceUtils.getInstance().init(Utils.getContext());
             FaceUtils.getInstance().loadFaces();
+            registerFace();
             initJni();
             mView.getContext().startService(new Intent(mView.getContext(), VerifyService.class));
         }).start();
