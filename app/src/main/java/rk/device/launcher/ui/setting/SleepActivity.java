@@ -25,12 +25,15 @@ import java.util.List;
 
 import butterknife.Bind;
 import cvc.EventUtil;
+import peripherals.LedHelper;
 import peripherals.MdHelper;
 import rk.device.launcher.R;
 import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.base.JniHandler;
 import rk.device.launcher.bean.event.SleepImageEvent;
+import rk.device.launcher.global.Constant;
 import rk.device.launcher.service.SleepTaskServer;
+import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.rxjava.RxBus;
 
 /**
@@ -71,14 +74,27 @@ public class SleepActivity extends BaseActivity {
         SleepTaskServer.getSleepHandler(SleepActivity.this).sendEmptyMessage(0x22);
         isHaveLunBo();
         registerBus();
+        if (SPUtils.getBoolean(Constant.KEY_LIGNT, false)) {    //如果灯是开的，休眠时关灯
+            LedHelper.PER_ledToggle(0);
+        }
     }
 
     protected void initData() {
         advertisingImg.setOnClickListener(view -> {
-            isStartMd = false;
-            setCrema(EventUtil.MEDIA_OPEN);
-            finish();
+            setCloseAct();
         });
+    }
+
+    /**
+     * 页面结束操作
+     */
+    private void setCloseAct() {
+        isStartMd = false;
+        setCrema(EventUtil.MEDIA_OPEN);
+        if (SPUtils.getBoolean(Constant.KEY_LIGNT, false)) {    //如果灯是开的，结束休眠时开灯
+            LedHelper.PER_ledToggle(1);
+        }
+        finish();
     }
 
 
@@ -91,9 +107,7 @@ public class SleepActivity extends BaseActivity {
             while (isStartMd) {
                 int mdStatus = MdHelper.PER_mdGet(1, mdStaus);
                 if (mdStatus == 0 && mdStaus[0] == 1) {
-                    isStartMd = false;
-                    setCrema(EventUtil.MEDIA_OPEN);
-                    finish();
+                    setCloseAct();
                 }
             }
         }).start();
@@ -181,7 +195,6 @@ public class SleepActivity extends BaseActivity {
 
 
     private void setCrema(int status) {
-        Log.d("wuliang", "set Carema = " + status);
         JniHandler mHandler = JniHandler.getInstance();
         Message msg = new Message();
         msg.what = status;

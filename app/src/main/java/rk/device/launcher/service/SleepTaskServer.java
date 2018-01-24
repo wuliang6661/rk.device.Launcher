@@ -80,7 +80,6 @@ public class SleepTaskServer extends Handler {
             stopSleepTask();
             return;
         }
-        Log.d("wuliang", "start sleep!");
         removeCallbacks(sleepWindowTask);
         postDelayed(sleepWindowTask, DenyTime);
     }

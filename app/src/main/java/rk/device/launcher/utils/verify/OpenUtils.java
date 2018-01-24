@@ -107,9 +107,9 @@ public class OpenUtils {
     private long justTime = 0;
 
     /**
-     * 判断上一次开门时间，5秒内不能多次开门
+     * 判断上一次开门时间，2秒内不能多次开门
      */
-    private synchronized boolean isOpen() {
+    private boolean isOpen() {
         if (justTime == 0) {
             return true;
         }
@@ -117,7 +117,7 @@ public class OpenUtils {
             return true;
         }
         long time = System.currentTimeMillis();
-        return (time - justTime) > 5000;
+        return (time - justTime) > 2000;
     }
 
 
@@ -180,7 +180,9 @@ public class OpenUtils {
                 syncRecords(token, type, personId, personName, TimeUtils.getTimeStamp(),
                         data);
                 insertToLocalDB(type, personId, personName, time, data);
-                soundPlayUtils.play(3);
+                if (SPUtils.getBoolean(Constant.DEVICE_MP3, true)) {
+                    soundPlayUtils.play(3);
+                }
             }
         });
     }
@@ -313,7 +315,9 @@ public class OpenUtils {
 //            syncRecords(token, type, personId, personName, TimeUtils.getTimeStamp(),
 //                    data);
                 insertToLocalDB(type, personId, personName, TimeUtils.getTimeStamp(), data);
-                soundPlayUtils.play(3);
+                if (SPUtils.getBoolean(Constant.DEVICE_MP3, true)) {
+                    soundPlayUtils.play(3);
+                }
             } else {
                 openDoorSuress = false;
             }

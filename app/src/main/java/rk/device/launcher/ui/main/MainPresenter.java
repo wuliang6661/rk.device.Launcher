@@ -36,6 +36,7 @@ import rk.device.launcher.service.ElectricBroadcastReceiver;
 import rk.device.launcher.service.NetBroadcastReceiver;
 import rk.device.launcher.service.NetChangeBroadcastReceiver;
 import rk.device.launcher.service.VerifyService;
+import rk.device.launcher.utils.AppManager;
 import rk.device.launcher.utils.AppUtils;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.StatSoFiles;
@@ -355,7 +356,9 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
     private void openDoor(User user) {
         long time = System.currentTimeMillis();
         if (user.getStartTime() < time && user.getEndTime() > time) {    //在有效时间内，则开门
-            OpenUtils.getInstance().open(VerifyTypeConstant.TYPE_FACE, user.getUniqueId(), user.getName());
+            if (AppManager.getAppManager().curremtActivity() instanceof MainActivity) {
+                OpenUtils.getInstance().open(VerifyTypeConstant.TYPE_FACE, user.getUniqueId(), user.getName());
+            }
         }
     }
 

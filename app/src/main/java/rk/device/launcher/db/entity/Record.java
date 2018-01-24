@@ -34,7 +34,6 @@ public class Record {
      * 访客人员唯一ID
      */
     @NotNull
-    @Unique
     private String peopleId;
 
     /**
@@ -75,6 +74,7 @@ public class Record {
     @Transient
     private String openTypeText;
 
+
     @Generated(hash = 1487740252)
     public Record(Long id, @NotNull String uniqueId, String popeName,
             @NotNull String peopleId, int openType, String data, int slide_data,
@@ -92,6 +92,7 @@ public class Record {
     @Generated(hash = 477726293)
     public Record() {
     }
+
 
     public Long getId() {
         return this.id;
