@@ -99,7 +99,7 @@ public class SleepActivity extends BaseActivity {
 
 
     /**
-     * 开始活体检测线程
+     * 开始人体红外检测线程
      */
     private void startMdRunable() {
         int[] mdStaus = new int[1];
@@ -119,7 +119,7 @@ public class SleepActivity extends BaseActivity {
         super.onResume();
         setCrema(EventUtil.MEDIA_CLOSE);
         //五秒后发送
-        handler.sendEmptyMessageDelayed(1, 500);
+        handler.sendEmptyMessageDelayed(1, 1000);
     }
 
 

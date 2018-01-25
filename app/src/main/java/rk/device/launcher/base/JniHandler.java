@@ -17,6 +17,8 @@ import peripherals.MdHelper;
 import peripherals.NfcHelper;
 import peripherals.NumberpadHelper;
 import peripherals.RelayHelper;
+import rk.device.launcher.global.Constant;
+import rk.device.launcher.utils.SPUtils;
 
 /**
  * Created by wuliang on 2017/11/28.
@@ -145,7 +147,9 @@ public class JniHandler extends Handler {
             NfcStatus = NfcHelper.PER_nfcInit();
             Log.i("JniHandler", "NfcStatus " + NfcStatus);
         }
-        Log.i("wuliang", "call  " + callsuress);
+        if (SPUtils.getBoolean(Constant.KEY_LIGNT, false)) {    //判断灯是否是开的，开灯的情况下将补光灯打开
+            LedHelper.PER_ledToggle(1);
+        }
         if (initListener != null) {
             initListener.initCallBack(cvcStatus, LedStatus, NfcStatus, fingerStatus);
         }

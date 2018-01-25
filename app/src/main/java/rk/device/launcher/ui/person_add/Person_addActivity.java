@@ -287,7 +287,7 @@ public class Person_addActivity
                     content = "0";
                 }
                 List<User> users = DbHelper.queryByPassword(content);
-                if (users.isEmpty()) {
+                if (users.isEmpty() || content.equals("0")) {
                     user.setPassWord(Integer.parseInt(content));
                     user.setUploadStatus(0);
                     DbHelper.insertUser(user);

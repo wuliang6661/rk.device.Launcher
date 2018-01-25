@@ -256,6 +256,4 @@ public class PersonFaceActivity extends MVPBaseActivity<PersonFaceContract.View,
             }
         });
     }
-
-
 }
