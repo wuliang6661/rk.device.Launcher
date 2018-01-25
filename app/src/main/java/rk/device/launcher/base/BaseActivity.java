@@ -30,6 +30,7 @@ import rk.device.launcher.service.BlueToothsBroadcastReceiver;
 import rk.device.launcher.service.RKLauncherPushIntentService;
 import rk.device.launcher.service.RKLauncherPushService;
 import rk.device.launcher.service.SleepTaskServer;
+import rk.device.launcher.service.SocketService;
 import rk.device.launcher.ui.fragment.BaseComDialogFragment;
 import rk.device.launcher.ui.fragment.VerifyNoticeDialogFragment;
 import rk.device.launcher.ui.fragment.WaitDialog;
@@ -37,6 +38,7 @@ import rk.device.launcher.ui.setting.SetNetWorkActivity;
 import rk.device.launcher.ui.setting.SleepActivity;
 import rk.device.launcher.utils.AppManager;
 import rk.device.launcher.utils.LogUtil;
+import rk.device.launcher.utils.PackageUtils;
 import rk.device.launcher.utils.rxjava.RxBus;
 import rk.device.launcher.zxing.decode.CaptureActivity;
 import rx.Subscriber;
@@ -44,6 +46,8 @@ import rx.Subscription;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
+
+import static rk.device.launcher.base.LauncherApplication.isTcp;
 
 /**
  * Created by wuliang on 2017/11/23.
@@ -312,10 +316,15 @@ public abstract class BaseActivity extends RxAppCompatActivity {
             @Override
             public void call(NetDismissBO netDismissBean) {
                 if (netDismissBean.isConnect()) {
+                    if(!isTcp){
+                        LogUtil.i("SocketService","SocketService isConnect.");
+                        startSocketService();
+                    }
                     if (hintDialog != null && hintDialog.isVisible()) {
                         hintDialog.dismiss();
                     }
                 } else {
+                    isTcp = false;
                     if (hintDialog != null && hintDialog.isVisible()) {
 
                     } else {
@@ -528,5 +537,27 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         });
     }
 
+    /**
+     * 开启socketService
+     */
+    public void startSocketService() {
+        isTcp = true;
+        if (!PackageUtils.isWorked(this,
+                PackageUtils.getPackageName(this) + ".service.SocketService")) {
+            LogUtil.i("SocketService", "SocketService isWorded");
+            Intent socketService = new Intent(this, SocketService.class);
+            startService(socketService);
+        } else {
+            LogUtil.i("SocketService", "SocketService openService");
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    SocketService.getInstance().closeThreadPool();
+                    SocketService.getInstance().openService();
+                }
+            },2000);
+        }
+
+    }
 
 }
