@@ -75,7 +75,6 @@ public class JniHandler extends Handler {
 
     @Override
     public void handleMessage(Message msg) {
-        Log.d("wuliang", "jniHandler msg.what = " + msg.what);
         switch (msg.what) {
             case EventUtil.INIT_JNI:    //初始化所有外设的jni库
                 initSuress();
