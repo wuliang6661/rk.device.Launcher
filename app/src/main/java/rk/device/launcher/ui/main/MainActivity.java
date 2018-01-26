@@ -48,6 +48,7 @@ import rk.device.launcher.ui.setting.SetSysActivity;
 import rk.device.launcher.ui.setting.SettingActivity;
 import rk.device.launcher.ui.settingmangerpwd.SettingMangerPwdActivity;
 import rk.device.launcher.utils.DateUtil;
+import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.SoundPlayUtils;
 import rk.device.launcher.utils.StringUtils;
@@ -487,6 +488,8 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
         if (!isNetWork) {    //之前网络未连接，现在连接了
             mPresenter.initLocation(this);
             mPresenter.getData();
+            LogUtil.i("SocketService", "SocketService isConnect.");
+            startSocketService();
         }
         isNetWork = true;
         if (WifiorNetStatus == 0) {
