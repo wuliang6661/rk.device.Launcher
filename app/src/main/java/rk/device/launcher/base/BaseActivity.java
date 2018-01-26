@@ -316,15 +316,15 @@ public abstract class BaseActivity extends RxAppCompatActivity {
             @Override
             public void call(NetDismissBO netDismissBean) {
                 if (netDismissBean.isConnect()) {
-                    if(!isTcp){
-                        LogUtil.i("SocketService","SocketService isConnect.");
-                        startSocketService();
-                    }
+//                    if(!isTcp){
+//                        LogUtil.i("SocketService","SocketService isConnect.");
+//                        startSocketService();
+//                    }
                     if (hintDialog != null && hintDialog.isVisible()) {
                         hintDialog.dismiss();
                     }
                 } else {
-                    isTcp = false;
+//                    isTcp = false;
                     if (hintDialog != null && hintDialog.isVisible()) {
 
                     } else {

@@ -87,6 +87,7 @@ public class SocketService extends Service {
     public void closeThreadPool() {
         if (mThreadPool != null) {
             CloseUtils.closeIOQuietly(socket);
+            socket = null;
             mThreadPool.shutdownNow();
             int threadCount = ((ThreadPoolExecutor) mThreadPool).getActiveCount();
             Log.i(TAG, "threadCount:" + threadCount);
@@ -104,7 +105,7 @@ public class SocketService extends Service {
         mThreadPool.execute(new Runnable() {
             @Override
             public void run() {
-                if (socket == null || !socket.isClosed()) {
+                if (socket == null || socket.isClosed()) {
                     CloseUtils.closeIOQuietly(socket);
                     socket = new Socket();
                 }
@@ -169,6 +170,8 @@ public class SocketService extends Service {
             Log.i(TAG, TAG + " send data success:" + jsonObject.toString());
         } catch (IOException e) {
             LogUtil.e(TAG, e.getMessage());
+            closeThreadPool();
+            openService();
         }
         mThreadPool.execute(new Runnable() {
             @Override
