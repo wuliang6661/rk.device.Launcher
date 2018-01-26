@@ -117,6 +117,8 @@ public class SocketService extends Service {
                     }
                 } catch (IOException e) {
                     LogUtil.e(TAG, e.getMessage());
+                    closeThreadPool();
+                    openService();
                 }
             }
         });
@@ -147,6 +149,8 @@ public class SocketService extends Service {
             }
         } catch (Exception e) {
             LogUtil.e(TAG, e.getMessage());
+            closeThreadPool();
+            openService();
         }
     }
 
