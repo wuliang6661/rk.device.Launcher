@@ -1,7 +1,5 @@
 package rk.device.launcher.ui.main.home;
 
-import android.content.Context;
-
 import java.util.List;
 
 import rk.device.launcher.base.JniHandler;
@@ -23,8 +21,7 @@ public class HomeContract {
 
         void setAnimationIp(String AnimationIp);
 
-        void showSuress(String text);
-
+        void hasPerson(boolean hasPerson);
 
     }
 

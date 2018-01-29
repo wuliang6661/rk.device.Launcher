@@ -26,7 +26,6 @@ import butterknife.Bind;
 import cvc.CvcHelper;
 import rk.device.launcher.R;
 import rk.device.launcher.api.T;
-import rk.device.launcher.base.JniHandler;
 import rk.device.launcher.bean.SetPageContentBO;
 import rk.device.launcher.bean.WeatherBO;
 import rk.device.launcher.bean.event.IpHostEvent;
@@ -45,6 +44,7 @@ import rk.device.launcher.ui.settingmangerpwd.SettingMangerPwdActivity;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.SoundPlayUtils;
 import rk.device.launcher.utils.StringUtils;
+import rk.device.launcher.utils.TimeUtils;
 import rk.device.launcher.utils.key.KeyUtils;
 import rk.device.launcher.utils.rxjava.RxBus;
 import rk.device.launcher.utils.verify.FaceUtils;
@@ -78,9 +78,6 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
     ImageView guanggao02;
     @Bind(R.id.guanggao03)
     ImageView guanggao03;
-
-
-    JniHandler mHandler;
 
     private InputWifiPasswordDialogFragment dialogFragment = null;
     SurfaceHolderCaremaFont callbackFont;
@@ -123,7 +120,6 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
      * 注册各类事物
      */
     private void register() {
-        mHandler = JniHandler.getInstance();
         mPresenter.initSO();
         mPresenter.registerNetOffReceiver();
         registerRxBus();
@@ -202,6 +198,12 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
             public void callHeightAndWidth(int width, int height) {
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mStaticHandler.post(mRefreshTimeRunnable);
     }
 
     @Override
@@ -284,7 +286,6 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
             goToSetting(type);
         }
     }
-
 
     /**
      * 显示输入管理员密码进入设置
@@ -415,7 +416,22 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
     }
 
     @Override
-    public void showSuress(String text) {
-
+    public void hasPerson(boolean hasPerson) {
+        runOnUiThread(() -> {
+            if (hasPerson) {
+                frameLayout.setVisibility(View.VISIBLE);
+            } else {
+                frameLayout.setVisibility(View.GONE);
+            }
+        });
     }
+
+    // todo 内存泄漏这里需要处理
+    private final Runnable mRefreshTimeRunnable = new Runnable() {
+        @Override
+        public void run() {
+            deviceTime.setText(TimeUtils.getTime());
+            mStaticHandler.postDelayed(this, REFRESH_DELAY);
+        }
+    };
 }

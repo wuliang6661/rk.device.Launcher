@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import cvc.EventUtil;
+import peripherals.MdHelper;
 import rk.device.launcher.api.BaseApiImpl;
 import rk.device.launcher.api.T;
 import rk.device.launcher.base.BaseActivity;
@@ -57,10 +58,10 @@ import rx.schedulers.Schedulers;
 
 /**
  * MVPPlugin
- *  邮箱 784787081@qq.com
+ * 邮箱 784787081@qq.com
  */
 
-public class HomePresenter extends BasePresenterImpl<HomeContract.View> implements HomeContract.Presenter{
+public class HomePresenter extends BasePresenterImpl<HomeContract.View> implements HomeContract.Presenter, JniHandler.OnInitListener {
 
 
     private GpsUtils gpsUtils;
@@ -85,6 +86,7 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
         Message msg = new Message();
         msg.what = EventUtil.INIT_JNI;
         mHandler.sendMessage(msg);
+        mHandler.setOnInitListener(this);
         return mHandler;
     }
 
@@ -328,7 +330,7 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
                     if (model.isIsmatch()) {
 //                        SoundPlayUtils.play(3);//播放声音
                         Log.i("wuliang", "face scusess!!!!");
-                        mView.showSuress(model.getName());
+//                        mView.showSuress(model.getName());
                     } else {
                         Log.i("wuliang", "face no  no   no!!!!");
                     }
@@ -380,5 +382,28 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
         }).start();
     }
 
-    
+
+    private int isHasPerson = 0;   //连续5次检测到没人，关闭摄像头
+
+    /**
+     * 启动人体红外检测
+     */
+    @Override
+    public void initCallBack(int cvcStatus, int LedStatus, int NfcStatus, int fingerStatus) {
+        int[] mdStaus = new int[1];
+        new Thread(() -> {
+            while (true) {
+                int mdStatus = MdHelper.PER_mdGet(1, mdStaus);
+                if (mdStatus == 0 && mdStaus[0] == 1) {
+                    isHasPerson = 0;
+                    mView.hasPerson(true);
+                } else {
+                    isHasPerson++;
+                    if (isHasPerson == 3) {
+                        mView.hasPerson(false);
+                    }
+                }
+            }
+        }).start();
+    }
 }
