@@ -495,6 +495,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
         if (WifiorNetStatus == 0) {
             mIvSignal.setImageResource(R.drawable.net_line);
         } else {
+            startSocketService();
             if (Math.abs(scanLever) > 100) {
                 mIvSignal.setImageResource(R.drawable.wifi_signal_1);
             } else if (Math.abs(scanLever) > 80) {
