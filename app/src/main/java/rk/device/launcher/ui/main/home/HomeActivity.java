@@ -12,6 +12,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
@@ -30,8 +31,11 @@ import rk.device.launcher.global.Constant;
 import rk.device.launcher.mvp.MVPBaseActivity;
 import rk.device.launcher.service.SocketService;
 import rk.device.launcher.service.VerifyService;
+import rk.device.launcher.ui.bbs.BbsActivity;
+import rk.device.launcher.ui.call.CallActivity;
 import rk.device.launcher.ui.fragment.InputWifiPasswordDialogFragment;
 import rk.device.launcher.ui.key.KeyActivity;
+import rk.device.launcher.ui.numpassword.NumpasswordActivity;
 import rk.device.launcher.ui.setting.SetBasicInfoActivity;
 import rk.device.launcher.ui.setting.SetDoorGuardActivity;
 import rk.device.launcher.ui.setting.SetNetWorkActivity;
@@ -45,9 +49,11 @@ import rk.device.launcher.utils.TimeUtils;
 import rk.device.launcher.utils.key.KeyUtils;
 import rk.device.launcher.utils.rxjava.RxBus;
 import rk.device.launcher.utils.verify.FaceUtils;
+import rk.device.launcher.widget.ArcMenu;
 import rk.device.launcher.widget.carema.SurfaceHolderCaremaBack;
 import rk.device.launcher.widget.carema.SurfaceHolderCaremaFont;
 import rk.device.launcher.widget.video.SampleListener;
+import rk.device.launcher.zxing.decode.CaptureActivity;
 
 
 /**
@@ -55,7 +61,7 @@ import rk.device.launcher.widget.video.SampleListener;
  * 邮箱 784787081@qq.com
  */
 
-public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresenter> implements HomeContract.View {
+public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresenter> implements HomeContract.View, View.OnClickListener {
 
     @Bind(R.id.default_video)
     StandardGSYVideoPlayer defaultVideo;
@@ -75,6 +81,20 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
     ImageView guanggao02;
     @Bind(R.id.guanggao03)
     ImageView guanggao03;
+    @Bind(R.id.menu_message)
+    LinearLayout menuMessage;
+    @Bind(R.id.menu_manager)
+    LinearLayout menuManager;
+    @Bind(R.id.menu_setting)
+    LinearLayout menuSetting;
+    @Bind(R.id.menu_pwd)
+    LinearLayout menuPwd;
+    @Bind(R.id.menu_call)
+    LinearLayout menuCall;
+    @Bind(R.id.menu_qrcode)
+    LinearLayout menuQrcode;
+    @Bind(R.id.menu)
+    ArcMenu menu;
 
     private InputWifiPasswordDialogFragment dialogFragment = null;
     SurfaceHolderCaremaFont callbackFont;
@@ -109,6 +129,12 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
     private void invition() {
         SoundPlayUtils.init(this);
         initSurfaceViewOne();
+        menuCall.setOnClickListener(this);
+        menuManager.setOnClickListener(this);
+        menuMessage.setOnClickListener(this);
+        menuPwd.setOnClickListener(this);
+        menuQrcode.setOnClickListener(this);
+        menuSetting.setOnClickListener(this);
 //        showView();
     }
 
@@ -425,4 +451,33 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
             mStaticHandler.postDelayed(this, REFRESH_DELAY);
         }
     };
+
+    @Override
+    public void onClick(View v) {
+        menu.close();
+        switch (v.getId()) {
+            case R.id.menu_setting:
+                setFirstLoder();
+                break;
+            case R.id.menu_manager:
+//                if (!StringUtils.isEmpty(modilePhone)) {
+//                    showMessageDialog("联系电话: " + modilePhone);
+//                }
+                break;
+            case R.id.menu_pwd:    //密码开门
+                gotoActivity(NumpasswordActivity.class, false);
+                break;
+            case R.id.menu_call:    //拨号
+                gotoActivity(CallActivity.class, false);
+                break;
+            case R.id.menu_qrcode:    //二维码
+//                gotoActivity(QrcodeActivity.class, false);
+                Intent intent = new Intent(this, CaptureActivity.class);
+                startActivityForResult(intent, 0x11);
+                break;
+            case R.id.menu_message:    //留言
+                gotoActivity(BbsActivity.class, false);
+                break;
+        }
+    }
 }

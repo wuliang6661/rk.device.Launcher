@@ -37,7 +37,6 @@ import rk.device.launcher.service.ElectricBroadcastReceiver;
 import rk.device.launcher.service.NetBroadcastReceiver;
 import rk.device.launcher.service.NetChangeBroadcastReceiver;
 import rk.device.launcher.service.VerifyService;
-import rk.device.launcher.ui.main.MainActivity;
 import rk.device.launcher.utils.AppManager;
 import rk.device.launcher.utils.AppUtils;
 import rk.device.launcher.utils.SPUtils;
@@ -359,7 +358,7 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
     private void openDoor(User user) {
         long time = System.currentTimeMillis();
         if (user.getStartTime() < time && user.getEndTime() > time) {    //在有效时间内，则开门
-            if (AppManager.getAppManager().curremtActivity() instanceof MainActivity) {
+            if (AppManager.getAppManager().curremtActivity() instanceof HomeActivity) {
                 OpenUtils.getInstance().open(VerifyTypeConstant.TYPE_FACE, user.getUniqueId(), user.getName());
             }
         }
@@ -399,7 +398,7 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
                     mView.hasPerson(true);
                 } else {
                     isHasPerson++;
-                    if (isHasPerson == 3) {
+                    if (isHasPerson == 5) {
                         mView.hasPerson(false);
                     }
                 }

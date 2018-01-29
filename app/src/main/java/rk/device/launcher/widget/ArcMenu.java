@@ -23,50 +23,68 @@ public class ArcMenu extends ViewGroup {
     private int mCenterX;
     private int mCenterY;
     private Paint mPaint;
-    private float mRadius;
     // 半透明的背景半径
-    private float mMaxBgRadius = 300f;
+    private float mRadius;
+    // 半透明的最大背景半径
+    private float mMaxBgRadius = 350f;
     private float mIconRadius;
     // 6个图标的最大扩散距离
-    private float mMaxIconRadius = 250f;
+    private float mMaxIconRadius = 270f;
     private OnClickListener mCenterButtonClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
-            ValueAnimator backgroudAnimator;
-            ValueAnimator iconAnimator;
-            if (mRadius == 0) {
-                backgroudAnimator = getBackAnimator(0, mMaxBgRadius);
-                iconAnimator = getIconAnimator(0, mMaxIconRadius);
-            } else {
-                backgroudAnimator = getBackAnimator(mMaxBgRadius, 0);
-                iconAnimator = getIconAnimator(mMaxIconRadius, 0);
-            }
-            AnimatorSet animatorSet = new AnimatorSet();
-            animatorSet.playTogether(backgroudAnimator, iconAnimator);
-            animatorSet.addListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animation) {
-                    mCenterButton.setEnabled(false);
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mCenterButton.setEnabled(true);
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animation) {
-
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animation) {
-
-                }
-            });
-            animatorSet.start();
+            toggle(mRadius);
         }
     };
+
+    private void toggle(float radius) {
+        ValueAnimator backgroudAnimator;
+        ValueAnimator iconAnimator;
+        if (radius == 0) {
+            backgroudAnimator = getBackAnimator(0, mMaxBgRadius);
+            iconAnimator = getIconAnimator(0, mMaxIconRadius);
+        } else {
+            backgroudAnimator = getBackAnimator(mMaxBgRadius, 0);
+            iconAnimator = getIconAnimator(mMaxIconRadius, 0);
+        }
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(backgroudAnimator, iconAnimator);
+        animatorSet.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                mCenterButton.setEnabled(false);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mCenterButton.setEnabled(true);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+        animatorSet.start();
+    }
+
+    public void close() {
+        if (mRadius == mMaxBgRadius) {
+            toggle(1);
+        }
+    }
+
+    public void open() {
+        if (mRadius == 0) {
+            toggle(0);
+        }
+    }
+
     private final int ANIMATION_DURATION = 300;
 
     public ArcMenu(Context context) {
@@ -91,7 +109,12 @@ public class ArcMenu extends ViewGroup {
     }
 
     private void init(Context context, AttributeSet attrs, int defStyleAttr) {
-
+        setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                close();
+            }
+        });
     }
 
     @Override
@@ -168,6 +191,10 @@ public class ArcMenu extends ViewGroup {
 //        RectF rectF = new RectF(mCenterX - 500, mCenterY - 500, mCenterX + 500, mCenterY + 500);
 //        canvas.drawArc(rectF, 180, 180, true, mPaint);
         canvas.drawCircle(mCenterX, mCenterY, mRadius, mPaint);
+//        if (mRadius == mMaxBgRadius) {
+//            canvas.drawCircle(mCenterX, mCenterY, 95, mPaint);
+//        }
+        canvas.drawCircle(mCenterX, mCenterY, mRadius * 0.27f, mPaint);
         super.onDraw(canvas);
     }
 }

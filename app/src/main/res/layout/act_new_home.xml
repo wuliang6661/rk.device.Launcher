@@ -149,43 +149,147 @@
 
 
     <rk.device.launcher.widget.ArcMenu
+        android:id="@+id/menu"
         android:layout_width="match_parent"
+        android:layout_marginTop="450dp"
         android:layout_height="match_parent">
 
-        <ImageView
+        <LinearLayout
+            android:id="@+id/menu_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/menu_call" />
+            android:gravity="center"
+            android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/menu_manager" />
+            <ImageView
+                android:layout_width="57dp"
+                android:layout_height="57dp"
+                android:src="@drawable/menu_message" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/menu_message" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="留言"
+                android:textColor="#71fc67"
+                android:textSize="19dp" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/menu_pwd" />
+        </LinearLayout>
 
-        <ImageView
+        <LinearLayout
+            android:id="@+id/menu_manager"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/menu_qrcode" />
+            android:gravity="center"
+            android:orientation="vertical">
 
-        <ImageView
+            <ImageView
+                android:layout_width="57dp"
+                android:layout_height="57dp"
+                android:src="@drawable/menu_manager" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="联系物管"
+                android:textColor="#71fc67"
+                android:textSize="19dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/menu_setting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/menu_setting" />
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="57dp"
+                android:layout_height="57dp"
+                android:src="@drawable/menu_setting" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="设置"
+                android:textColor="#71fc67"
+                android:textSize="19dp" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/menu_pwd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="57dp"
+                android:layout_height="57dp"
+                android:src="@drawable/menu_pwd" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="密码开门"
+                android:textColor="#71fc67"
+                android:textSize="19dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/menu_call"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="57dp"
+                android:layout_height="57dp"
+                android:src="@drawable/menu_call" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="拨号"
+                android:textColor="#71fc67"
+                android:textSize="19dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/menu_qrcode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="57dp"
+                android:layout_height="57dp"
+                android:src="@drawable/menu_qrcode" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="二维码"
+                android:textColor="#71fc67"
+                android:textSize="19dp" />
+
+        </LinearLayout>
 
         <RelativeLayout
             android:layout_width="126dp"
-            android:layout_height="126dp"
-            android:background="@drawable/anniu_bg">
+            android:layout_height="126dp">
 
             <ImageView
                 android:layout_width="116dp"
