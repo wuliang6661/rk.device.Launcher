@@ -48,7 +48,6 @@ public class SocketService extends Service {
     /**
      * 接收服务器消息 变量
      */
-    // 输入流对象
     BufferedReader reader = null;
     private DeviceUuidFactory uuidFactory;
     private String uuid;
@@ -87,7 +86,6 @@ public class SocketService extends Service {
     public void closeThreadPool() {
         if (mThreadPool != null) {
             CloseUtils.closeIOQuietly(socket);
-            socket = null;
             mThreadPool.shutdownNow();
             if (mThreadPool != null) {
                 int threadCount = ((ThreadPoolExecutor) mThreadPool).getActiveCount();
@@ -95,6 +93,21 @@ public class SocketService extends Service {
             }
             mThreadPool = null;
         }
+    }
+
+    /**
+     * 判断当前是否连接
+     *
+     * @return
+     */
+    public boolean checkConnected() {
+        if (socket == null || socket.isClosed()) {
+            return false;
+        }
+        if (socket != null) {
+            return socket.isConnected();
+        }
+        return false;
     }
 
     /**
