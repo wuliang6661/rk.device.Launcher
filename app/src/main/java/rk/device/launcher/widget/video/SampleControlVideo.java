@@ -1,4 +1,4 @@
-package rk.device.launcher.utils.video;
+package rk.device.launcher.widget.video;
 
 import android.content.Context;
 import android.graphics.Matrix;

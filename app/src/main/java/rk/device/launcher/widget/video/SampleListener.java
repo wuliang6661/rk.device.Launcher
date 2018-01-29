@@ -1,4 +1,4 @@
-package rk.device.launcher.utils.video;
+package rk.device.launcher.widget.video;
 
 import com.shuyu.gsyvideoplayer.listener.StandardVideoAllCallBack;
 

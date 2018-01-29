@@ -148,29 +148,54 @@
     </LinearLayout>
 
 
-    <RelativeLayout
-        android:layout_width="126dp"
-        android:layout_height="126dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="14dp"
-        android:layout_marginRight="192dp">
+    <rk.device.launcher.widget.ArcMenu
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/anniu_bg"
-            android:visibility="gone" />
-
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/menu_call" />
 
         <ImageView
-            android:layout_width="116dp"
-            android:layout_height="116dp"
-            android:layout_centerInParent="true"
-            android:background="@drawable/anniu" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/menu_manager" />
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/menu_message" />
 
-    </RelativeLayout>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/menu_pwd" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/menu_qrcode" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/menu_setting" />
+
+        <RelativeLayout
+            android:layout_width="126dp"
+            android:layout_height="126dp"
+            android:background="@drawable/anniu_bg">
+
+            <ImageView
+                android:layout_width="116dp"
+                android:layout_height="116dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/anniu" />
+
+        </RelativeLayout>
+
+    </rk.device.launcher.widget.ArcMenu>
 
 
 </RelativeLayout>

@@ -1,9 +1,6 @@
 package rk.device.launcher.ui.main.home;
 
-import java.util.List;
-
 import rk.device.launcher.base.JniHandler;
-import rk.device.launcher.bean.WeatherBO;
 import rk.device.launcher.mvp.BasePresenter;
 import rk.device.launcher.mvp.BaseView;
 import rk.device.launcher.service.ElectricBroadcastReceiver;
@@ -17,7 +14,7 @@ import rk.device.launcher.service.NetChangeBroadcastReceiver;
 public class HomeContract {
     interface View extends BaseView {
 
-        void showWeather(List<WeatherBO> weatherModel);
+//        void showWeather(List<WeatherBO> weatherModel);
 
         void setAnimationIp(String AnimationIp);
 

@@ -212,7 +212,7 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
                                @Override
                                public void onNext(List<WeatherBO> weatherModel) {
 //                                   isIpError = false;
-                                   mView.showWeather(weatherModel);
+//                                   mView.showWeather(weatherModel);
                                }
                            }
                 );
@@ -238,7 +238,7 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
 
             @Override
             public void onNext(List<WeatherBO> weatherModel) {
-                mView.showWeather(weatherModel);
+//                mView.showWeather(weatherModel);
             }
         });
     }

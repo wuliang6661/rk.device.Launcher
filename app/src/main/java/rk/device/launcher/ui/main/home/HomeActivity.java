@@ -20,14 +20,11 @@ import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
 
-import java.util.List;
-
 import butterknife.Bind;
 import cvc.CvcHelper;
 import rk.device.launcher.R;
 import rk.device.launcher.api.T;
 import rk.device.launcher.bean.SetPageContentBO;
-import rk.device.launcher.bean.WeatherBO;
 import rk.device.launcher.bean.event.IpHostEvent;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.mvp.MVPBaseActivity;
@@ -48,9 +45,9 @@ import rk.device.launcher.utils.TimeUtils;
 import rk.device.launcher.utils.key.KeyUtils;
 import rk.device.launcher.utils.rxjava.RxBus;
 import rk.device.launcher.utils.verify.FaceUtils;
-import rk.device.launcher.utils.video.SampleListener;
 import rk.device.launcher.widget.carema.SurfaceHolderCaremaBack;
 import rk.device.launcher.widget.carema.SurfaceHolderCaremaFont;
+import rk.device.launcher.widget.video.SampleListener;
 
 
 /**
@@ -402,12 +399,6 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
                 T.showShort(scanResult);
             }
         }
-    }
-
-
-    @Override
-    public void showWeather(List<WeatherBO> weatherModel) {
-
     }
 
     @Override
