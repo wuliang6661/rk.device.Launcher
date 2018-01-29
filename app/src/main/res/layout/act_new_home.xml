@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+
+        <com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer
+            android:id="@+id/default_video"
+            android:layout_width="match_parent"
+            android:layout_height="450dp" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+
+            <ImageView
+                android:layout_width="260dp"
+                android:layout_height="52dp"
+                android:layout_marginLeft="32dp"
+                android:background="@drawable/logo" />
+
+
+            <View
+                android:layout_width="1.5dp"
+                android:layout_height="60dp"
+                android:layout_marginLeft="19dp"
+                android:background="#000000" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="26dp"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:id="@+id/device_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2017-01-17 15:36"
+                    android:textColor="#333333"
+                    android:textSize="26dp"
+                    android:textStyle="bold" />
+
+
+                <TextView
+                    android:id="@+id/device_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="13dp"
+                    android:maxLines="1"
+                    android:text="浙江省杭州市拱墅区远洋国际中心A座601"
+                    android:textColor="#333333"
+                    android:textSize="22dp"
+                    android:textStyle="bold" />
+
+
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/gonggao_text"
+            android:layout_width="match_parent"
+            android:layout_height="96dp"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp"
+            android:background="@drawable/gonggao_bg"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:singleLine="true"
+            android:focusableInTouchMode="true"
+            android:gravity="center_vertical"
+            android:paddingLeft="14dp"
+            android:text="@string/declare"
+            android:textColor="#ff0000"
+            android:textSize="32dp" />
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="320dp">
+
+
+            <ImageView
+                android:id="@+id/guanggao01"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:src="@drawable/guanggao01" />
+
+            <FrameLayout
+                android:id="@+id/frame_layout"
+                android:layout_width="426dp"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:visibility="gone">
+
+                <SurfaceView
+                    android:id="@+id/camera_surfaceview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </FrameLayout>
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal">
+
+
+            <ImageView
+                android:id="@+id/guanggao02"
+                android:layout_width="262dp"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:src="@drawable/guanggao02" />
+
+
+            <ImageView
+                android:id="@+id/guanggao03"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="4dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/guanggao03" />
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:layout_width="126dp"
+        android:layout_height="126dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="14dp"
+        android:layout_marginRight="192dp">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/anniu_bg"
+            android:visibility="gone" />
+
+
+        <ImageView
+            android:layout_width="116dp"
+            android:layout_height="116dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/anniu" />
+
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

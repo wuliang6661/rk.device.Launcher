@@ -35,24 +35,24 @@ import rk.device.launcher.utils.uuid.DeviceUuidFactory;
 
 public class SocketService extends Service {
 
-    private static final String  TAG            = "SocketService";
+    private static final String TAG = "SocketService";
     /**
      * socket变量
      */
-    private Socket               socket         = null;
+    private Socket socket = null;
     // 线程池
     // 为了方便展示,此处直接采用线程池进行线程管理,而没有一个个开线程
-    private ExecutorService      mThreadPool;
+    private ExecutorService mThreadPool;
     //输出流
     private BufferedWriter writer = null;
     /**
      * 接收服务器消息 变量
      */
     // 输入流对象
-    BufferedReader               reader = null;
-    private DeviceUuidFactory    uuidFactory;
-    private String               uuid;
-    private static SocketService mService       = null;
+    BufferedReader reader = null;
+    private DeviceUuidFactory uuidFactory;
+    private String uuid;
+    private static SocketService mService = null;
 
     public static SocketService getInstance() {
         if (mService == null) {
@@ -89,8 +89,10 @@ public class SocketService extends Service {
             CloseUtils.closeIOQuietly(socket);
             socket = null;
             mThreadPool.shutdownNow();
-            int threadCount = ((ThreadPoolExecutor) mThreadPool).getActiveCount();
-            Log.i(TAG, "threadCount:" + threadCount);
+            if (mThreadPool != null) {
+                int threadCount = ((ThreadPoolExecutor) mThreadPool).getActiveCount();
+                Log.i(TAG, "threadCount:" + threadCount);
+            }
             mThreadPool = null;
         }
     }
@@ -117,8 +119,8 @@ public class SocketService extends Service {
                     }
                 } catch (IOException e) {
                     LogUtil.e(TAG, e.getMessage());
-                    closeThreadPool();
-                    openService();
+//                    closeThreadPool();
+//                    openService();
                 }
             }
         });
@@ -169,7 +171,7 @@ public class SocketService extends Service {
         jsonObject.put("address", SPUtils.getString(Constant.KEY_ADDRESS));
         // 步骤2：写入需要发送的数据到输出流对象中
         try {
-            writer.write(jsonObject.toString()+"\n");
+            writer.write(jsonObject.toString() + "\n");
             writer.flush();
             Log.i(TAG, TAG + " send data success:" + jsonObject.toString());
         } catch (IOException e) {
@@ -185,7 +187,7 @@ public class SocketService extends Service {
                     if (socket.isConnected() && !socket.isClosed()) {
                         StringBuffer responseInfo = new StringBuffer();
                         while (reader.ready()) {
-                            responseInfo.append((char)reader.read());
+                            responseInfo.append((char) reader.read());
                         }
                         Log.i(TAG, TAG + " server responseInfo:" + responseInfo.toString());
                     }

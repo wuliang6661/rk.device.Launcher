@@ -108,4 +108,6 @@ dependencies {
     compile 'com.guo.android_extend:android-extend:1.0.1'
     // zxing
     compile 'com.google.zxing:core:3.3.1'
+    //完整版引入
+    compile 'com.shuyu:GSYVideoPlayer:2.0.8'
 }
