@@ -51,6 +51,7 @@ import rk.device.launcher.utils.verify.OpenUtils;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -62,6 +63,7 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
 
 
     private GpsUtils gpsUtils;
+    private static final String TAG = "MainPresenter";
 
     /**
      * UUID工具
@@ -176,42 +178,48 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
         // requestQueue.register(observable).subscribe(subscriber)
         // 将所有的Subscription添加到一个CompositeSubscription里
         // activity在ondestroy的时候调用requestQueue.cancelAll()将CompositeSubscription.unsubscribe()
-        BaseApiImpl.address("js").subscribeOn(Schedulers.io())
-                .flatMap(s -> {
-                    int start = s.indexOf("{");
-                    int end = s.indexOf("}");
-                    String json = s.substring(start, end + 1);
-                    AddressBO addressModel = JSON.parseObject(json, AddressBO.class);
-                    Map<String, Object> params = new HashMap<>();
-                    params.put("city", addressModel.city);
-                    Observable<List<WeatherBO>> observable;
-                    try {
-                        observable = BaseApiImpl.weather(params);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        throw new RuntimeException("error throw ip");
+
+        // 我觉得可以把这个subscribeOn放在flatmap后面
+        BaseApiImpl.address("js")
+                .flatMap(new Func1<String, Observable<? extends List<WeatherBO>>>() {
+                    @Override
+                    public Observable<? extends List<WeatherBO>> call(String s) {
+                        Log.d(TAG, "currentThread = " + Thread.currentThread().getName());
+                        int start = s.indexOf("{");
+                        int end = s.indexOf("}");
+                        String json = s.substring(start, end + 1);
+                        AddressBO addressModel = JSON.parseObject(json, AddressBO.class);
+                        Map<String, Object> params = new HashMap<>();
+                        params.put("city", addressModel.city);
+                        Observable<List<WeatherBO>> observable;
+                        try {
+                            observable = BaseApiImpl.weather(params);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            throw new RuntimeException("error throw ip");
+                        }
+                        return observable;
                     }
-                    return observable;
-                }).observeOn(AndroidSchedulers.mainThread())
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .compose(activity.bindUntilEvent(ActivityEvent.DESTROY))
                 .subscribe(new Subscriber<List<WeatherBO>>() {
-                               @Override
-                               public void onCompleted() {
+                    @Override
+                    public void onCompleted() {
 
-                               }
+                    }
 
-                               @Override
-                               public void onError(Throwable e) {
-//                                   isIpError = true;
-                               }
+                    @Override
+                    public void onError(Throwable e) {
 
-                               @Override
-                               public void onNext(List<WeatherBO> weatherModel) {
-//                                   isIpError = false;
-                                   mView.showWeather(weatherModel);
-                               }
-                           }
-                );
+                    }
+
+                    @Override
+                    public void onNext(List<WeatherBO> weatherModel) {
+                        mView.showWeather(weatherModel);
+                    }
+                });
     }
 
 
