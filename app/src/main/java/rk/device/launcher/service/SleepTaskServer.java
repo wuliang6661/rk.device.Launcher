@@ -4,7 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
+import cvc.EventUtil;
+import peripherals.MdHelper;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.ui.setting.SleepActivity;
 import rk.device.launcher.utils.SPUtils;
@@ -96,8 +99,14 @@ public class SleepTaskServer extends Handler {
 
         @Override
         public void run() {
-            Intent intent = new Intent(context, SleepActivity.class);
-            context.startActivity(intent);
+            int[] mdStaus = new int[1];
+            int mdStatus = MdHelper.PER_mdGet(1, mdStaus);
+            if (mdStatus == 0 && mdStaus[0] == 1) {
+                startSleepTask();
+            } else {
+                Intent intent = new Intent(context, SleepActivity.class);
+                context.startActivity(intent);
+            }
         }
     };
 }

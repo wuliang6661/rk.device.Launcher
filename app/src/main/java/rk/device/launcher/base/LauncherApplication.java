@@ -62,6 +62,8 @@ public class LauncherApplication extends Application implements CustomActivityOn
      */
     public static int sInitFingerSuccess = -1;
 
+    public static boolean      isTcp      = false;//是否连接tcp
+
     private final String DB_FOLDER = "/data/rk_backup/";
     private final String DB_NAME = "rk.db";
     private final String TEMP_DB_NAME = "temp.db";

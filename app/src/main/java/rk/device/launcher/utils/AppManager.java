@@ -2,10 +2,9 @@ package rk.device.launcher.utils;
 
 import android.app.Activity;
 
-
 import java.util.Stack;
 
-import rk.device.launcher.ui.main.MainActivity;
+import rk.device.launcher.ui.main.home.HomeActivity;
 
 
 /**
@@ -74,7 +73,7 @@ public class AppManager {
      */
     public void goBackMain() {
         for (int i = 0, size = activityStack.size(); i < size; i++) {
-            if (null != activityStack.get(i) && !(activityStack.get(i) instanceof MainActivity)) {
+            if (null != activityStack.get(i) && !(activityStack.get(i) instanceof HomeActivity)) {
                 activityStack.get(i).finish();
             }
         }

@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import java.util.UUID;
 
+import peripherals.RelayHelper;
 import rk.device.launcher.api.BaseApiImpl;
 import rk.device.launcher.api.HttpResultCode;
 import rk.device.launcher.base.LauncherApplication;
@@ -34,14 +35,16 @@ import rx.Subscriber;
 
 public class OpenUtils {
 
-    public static final String    TAG               = "OpenUtils";
+    public static final String TAG = "OpenUtils";
 
-    DeviceUuidFactory             deviceUuidFactory = new DeviceUuidFactory(
+    DeviceUuidFactory deviceUuidFactory = new DeviceUuidFactory(
             LauncherApplication.getContext());
 
-    private static OpenUtils      openUtils         = null;
-    private static SoundPlayUtils soundPlayUtils    = null;
-    private int                   fingerId          = -1;
+    private static OpenUtils openUtils = null;
+    private static SoundPlayUtils soundPlayUtils = null;
+    private int fingerId = -1;
+
+    private boolean openDoorSuress = false;    //默认门没开
 
     public static OpenUtils getInstance() {
         if (openUtils == null) {
@@ -63,7 +66,7 @@ public class OpenUtils {
     /**
      * 开门方式
      *
-     * @param type 1 : nfc,2 : 指纹,3 : 人脸,4 : 密码,5 : 二维码,6 : 远程开门
+     * @param type       1 : nfc,2 : 指纹,3 : 人脸,4 : 密码,5 : 二维码,6 : 远程开门
      * @param personId
      * @param personName
      * @step 1 验证通过之后，调取开门接口（接口1）
@@ -71,9 +74,13 @@ public class OpenUtils {
      * @result 1.2 验证通过
      * @step 2 数据库插入开门记录
      * @step 3 开门记录同步到服务端(接口3)
-     *       <p/>
+     * <p/>
      */
-    public void open(int type, String personId, String personName) {
+    public synchronized void open(int type, String personId, String personName) {
+        if (!isOpen()) {
+            return;
+        }
+        openDoorJni(type, personId, personName);
         String token = SPUtils.getString(Constant.ACCENT_TOKEN);
         if (TextUtils.isEmpty(token)) {
             obtainToken(type, personId, personName);
@@ -82,7 +89,11 @@ public class OpenUtils {
         }
     }
 
-    public void open(int type, String personId, String personName, int fingerId) {
+    public synchronized void open(int type, String personId, String personName, int fingerId) {
+        if (!isOpen()) {
+            return;
+        }
+        openDoorJni(type, personId, personName);
         String token = SPUtils.getString(Constant.ACCENT_TOKEN);
         this.fingerId = fingerId;
         if (TextUtils.isEmpty(token)) {
@@ -91,6 +102,24 @@ public class OpenUtils {
             openDoor(token, type, personId, personName);
         }
     }
+
+
+    private long justTime = 0;
+
+    /**
+     * 判断上一次开门时间，2秒内不能多次开门
+     */
+    private boolean isOpen() {
+        if (justTime == 0) {
+            return true;
+        }
+        if (!openDoorSuress) {
+            return true;
+        }
+        long time = System.currentTimeMillis();
+        return (time - justTime) > 2000;
+    }
+
 
     /**
      * 设备开门鉴权token请求接口
@@ -130,29 +159,32 @@ public class OpenUtils {
         int time = TimeUtils.getTimeStamp();
         BaseApiImpl.openDoor(token, deviceUuidFactory.getUuid().toString(), type,
                 TimeUtils.getTimeStamp()).subscribe(new Subscriber<StatusBo>() {
-                    @Override
-                    public void onCompleted() {
+            @Override
+            public void onCompleted() {
 
-                    }
+            }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        if (e.getMessage().equals(HttpResultCode.TOKEN_INVALID)) {
-                            obtainToken(type, personId, personName);
-                        }
-                    }
+            @Override
+            public void onError(Throwable e) {
+                if (e.getMessage().equals(HttpResultCode.TOKEN_INVALID)) {
+                    obtainToken(type, personId, personName);
+                }
+            }
 
-                    @Override
-                    public void onNext(StatusBo statusBo) {
-                        String data = openStatus(type, personId);
-                        RxBus.getDefault().post(
-                                new OpenDoorSuccessEvent(personName, type, statusBo.getStatus()));
-                        syncRecords(token, type, personId, personName, TimeUtils.getTimeStamp(),
-                                data);
-                        insertToLocalDB(type, personId, personName, time, data);
-                        soundPlayUtils.play(3);
-                    }
-                });
+            @Override
+            public void onNext(StatusBo statusBo) {
+                justTime = System.currentTimeMillis();
+                String data = openStatus(type, personId);
+                RxBus.getDefault().post(
+                        new OpenDoorSuccessEvent(personName, type, statusBo.getStatus()));
+                syncRecords(token, type, personId, personName, TimeUtils.getTimeStamp(),
+                        data);
+                insertToLocalDB(type, personId, personName, time, data);
+                if (SPUtils.getBoolean(Constant.DEVICE_MP3, true)) {
+                    soundPlayUtils.play(3);
+                }
+            }
+        });
     }
 
     /**
@@ -260,5 +292,35 @@ public class OpenUtils {
                 }
             }
         });
+    }
+
+    /**
+     * 使用本地jni方法开门
+     */
+    private void openDoorJni(int type, String personId, String personName) {
+        int relayOff = RelayHelper.RelaySetOff();
+        if (relayOff == 0) {
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            int relayOn = RelayHelper.RelaySetOn();
+            if (relayOn == 0) {
+                justTime = System.currentTimeMillis();
+                openDoorSuress = true;
+                String data = openStatus(type, personId);
+                RxBus.getDefault().post(
+                        new OpenDoorSuccessEvent(personName, type, 1));
+//            syncRecords(token, type, personId, personName, TimeUtils.getTimeStamp(),
+//                    data);
+                insertToLocalDB(type, personId, personName, TimeUtils.getTimeStamp(), data);
+                if (SPUtils.getBoolean(Constant.DEVICE_MP3, true)) {
+                    soundPlayUtils.play(3);
+                }
+            } else {
+                openDoorSuress = false;
+            }
+        }
     }
 }

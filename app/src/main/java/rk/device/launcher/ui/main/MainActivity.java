@@ -8,7 +8,6 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.text.InputType;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -49,7 +48,7 @@ import rk.device.launcher.ui.setting.SetSysActivity;
 import rk.device.launcher.ui.setting.SettingActivity;
 import rk.device.launcher.ui.settingmangerpwd.SettingMangerPwdActivity;
 import rk.device.launcher.utils.DateUtil;
-import rk.device.launcher.utils.FileUtils;
+import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.SoundPlayUtils;
 import rk.device.launcher.utils.StringUtils;
@@ -159,7 +158,6 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
 
         invition();
         register();
-        mPresenter.registerFace();
     }
 
     /**
@@ -183,7 +181,6 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
     private void register() {
         mHandler = JniHandler.getInstance();
         mPresenter.initSO();
-//        mPresenter.initJni();
         mHandler.setOnInitListener(this);
         mPresenter.registerBatteryReceiver().setCallBack(this);
         mPresenter.registerNetReceiver().setCallBack(this);
@@ -192,9 +189,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
         registerIPHost();
         mPresenter.initLocation(this);
         mPresenter.getData();
-        startService(new Intent(this, SocketService.class));
-//        startService(new Intent(this, VerifyService.class));
-        Log.d("wuliang", FileUtils.readFile2String("/proc/board_sn", "UTF-8"));
+        startSocketService();
     }
 
     /**
@@ -315,7 +310,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
     @Override
     public void initCallBack(int cvcStatus, int LedStatus, int NfcStatus, int finderStarus) {
         runOnUiThread(() -> {
-            if (cvcStatus == 0 && LedStatus == 0 && NfcStatus == 0 && finderStarus == 0) {
+            if (cvcStatus == 0 && LedStatus == 0 && NfcStatus == 0 && finderStarus > 0) {
                 initError.setVisibility(View.GONE);
                 if (initDialog != null && initDialog.isVisible()) {
                     initDialog.dismiss();
@@ -493,11 +488,14 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
         if (!isNetWork) {    //之前网络未连接，现在连接了
             mPresenter.initLocation(this);
             mPresenter.getData();
+            LogUtil.i("SocketService", "SocketService isConnect.");
+            startSocketService();
         }
         isNetWork = true;
         if (WifiorNetStatus == 0) {
             mIvSignal.setImageResource(R.drawable.net_line);
         } else {
+            startSocketService();
             if (Math.abs(scanLever) > 100) {
                 mIvSignal.setImageResource(R.drawable.wifi_signal_1);
             } else if (Math.abs(scanLever) > 80) {

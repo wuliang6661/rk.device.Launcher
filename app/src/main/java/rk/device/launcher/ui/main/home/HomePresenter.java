@@ -1,4 +1,4 @@
-package rk.device.launcher.ui.main;
+package rk.device.launcher.ui.main.home;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import cvc.EventUtil;
+import peripherals.MdHelper;
 import rk.device.launcher.api.BaseApiImpl;
 import rk.device.launcher.api.T;
 import rk.device.launcher.base.BaseActivity;
@@ -52,7 +53,6 @@ import rk.device.launcher.utils.verify.OpenUtils;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -60,11 +60,10 @@ import rx.schedulers.Schedulers;
  * 邮箱 784787081@qq.com
  */
 
-public class MainPresenter extends BasePresenterImpl<MainContract.View> implements MainContract.Presenter {
+public class HomePresenter extends BasePresenterImpl<HomeContract.View> implements HomeContract.Presenter, JniHandler.OnInitListener {
 
 
     private GpsUtils gpsUtils;
-    private static final String TAG = "MainPresenter";
 
     /**
      * UUID工具
@@ -86,6 +85,7 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
         Message msg = new Message();
         msg.what = EventUtil.INIT_JNI;
         mHandler.sendMessage(msg);
+        mHandler.setOnInitListener(this);
         return mHandler;
     }
 
@@ -179,48 +179,42 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
         // requestQueue.register(observable).subscribe(subscriber)
         // 将所有的Subscription添加到一个CompositeSubscription里
         // activity在ondestroy的时候调用requestQueue.cancelAll()将CompositeSubscription.unsubscribe()
-
-        // 我觉得可以把这个subscribeOn放在flatmap后面
-        BaseApiImpl.address("js")
-                .flatMap(new Func1<String, Observable<? extends List<WeatherBO>>>() {
-                    @Override
-                    public Observable<? extends List<WeatherBO>> call(String s) {
-                        Log.d(TAG, "currentThread = " + Thread.currentThread().getName());
-                        int start = s.indexOf("{");
-                        int end = s.indexOf("}");
-                        String json = s.substring(start, end + 1);
-                        AddressBO addressModel = JSON.parseObject(json, AddressBO.class);
-                        Map<String, Object> params = new HashMap<>();
-                        params.put("city", addressModel.city);
-                        Observable<List<WeatherBO>> observable;
-                        try {
-                            observable = BaseApiImpl.weather(params);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            throw new RuntimeException("error throw ip");
-                        }
-                        return observable;
+        BaseApiImpl.address("js").subscribeOn(Schedulers.io())
+                .flatMap(s -> {
+                    int start = s.indexOf("{");
+                    int end = s.indexOf("}");
+                    String json = s.substring(start, end + 1);
+                    AddressBO addressModel = JSON.parseObject(json, AddressBO.class);
+                    Map<String, Object> params = new HashMap<>();
+                    params.put("city", addressModel.city);
+                    Observable<List<WeatherBO>> observable;
+                    try {
+                        observable = BaseApiImpl.weather(params);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        throw new RuntimeException("error throw ip");
                     }
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                    return observable;
+                }).observeOn(AndroidSchedulers.mainThread())
                 .compose(activity.bindUntilEvent(ActivityEvent.DESTROY))
                 .subscribe(new Subscriber<List<WeatherBO>>() {
-                    @Override
-                    public void onCompleted() {
+                               @Override
+                               public void onCompleted() {
 
-                    }
+                               }
 
-                    @Override
-                    public void onError(Throwable e) {
+                               @Override
+                               public void onError(Throwable e) {
+//                                   isIpError = true;
+                               }
 
-                    }
-
-                    @Override
-                    public void onNext(List<WeatherBO> weatherModel) {
-                        mView.showWeather(weatherModel);
-                    }
-                });
+                               @Override
+                               public void onNext(List<WeatherBO> weatherModel) {
+//                                   isIpError = false;
+//                                   mView.showWeather(weatherModel);
+                               }
+                           }
+                );
     }
 
 
@@ -243,7 +237,7 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
 
             @Override
             public void onNext(List<WeatherBO> weatherModel) {
-                mView.showWeather(weatherModel);
+//                mView.showWeather(weatherModel);
             }
         });
     }
@@ -335,7 +329,7 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
                     if (model.isIsmatch()) {
 //                        SoundPlayUtils.play(3);//播放声音
                         Log.i("wuliang", "face scusess!!!!");
-                        mView.showSuress(model.getName());
+//                        mView.showSuress(model.getName());
                     } else {
                         Log.i("wuliang", "face no  no   no!!!!");
                     }
@@ -364,7 +358,7 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
     private void openDoor(User user) {
         long time = System.currentTimeMillis();
         if (user.getStartTime() < time && user.getEndTime() > time) {    //在有效时间内，则开门
-            if (AppManager.getAppManager().curremtActivity() instanceof MainActivity) {
+            if (AppManager.getAppManager().curremtActivity() instanceof HomeActivity) {
                 OpenUtils.getInstance().open(VerifyTypeConstant.TYPE_FACE, user.getUniqueId(), user.getName());
             }
         }
@@ -387,4 +381,28 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
         }).start();
     }
 
+
+    private int isHasPerson = 0;   //连续5次检测到没人，关闭摄像头
+
+    /**
+     * 启动人体红外检测
+     */
+    @Override
+    public void initCallBack(int cvcStatus, int LedStatus, int NfcStatus, int fingerStatus) {
+        int[] mdStaus = new int[1];
+        new Thread(() -> {
+            while (true) {
+                int mdStatus = MdHelper.PER_mdGet(1, mdStaus);
+                if (mdStatus == 0 && mdStaus[0] == 1) {
+                    isHasPerson = 0;
+                    mView.hasPerson(true);
+                } else {
+                    isHasPerson++;
+                    if (isHasPerson == 5) {
+                        mView.hasPerson(false);
+                    }
+                }
+            }
+        }).start();
+    }
 }

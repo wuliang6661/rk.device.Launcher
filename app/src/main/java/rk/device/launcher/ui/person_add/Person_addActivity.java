@@ -204,13 +204,13 @@ public class Person_addActivity
                     }
                     //删除指纹
                     if (!TextUtils.isEmpty(user.getFingerID1())) {
-                        FingerHelper.JNIFpDelUserByID(LauncherApplication.fingerModuleID,TypeTranUtils.str2Int(user.getFingerID1()));
+                        FingerHelper.JNIFpDelUserByID(LauncherApplication.fingerModuleID, TypeTranUtils.str2Int(user.getFingerID1()));
                     }
                     if (!TextUtils.isEmpty(user.getFingerID2())) {
-                        FingerHelper.JNIFpDelUserByID(LauncherApplication.fingerModuleID,TypeTranUtils.str2Int(user.getFingerID2()));
+                        FingerHelper.JNIFpDelUserByID(LauncherApplication.fingerModuleID, TypeTranUtils.str2Int(user.getFingerID2()));
                     }
                     if (!TextUtils.isEmpty(user.getFingerID3())) {
-                        FingerHelper.JNIFpDelUserByID(LauncherApplication.fingerModuleID,TypeTranUtils.str2Int(user.getFingerID3()));
+                        FingerHelper.JNIFpDelUserByID(LauncherApplication.fingerModuleID, TypeTranUtils.str2Int(user.getFingerID3()));
                     }
                     DbHelper.delete(user);
                     dissmissMessageDialog();
@@ -252,11 +252,17 @@ public class Person_addActivity
         fragment.setSelectedTime(TimeUtils.stringToFormat(time, "yyyy"), TimeUtils.stringToFormat(time, "MM"), TimeUtils.stringToFormat(time, "dd"),
                 TimeUtils.stringToFormat(time, "HH"), TimeUtils.stringToFormat(time, "mm"));
         fragment.setOnConfirmDialogListener((year, month, day, hour, minute) -> {
+            long selTime = TimeUtils.string2Millis(year + "-" + month + "-" + day + " " + hour + ":" + minute);
+            long staTime = TimeUtils.string2Millis(tvTimeStart.getText().toString());
+            long endTime = TimeUtils.string2Millis(tvTimeEnd.getText().toString());
             if (type == 1) {    //结束时间
-                long endTime = TimeUtils.string2Millis(year + "-" + month + "-" + day + " " + hour + ":" + minute);
-                long staTime = TimeUtils.string2Millis(tvTimeStart.getText().toString());
-                if (endTime <= staTime) {
+                if (selTime <= staTime) {
                     showMessageDialog("结束时间必须大于开始时间");
+                    return;
+                }
+            } else {
+                if (selTime >= endTime) {
+                    showMessageDialog("开始时间必须小于结束时间");
                     return;
                 }
             }
@@ -281,7 +287,7 @@ public class Person_addActivity
                     content = "0";
                 }
                 List<User> users = DbHelper.queryByPassword(content);
-                if (users.isEmpty()) {
+                if (users.isEmpty() || content.equals("0")) {
                     user.setPassWord(Integer.parseInt(content));
                     user.setUploadStatus(0);
                     DbHelper.insertUser(user);

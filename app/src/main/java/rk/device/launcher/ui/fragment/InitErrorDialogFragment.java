@@ -89,7 +89,11 @@ public class InitErrorDialogFragment extends BaseDialogFragment implements View.
         setViewVisable(cvcError, cvcStatus);
         setViewVisable(ledError, ledStatus);
         setViewVisable(nfcError, nfcStatus);
-        setViewVisable(finderError, finderStarus);
+        if (finderStarus > 0) {
+            finderError.setVisibility(View.GONE);
+        } else {
+            finderError.setVisibility(View.VISIBLE);
+        }
         btnCancel.setOnClickListener(this);
     }
 
@@ -133,7 +137,12 @@ public class InitErrorDialogFragment extends BaseDialogFragment implements View.
         setViewVisable(cvcError, cvcStatus);
         setViewVisable(ledError, ledStatus);
         setViewVisable(nfcError, nfcStatus);
-        setViewVisable(finderError, finderStarus);
+
+        if (finderStarus > 0) {
+            finderError.setVisibility(View.GONE);
+        } else {
+            finderError.setVisibility(View.VISIBLE);
+        }
     }
 
 

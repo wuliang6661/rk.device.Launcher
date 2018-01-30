@@ -513,11 +513,6 @@ public class FaceUtils {
                     //fr success.
                     Log.d("wuliang", "fit Score:" + max + ", NAME:" + name + ",age:" + age + ",gender:" + gender);
                     if (featureFace != null) {
-                        try {
-                            Thread.sleep(1000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
                         featureFace.faceSuress(name, max);
                     }
                 } else {
