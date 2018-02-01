@@ -15,6 +15,7 @@ import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.STUtils;
 import rk.device.launcher.utils.Utils;
+import rk.device.launcher.utils.cache.CacheUtils;
 import rk.device.launcher.utils.verify.FaceUtils;
 import rk.device.launcher.widget.carema.SurfaceHolderCaremaBack;
 import rk.device.launcher.widget.carema.SurfaceHolderCaremaFont;
@@ -62,12 +63,12 @@ public class LauncherApplication extends Application implements CustomActivityOn
      */
     public static int sInitFingerSuccess = -1;
 
-    public static boolean      isTcp      = false;//是否连接tcp
+    public static boolean isTcp = false;//是否连接tcp
 
-    private final String DB_FOLDER = "/data/rk_backup/";
     private final String DB_NAME = "rk.db";
     private final String TEMP_DB_NAME = "temp.db";
     private final String DB_JOUR = "rk.db-journal";
+
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -88,6 +89,7 @@ public class LauncherApplication extends Application implements CustomActivityOn
         CustomActivityOnCrash.setShowErrorDetails(true);
         CustomActivityOnCrash.setDefaultErrorActivityDrawable(R.mipmap.ic_launcher);
         CustomActivityOnCrash.setEventListener(this);
+        CacheUtils.init();
         Utils.init(this);
         STUtils.init(this);
         SPUtils.inviSp();
@@ -107,7 +109,7 @@ public class LauncherApplication extends Application implements CustomActivityOn
         @Override
         public void run() {
             try {
-                File dbFolder = new File(DB_FOLDER);
+                File dbFolder = new File(CacheUtils.getBaseCache());
                 if (!dbFolder.exists()) {
                     dbFolder.mkdirs();
                 }
@@ -144,6 +146,7 @@ public class LauncherApplication extends Application implements CustomActivityOn
 
     @Override
     public void onLaunchErrorActivity() {
+        LogUtil.d("wuliang", "application destory!!!");
         SurfaceHolderCaremaFont.stopCarema();
         SurfaceHolderCaremaBack.stopCarema();
         FaceUtils.getInstance().stopFaceFR();

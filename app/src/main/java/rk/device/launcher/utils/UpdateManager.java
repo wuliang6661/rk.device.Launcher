@@ -40,6 +40,7 @@ import rk.device.launcher.api.BaseApiImpl;
 import rk.device.launcher.api.T;
 import rk.device.launcher.bean.VersionBO;
 import rk.device.launcher.ui.fragment.CheckUpdateDialogFragment;
+import rk.device.launcher.utils.cache.CacheUtils;
 import rk.device.launcher.widget.dialog.BaseWidgetDialogFragment;
 import rx.Subscriber;
 import rx.subscriptions.CompositeSubscription;
@@ -219,19 +220,19 @@ public class UpdateManager {
 //        Window window = latestOrFailDialog.getWindow();
 //        latestOrFailDialog.show();
 //        window.setGravity(Gravity.CENTER);
-	    latestOrFailDialog = new CheckUpdateDialogFragment();
-	    latestOrFailDialog.setTitle("系统提示");
+        latestOrFailDialog = new CheckUpdateDialogFragment();
+        latestOrFailDialog.setTitle("系统提示");
         if (dialogType == DIALOG_TYPE_LATEST) {
-	        latestOrFailDialog.setMessage("您当前已经是最新版本");
+            latestOrFailDialog.setMessage("您当前已经是最新版本");
         } else if (dialogType == DIALOG_TYPE_FAIL) {
-	        latestOrFailDialog.setMessage("无法获取版本更新信息");
+            latestOrFailDialog.setMessage("无法获取版本更新信息");
         }
-	    latestOrFailDialog.setPositiveButton("确定");
-	    FragmentManager fragmentManager = mWeakReference.get();
-	    if (fragmentManager != null) {
-		    latestOrFailDialog.show(fragmentManager, null);
-	    }
-	    
+        latestOrFailDialog.setPositiveButton("确定");
+        FragmentManager fragmentManager = mWeakReference.get();
+        if (fragmentManager != null) {
+            latestOrFailDialog.show(fragmentManager, null);
+        }
+
     }
 
     /**
@@ -422,7 +423,7 @@ public class UpdateManager {
             //没内存卡就存机身内存
 //            directoryPath = mContext.getFilesDir() + File.separator + dir;
 //            directoryPath = mContext.getCacheDir() + File.separator + dir;
-            directoryPath = "/data/rk_backup/" + dir;
+            directoryPath = CacheUtils.getBase() + "/" + dir;
         }
         File file = new File(directoryPath);
         if (!file.exists()) {//判断文件目录是否存在

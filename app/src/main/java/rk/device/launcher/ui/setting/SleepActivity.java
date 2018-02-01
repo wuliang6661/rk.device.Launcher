@@ -34,6 +34,7 @@ import rk.device.launcher.bean.event.SleepImageEvent;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.service.SleepTaskServer;
 import rk.device.launcher.utils.SPUtils;
+import rk.device.launcher.utils.cache.CacheUtils;
 import rk.device.launcher.utils.rxjava.RxBus;
 
 /**
@@ -139,7 +140,7 @@ public class SleepActivity extends BaseActivity {
      * 判断是否已接收到图片，显示最新的图片
      */
     private void isHaveLunBo() {
-        String destDirPath = "/data/rk_backup/rk_ad";
+        String destDirPath = CacheUtils.getImgFile();
         File destDir = new File(destDirPath);
         if (destDir.exists()) {
             File fa[] = destDir.listFiles();

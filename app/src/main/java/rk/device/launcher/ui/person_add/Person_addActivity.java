@@ -28,6 +28,7 @@ import rk.device.launcher.utils.FileUtils;
 import rk.device.launcher.utils.StringUtils;
 import rk.device.launcher.utils.TimeUtils;
 import rk.device.launcher.utils.TypeTranUtils;
+import rk.device.launcher.utils.cache.CacheUtils;
 import rk.device.launcher.utils.verify.FaceUtils;
 import rk.device.launcher.utils.verify.SyncPersonUtils;
 
@@ -200,7 +201,7 @@ public class Person_addActivity
                     if (!StringUtils.isEmpty(user.getFaceID())) {    //删除本地人脸
                         FaceUtils faceUtils = FaceUtils.getInstance();
                         faceUtils.delete(user.getFaceID());
-                        FileUtils.deleteFile("/data/rk_backup/face/" + user.getFaceID() + ".png");
+                        FileUtils.deleteFile(CacheUtils.getFaceFile() + "/" + user.getFaceID() + ".png");
                     }
                     //删除指纹
                     if (!TextUtils.isEmpty(user.getFingerID1())) {

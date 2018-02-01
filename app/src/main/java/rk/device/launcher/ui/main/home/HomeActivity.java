@@ -1,6 +1,7 @@
 package rk.device.launcher.ui.main.home;
 
 
+import android.app.ActivityManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,6 +30,7 @@ import rk.device.launcher.bean.SetPageContentBO;
 import rk.device.launcher.bean.event.IpHostEvent;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.mvp.MVPBaseActivity;
+import rk.device.launcher.service.NetChangeBroadcastReceiver;
 import rk.device.launcher.service.SocketService;
 import rk.device.launcher.service.VerifyService;
 import rk.device.launcher.ui.bbs.BbsActivity;
@@ -42,6 +44,7 @@ import rk.device.launcher.ui.setting.SetNetWorkActivity;
 import rk.device.launcher.ui.setting.SetSysActivity;
 import rk.device.launcher.ui.setting.SettingActivity;
 import rk.device.launcher.ui.settingmangerpwd.SettingMangerPwdActivity;
+import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.SoundPlayUtils;
 import rk.device.launcher.utils.StringUtils;
@@ -61,7 +64,8 @@ import rk.device.launcher.zxing.decode.CaptureActivity;
  * 邮箱 784787081@qq.com
  */
 
-public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresenter> implements HomeContract.View, View.OnClickListener {
+public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresenter> implements HomeContract.View,
+        View.OnClickListener, NetChangeBroadcastReceiver.CallBack {
 
     @Bind(R.id.default_video)
     StandardGSYVideoPlayer defaultVideo;
@@ -104,6 +108,7 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
      */
     private static final int REFRESH_DELAY = 1000;
     private Handler mStaticHandler = new Handler();
+    private boolean isNetWork = true;// 此状态保存上次网络是否连接，默认已连接
 
     private OrientationUtils orientationUtils;
     private boolean isPlay;
@@ -127,6 +132,7 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
      * 初始化界面
      */
     private void invition() {
+        mPresenter.registerNetReceiver().setCallBack(this);
         SoundPlayUtils.init(this);
         initSurfaceViewOne();
         menuCall.setOnClickListener(this);
@@ -267,6 +273,7 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
 
     @Override
     protected void onDestroy() {
+        LogUtil.d("wuliang", "home destory!!!");
         if (isPlay) {
             getCurPlay().release();
         }
@@ -478,6 +485,23 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
             case R.id.menu_message:    //留言
                 gotoActivity(BbsActivity.class, false);
                 break;
+        }
+    }
+
+    @Override
+    public void onCallMessage(boolean isNoNet, int WifiorNetStatus, int scanLever) {
+        if (!isNoNet) {
+            isNetWork = false;
+            return;
+        }
+        if (!isNetWork) {    //之前网络未连接，现在连接了
+            mPresenter.getData();
+            LogUtil.i("SocketService", "SocketService isConnect.");
+            startSocketService();
+        }
+        isNetWork = true;
+        if (WifiorNetStatus != 0) {
+            startSocketService();
         }
     }
 }

@@ -142,9 +142,15 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
      * 注销各类服务
      */
     void unRegisterReceiver(Activity activity) {
-        activity.unregisterReceiver(mBatteryReceiver);
-        activity.unregisterReceiver(netChangeBroadcastRecever);
-        activity.unregisterReceiver(netOffReceiver);
+        if (mBatteryReceiver != null) {
+            activity.unregisterReceiver(mBatteryReceiver);
+        }
+        if (netChangeBroadcastRecever != null) {
+            activity.unregisterReceiver(netChangeBroadcastRecever);
+        }
+        if (netOffReceiver != null) {
+            activity.unregisterReceiver(netOffReceiver);
+        }
     }
 
 
@@ -395,11 +401,13 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
                 int mdStatus = MdHelper.PER_mdGet(1, mdStaus);
                 if (mdStatus == 0 && mdStaus[0] == 1) {
                     isHasPerson = 0;
-                    mView.hasPerson(true);
+                    if (mView != null)
+                        mView.hasPerson(true);
                 } else {
                     isHasPerson++;
                     if (isHasPerson == 5) {
-                        mView.hasPerson(false);
+                        if (mView != null)
+                            mView.hasPerson(false);
                     }
                 }
             }

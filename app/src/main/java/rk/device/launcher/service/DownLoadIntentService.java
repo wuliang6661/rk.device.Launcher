@@ -27,142 +27,143 @@ import rk.device.launcher.global.Constant;
 import rk.device.launcher.utils.AppUtils;
 import rk.device.launcher.utils.CloseUtils;
 import rk.device.launcher.utils.LogUtil;
+import rk.device.launcher.utils.cache.CacheUtils;
 
 public class DownLoadIntentService extends IntentService {
-	private static final String ACTION_DOWNLOAD = "rk.device.launcher.service.action.DOWNLOAD";
-	
-	private static final String EXTRA_URL = "rk.device.launcher.service.extra.url";
-	
-	// 升级的是rom还是apk
-	private static final String EXTRA_TYPE = "rk.device.launcher.service.extra.type";
-	
-	private static final int DOWNLOAD_APK_OVER = 2;
-	
-	private static final int DOWNLOAD_ROM_OVER = 3;
-	private String mApkPath;
-	private static final int IO_BUFFER_SIZE = 8 * 1024;
-	
-	
-	public DownLoadIntentService() {
-		super("DownLoadIntentService");
-	}
-	
-	private Handler mHandler = new Handler() {
-		@Override
-		public void handleMessage(Message msg) {
-			switch (msg.what) {
-				case DOWNLOAD_APK_OVER:
-					installApk();
-					break;
-				case DOWNLOAD_ROM_OVER:
-					LogUtil.e(TAG, "开始安装rom了!!!");
+    private static final String ACTION_DOWNLOAD = "rk.device.launcher.service.action.DOWNLOAD";
+
+    private static final String EXTRA_URL = "rk.device.launcher.service.extra.url";
+
+    // 升级的是rom还是apk
+    private static final String EXTRA_TYPE = "rk.device.launcher.service.extra.type";
+
+    private static final int DOWNLOAD_APK_OVER = 2;
+
+    private static final int DOWNLOAD_ROM_OVER = 3;
+    private String mApkPath;
+    private static final int IO_BUFFER_SIZE = 8 * 1024;
+
+
+    public DownLoadIntentService() {
+        super("DownLoadIntentService");
+    }
+
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case DOWNLOAD_APK_OVER:
+                    installApk();
+                    break;
+                case DOWNLOAD_ROM_OVER:
+                    LogUtil.e(TAG, "开始安装rom了!!!");
 //					Sys.rebootToRecovery();
-					try {
-						File romFile = new File("/data/rk_backup/update.img");
-						RecoverySystem.installPackage(DownLoadIntentService.this, romFile);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-					break;
-			}
-		}
-	};
-	
-	public static void startDownLoad(Context context, String url, String type) {
-		Intent intent = new Intent(context, DownLoadIntentService.class);
-		intent.setAction(ACTION_DOWNLOAD);
-		intent.putExtra(EXTRA_URL, url);
-		intent.putExtra(EXTRA_TYPE, type);
-		context.startService(intent);
-	}
-	
-	@Override
-	protected void onHandleIntent(Intent intent) {
-		if (intent != null) {
-			final String action = intent.getAction();
-			if (ACTION_DOWNLOAD.equals(action)) {
-				final String url = intent.getStringExtra(EXTRA_URL);
-				String type = intent.getStringExtra(EXTRA_TYPE);
-				if (TextUtils.equals(Constant.KEY_ROM, type)) {
-					handleActionDownLoadRom(url);
-				} else {
-					handleActionDownLoadAPK(url);
-				}
-			}
-		}
-	}
-	
-	private void handleActionDownLoadAPK(String url) {
-		String storageState = Environment.getExternalStorageState();
-		if (storageState.equals(Environment.MEDIA_MOUNTED)) { // sd卡已经挂载
-			String savePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/upload/Update/";
-			File file = new File(savePath);
-			if (!file.exists()) {
-				file.mkdirs();
-			}
-			mApkPath = savePath + getAppInfo() + ".apk";
-			File apkFile = new File(mApkPath);
-			// 是否已下载更新文件
+                    try {
+                        File romFile = new File(CacheUtils.getBase() + "/update.img");
+                        RecoverySystem.installPackage(DownLoadIntentService.this, romFile);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+            }
+        }
+    };
+
+    public static void startDownLoad(Context context, String url, String type) {
+        Intent intent = new Intent(context, DownLoadIntentService.class);
+        intent.setAction(ACTION_DOWNLOAD);
+        intent.putExtra(EXTRA_URL, url);
+        intent.putExtra(EXTRA_TYPE, type);
+        context.startService(intent);
+    }
+
+    @Override
+    protected void onHandleIntent(Intent intent) {
+        if (intent != null) {
+            final String action = intent.getAction();
+            if (ACTION_DOWNLOAD.equals(action)) {
+                final String url = intent.getStringExtra(EXTRA_URL);
+                String type = intent.getStringExtra(EXTRA_TYPE);
+                if (TextUtils.equals(Constant.KEY_ROM, type)) {
+                    handleActionDownLoadRom(url);
+                } else {
+                    handleActionDownLoadAPK(url);
+                }
+            }
+        }
+    }
+
+    private void handleActionDownLoadAPK(String url) {
+        String storageState = Environment.getExternalStorageState();
+        if (storageState.equals(Environment.MEDIA_MOUNTED)) { // sd卡已经挂载
+            String savePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/upload/Update/";
+            File file = new File(savePath);
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+            mApkPath = savePath + getAppInfo() + ".apk";
+            File apkFile = new File(mApkPath);
+            // 是否已下载更新文件
 //			if (apkFile.exists()) {
 //				installApk();
 //				return;
 //			}
-			OkHttpClient client = new OkHttpClient();
-			Request request = new Request.Builder()
-			.url(url)
-			.build();
-			client.newCall(request).enqueue(new Callback() {
-				@Override
-				public void onFailure(Call call, IOException e) {
-					e.printStackTrace();
-				}
-				
-				@Override
-				public void onResponse(Call call, Response response) throws IOException {
-					if (!response.isSuccessful()) {
-						Log.e(TAG, "response is not success");
-						return;
-					}
-					BufferedInputStream in = null;
-					BufferedOutputStream out = null;
-					int len = 0;
-					try {
-						long total = response.body().contentLength();
-						Log.e(TAG, "total------>" + total);
-						long current = 0;
-						in = new BufferedInputStream(response.body().byteStream(), IO_BUFFER_SIZE);
-						out = new BufferedOutputStream(new FileOutputStream(apkFile), IO_BUFFER_SIZE);
-						while ((len = in.read()) != -1) {
-							current += len;
-							out.write(len);
-							Log.e(TAG, "current------>" + current);
-						}
-						out.flush();
-						Log.d(TAG, "下载完成！！！");
-						mHandler.sendEmptyMessage(DOWNLOAD_APK_OVER);
-					} catch (Exception e) {
-						e.printStackTrace();
-						Log.e(TAG, "下载失败");
-					} finally {
-						CloseUtils.closeIOQuietly(in);
-						CloseUtils.closeIOQuietly(out);
-					}
-				}
-			});
-			
-		}
-	}
-	
-	/**
-	 * 安装apk
-	 */
-	private void installApk() {
-		File apkfile = new File(mApkPath);
-		if (!apkfile.exists()) {
-			return;
-		}
-		LogUtil.e(TAG, "开始静默安装了");
-		AppUtils.installAppSilent(mApkPath);
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url(url)
+                    .build();
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    e.printStackTrace();
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    if (!response.isSuccessful()) {
+                        Log.e(TAG, "response is not success");
+                        return;
+                    }
+                    BufferedInputStream in = null;
+                    BufferedOutputStream out = null;
+                    int len = 0;
+                    try {
+                        long total = response.body().contentLength();
+                        Log.e(TAG, "total------>" + total);
+                        long current = 0;
+                        in = new BufferedInputStream(response.body().byteStream(), IO_BUFFER_SIZE);
+                        out = new BufferedOutputStream(new FileOutputStream(apkFile), IO_BUFFER_SIZE);
+                        while ((len = in.read()) != -1) {
+                            current += len;
+                            out.write(len);
+                            Log.e(TAG, "current------>" + current);
+                        }
+                        out.flush();
+                        Log.d(TAG, "下载完成！！！");
+                        mHandler.sendEmptyMessage(DOWNLOAD_APK_OVER);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.e(TAG, "下载失败");
+                    } finally {
+                        CloseUtils.closeIOQuietly(in);
+                        CloseUtils.closeIOQuietly(out);
+                    }
+                }
+            });
+
+        }
+    }
+
+    /**
+     * 安装apk
+     */
+    private void installApk() {
+        File apkfile = new File(mApkPath);
+        if (!apkfile.exists()) {
+            return;
+        }
+        LogUtil.e(TAG, "开始静默安装了");
+        AppUtils.installAppSilent(mApkPath);
 //		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 //			//参数1 上下文, 参数2 Provider主机地址 和配置文件中保持一致   参数3  共享的文件
 //			Uri apkUri =
@@ -181,78 +182,78 @@ public class DownLoadIntentService extends IntentService {
 //			"application/vnd.android.package-archive");
 //			startActivity(intent);
 //		}
-	}
-	
-	private String getAppInfo() {
-		try {
-			String pkName = getPackageName();
-			String versionName = getPackageManager().getPackageInfo(
-			pkName, 0).versionName;
-			int versionCode = getPackageManager().getPackageInfo(
-			pkName, 0).versionCode;
-			return pkName + "_" + versionName + "_" + versionCode;
-		} catch (Exception e) {
-		}
-		return null;
-	}
-	
-	private final String TAG = "DownLoadIntentService";
-	
-	
-	private void handleActionDownLoadRom(String url) {
-		String fileDir = "/data/rk_backup";
-		File dir = new File(fileDir);
-		if (!dir.exists()) {
-			dir.mkdirs();
-		}
-		final File downLoadRom = new File(dir, "update.img");
-		OkHttpClient client = new OkHttpClient();
-		Request request = new Request.Builder()
-		.url(url)
-		.build();
-		client.newCall(request).enqueue(new Callback() {
-			@Override
-			public void onFailure(Call call, IOException e) {
-				e.printStackTrace();
-			}
-			
-			@Override
-			public void onResponse(Call call, Response response) throws IOException {
-				if (!response.isSuccessful()) {
-					Log.e(TAG, "response is not success");
-					return;
-				}
-				InputStream in = null;
+    }
+
+    private String getAppInfo() {
+        try {
+            String pkName = getPackageName();
+            String versionName = getPackageManager().getPackageInfo(
+                    pkName, 0).versionName;
+            int versionCode = getPackageManager().getPackageInfo(
+                    pkName, 0).versionCode;
+            return pkName + "_" + versionName + "_" + versionCode;
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
+    private final String TAG = "DownLoadIntentService";
+
+
+    private void handleActionDownLoadRom(String url) {
+        String fileDir = CacheUtils.getBase();
+        File dir = new File(fileDir);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        final File downLoadRom = new File(dir, "update.img");
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    Log.e(TAG, "response is not success");
+                    return;
+                }
+                InputStream in = null;
 //				BufferedOutputStream out = null;
-				OutputStream out = null;
-				int len = 0;
-				try {
-					long total = response.body().contentLength();
-					Log.e(TAG, "total------>" + total);
-					long current = 0;
-					byte[] buffer = new byte[8 * 1024];
-					in = response.body().byteStream();
+                OutputStream out = null;
+                int len = 0;
+                try {
+                    long total = response.body().contentLength();
+                    Log.e(TAG, "total------>" + total);
+                    long current = 0;
+                    byte[] buffer = new byte[8 * 1024];
+                    in = response.body().byteStream();
 //					in = new BufferedInputStream(response.body().byteStream(), IO_BUFFER_SIZE);
 //					out = new BufferedOutputStream(new FileOutputStream(downLoadRom), IO_BUFFER_SIZE);
-					out = new FileOutputStream(downLoadRom);
-					while ((len = in.read(buffer)) != -1) {
-						current += len;
-						out.write(buffer, 0, len);
-						Log.e(TAG, "current------>" + current);
-						LogUtil.d(TAG, "percent = " + current * 100.0f / total + "%");
-					}
-					out.flush();
-					Log.d(TAG, "下载完成！！！");
-					mHandler.sendEmptyMessage(DOWNLOAD_ROM_OVER);
-				} catch (Exception e) {
-					e.printStackTrace();
-					Log.e(TAG, "下载失败");
-				} finally {
-					CloseUtils.closeIOQuietly(in);
-					CloseUtils.closeIOQuietly(out);
-				}
-			}
-		});
-	}
-	
+                    out = new FileOutputStream(downLoadRom);
+                    while ((len = in.read(buffer)) != -1) {
+                        current += len;
+                        out.write(buffer, 0, len);
+                        Log.e(TAG, "current------>" + current);
+                        LogUtil.d(TAG, "percent = " + current * 100.0f / total + "%");
+                    }
+                    out.flush();
+                    Log.d(TAG, "下载完成！！！");
+                    mHandler.sendEmptyMessage(DOWNLOAD_ROM_OVER);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e(TAG, "下载失败");
+                } finally {
+                    CloseUtils.closeIOQuietly(in);
+                    CloseUtils.closeIOQuietly(out);
+                }
+            }
+        });
+    }
+
 }

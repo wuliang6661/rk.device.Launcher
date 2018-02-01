@@ -30,6 +30,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import rk.device.launcher.utils.cache.CacheUtils;
+
 
 public class BitmapUtil {
     // 把Resource转化成Bitmap
@@ -434,7 +436,7 @@ public class BitmapUtil {
      * 保存方法
      */
     public static void saveBitmap(String picName, Bitmap bm) {
-        File f = new File("/data/rk_backup/face/", picName);
+        File f = new File(CacheUtils.getFaceFile() + "/", picName);
         if (f.exists()) {
             f.delete();
         }
@@ -454,7 +456,7 @@ public class BitmapUtil {
      * bitmap转为base64编码
      */
     public static String bitmapToString(String name) {
-        File f = new File("/data/rk_backup/face/", name + ".png");
+        File f = new File(CacheUtils.getFaceFile(), name + ".png");
         if (!f.exists()) {
             return null;
         } else {

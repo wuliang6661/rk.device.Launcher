@@ -23,6 +23,7 @@ import rk.device.launcher.mvp.MVPBaseActivity;
 import rk.device.launcher.utils.BitmapUtil;
 import rk.device.launcher.utils.FileUtils;
 import rk.device.launcher.utils.StringUtils;
+import rk.device.launcher.utils.cache.CacheUtils;
 import rk.device.launcher.utils.verify.FaceUtils;
 import rk.device.launcher.widget.carema.SurfaceHolderCaremaFont;
 
@@ -95,7 +96,7 @@ public class PersonFaceActivity extends MVPBaseActivity<PersonFaceContract.View,
         if (!StringUtils.isEmpty(user.getFaceID())) {
             isUpdate = true;
             setTitle("人脸详情");
-            faceImg.setImageBitmap(BitmapFactory.decodeFile("/data/rk_backup/face/" + user.getFaceID() + ".png"));
+            faceImg.setImageBitmap(BitmapFactory.decodeFile(CacheUtils.getFaceFile() + "/" + user.getFaceID() + ".png"));
             faceImg.setVisibility(View.VISIBLE);
             hintText.setVisibility(View.INVISIBLE);
             btnFinishSetting.setText("重新拍摄");
@@ -221,7 +222,7 @@ public class PersonFaceActivity extends MVPBaseActivity<PersonFaceContract.View,
         faceUtils = FaceUtils.getInstance();
         if (!StringUtils.isEmpty(user.getFaceID())) {
             faceUtils.delete(user.getFaceID());
-            FileUtils.deleteFile("/data/rk_backup/face/" + user.getFaceID() + ".png");
+            FileUtils.deleteFile(CacheUtils.getFaceFile() + "/" + user.getFaceID() + ".png");
         }
         if (faceUtils.getmRegister().size() > 1000) {
             hintText.setText("人脸数量已达上限");

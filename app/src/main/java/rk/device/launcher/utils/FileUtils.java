@@ -1,7 +1,5 @@
 package rk.device.launcher.utils;
 
-import android.util.Log;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -1299,7 +1297,7 @@ public class FileUtils {
     public static void setPermission(String filePath) {
         try {
             Runtime.getRuntime().exec("chmod -R 777 " + filePath);
-        } catch (IOException e) {
+        } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
