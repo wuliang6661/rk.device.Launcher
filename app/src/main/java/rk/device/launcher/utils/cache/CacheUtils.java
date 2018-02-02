@@ -16,6 +16,11 @@ public class CacheUtils {
     private static final String BASE_CACHE = BASE + "/app_cache";   //存放程序进程的文件根目录
 
     /**
+     * 本地日志保存路径
+     */
+    public static final String LOG_FILE = BASE_CACHE + "/log";
+
+    /**
      * 人脸信息存放目录
      */
     private static final String FACE_FILE = BASE_CACHE + "/face";

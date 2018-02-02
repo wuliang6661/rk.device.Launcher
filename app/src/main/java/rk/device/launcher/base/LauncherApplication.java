@@ -89,6 +89,7 @@ public class LauncherApplication extends Application implements CustomActivityOn
         CustomActivityOnCrash.setShowErrorDetails(true);
         CustomActivityOnCrash.setDefaultErrorActivityDrawable(R.mipmap.ic_launcher);
         CustomActivityOnCrash.setEventListener(this);
+        CrashHandler.getInstance().init(this);
         CacheUtils.init();
         Utils.init(this);
         STUtils.init(this);

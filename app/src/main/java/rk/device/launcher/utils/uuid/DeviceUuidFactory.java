@@ -20,6 +20,7 @@ import java.util.UUID;
 
 import rk.device.launcher.utils.DeviceUtils;
 import rk.device.launcher.utils.FileUtils;
+import rk.device.launcher.utils.cache.CacheUtils;
 
 
 public class DeviceUuidFactory {
@@ -77,7 +78,7 @@ public class DeviceUuidFactory {
 
     private static String recoverDeviceUuidFromSD() {
         try {
-            String sdcardPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+            String sdcardPath = CacheUtils.getBaseCache();
             File sdCardFolder = new File(sdcardPath);
             File uuidFile = new File(sdCardFolder, DEVICE_UUID_FILE_NAME);
             if (!sdCardFolder.exists() || !uuidFile.exists()) {
@@ -100,7 +101,7 @@ public class DeviceUuidFactory {
     }
 
     private static void saveDeviceUuidToSD(String uuid) {
-        String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+        String dirPath = CacheUtils.getBaseCache();
         File targetFile = new File(dirPath, DEVICE_UUID_FILE_NAME);
         if (targetFile != null) {
             if (targetFile.exists()) {
@@ -113,6 +114,7 @@ public class DeviceUuidFactory {
                         osw.write(uuid);
                         osw.flush();
                         osw.close();
+                        FileUtils.setPermission(targetFile.getAbsolutePath());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
