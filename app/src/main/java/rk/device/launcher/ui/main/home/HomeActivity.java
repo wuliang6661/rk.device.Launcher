@@ -24,7 +24,6 @@ import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
 import java.lang.ref.WeakReference;
 
 import butterknife.Bind;
-import cvc.CvcHelper;
 import rk.device.launcher.R;
 import rk.device.launcher.api.T;
 import rk.device.launcher.bean.SetPageContentBO;
@@ -289,11 +288,12 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
             orientationUtils.releaseListener();
         }
         mStaticHandler.removeCallbacksAndMessages(null);
-        CvcHelper.CVC_deinit();
-        mPresenter.unRegisterReceiver(this);
         SurfaceHolderCaremaFont.stopCarema();
         SurfaceHolderCaremaBack.stopCarema();
+        mPresenter.deInitJni();
+        mPresenter.unRegisterReceiver(this);
         FaceUtils.getInstance().stopFaceFR();
+        FaceUtils.getInstance().destory();
         stopService(new Intent(this, SocketService.class));
         stopService(new Intent(this, VerifyService.class));
         super.onDestroy();

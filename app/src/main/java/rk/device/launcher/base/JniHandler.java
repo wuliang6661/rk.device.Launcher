@@ -18,6 +18,7 @@ import peripherals.NfcHelper;
 import peripherals.NumberpadHelper;
 import peripherals.RelayHelper;
 import rk.device.launcher.global.Constant;
+import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.SPUtils;
 
 /**
@@ -107,6 +108,9 @@ public class JniHandler extends Handler {
             case EventUtil.MEDIA_CLOSE:    //关闭摄像头
                 closeCarema();
                 break;
+            case EventUtil.DEINIT_JNI:
+                deInitJni();
+                break;
         }
         super.handleMessage(msg);
     }
@@ -186,6 +190,23 @@ public class JniHandler extends Handler {
         if (stop02 == 0) {
             MediacHelper.MEDIAC_close(carmer02[0]);
         }
+    }
+
+
+    /**
+     * 注销所有硬件
+     */
+    private void deInitJni() {
+        CvcHelper.CVC_deinit();
+        int fingerStatus = FingerHelper.JNIFpDeInit(LauncherApplication.fingerModuleID);
+        LogUtil.d("wuliang", "fingerStatus == " + fingerStatus);
+        LedHelper.PER_ledDeinit();
+        MdHelper.PER_mdDeinit();
+        NfcHelper.PER_nfcDeinit();
+        NumberpadHelper.PER_numberpadDeinit();
+        RelayHelper.RelayDeInit();
+        MediacHelper.MEDIAC_deinit(carmer01[0]);
+        MediacHelper.MEDIAC_deinit(carmer02[0]);
     }
 
 

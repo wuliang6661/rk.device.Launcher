@@ -83,12 +83,24 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
     @Override
     public JniHandler initJni() {
         JniHandler mHandler = JniHandler.getInstance();
-        Message msg = new Message();
+        Message msg = Message.obtain();
         msg.what = EventUtil.INIT_JNI;
         mHandler.sendMessage(msg);
         mHandler.setOnInitListener(this);
         return mHandler;
     }
+
+
+    /**
+     * 反注册所有JNI
+     */
+    void deInitJni() {
+        JniHandler mHandler = JniHandler.getInstance();
+        Message msg = Message.obtain();
+        msg.what = EventUtil.DEINIT_JNI;
+        mHandler.sendMessage(msg);
+    }
+
 
     /**
      * 注册电量监听

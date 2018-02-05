@@ -51,4 +51,9 @@ public class EventUtil {
      */
     public static final int MEDIA_CLOSE = 8;
 
+    /**
+     * 注销所有jni
+     */
+    public static final int DEINIT_JNI = 9;
+
 }
