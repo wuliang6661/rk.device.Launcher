@@ -35,6 +35,8 @@ import java.util.List;
  */
 public class FileUtils {
 
+    private static final String TAG = "FileUtils";
+
     /**
      * 分隔符.
      */
@@ -1361,7 +1363,7 @@ public class FileUtils {
         try {
             Runtime.getRuntime().exec("chmod -R 777 " + filePath);
         } catch (Exception e) {
-            // TODO Auto-generated catch block
+            LogUtil.e(TAG, "设置权限失败, filePath = " + filePath);
             e.printStackTrace();
         }
     }
