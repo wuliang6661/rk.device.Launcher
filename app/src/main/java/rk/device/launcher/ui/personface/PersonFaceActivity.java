@@ -64,6 +64,9 @@ public class PersonFaceActivity extends MVPBaseActivity<PersonFaceContract.View,
 
     private AFR_FSDKFace aa_face;
 
+    SurfaceHolder surfaceholder;
+    SurfaceHolderCaremaFont callbackFont;
+
 
     @Override
     protected int getLayout() {
@@ -109,9 +112,9 @@ public class PersonFaceActivity extends MVPBaseActivity<PersonFaceContract.View,
      * 初始化摄像头
      */
     private void initCrema() {
-        SurfaceHolder surfaceholder = surfaceview.getHolder();
+        surfaceholder = surfaceview.getHolder();
         surfaceholder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-        SurfaceHolderCaremaFont callbackFont = new SurfaceHolderCaremaFont();
+        callbackFont = new SurfaceHolderCaremaFont();
         callbackFont.setCallBack(new SurfaceHolderCaremaFont.CallBack() {
             @Override
             public void callMessage(byte[] data, int width, int height) {
@@ -126,6 +129,12 @@ public class PersonFaceActivity extends MVPBaseActivity<PersonFaceContract.View,
         surfaceholder.addCallback(callbackFont);
     }
 
+
+    @Override
+    protected void onDestroy() {
+        callbackFont.setCallBack(null);
+        super.onDestroy();
+    }
 
     @Override
     public void onClick(View v) {

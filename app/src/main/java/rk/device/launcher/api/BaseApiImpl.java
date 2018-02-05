@@ -94,21 +94,21 @@ public class BaseApiImpl {
      * 获取天气接口
      */
     public static Observable<List<WeatherBO>> weather(Map<String, Object> params) {
-        return weatherFactorys().weather(params).compose(RxResultHelper.httpResult()).compose(activity.bindUntilEvent(ActivityEvent.DESTROY));
+        return weatherFactorys().weather(params).compose(RxResultHelper.httpResult());
     }
 
     /**
      * 访问外网, 根据IP地址获取地址
      */
     public static Observable<String> address(String format) {
-        return createAddressAPI().getAddress(format).compose(activity.bindUntilEvent(ActivityEvent.DESTROY));
+        return createAddressAPI().getAddress(format).compose(activity.bindUntilEvent(ActivityEvent.PAUSE));
     }
 
     /**
      * 检测App是否更新
      */
     public static Observable<VersionBO> updateApp(String verCode) {
-        return weatherFactorys().updateApp(verCode).compose(RxResultHelper.httpResult()).compose(activity.bindUntilEvent(ActivityEvent.DESTROY));
+        return weatherFactorys().updateApp(verCode).compose(RxResultHelper.httpResult()).compose(activity.bindUntilEvent(ActivityEvent.PAUSE));
     }
 
     /**
@@ -116,14 +116,14 @@ public class BaseApiImpl {
      */
     public static Observable<DeviceInfoBO> deviceConfiguration(String verCode, String cid) {
         return weatherFactorys().deviceConfiguration(verCode, cid)
-                .compose(RxResultHelper.httpResult()).compose(activity.bindUntilEvent(ActivityEvent.DESTROY));
+                .compose(RxResultHelper.httpResult());
     }
 
     /**
      * 人脸识别
      */
     public static Observable<VerifyBO> verifyFace(Map<String, Object> params) {
-        return weatherFactorys().verify(params).compose(RxResultHelper.httpResult()).compose(activity.bindUntilEvent(ActivityEvent.DESTROY));
+        return weatherFactorys().verify(params).compose(RxResultHelper.httpResult());
     }
 
     /**
@@ -146,7 +146,7 @@ public class BaseApiImpl {
 
         }
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), params.toString());
-        return weatherFactorys().openDoor(requestBody).compose(RxResultHelper.httpResult()).compose(activity.bindUntilEvent(ActivityEvent.DESTROY));
+        return weatherFactorys().openDoor(requestBody).compose(RxResultHelper.httpResult());
     }
 
     /**
@@ -159,7 +159,7 @@ public class BaseApiImpl {
             object.put("mac", mac);
             object.put("license", license);
             RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), object.toString());
-            return weatherFactorys().activationDiveces(requestBody).compose(RxResultHelper.httpResult()).compose(activity.bindUntilEvent(ActivityEvent.DESTROY));
+            return weatherFactorys().activationDiveces(requestBody).compose(RxResultHelper.httpResult());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -176,7 +176,7 @@ public class BaseApiImpl {
             object.put("uuid", uuid);
             object.put("license", license);
             RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), object.toString());
-            return weatherFactorys().getToken(requestBody).compose(RxResultHelper.httpResult()).compose(activity.bindUntilEvent(ActivityEvent.DESTROY));
+            return weatherFactorys().getToken(requestBody).compose(RxResultHelper.httpResult());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -191,7 +191,7 @@ public class BaseApiImpl {
      */
     public static Observable<StatusBo> syncRecords(JSONObject params) {
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), params.toString());
-        return weatherFactorys().syncRecords(requestBody).compose(RxResultHelper.httpResult()).compose(activity.bindUntilEvent(ActivityEvent.DESTROY));
+        return weatherFactorys().syncRecords(requestBody).compose(RxResultHelper.httpResult());
     }
 
 

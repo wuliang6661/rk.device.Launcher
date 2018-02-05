@@ -27,7 +27,6 @@ import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.bean.SetDoorRvBO;
 import rk.device.launcher.bean.event.IpHostEvent;
 import rk.device.launcher.global.Constant;
-import rk.device.launcher.service.SleepTaskServer;
 import rk.device.launcher.utils.DrawableUtil;
 import rk.device.launcher.utils.EditUtil;
 import rk.device.launcher.utils.NetWorkUtil;
@@ -187,7 +186,7 @@ public class SetSysActivity extends BaseActivity {
         SPUtils.putString(Constant.KEY_CLIENT_CODE, clientCode);
         // 保存待机时间
         SPUtils.putLong(Constant.KEY_SLEEP_TIME, getSleepTime());
-        SleepTaskServer.getSleepHandler(this).sendEmptyMessage(0x44);
+//        SleepTaskServer.getSleepHandler(this).sendEmptyMessage(0x44);
         // 保存补光灯的开关状态
         SPUtils.putBoolean(Constant.KEY_LIGNT, mCbLight.isChecked());
         if (mCbLight.isChecked()) {

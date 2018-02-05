@@ -265,7 +265,8 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
 
             @Override
             public void onNext(DeviceInfoBO s) {
-                mView.setAnimationIp(s.getMobile());
+                if (mView != null)
+                    mView.setAnimationIp(s.getMobile());
             }
         });
     }

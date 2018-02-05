@@ -5,10 +5,8 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Looper;
 import android.os.SystemClock;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -24,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import rk.device.launcher.utils.FileUtils;
+import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.TimeUtils;
 import rk.device.launcher.utils.cache.CacheUtils;
 
@@ -85,10 +84,10 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
             // 如果用户没有处理则让系统默认的异常处理器来处理
             mDefaultHandler.uncaughtException(thread, ex);
         } else {
-            SystemClock.sleep(3000);
-            // 退出程序
-            android.os.Process.killProcess(android.os.Process.myPid());
-            System.exit(1);
+//            SystemClock.sleep(3000);
+//            // 退出程序
+//            android.os.Process.killProcess(android.os.Process.myPid());
+//            System.exit(1);
         }
     }
 
@@ -103,17 +102,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
             return false;
 
         try {
-            // 使用Toast来显示异常信息
-            new Thread() {
-
-                @Override
-                public void run() {
-                    Looper.prepare();
-                    Toast.makeText(mContext, "很抱歉,程序出现异常,即将重启.",
-                            Toast.LENGTH_LONG).show();
-                    Looper.loop();
-                }
-            }.start();
+            LogUtil.e("wuliang", "很抱歉,程序出现异常,即将重启.");
             // 收集设备参数信息
             collectDeviceInfo(mContext);
             // 保存日志文件
@@ -122,7 +111,6 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return true;
     }
 
@@ -216,8 +204,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     }
 
     public static String getGlobalpath() {
-        return CacheUtils.LOG_FILE
-                + File.separator + "crash" + File.separator;
+        return CacheUtils.LOG_FILE + File.separator;
     }
 
     public static void setTag(String tag) {

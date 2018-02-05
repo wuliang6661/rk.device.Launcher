@@ -14,6 +14,7 @@ import com.alibaba.sdk.android.oss.ServiceException;
 import com.alibaba.sdk.android.oss.model.PutObjectRequest;
 import com.trello.rxlifecycle.ActivityEvent;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -265,7 +266,8 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
 
             @Override
             public void onNext(DeviceInfoBO s) {
-                mView.setAnimationIp(s.getMobile());
+                if (mView != null)
+                    mView.setAnimationIp(s.getMobile());
             }
         });
     }
@@ -384,33 +386,54 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
             registerFace();
             initJni();
             mView.getContext().startService(new Intent(mView.getContext(), VerifyService.class));
+            mView.startVideo();
         }).start();
     }
 
 
     private int isHasPerson = 0;   //连续5次检测到没人，关闭摄像头
+    private boolean isStopThread = false;
 
     /**
      * 启动人体红外检测
      */
     @Override
     public void initCallBack(int cvcStatus, int LedStatus, int NfcStatus, int fingerStatus) {
-        int[] mdStaus = new int[1];
-        new Thread(() -> {
-            while (true) {
+        MdThread mdThread = new MdThread(this);
+        mdThread.start();
+    }
+
+    private static class MdThread extends Thread {
+
+        WeakReference<HomePresenter> weakReference;
+        int[] mdStaus;
+
+        MdThread(HomePresenter presenter) {
+            weakReference = new WeakReference<>(presenter);
+            mdStaus = new int[1];
+        }
+
+        @Override
+        public void run() {
+            super.run();
+            HomePresenter presenter = weakReference.get();
+            if (presenter == null) {
+                return;
+            }
+            while (!presenter.isStopThread) {
                 int mdStatus = MdHelper.PER_mdGet(1, mdStaus);
                 if (mdStatus == 0 && mdStaus[0] == 1) {
-                    isHasPerson = 0;
-                    if (mView != null)
-                        mView.hasPerson(true);
+                    presenter.isHasPerson = 0;
+                    if (presenter.mView != null)
+                        presenter.mView.hasPerson(true);
                 } else {
-                    isHasPerson++;
-                    if (isHasPerson == 5) {
-                        if (mView != null)
-                            mView.hasPerson(false);
+                    presenter.isHasPerson++;
+                    if (presenter.isHasPerson == 5) {
+                        if (presenter.mView != null)
+                            presenter.mView.hasPerson(false);
                     }
                 }
             }
-        }).start();
+        }
     }
 }

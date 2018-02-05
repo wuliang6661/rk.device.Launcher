@@ -1,7 +1,6 @@
 package rk.device.launcher.ui.main.home;
 
 
-import android.app.ActivityManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,6 +20,8 @@ import com.shuyu.gsyvideoplayer.utils.GSYVideoType;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
+
+import java.lang.ref.WeakReference;
 
 import butterknife.Bind;
 import cvc.CvcHelper;
@@ -112,6 +113,9 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
 
     private OrientationUtils orientationUtils;
     private boolean isPlay;
+    private boolean isAddVideo = false;
+
+    RefreshTimeRunnable mRefreshTimeRunnable;
 
     @Override
     protected int getLayout() {
@@ -123,7 +127,6 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
         super.onCreate(savedInstanceState);
 
         invition();
-        invitionVideo();
         register();
         resolveNormalVideoUI();
     }
@@ -133,6 +136,7 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
      */
     private void invition() {
         mPresenter.registerNetReceiver().setCallBack(this);
+        mRefreshTimeRunnable = new RefreshTimeRunnable(this);
         SoundPlayUtils.init(this);
         initSurfaceViewOne();
         menuCall.setOnClickListener(this);
@@ -237,7 +241,9 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
 
     @Override
     protected void onResume() {
-        getCurPlay().onVideoResume();
+        if (isAddVideo) {
+            getCurPlay().onVideoResume();
+        }
         super.onResume();
         deviceName.setText(SPUtils.getString(Constant.DEVICE_NAME));
         new Handler().postDelayed(() -> {
@@ -249,7 +255,9 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
 
     @Override
     protected void onPause() {
-        getCurPlay().onVideoPause();
+        if (isAddVideo) {
+            getCurPlay().onVideoPause();
+        }
         super.onPause();
     }
 
@@ -405,7 +413,7 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
                 .setRotateViewAuto(false)
                 .setShowFullAnimation(false)
                 .setNeedShowWifiTip(false)
-                .setNeedLockFull(true)
+                .setShowPauseCover(false)
                 .setSeekRatio(1)
                 .setUrl("http://dxm.happydoit.com:80/upload/20171108/237QeWW.mp4")
                 .setCacheWithPlay(false)
@@ -418,7 +426,6 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
                     }
                 })
                 .build(defaultVideo);
-        defaultVideo.startPlayLogic();
     }
 
 
@@ -443,21 +450,45 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
     public void hasPerson(boolean hasPerson) {
         runOnUiThread(() -> {
             if (hasPerson) {
-                frameLayout.setVisibility(View.VISIBLE);
+                if (frameLayout != null)
+                    frameLayout.setVisibility(View.VISIBLE);
             } else {
-                frameLayout.setVisibility(View.GONE);
+                if (frameLayout != null)
+                    frameLayout.setVisibility(View.GONE);
             }
         });
     }
 
-    // todo 内存泄漏这里需要处理
-    private final Runnable mRefreshTimeRunnable = new Runnable() {
+    @Override
+    public void startVideo() {
+        runOnUiThread(() -> {
+            isAddVideo = true;
+            invitionVideo();
+            defaultVideo.startPlayLogic();
+        });
+    }
+
+
+    /**
+     * 使用弱引用避免内存泄漏
+     */
+    private static class RefreshTimeRunnable implements Runnable {
+
+        WeakReference<HomeActivity> weakReference;
+
+        RefreshTimeRunnable(HomeActivity activity) {
+            weakReference = new WeakReference<>(activity);
+        }
+
         @Override
         public void run() {
-            deviceTime.setText(TimeUtils.getTime());
-            mStaticHandler.postDelayed(this, REFRESH_DELAY);
+            HomeActivity activity = weakReference.get();
+            if (activity != null) {
+                activity.deviceTime.setText(TimeUtils.getTime());
+                activity.mStaticHandler.postDelayed(this, REFRESH_DELAY);
+            }
         }
-    };
+    }
 
     @Override
     public void onClick(View v) {

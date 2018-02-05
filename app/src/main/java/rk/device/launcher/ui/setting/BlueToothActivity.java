@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inuker.bluetooth.library.BluetoothClient;
+import com.inuker.bluetooth.library.connect.listener.BluetoothStateListener;
 import com.inuker.bluetooth.library.search.SearchRequest;
 import com.inuker.bluetooth.library.search.SearchResult;
 import com.inuker.bluetooth.library.search.response.SearchResponse;
@@ -23,19 +24,18 @@ import butterknife.Bind;
 import rk.device.launcher.R;
 import rk.device.launcher.api.T;
 import rk.device.launcher.base.BaseActivity;
-import rk.device.launcher.utils.rxjava.RxBus;
 import rk.device.launcher.bean.BlueToothBO;
 import rk.device.launcher.bean.event.BlueToothEvent;
 import rk.device.launcher.utils.bluetools.MoreManager;
+import rk.device.launcher.utils.rxjava.RxBus;
+import rk.device.launcher.widget.MyListView;
 import rk.device.launcher.widget.adapter.CommonAdapter;
 import rk.device.launcher.widget.adapter.ViewHolder;
-import rk.device.launcher.widget.MyListView;
 
 /**
  * 蓝牙 Created by hanbin on 2017/11/24.
  */
-public class BlueToothActivity extends BaseActivity
-        implements CheckBox.OnCheckedChangeListener {
+public class BlueToothActivity extends BaseActivity implements CheckBox.OnCheckedChangeListener {
 
     @Bind(R.id.checkbox_blue)
     CheckBox blueCheckBox;
@@ -118,11 +118,18 @@ public class BlueToothActivity extends BaseActivity
     protected void initData() {
         setTitle(getString(R.string.blue_tooth));
         //判断蓝牙是否打开
+        mClient.registerBluetoothStateListener(bluetoothStateListener);
         if (mClient.isBluetoothOpened()) {
             openBlueTooth();
         } else {
             closeBlueTooth();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        mClient.unregisterBluetoothStateListener(bluetoothStateListener);
+        super.onDestroy();
     }
 
     private void searchBlueTooth() {
@@ -179,4 +186,14 @@ public class BlueToothActivity extends BaseActivity
                 break;
         }
     }
+
+
+    BluetoothStateListener bluetoothStateListener = new BluetoothStateListener() {
+        @Override
+        public void onBluetoothStateChanged(boolean openOrClosed) {
+            if (openOrClosed) {
+                openBlueTooth();
+            }
+        }
+    };
 }

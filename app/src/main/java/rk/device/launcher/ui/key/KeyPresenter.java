@@ -18,17 +18,20 @@ public class KeyPresenter extends BasePresenterImpl<KeyContract.View> implements
         BaseApiImpl.activationDiveces(uuid, mac, license).subscribe(new Subscriber<Object>() {
             @Override
             public void onCompleted() {
-                mView.onRequestEnd();
+                if (mView != null)
+                    mView.onRequestEnd();
             }
 
             @Override
             public void onError(Throwable e) {
-                mView.onRequestError(e.getMessage());
+                if (mView != null)
+                    mView.onRequestError(e.getMessage());
             }
 
             @Override
             public void onNext(Object s) {
-                mView.onSuress();
+                if (mView != null)
+                    mView.onSuress();
             }
         });
     }
