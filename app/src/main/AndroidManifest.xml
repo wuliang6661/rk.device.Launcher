@@ -177,7 +177,7 @@
 
         <!-- 摄像头预览界面 -->
         <activity
-            android:name=".ui.setting.CaremaActivity"
+            android:name=".ui.detection.CaremaDetection"
             android:screenOrientation="portrait" />
 
         <!-- 拨号界面 -->

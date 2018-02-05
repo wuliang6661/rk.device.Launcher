@@ -69,16 +69,6 @@ public class LauncherApplication extends Application implements CustomActivityOn
     private final String TEMP_DB_NAME = "temp.db";
     private final String DB_JOUR = "rk.db-journal";
 
-    private Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case 0:
-                    LogUtil.d("数据导入完成");
-                    break;
-            }
-        }
-    };
 
     @Override
     public void onCreate() {
@@ -89,7 +79,7 @@ public class LauncherApplication extends Application implements CustomActivityOn
         CustomActivityOnCrash.setShowErrorDetails(true);
         CustomActivityOnCrash.setDefaultErrorActivityDrawable(R.mipmap.ic_launcher);
         CustomActivityOnCrash.setEventListener(this);
-//        CrashHandler.getInstance().init(this);
+        CrashHandler.getInstance().init(this);
         CacheUtils.init();
         Utils.init(this);
         STUtils.init(this);
@@ -128,7 +118,7 @@ public class LauncherApplication extends Application implements CustomActivityOn
                     if (journal.exists()) {
                         journal.delete();
                     }
-                    mHandler.sendEmptyMessage(0);
+                    LogUtil.d("数据导入完成");
                 }
             } catch (Exception e) {
                 e.printStackTrace();

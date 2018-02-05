@@ -1,9 +1,11 @@
-package rk.device.launcher.ui.setting;
+package rk.device.launcher.ui.detection;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+import android.widget.Button;
 
 import butterknife.Bind;
 import rk.device.launcher.R;
@@ -16,16 +18,13 @@ import rk.device.launcher.widget.carema.SurfaceHolderCaremaFont;
  * 测试摄像头页面
  */
 
-public class CaremaActivity extends BaseActivity {
-
-//    @Bind(R.id.image)
-//    ImageView image;
-//    @Bind(R.id.hint_text)
-//    TextView hintText;
+public class CaremaDetection extends BaseActivity implements View.OnClickListener{
 
 
     @Bind(R.id.camera_surfaceview)
     SurfaceView surfaceview;
+    @Bind(R.id.btn_finish_setting)
+    Button btnFinishSetting;
 
     @Override
     protected int getLayout() {
@@ -36,28 +35,14 @@ public class CaremaActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initView();
-        initData();
     }
 
     protected void initView() {
         goBack();
-        setTitle("摄像头效果预览");
+        setTitle("摄像头检测");
 
         initSurfaceViewOne();
-    }
-
-    protected void initData() {
-//        String path = "/data/rk_backup/stereo_calibration.jpg";
-//        File file = new File(path);
-//        if (file.exists()) {
-//            image.setVisibility(View.VISIBLE);
-//            hintText.setVisibility(View.GONE);
-//            Bitmap bitmap = BitmapFactory.decodeFile(path);
-//            image.setImageBitmap(bitmap);
-//        } else {
-//            image.setVisibility(View.GONE);
-//            hintText.setVisibility(View.VISIBLE);
-//        }
+        btnFinishSetting.setOnClickListener(this);
     }
 
 
@@ -67,4 +52,13 @@ public class CaremaActivity extends BaseActivity {
         surfaceholder.addCallback(new SurfaceHolderCaremaFont());
     }
 
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.btn_finish_setting:
+
+                break;
+        }
+    }
 }

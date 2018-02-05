@@ -107,7 +107,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
             collectDeviceInfo(mContext);
             // 保存日志文件
             saveCrashInfoFile(ex);
-            SystemClock.sleep(3000);
+//            SystemClock.sleep(3000);
         } catch (Exception e) {
             e.printStackTrace();
         }

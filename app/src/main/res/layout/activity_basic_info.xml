@@ -150,12 +150,11 @@
 
         <LinearLayout
             android:id="@+id/ceshi"
-            style="@style/ll_set_item"
-            android:visibility="gone">
+            style="@style/ll_set_item">
 
             <TextView
                 style="@style/tv_set_label"
-                android:text="双摄像头效果" />
+                android:text="硬件检测" />
 
             <TextView
                 android:layout_width="0dp"
@@ -172,8 +171,8 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/divider_height"
-            android:visibility="gone"
-            android:background="@color/blue_31598a" />
+            android:background="@color/blue_31598a"
+            android:visibility="visible" />
 
 
         <Button
