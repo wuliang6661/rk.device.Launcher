@@ -175,11 +175,6 @@
             android:name=".ui.setting.SleepActivity"
             android:screenOrientation="portrait" />
 
-        <!-- 摄像头预览界面 -->
-        <activity
-            android:name=".ui.detection.CaremaDetection"
-            android:screenOrientation="portrait" />
-
         <!-- 拨号界面 -->
         <activity
             android:name=".ui.call.CallActivity"
@@ -247,6 +242,34 @@
             android:name=".ui.managedata.ManagedataActivity"
             android:screenOrientation="portrait" />
 
+        <!--所有需要检测的硬件列表-->
+        <activity
+            android:name=".ui.detection.HardwareAct"
+            android:screenOrientation="portrait" />
+
+
+        <!--硬件LED检测-->
+        <activity
+            android:name=".ui.detection.LedDetection"
+            android:screenOrientation="portrait" />
+
+        <!--硬件NFC检测-->
+        <activity
+            android:name=".ui.detection.NfcDetection"
+            android:screenOrientation="portrait" />
+
+        <!--硬件摄像头检测-->
+        <activity
+            android:name=".ui.detection.CaremaDetection"
+            android:screenOrientation="portrait" />
+
+
+        <!--硬件指纹头检测-->
+        <activity
+            android:name=".ui.detection.FinderDetection"
+            android:screenOrientation="portrait" />
+
+
         <!--数据管理中搜索数据-->
         <activity
             android:name=".ui.managedata.SearchdataActivity"
@@ -255,7 +278,8 @@
 
         <activity
             android:name=".ui.dialogactivity.DialogActivity"
-            android:theme="@style/Theme.ActivityDialogStyle"></activity>
+            android:theme="@style/Theme.ActivityDialogStyle" />
+
 
         <!-- 个推 -->
         <service

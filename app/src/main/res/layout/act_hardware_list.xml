@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/shape_normal_bg"
+    android:orientation="vertical">
+
+
+    <include layout="@layout/topbar" />
+
+
+    <LinearLayout
+        android:id="@+id/carema"
+        style="@style/ll_set_item">
+
+        <TextView
+            style="@style/tv_set_label"
+            android:text="摄像头检测" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:textColor="@color/white"
+            android:textSize="27sp" />
+
+        <ImageView style="@style/more_tag" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_height"
+        android:background="@color/blue_31598a" />
+
+
+    <LinearLayout
+        android:id="@+id/nfc"
+        style="@style/ll_set_item">
+
+        <TextView
+            style="@style/tv_set_label"
+            android:text="NFC检测" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:textColor="@color/white"
+            android:textSize="27sp" />
+
+        <ImageView style="@style/more_tag" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_height"
+        android:background="@color/blue_31598a" />
+
+
+    <LinearLayout
+        android:id="@+id/finder"
+        style="@style/ll_set_item">
+
+        <TextView
+            style="@style/tv_set_label"
+            android:text="指纹检测" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:textColor="@color/white"
+            android:textSize="27sp" />
+
+        <ImageView style="@style/more_tag" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_height"
+        android:background="@color/blue_31598a" />
+
+
+    <LinearLayout
+        android:id="@+id/led"
+        style="@style/ll_set_item">
+
+        <TextView
+            style="@style/tv_set_label"
+            android:text="LED补光灯检测" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:textColor="@color/white"
+            android:textSize="27sp" />
+
+        <ImageView style="@style/more_tag" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_height"
+        android:background="@color/blue_31598a" />
+
+
+    <LinearLayout
+        android:id="@+id/net_work"
+        style="@style/ll_set_item">
+
+        <TextView
+            style="@style/tv_set_label"
+            android:text="网络检测" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:textColor="@color/white"
+            android:textSize="27sp" />
+
+        <ImageView style="@style/more_tag" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_height"
+        android:background="@color/blue_31598a" />
+
+</LinearLayout>

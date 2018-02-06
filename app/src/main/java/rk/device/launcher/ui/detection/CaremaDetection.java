@@ -10,6 +10,7 @@ import android.widget.Button;
 import butterknife.Bind;
 import rk.device.launcher.R;
 import rk.device.launcher.base.BaseActivity;
+import rk.device.launcher.widget.carema.SurfaceHolderCaremaBack;
 import rk.device.launcher.widget.carema.SurfaceHolderCaremaFont;
 
 /**
@@ -18,7 +19,7 @@ import rk.device.launcher.widget.carema.SurfaceHolderCaremaFont;
  * 测试摄像头页面
  */
 
-public class CaremaDetection extends BaseActivity implements View.OnClickListener{
+public class CaremaDetection extends BaseActivity implements View.OnClickListener {
 
 
     @Bind(R.id.camera_surfaceview)
@@ -55,9 +56,10 @@ public class CaremaDetection extends BaseActivity implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.btn_finish_setting:
-
+                SurfaceHolderCaremaBack.stopCarema();
+                finish();
                 break;
         }
     }

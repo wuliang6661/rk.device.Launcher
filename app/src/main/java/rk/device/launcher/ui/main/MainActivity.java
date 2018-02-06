@@ -572,7 +572,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
      */
     @Override
     public void setOnBioFace(CvcRect cvcRect1, int[] rectWidth, int[] rectHeight) {
-        Message msg = new Message();
+        Message msg = Message.obtain();
         msg.what = EventUtil.CVC_LIVINGFACE;
         mHandler.sendMessage(msg);
         if (!isFaceCode) {
