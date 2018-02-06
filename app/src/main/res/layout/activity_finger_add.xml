@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@drawable/shape_normal_bg"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/shape_normal_bg"
+    android:orientation="vertical">
 
-    <include layout="@layout/topbar"/>
+    <include layout="@layout/topbar" />
 
     <LinearLayout
         android:id="@+id/ll_finger_notice"
@@ -18,24 +18,25 @@
             android:layout_width="300dp"
             android:layout_height="300dp"
             android:layout_gravity="center"
-            android:src="@mipmap/add_finger"/>
+            android:layout_marginTop="30dp"
+            android:src="@mipmap/add_finger" />
 
         <TextView
             android:id="@+id/tv_notice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:layout_marginTop="@dimen/dp_100"
             android:gravity="center"
-            android:paddingTop="@dimen/dp_10"
             android:paddingBottom="@dimen/dp_10"
             android:paddingLeft="@dimen/dp_20"
             android:paddingRight="@dimen/dp_20"
-            android:layout_gravity="center_horizontal"
+            android:paddingTop="@dimen/dp_10"
             android:text="@string/finger_add_notice"
             android:textColor="@color/white"
-            android:textSize="18sp"/>
+            android:textSize="18sp" />
 
 
         <LinearLayout
@@ -60,7 +61,7 @@
                 android:paddingTop="15dp"
                 android:text="重命名"
                 android:textColor="@color/white"
-                android:textSize="18sp"/>
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/tv_save"
@@ -76,7 +77,7 @@
                 android:text="@string/save"
                 android:textColor="@color/white"
                 android:textSize="18sp"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
         </LinearLayout>
 
@@ -86,7 +87,7 @@
             android:layout_marginBottom="@dimen/dp_100"
             android:layout_marginTop="@dimen/dp_100"
             android:text="添加指纹"
-            android:visibility="visible"/>
+            android:visibility="visible" />
     </LinearLayout>
 
 </LinearLayout>

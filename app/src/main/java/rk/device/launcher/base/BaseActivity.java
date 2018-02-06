@@ -11,6 +11,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -139,6 +140,33 @@ public abstract class BaseActivity extends RxAppCompatActivity {
 //        return super.dispatchTouchEvent(ev);
 //    }
 
+
+    /**
+     * 在子页面30秒无操作，则返回主页面
+     */
+    private Handler handler = new Handler();
+
+    private long time = 1000 * 30;
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                handler.removeCallbacks(runnable);
+                break;
+            case MotionEvent.ACTION_UP:
+                startAD();
+                break;
+        }
+        return super.dispatchTouchEvent(event);
+    }
+
+    private Runnable runnable = () -> AppManager.getAppManager().goBackMain();
+
+    public void startAD() {
+        handler.removeCallbacks(runnable);
+        handler.postDelayed(runnable, time);
+    }
 
     /**
      * 常用的跳转方法
