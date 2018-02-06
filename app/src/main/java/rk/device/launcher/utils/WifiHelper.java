@@ -615,4 +615,23 @@ public class WifiHelper {
 		}
 		return null;
 	}
+
+	public static int obtainWifiInfo(Context context) {
+		// Wifi的连接速度及信号强度：
+		int strength = 0;
+		WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+		// WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+		WifiInfo info = wifiManager.getConnectionInfo();
+		if (info.getBSSID() != null) {
+			// 链接信号强度，5为获取的信号强度值在5以内
+			strength = WifiManager.calculateSignalLevel(info.getRssi(), 5);
+			// 链接速度
+//			int speed = info.getLinkSpeed();
+			// 链接速度单位
+//			String units = WifiInfo.LINK_SPEED_UNITS;
+			// Wifi源名称
+//			String ssid = info.getSSID();
+		}
+		return strength;
+	}
 }

@@ -1,18 +1,28 @@
 package rk.device.server.logic;
 
-import com.alibaba.fastjson.JSONArray;
+import android.text.TextUtils;
+
 import com.alibaba.fastjson.JSONObject;
 import com.koushikdutta.async.http.Multimap;
 
+import java.util.List;
+
 import rk.device.launcher.base.LauncherApplication;
+import rk.device.launcher.global.Constant;
+import rk.device.launcher.service.DownLoadIntentService;
+import rk.device.launcher.utils.LogUtil;
+import rk.device.launcher.utils.PackageUtils;
+import rk.device.launcher.utils.TypeTranUtils;
 import rk.device.launcher.utils.uuid.DeviceUuidFactory;
 
 /**
  * Created by hanbin on 2018/2/5.
  */
 public class PublicLogic extends BaseLogic {
-    private static PublicLogic publicLogic       = null;
-    private DeviceUuidFactory  deviceUuidFactory = null;
+
+    private static final String TAG               = "PublicLogic";
+    private static PublicLogic  publicLogic       = null;
+    private DeviceUuidFactory   deviceUuidFactory = null;
 
     public PublicLogic() {
         if (deviceUuidFactory == null) {
@@ -38,9 +48,25 @@ public class PublicLogic extends BaseLogic {
      * @return
      */
     public JSONObject update(Multimap params) {
+        String accessToken = params.getString("access_token");
+        String uuid = params.getString("uuid");
+        if (TextUtils.isEmpty(uuid)) {
+            return onError(300, "UUID不能为空");
+        }
+        if (!getUUID().equals(uuid)) {
+            LogUtil.i(TAG, getUUID());
+            return onError(300, "请填写正确的UUID: " + getUUID());
+        }
+        int code = TypeTranUtils.str2Int(params.getString("code"));
+        String file = params.getString("file");
+        int currentVersion = PackageUtils.getCurrentVersionCode();
+        if (code > currentVersion) {
+            DownLoadIntentService.startDownLoad(LauncherApplication.getContext(), file,
+                    Constant.KEY_ROM);
+        }
         JSONObject result = new JSONObject();
-        result.put("code", 1);
-        result.put("ver", "1.0.0");
+        result.put("code", PackageUtils.getCurrentVersionCode());
+        result.put("ver", PackageUtils.getCurrentVersion());
         return onSuccess(result, "请求成功");
     }
 
@@ -51,13 +77,20 @@ public class PublicLogic extends BaseLogic {
      * @return
      */
     public JSONObject ad(Multimap params) {
+        String accessToken = params.getString("access_token");
+        String uuid = params.getString("uuid");
+        if (TextUtils.isEmpty(uuid)) {
+            return onError(300, "UUID不能为空");
+        }
+        if (!getUUID().equals(uuid)) {
+            LogUtil.i(TAG, getUUID());
+            return onError(300, "请填写正确的UUID: " + getUUID());
+        }
+        String videoUrl = params.getString("video_url");
+        List<String> imageList = params.get("image_list");
+
         JSONObject result = new JSONObject();
-        result.put("video_url", "http://www.roombanker.cn");
-        JSONArray jsonArray = new JSONArray();
-        jsonArray.add("http://www.roombanker.cn/images/image1.ipg");
-        jsonArray.add("http://www.roombanker.cn/images/image1.ipg");
-        jsonArray.add("http://www.roombanker.cn/images/image1.ipg");
-        result.put("imageList", jsonArray);
+        result.put("status", 1);
         return onSuccess(result, "请求成功");
     }
 }

@@ -18,8 +18,8 @@ import rk.device.launcher.utils.verify.VerifyUtils;
  */
 public class MemberLogic extends BaseLogic {
 
-    private static final String TAG         = "MemberLogic";
-    private static MemberLogic  memberLogic = null;
+    private static final String TAG = "MemberLogic";
+    private static MemberLogic memberLogic = null;
 
     public MemberLogic() {
 
@@ -38,7 +38,7 @@ public class MemberLogic extends BaseLogic {
 
     /**
      * 添加用户
-     * 
+     *
      * @param params
      * @return
      */
@@ -90,6 +90,9 @@ public class MemberLogic extends BaseLogic {
         } else {
             //修改用户
             User oldUser = VerifyUtils.getInstance().queryUserByUniqueId(peopleId);
+            if (oldUser == null) {
+                return onError(300, "该用户不存在");
+            }
             User user = new User();
             user.setId(oldUser.getId());
             user.setUniqueId(peopleId);
@@ -118,9 +121,55 @@ public class MemberLogic extends BaseLogic {
      * @return
      */
     public JSONObject delete(Multimap params) {
+        String accessToken = params.getString("access_token");
+        String uuid = params.getString("uuid");
+        if (TextUtils.isEmpty(uuid)) {
+            return onError(300, "UUID不能为空");
+        }
+        if (!getUUID().equals(uuid)) {
+            LogUtil.i(TAG, getUUID());
+            return onError(300, "请填写正确的UUID: " + getUUID());
+        }
+        if (TextUtils.isEmpty(params.getString("type"))) {
+            return onError(300, "请指定业务类型");
+        }
+        String peopleId = params.getString("peopleId");
+        if (TextUtils.isEmpty(peopleId)) {
+            return onError(300, "用户ID不能为空");
+        }
+        int type = TypeTranUtils.str2Int(params.getString("type"));
+        switch (type) {
+            case 1://用户
+                User user = VerifyUtils.getInstance().queryUserByUniqueId(peopleId);
+                DbHelper.delete(user);
+                break;
+            case 2://卡
+                user = VerifyUtils.getInstance().queryUserByUniqueId(peopleId);
+                user.setCardNo("");
+                DbHelper.update(user);
+                break;
+            case 3://密码
+                user = VerifyUtils.getInstance().queryUserByUniqueId(peopleId);
+                user.setPassWord(0);
+                DbHelper.update(user);
+                break;
+            default:
+                return onError(300, "错误的业务类型");
+        }
         JSONObject result = new JSONObject();
         result.put("status", 1);
         return onSuccess(result, "请求成功");
     }
 
+    /**
+     * 上传人脸图片
+     *
+     * @param params
+     * @return
+     */
+    public JSONObject upload(Multimap params) {
+        JSONObject result = new JSONObject();
+        result.put("status", 1);
+        return onSuccess(result, "请求成功");
+    }
 }

@@ -5,6 +5,12 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.os.Build;
+import android.telephony.TelephonyManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +56,7 @@ public class PackageUtils {
         return curVersion;
     }
 
-    public static String getPageageName(){
+    public static String getPageageName() {
         String packageName = "";
         try {
             PackageInfo info = LauncherApplication.getContext().getPackageManager()
@@ -102,4 +108,72 @@ public class PackageUtils {
         }
         return false;
     }
+
+    /**
+     * 手机IMSI号
+     *
+     * @param context
+     * @return
+     */
+    public static String getImsi(Context context) {
+        TelephonyManager tm = (TelephonyManager) context
+                .getSystemService(Context.TELEPHONY_SERVICE);
+        String _imsi = tm.getSubscriberId();
+        if (_imsi != null && !_imsi.equals("")) {
+            return _imsi;
+        }
+        return "未知";
+    }
+
+    /**
+     * 手机Msisdn号
+     * 
+     * @param context
+     * @return
+     */
+    public static String getMsisdn(Context context) {
+        TelephonyManager tm = (TelephonyManager) context
+                .getSystemService(Context.TELEPHONY_SERVICE);
+        String tel = tm.getLine1Number();//取出MSISDN，很可能为空
+        if (tel != null && !tel.equals("")) {
+            return tel;
+        }
+        return "未知";
+    }
+
+    private static Sensor        mTempSensor = null;
+    private static SensorManager sm          = null;
+
+    public static void getTemperature(Context context) {
+        sm = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+        List<Sensor> allSensors = sm.getSensorList(Sensor.TYPE_ALL);
+        for (Sensor s : allSensors) {
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
+                if (s.getStringType().toUpperCase().indexOf("TEMP") > 0) {
+                    // 可以看到，这里将包含有TEMP关键字的sensor付给了变量mTempSensor
+                    // 而这个mTempSensor 就是我们需要的温度传感器
+                    mTempSensor = s;
+                }
+            }
+        }
+        sm.registerListener(new SensorEventListener() {
+            @Override
+            public void onSensorChanged(SensorEvent event) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
+                    if (event.sensor.getStringType().toUpperCase().indexOf("TEMP") > 0) {
+                    /* 温度传感器返回当前的温度，单位是摄氏度（°C）。 */
+                        LauncherApplication.sTemperature = event.values[0];
+                        sm.unregisterListener(this, mTempSensor);
+                    }
+                }
+            }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int accuracy) {
+            }
+
+        }, mTempSensor, SensorManager.SENSOR_DELAY_GAME);
+    }
+
+
 }

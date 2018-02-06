@@ -132,7 +132,6 @@ public class NfcaddActivity extends MVPBaseActivity<NfcaddContract.View, NfcaddP
                             return;
                         }
                         LogUtil.i("VerifyService", "VerifyService NFCAddEvent:" + nfcAddEvent.NFCCard);
-                        T.showShort(nfcAddEvent.NFCCard);
                     }
                 }));
     }

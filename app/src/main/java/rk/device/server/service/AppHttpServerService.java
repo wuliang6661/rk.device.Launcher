@@ -37,36 +37,56 @@ public class AppHttpServerService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        launcherServer.startServer(new LauncherHttpServer.HttpServerReqCallBack() {
+        Thread launcherThread = new Thread(new Runnable() {
             @Override
-            public void onError(String uri, Multimap params, AsyncHttpServerResponse response) {
+            public void run() {
+                launcherServer.startServer(new LauncherHttpServer.HttpServerReqCallBack() {
+                    @Override
+                    public void onError(String uri, Multimap params,
+                                        AsyncHttpServerResponse response) {
 
-            }
+                    }
 
-            @Override
-            public void onSuccess(String uri, Multimap params, AsyncHttpServerResponse response) {
-                switch (uri) {
-                    case HttpRequestUri.MEMBER_ADD:
-                        response.send(MemberLogic.getInstance().addMember(params).toJSONString());
-                        break;
-                    case HttpRequestUri.DELETE:
-                        response.send(MemberLogic.getInstance().delete(params).toJSONString());
-                        break;
-                    case HttpRequestUri.OPEN:
-                        response.send(DeviceLogic.getInstance().open(params).toJSONString());
-                        break;
-                    case HttpRequestUri.DEVICE_STATUS:
-                        response.send(DeviceLogic.getInstance().status(params).toJSONString());
-                        break;
-                    case HttpRequestUri.UPDATE:
-                        response.send(PublicLogic.getInstance().update(params).toJSONString());
-                        break;
-                    case HttpRequestUri.AD:
-                        response.send(PublicLogic.getInstance().ad(params).toJSONString());
-                        break;
-                }
+                    @Override
+                    public void onSuccess(String uri, Multimap params,
+                                          AsyncHttpServerResponse response) {
+                        switch (uri) {
+                            case HttpRequestUri.MEMBER_ADD:
+                                response.send(
+                                        MemberLogic.getInstance().addMember(params).toJSONString());
+                                break;
+                            case HttpRequestUri.DELETE:
+                                response.send(
+                                        MemberLogic.getInstance().delete(params).toJSONString());
+                                break;
+                            case HttpRequestUri.OPEN:
+                                response.send(
+                                        DeviceLogic.getInstance().open(params).toJSONString());
+                                break;
+                            case HttpRequestUri.DEVICE_STATUS:
+                                response.send(
+                                        DeviceLogic.getInstance().status(params).toJSONString());
+                                break;
+                            case HttpRequestUri.UPDATE:
+                                response.send(
+                                        PublicLogic.getInstance().update(params).toJSONString());
+                                break;
+                            case HttpRequestUri.AD:
+                                response.send(PublicLogic.getInstance().ad(params).toJSONString());
+                                break;
+                            case HttpRequestUri.UPLOAD:
+                                response.send(
+                                        MemberLogic.getInstance().upload(params).toJSONString());
+                                break;
+                            default:
+                                response.send("Invalid request url.");
+                                break;
+                        }
+                    }
+                });
             }
         });
+        launcherThread.start();
         return super.onStartCommand(intent, flags, startId);
     }
 

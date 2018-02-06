@@ -57,6 +57,7 @@ import rk.device.launcher.widget.carema.SurfaceHolderCaremaBack;
 import rk.device.launcher.widget.carema.SurfaceHolderCaremaFont;
 import rk.device.launcher.widget.video.SampleListener;
 import rk.device.launcher.zxing.decode.CaptureActivity;
+import rk.device.server.service.AppHttpServerService;
 
 
 /**
@@ -158,6 +159,7 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
         registerIPHost();
         mPresenter.getData();
         startSocketService();
+        startService(new Intent(this, AppHttpServerService.class));
     }
 
     /**

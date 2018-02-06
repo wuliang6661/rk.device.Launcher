@@ -142,6 +142,8 @@ public class JniHandler extends Handler {
         if (fingerStatus <= 0) {
             fingerStatus = FingerHelper.JNIFpInit();
             LauncherApplication.fingerModuleID = fingerStatus;
+            LauncherApplication.totalUserCount = FingerHelper.JNIFpGetTotalUser(fingerStatus);
+            LauncherApplication.remainUserCount = FingerHelper.JNIFpGetRemainSpace(fingerStatus);
             Log.i("JniHandler", "fingerStatus " + fingerStatus);
             if (fingerStatus > 0) {
                 LauncherApplication.sInitFingerSuccess = 0;

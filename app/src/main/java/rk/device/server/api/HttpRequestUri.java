@@ -37,4 +37,9 @@ public interface HttpRequestUri {
      */
     String AD            = "/app/api/v1/public/ad";
 
+    /**
+     * 上传人脸图片
+     */
+    String UPLOAD        = "/app/api/v1/public/upload";
+
 }

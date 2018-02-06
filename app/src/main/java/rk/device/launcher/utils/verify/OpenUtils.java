@@ -297,7 +297,7 @@ public class OpenUtils {
     /**
      * 使用本地jni方法开门
      */
-    private void openDoorJni(int type, String personId, String personName) {
+    public void openDoorJni(int type, String personId, String personName) {
         int relayOff = RelayHelper.RelaySetOff();
         if (relayOff == 0) {
             try {
