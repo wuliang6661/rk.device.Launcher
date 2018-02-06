@@ -61,5 +61,6 @@ public class LedDetection extends BaseActivity implements View.OnClickListener {
         } else {
             LedHelper.PER_ledToggle(0);
         }
+        finish();
     }
 }

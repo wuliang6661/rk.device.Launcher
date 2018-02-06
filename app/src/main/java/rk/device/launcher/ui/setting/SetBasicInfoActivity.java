@@ -26,6 +26,7 @@ import rk.device.launcher.bean.event.HomeInfoEvent;
 import rk.device.launcher.bean.event.TimeEvent;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.ui.detection.CaremaDetection;
+import rk.device.launcher.ui.detection.HardwareAct;
 import rk.device.launcher.utils.AppManager;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.StringUtils;
@@ -180,7 +181,7 @@ public class SetBasicInfoActivity extends BaseActivity implements View.OnClickLi
                 connectDevice(deviceName);
                 break;
             case R.id.ceshi:
-                gotoActivity(CaremaDetection.class, false);
+                gotoActivity(HardwareAct.class, false);
                 break;
         }
     }

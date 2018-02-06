@@ -23,11 +23,12 @@ import rk.device.launcher.utils.verify.VerifyUtils;
  */
 
 public class VerifyService extends Service {
-    private static final int    DELAY           = 500;
-    private static final String TAG             = "VerifyService";
-    private static final String NFC_ADD_PAGE    = "rk.device.launcher.ui.nfcadd.NfcaddActivity";
+    private static final int DELAY = 500;
+    private static final String TAG = "VerifyService";
+    private static final String NFC_ADD_PAGE = "rk.device.launcher.ui.nfcadd.NfcaddActivity";
+    private static final String NFC_DETECTION = "rk.device.launcher.ui.detection.NfcDetection";
     private static final String FINGER_ADD_PAGE = "rk.device.launcher.ui.fingeradd.FingeraddActivity";
-    private boolean             isOpen          = true;
+    private boolean isOpen = true;
 
     @Override
     public void onCreate() {
@@ -73,7 +74,7 @@ public class VerifyService extends Service {
      * finger service
      */
     private void fingerService() {
-        if(LauncherApplication.sInitFingerSuccess == -1){
+        if (LauncherApplication.sInitFingerSuccess == -1) {
 //            LogUtil.i(TAG, TAG + " finger init failed.");
             sleep();
             return;
@@ -92,7 +93,7 @@ public class VerifyService extends Service {
                 }
                 LogUtil.i(TAG, TAG + " user " + user.getName());
                 OpenUtils.getInstance().open(VerifyTypeConstant.TYPE_FINGER, user.getUniqueId(),
-                        user.getName(),resultCode);
+                        user.getName(), resultCode);
             }
         }
         sleep();
@@ -122,7 +123,7 @@ public class VerifyService extends Service {
             LogUtil.i(TAG, TAG + "NfcCard:" + bytesToHexString(cardNumber, cardType[0]) + "NfcType:"
                     + cardType[0]);
             //nfc add model
-            if (LauncherApplication.sIsNFCAdd == 1 && isTopActivity().equals(NFC_ADD_PAGE)) {
+            if (LauncherApplication.sIsNFCAdd == 1 && (isTopActivity().equals(NFC_ADD_PAGE) || isTopActivity().equals(NFC_DETECTION))) {
                 RxBus.getDefault().post(new NFCAddEvent(NFCCard));
             } else {
                 //nfc verify model
@@ -131,7 +132,7 @@ public class VerifyService extends Service {
                     return;
                 }
                 //TextUtils.isEmpty(user.getPopedomType())
-                OpenUtils.getInstance().open(VerifyTypeConstant.TYPE_CARD, user.getUniqueId(),user.getName());
+                OpenUtils.getInstance().open(VerifyTypeConstant.TYPE_CARD, user.getUniqueId(), user.getName());
 //                RxBus.getDefault().post(new OpenDoorSuccessEvent("", VerifyTypeConstant.TYPE_CARD, 1));
             }
         } else {
