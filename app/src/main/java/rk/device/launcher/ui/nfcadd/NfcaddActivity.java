@@ -26,7 +26,7 @@ import rx.Subscriber;
 
 /**
  * NFC 卡添加 and 详情
- * 
+ *
  * @doc 1.进入该页面，进入nfc卡录入模式
  * @doc 2.nfc卡号读取到之后判断该卡是否绑定用户
  * @doc 2.1 已绑定提示已绑定
@@ -37,21 +37,21 @@ public class NfcaddActivity extends MVPBaseActivity<NfcaddContract.View, NfcaddP
         implements NfcaddContract.View, View.OnClickListener {
 
     private static final String EXTRA_UNIQUEID = "uniqueId";
-    private String              uniqueId       = null;
+    private String uniqueId = null;
 
-    private TextView            cardNumTv;                  //卡号
+    private TextView cardNumTv;                  //卡号
     @Bind(R.id.ll_card_notice)
-    LinearLayout                cardNoticeLL;               //用于展示提示信息的Layout
+    LinearLayout cardNoticeLL;               //用于展示提示信息的Layout
     @Bind(R.id.stub_layout)
-    ViewStub                    cardNumberStub;             //用于展示卡片信息的Layout
-    TextView                    noticeTv;                   //用于提示当前卡牌状态
+    ViewStub cardNumberStub;             //用于展示卡片信息的Layout
+    TextView noticeTv;                   //用于提示当前卡牌状态
     @Bind(R.id.iv_search)
-    ImageView                   deleteImg;                  //删除按钮
-    private View                cardNumberView;
-    private Button              saveBtn;
-    private boolean             isDetail       = false;
-    private boolean             isChange       = false;
-    private boolean             isReload       = false;
+    ImageView deleteImg;                  //删除按钮
+    private View cardNumberView;
+    private Button saveBtn;
+    private boolean isDetail = false;
+    private boolean isChange = false;
+    private boolean isReload = false;
 
     @Override
     protected int getLayout() {
@@ -83,7 +83,7 @@ public class NfcaddActivity extends MVPBaseActivity<NfcaddContract.View, NfcaddP
                                     finish();
                                 }
                             });
-                }else{
+                } else {
                     finish();
                 }
             }
@@ -124,8 +124,9 @@ public class NfcaddActivity extends MVPBaseActivity<NfcaddContract.View, NfcaddP
                                 @Override
                                 public void run() {
                                     //判断当前卡已经存在
-                                    noticeTv.setText(getResources()
-                                            .getString(R.string.notice_card_is_exist));
+                                    if (noticeTv != null)
+                                        noticeTv.setText(getResources()
+                                                .getString(R.string.notice_card_is_exist));
                                 }
                             });
                             return;
@@ -138,7 +139,7 @@ public class NfcaddActivity extends MVPBaseActivity<NfcaddContract.View, NfcaddP
 
     /**
      * 设置卡片信息
-     * 
+     *
      * @param nfcCard
      */
     private void setCardInfo(String nfcCard, boolean showNotice) {
@@ -193,7 +194,7 @@ public class NfcaddActivity extends MVPBaseActivity<NfcaddContract.View, NfcaddP
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_save:
-                if(isDetail && !isReload){
+                if (isDetail && !isReload) {
                     isReload = true;
                     saveBtn.setText(getResources().getString(R.string.save));
                     return;
@@ -220,6 +221,7 @@ public class NfcaddActivity extends MVPBaseActivity<NfcaddContract.View, NfcaddP
                         getResources().getString(R.string.sure), new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                dissmissMessageDialog();
                                 deleteCard();
                             }
                         });

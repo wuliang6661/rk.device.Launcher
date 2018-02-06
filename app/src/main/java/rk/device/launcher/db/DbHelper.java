@@ -14,6 +14,7 @@ import rk.device.launcher.global.Constant;
 import rk.device.launcher.utils.FileUtils;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.MD5;
+import rk.device.launcher.utils.cache.CacheUtils;
 
 /**
  * @author : mundane
@@ -23,8 +24,8 @@ import rk.device.launcher.utils.MD5;
  */
 
 public class DbHelper {
-    private static final String DB_NAME      = "/data/rk_backup/rk.db";
-    private static final String DB_PATH_JOUR = "/data/rk_backup/rk.db-journal";
+    private static final String DB_NAME = CacheUtils.DB_PATH;
+    private static final String DB_PATH_JOUR = CacheUtils.DB_PATH_JOUR;
 
     private static UserDao      sUserDao;
     private static final String TAG          = "DbHelper";

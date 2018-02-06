@@ -2,19 +2,28 @@ package rk.device.launcher.base;
 
 import android.app.Application;
 import android.content.Context;
-import android.os.Handler;
+import android.content.Intent;
 import android.os.Message;
 
-import java.io.File;
+import java.lang.ref.WeakReference;
 
 import cat.ereza.customactivityoncrash.CustomActivityOnCrash;
+import cvc.CvcHelper;
+import cvc.EventUtil;
 import peripherals.FingerHelper;
+import peripherals.LedHelper;
+import peripherals.MdHelper;
+import peripherals.NfcHelper;
+import peripherals.NumberpadHelper;
+import peripherals.RelayHelper;
 import rk.device.launcher.R;
-import rk.device.launcher.utils.FileUtils;
+import rk.device.launcher.service.SocketService;
+import rk.device.launcher.service.VerifyService;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.STUtils;
 import rk.device.launcher.utils.Utils;
+import rk.device.launcher.utils.cache.CacheUtils;
 import rk.device.launcher.utils.verify.FaceUtils;
 import rk.device.launcher.widget.carema.SurfaceHolderCaremaBack;
 import rk.device.launcher.widget.carema.SurfaceHolderCaremaFont;
@@ -25,7 +34,7 @@ import rk.device.launcher.widget.carema.SurfaceHolderCaremaFont;
  * 程序全局监听
  */
 
-public class LauncherApplication extends Application implements CustomActivityOnCrash.EventListener {
+public class LauncherApplication extends Application {
 
     public static Context sContext;
 
@@ -62,22 +71,12 @@ public class LauncherApplication extends Application implements CustomActivityOn
      */
     public static int sInitFingerSuccess = -1;
 
-    public static boolean      isTcp      = false;//是否连接tcp
+    public static boolean isTcp = false;//是否连接tcp
 
-    private final String DB_FOLDER = "/data/rk_backup/";
     private final String DB_NAME = "rk.db";
     private final String TEMP_DB_NAME = "temp.db";
     private final String DB_JOUR = "rk.db-journal";
-    private Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case 0:
-                    LogUtil.d("数据导入完成");
-                    break;
-            }
-        }
-    };
+
 
     @Override
     public void onCreate() {
@@ -87,51 +86,53 @@ public class LauncherApplication extends Application implements CustomActivityOn
         CustomActivityOnCrash.install(this);
         CustomActivityOnCrash.setShowErrorDetails(true);
         CustomActivityOnCrash.setDefaultErrorActivityDrawable(R.mipmap.ic_launcher);
-        CustomActivityOnCrash.setEventListener(this);
+        CustomActivityOnCrash.setEventListener(new CrashEventListener(this));
+        CrashHandler.getInstance().init(this);
+        CacheUtils.init();
         Utils.init(this);
         STUtils.init(this);
         SPUtils.inviSp();
-        setDb();
+//        setDb();
     }
 
 
-    /**
-     * 检测数据库更新
-     */
-    private void setDb() {
-        new CopyFileThread().start();
-    }
-
-
-    private class CopyFileThread extends Thread {
-        @Override
-        public void run() {
-            try {
-                File dbFolder = new File(DB_FOLDER);
-                if (!dbFolder.exists()) {
-                    dbFolder.mkdirs();
-                }
-                File dbFile = new File(dbFolder, DB_NAME);
-                if (dbFile.exists()) {
-                    File tempDbFile = new File(dbFolder, TEMP_DB_NAME);
-                    FileUtils.setPermission(tempDbFile.getAbsolutePath());
-                    FileUtils.copyFile(dbFile, tempDbFile);
-                    dbFile.delete();
-                    File selfDbFile = new File(dbFolder, DB_NAME);
-                    FileUtils.copyFile(tempDbFile, selfDbFile);
-                    FileUtils.setPermission(selfDbFile.getAbsolutePath());
-                    tempDbFile.delete();
-                    File journal = new File(dbFolder, DB_JOUR);
-                    if (journal.exists()) {
-                        journal.delete();
-                    }
-                    mHandler.sendEmptyMessage(0);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
+//    /**
+//     * 检测数据库更新
+//     */
+//    private void setDb() {
+//        new CopyFileThread().start();
+//    }
+//
+//
+//    private class CopyFileThread extends Thread {
+//        @Override
+//        public void run() {
+//            try {
+//                File dbFolder = new File(CacheUtils.getBaseCache());
+//                if (!dbFolder.exists()) {
+//                    dbFolder.mkdirs();
+//                }
+//                File dbFile = new File(dbFolder, DB_NAME);
+//                if (dbFile.exists()) {
+//                    File tempDbFile = new File(dbFolder, TEMP_DB_NAME);
+//                    FileUtils.setPermission(tempDbFile.getAbsolutePath());
+//                    FileUtils.copyFile(dbFile, tempDbFile);
+//                    dbFile.delete();
+//                    File selfDbFile = new File(dbFolder, DB_NAME);
+//                    FileUtils.copyFile(tempDbFile, selfDbFile);
+//                    FileUtils.setPermission(selfDbFile.getAbsolutePath());
+//                    tempDbFile.delete();
+//                    File journal = new File(dbFolder, DB_JOUR);
+//                    if (journal.exists()) {
+//                        journal.delete();
+//                    }
+//                    LogUtil.d("数据导入完成");
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 
     /**
      * 获取上下文
@@ -142,23 +143,48 @@ public class LauncherApplication extends Application implements CustomActivityOn
         return sContext;
     }
 
-    @Override
-    public void onLaunchErrorActivity() {
-        SurfaceHolderCaremaFont.stopCarema();
-        SurfaceHolderCaremaBack.stopCarema();
-        FaceUtils.getInstance().stopFaceFR();
-        FingerHelper.JNIFpDeInit(fingerModuleID);
-//        stopService(new Intent(this, SocketService.class));
-//        stopService(new Intent(this, VerifyService.class));
-    }
 
-    @Override
-    public void onRestartAppFromErrorActivity() {
+    private static class CrashEventListener implements CustomActivityOnCrash.EventListener {
 
-    }
+        WeakReference<LauncherApplication> weakReference;
 
-    @Override
-    public void onCloseAppFromErrorActivity() {
+        CrashEventListener(LauncherApplication application) {
+            weakReference = new WeakReference<>(application);
+        }
 
+        @Override
+        public void onLaunchErrorActivity() {
+            LogUtil.d("wuliang", "application destory!!!");
+            LauncherApplication application = weakReference.get();
+            if (application != null) {
+                application.stopService(new Intent(application, SocketService.class));
+                application.stopService(new Intent(application, VerifyService.class));
+            }
+            SurfaceHolderCaremaFont.stopCarema();
+            SurfaceHolderCaremaBack.stopCarema();
+            FaceUtils.getInstance().stopFaceFR();
+            deInitJni();
+            FaceUtils.getInstance().destory();
+        }
+
+        @Override
+        public void onRestartAppFromErrorActivity() {
+
+        }
+
+        @Override
+        public void onCloseAppFromErrorActivity() {
+
+        }
+
+        /**
+         * 反注册所有JNI
+         */
+        void deInitJni() {
+            JniHandler mHandler = JniHandler.getInstance();
+            Message msg = Message.obtain();
+            msg.what = EventUtil.DEINIT_JNI;
+            mHandler.sendMessage(msg);
+        }
     }
 }

@@ -11,9 +11,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Map;
 
+import rk.device.launcher.utils.cache.CacheUtils;
+
 public class SPUtils {
 
-    private static final String XML_PATH = "/data/rk_backup/";
+    private static final String XML_PATH = CacheUtils.getBaseCache() + "/";
 
     private static SharedPreferences sp;
     private static SharedPreferences.Editor sEditor;

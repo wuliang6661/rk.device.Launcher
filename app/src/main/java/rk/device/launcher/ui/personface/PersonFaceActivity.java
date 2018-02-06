@@ -23,6 +23,7 @@ import rk.device.launcher.mvp.MVPBaseActivity;
 import rk.device.launcher.utils.BitmapUtil;
 import rk.device.launcher.utils.FileUtils;
 import rk.device.launcher.utils.StringUtils;
+import rk.device.launcher.utils.cache.CacheUtils;
 import rk.device.launcher.utils.verify.FaceUtils;
 import rk.device.launcher.widget.carema.SurfaceHolderCaremaFont;
 
@@ -63,6 +64,9 @@ public class PersonFaceActivity extends MVPBaseActivity<PersonFaceContract.View,
 
     private AFR_FSDKFace aa_face;
 
+    SurfaceHolder surfaceholder;
+    SurfaceHolderCaremaFont callbackFont;
+
 
     @Override
     protected int getLayout() {
@@ -95,7 +99,7 @@ public class PersonFaceActivity extends MVPBaseActivity<PersonFaceContract.View,
         if (!StringUtils.isEmpty(user.getFaceID())) {
             isUpdate = true;
             setTitle("人脸详情");
-            faceImg.setImageBitmap(BitmapFactory.decodeFile("/data/rk_backup/face/" + user.getFaceID() + ".png"));
+            faceImg.setImageBitmap(BitmapFactory.decodeFile(CacheUtils.getFaceFile() + "/" + user.getFaceID() + ".png"));
             faceImg.setVisibility(View.VISIBLE);
             hintText.setVisibility(View.INVISIBLE);
             btnFinishSetting.setText("重新拍摄");
@@ -108,9 +112,9 @@ public class PersonFaceActivity extends MVPBaseActivity<PersonFaceContract.View,
      * 初始化摄像头
      */
     private void initCrema() {
-        SurfaceHolder surfaceholder = surfaceview.getHolder();
+        surfaceholder = surfaceview.getHolder();
         surfaceholder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-        SurfaceHolderCaremaFont callbackFont = new SurfaceHolderCaremaFont();
+        callbackFont = new SurfaceHolderCaremaFont();
         callbackFont.setCallBack(new SurfaceHolderCaremaFont.CallBack() {
             @Override
             public void callMessage(byte[] data, int width, int height) {
@@ -125,6 +129,12 @@ public class PersonFaceActivity extends MVPBaseActivity<PersonFaceContract.View,
         surfaceholder.addCallback(callbackFont);
     }
 
+
+    @Override
+    protected void onDestroy() {
+        callbackFont.setCallBack(null);
+        super.onDestroy();
+    }
 
     @Override
     public void onClick(View v) {
@@ -221,7 +231,7 @@ public class PersonFaceActivity extends MVPBaseActivity<PersonFaceContract.View,
         faceUtils = FaceUtils.getInstance();
         if (!StringUtils.isEmpty(user.getFaceID())) {
             faceUtils.delete(user.getFaceID());
-            FileUtils.deleteFile("/data/rk_backup/face/" + user.getFaceID() + ".png");
+            FileUtils.deleteFile(CacheUtils.getFaceFile() + "/" + user.getFaceID() + ".png");
         }
         if (faceUtils.getmRegister().size() > 1000) {
             hintText.setText("人脸数量已达上限");

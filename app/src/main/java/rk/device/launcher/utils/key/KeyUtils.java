@@ -1,6 +1,7 @@
 package rk.device.launcher.utils.key;
 
 import rk.device.launcher.utils.FileUtils;
+import rk.device.launcher.utils.cache.CacheUtils;
 import rk.device.launcher.utils.encrypt.RSAUtils;
 
 /**
@@ -11,7 +12,7 @@ import rk.device.launcher.utils.encrypt.RSAUtils;
 
 public class KeyUtils {
 
-    private static final String keyPath = "/data/rk_backup/key";
+    private static final String keyPath = CacheUtils.KEY_PATH;
 
 
     /**

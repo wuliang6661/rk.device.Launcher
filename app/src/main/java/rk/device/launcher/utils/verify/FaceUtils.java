@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.UUID;
 
 import rk.device.launcher.utils.FileUtils;
+import rk.device.launcher.utils.cache.CacheUtils;
 
 /**
  * Created by wuliang on 2017/12/28.
@@ -50,7 +51,7 @@ public class FaceUtils {
 
     private static final String TAG = "FaceUtils";
 
-    private static final String facePath = "/data/rk_backup/face";
+    private static final String facePath = CacheUtils.getFaceFile();
 
     private static String appid = "7p9bytNNtUW7h4i6QTMeJsWpGZG6zxbcuupyTEwc5Tpi";
     private static String ft_key = "56nNWR9uZaSZC4NidCkvtTcY88X3aAmTcNvoMoGeTMqn";
@@ -318,6 +319,7 @@ public class FaceUtils {
      */
     public boolean loadFaces() {
         if (FileUtils.createOrExistsDir(new File(facePath))) {
+            FileUtils.setPermission(facePath);
             if (loadInfo()) {
                 try {
                     for (FaceRegist face : mRegister) {

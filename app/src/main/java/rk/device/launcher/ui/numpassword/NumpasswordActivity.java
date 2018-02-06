@@ -153,10 +153,13 @@ public class NumpasswordActivity extends MVPBaseActivity<NumpasswordContract.Vie
             case R.id.call_commit:    //确定密码
                 String[] passwords = commitText.toString().split("#");
                 List<User> users = DbHelper.queryByPassword(passwords[passwords.length - 1]);
-                Log.d("wuliang", users.size() + "");
                 if (users.isEmpty()) {
                     showMessageDialog("密码错误，请重新输入");
                 } else {
+                    if (users.get(0).getPassWord() == 0) {
+                        showMessageDialog("密码错误，请重新输入");
+                        return;
+                    }
                     long time = System.currentTimeMillis();
                     if (users.get(0).getStartTime() < time && users.get(0).getEndTime() > time) {    //在有效时间内，则开门
                         OpenUtils.getInstance().open(VerifyTypeConstant.TYPE_PASSWORD, users.get(0).getUniqueId(), users.get(0).getName());

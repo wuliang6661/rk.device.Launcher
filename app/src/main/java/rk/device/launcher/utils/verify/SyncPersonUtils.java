@@ -13,6 +13,7 @@ import rk.device.launcher.global.Constant;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.StringUtils;
 import rk.device.launcher.utils.Utils;
+import rk.device.launcher.utils.cache.CacheUtils;
 import rk.device.launcher.utils.key.KeyUtils;
 import rk.device.launcher.utils.uuid.DeviceUuidFactory;
 import rx.Subscriber;
@@ -95,7 +96,7 @@ public class SyncPersonUtils {
      * 上传人脸图片
      */
     private void uploadImage(User user) {
-        File file = new File("/data/rk_backup/face/", user.getFaceID() + ".png");
+        File file = new File(CacheUtils.getFaceFile() + "/", user.getFaceID() + ".png");
         if (!file.exists()) {
             return;
         }

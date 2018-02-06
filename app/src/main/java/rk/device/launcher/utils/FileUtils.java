@@ -1,6 +1,6 @@
 package rk.device.launcher.utils;
 
-import android.util.Log;
+import android.text.TextUtils;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -34,6 +34,13 @@ import java.util.List;
  * </pre>
  */
 public class FileUtils {
+
+    private static final String TAG = "FileUtils";
+
+    /**
+     * 分隔符.
+     */
+    public final static String FILE_EXTENSION_SEPARATOR = ".";
 
     private FileUtils() {
         throw new UnsupportedOperationException("u can't instantiate me...");
@@ -484,6 +491,62 @@ public class FileUtils {
             }
         }
         return true;
+    }
+
+
+    /**
+     * 获得不带扩展名的文件名称
+     *
+     * @param filePath 文件路径
+     * @return
+     */
+    public static String getFileNameWithoutExtension(String filePath) {
+        if (TextUtils.isEmpty(filePath)) {
+            return filePath;
+        }
+        int extenPosi = filePath.lastIndexOf(FILE_EXTENSION_SEPARATOR);
+        int filePosi = filePath.lastIndexOf(File.separator);
+        if (filePosi == -1) {
+            return (extenPosi == -1 ? filePath : filePath.substring(0,
+                    extenPosi));
+        }
+        if (extenPosi == -1) {
+            return filePath.substring(filePosi + 1);
+        }
+        return (filePosi < extenPosi ? filePath.substring(filePosi + 1,
+                extenPosi) : filePath.substring(filePosi + 1));
+    }
+
+    /**
+     * 删除指定目录中特定的文件
+     *
+     * @param dir
+     * @param filter
+     */
+    public static void delete(String dir, FilenameFilter filter) {
+        if (TextUtils.isEmpty(dir))
+            return;
+        File file = new File(dir);
+        if (!file.exists())
+            return;
+        if (file.isFile())
+            file.delete();
+        if (!file.isDirectory())
+            return;
+
+        File[] lists = null;
+        if (filter != null)
+            lists = file.listFiles(filter);
+        else
+            lists = file.listFiles();
+
+        if (lists == null)
+            return;
+        for (File f : lists) {
+            if (f.isFile()) {
+                f.delete();
+            }
+        }
     }
 
     /**
@@ -1299,8 +1362,8 @@ public class FileUtils {
     public static void setPermission(String filePath) {
         try {
             Runtime.getRuntime().exec("chmod -R 777 " + filePath);
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
+        } catch (Exception e) {
+            LogUtil.e(TAG, "设置权限失败, filePath = " + filePath);
             e.printStackTrace();
         }
     }

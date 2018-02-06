@@ -6,13 +6,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -29,13 +27,11 @@ import rk.device.launcher.global.VerifyTypeConstant;
 import rk.device.launcher.service.BlueToothsBroadcastReceiver;
 import rk.device.launcher.service.RKLauncherPushIntentService;
 import rk.device.launcher.service.RKLauncherPushService;
-import rk.device.launcher.service.SleepTaskServer;
 import rk.device.launcher.service.SocketService;
 import rk.device.launcher.ui.fragment.BaseComDialogFragment;
 import rk.device.launcher.ui.fragment.VerifyNoticeDialogFragment;
 import rk.device.launcher.ui.fragment.WaitDialog;
 import rk.device.launcher.ui.setting.SetNetWorkActivity;
-import rk.device.launcher.ui.setting.SleepActivity;
 import rk.device.launcher.utils.AppManager;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.PackageUtils;
@@ -72,11 +68,6 @@ public abstract class BaseActivity extends RxAppCompatActivity {
 
     private Subscription subscription;
 
-    /***
-     * 屏幕锁
-     */
-    private PowerManager.WakeLock wakeLock;
-
     WaitDialog dialog;
 
     /**
@@ -92,7 +83,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         hideNavigationBar();
         registerRxBus();
         ButterKnife.bind(this);
-        SleepTaskServer.getSleepHandler(this).sendEmptyMessage(0x11);
+//        SleepTaskServer.getSleepHandler(this).sendEmptyMessage(0x11);
         AppManager.getAppManager().addActivity(this);
         setNetListener();
         makeFilters();
@@ -114,7 +105,6 @@ public abstract class BaseActivity extends RxAppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         AppManager.getAppManager().removeActivity(this);
         ButterKnife.unbind(this);
         unregisterReceiver(mReceiver);
@@ -126,26 +116,28 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         }
         if (hintDialog != null && hintDialog.getDialog() != null
                 && hintDialog.getDialog().isShowing()) {
-            hintDialog.dismiss();
+            hintDialog.dismissAllowingStateLoss();
         }
         if (verifyNoticeDialogFragment != null && verifyNoticeDialogFragment.getDialog() != null
                 && verifyNoticeDialogFragment.getDialog().isShowing()) {
-            verifyNoticeDialogFragment.dismiss();
+            verifyNoticeDialogFragment.dismissAllowingStateLoss();
         }
+        BaseApiImpl.setActivity(null);
+        super.onDestroy();
     }
 
 
-    /**
-     * 有人点击重新开始休眠
-     */
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        if (this instanceof SleepActivity) {
-            return super.dispatchTouchEvent(ev);
-        }
-        SleepTaskServer.getSleepHandler(this).sendEmptyMessage(0x11);
-        return super.dispatchTouchEvent(ev);
-    }
+//    /**
+//     * 有人点击重新开始休眠
+//     */
+//    @Override
+//    public boolean dispatchTouchEvent(MotionEvent ev) {
+//        if (this instanceof SleepActivity) {
+//            return super.dispatchTouchEvent(ev);
+//        }
+//        SleepTaskServer.getSleepHandler(this).sendEmptyMessage(0x11);
+//        return super.dispatchTouchEvent(ev);
+//    }
 
 
     /**
@@ -475,7 +467,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
 
 
     private void registerRxBus() {
-        RxBus.getDefault().toObserverable(OpenDoorSuccessEvent.class).subscribeOn(Schedulers.io()).subscribe(new Subscriber<OpenDoorSuccessEvent>() {
+        addSubscription(RxBus.getDefault().toObserverable(OpenDoorSuccessEvent.class).subscribeOn(Schedulers.io()).subscribe(new Subscriber<OpenDoorSuccessEvent>() {
             @Override
             public void onCompleted() {
 
@@ -502,7 +494,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
                     showFailDialog();
                 }
             }
-        });
+        }));
     }
 
     /**
@@ -552,12 +544,12 @@ public abstract class BaseActivity extends RxAppCompatActivity {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if(!SocketService.getInstance().checkConnected()){
+                    if (!SocketService.getInstance().checkConnected()) {
                         SocketService.getInstance().closeThreadPool();
                         SocketService.getInstance().openService();
                     }
                 }
-            },2000);
+            }, 2000);
         }
 
     }

@@ -35,23 +35,22 @@ import rk.device.launcher.utils.uuid.DeviceUuidFactory;
 
 public class SocketService extends Service {
 
-    private static final String  TAG      = "SocketService";
+    private static final String TAG = "SocketService";
     /**
      * socket变量
      */
-    private Socket               socket   = null;
+    private Socket socket = null;
     // 线程池
     // 为了方便展示,此处直接采用线程池进行线程管理,而没有一个个开线程
-    private ExecutorService      mThreadPool;
+    private ExecutorService mThreadPool;
     //输出流
-    private BufferedWriter       writer   = null;
+    private BufferedWriter writer = null;
     /**
      * 接收服务器消息 变量
      */
-    // 输入流对象
-    BufferedReader               reader   = null;
-    private DeviceUuidFactory    uuidFactory;
-    private String               uuid;
+    BufferedReader reader = null;
+    private DeviceUuidFactory uuidFactory;
+    private String uuid;
     private static SocketService mService = null;
 
     public static SocketService getInstance() {
@@ -88,15 +87,17 @@ public class SocketService extends Service {
         if (mThreadPool != null) {
             CloseUtils.closeIOQuietly(socket);
             mThreadPool.shutdownNow();
-            int threadCount = ((ThreadPoolExecutor) mThreadPool).getActiveCount();
-            Log.i(TAG, "threadCount:" + threadCount);
+            if (mThreadPool != null) {
+                int threadCount = ((ThreadPoolExecutor) mThreadPool).getActiveCount();
+                Log.i(TAG, "threadCount:" + threadCount);
+            }
             mThreadPool = null;
         }
     }
 
     /**
      * 判断当前是否连接
-     * 
+     *
      * @return
      */
     public boolean checkConnected() {
@@ -131,6 +132,8 @@ public class SocketService extends Service {
                     }
                 } catch (IOException e) {
                     LogUtil.e(TAG, e.getMessage());
+//                    closeThreadPool();
+//                    openService();
                 }
             }
         });

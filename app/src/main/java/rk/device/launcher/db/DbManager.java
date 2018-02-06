@@ -8,6 +8,7 @@ import rk.device.launcher.db.entity.RecordDao;
 import rk.device.launcher.db.entity.UserDao;
 import rk.device.launcher.utils.CommonUtils;
 import rk.device.launcher.utils.FileUtils;
+import rk.device.launcher.utils.cache.CacheUtils;
 
 
 /**
@@ -20,8 +21,8 @@ import rk.device.launcher.utils.FileUtils;
 public class DbManager {
 
     //	private static final String DB_NAME = "rk.db";
-    private static final String DB_NAME = "/data/rk_backup/rk.db";
-    private static final String DB_PATH_JOUR = "/data/rk_backup/rk.db-journal";
+    private static final String DB_NAME = CacheUtils.DB_PATH;
+    private static final String DB_PATH_JOUR = CacheUtils.DB_PATH_JOUR;
     //	private static final String DB_PASSWORD = "793478MUDd97fdUjl2";
     private UserDao mUserDao;
 

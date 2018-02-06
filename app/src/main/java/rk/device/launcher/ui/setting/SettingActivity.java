@@ -26,6 +26,7 @@ import rk.device.launcher.ui.managedata.ManagedataActivity;
 import rk.device.launcher.ui.personmanage.PersonManageActivity;
 import rk.device.launcher.utils.FileUtils;
 import rk.device.launcher.utils.SettingUtils;
+import rk.device.launcher.utils.cache.CacheUtils;
 
 /**
  * Created by mundane on 2017/11/9 上午10:56
@@ -224,15 +225,7 @@ public class SettingActivity extends BaseActivity {
      * 清除本地所有文件
      */
     private void clearFile() {
-        FileUtils.deleteDir("/data/rk_backup/face");
-        FileUtils.deleteFile("/data/rk_backup/key");
-        FileUtils.deleteFile("/data/rk_backup/sp_config.xml");
-        if (new File("/data/rk_backup/rk.db").exists()) {
-            FileUtils.deleteFile("/data/rk_backup/rk.db");
-        }
-        if (new File("/data/rk_backup/rk.db-journal").exists()) {
-            FileUtils.deleteFile("/data/rk_backup/rk.db-journal");
-        }
+        CacheUtils.clearAll();
     }
 
 

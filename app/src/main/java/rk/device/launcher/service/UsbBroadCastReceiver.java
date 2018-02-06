@@ -21,6 +21,7 @@ import rk.device.launcher.bean.event.SleepImageEvent;
 import rk.device.launcher.utils.FileUtils;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.ThreadUtils;
+import rk.device.launcher.utils.cache.CacheUtils;
 import rk.device.launcher.utils.carema.utils.FileUtil;
 import rk.device.launcher.utils.rxjava.RxBus;
 
@@ -94,7 +95,7 @@ public class UsbBroadCastReceiver extends BroadcastReceiver {
             ThreadUtils.newThread(new Runnable() {
                 @Override
                 public void run() {
-                    String destDirPath = "/data/rk_backup/rk_ad";
+                    String destDirPath = CacheUtils.getImgFile();
                     File destDir = new File(destDirPath);
                     if (!FileUtils.createOrExistsDir(destDir)) {
                         return;

@@ -7,6 +7,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
+import rk.device.launcher.utils.cache.CacheUtils;
+
 /**
  * 录音工具
  */
@@ -21,7 +23,7 @@ public class RecorderUtil {
     private boolean isRecording;
 
     public RecorderUtil() {
-        mFileName = "/data/rk_backup/recorder.amr";
+        mFileName = CacheUtils.RECODE_PATH;
     }
 
     /**
