@@ -285,9 +285,13 @@ public class FaceUtils {
             boolean find = false;
             for (FaceRegist frface : mRegister) {
                 if (frface.mName.equals(name)) {
-                    File delfile = new File(facePath + "/" + name + ".data");
+                    File delfile = new File(facePath + "/" + name + ".data");    //删除人脸信息
                     if (delfile.exists()) {
                         delfile.delete();
+                    }
+                    File delImg = new File(facePath + "/" + name + ".png");   //删除人脸图片
+                    if (delImg.exists()) {
+                        delImg.delete();
                     }
                     mRegister.remove(frface);
                     find = true;

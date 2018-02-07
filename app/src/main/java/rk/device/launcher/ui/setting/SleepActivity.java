@@ -72,7 +72,7 @@ public class SleepActivity extends BaseActivity {
 
     protected void initView() {
         getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);//需要添加的语句
-        SleepTaskServer.getSleepHandler(SleepActivity.this).sendEmptyMessage(0x22);
+        SleepTaskServer.getSleepHandler().sendEmptyMessage(0x22);
         isHaveLunBo();
         registerBus();
         if (SPUtils.getBoolean(Constant.KEY_LIGNT, false)) {    //如果灯是开的，休眠时关灯
@@ -191,7 +191,7 @@ public class SleepActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        SleepTaskServer.getSleepHandler(SleepActivity.this).sendEmptyMessage(0x33);
+        SleepTaskServer.getSleepHandler().sendEmptyMessage(0x33);
     }
 
 

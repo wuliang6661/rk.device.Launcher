@@ -28,11 +28,13 @@ import rk.device.launcher.global.VerifyTypeConstant;
 import rk.device.launcher.service.BlueToothsBroadcastReceiver;
 import rk.device.launcher.service.RKLauncherPushIntentService;
 import rk.device.launcher.service.RKLauncherPushService;
+import rk.device.launcher.service.SleepTaskServer;
 import rk.device.launcher.service.SocketService;
 import rk.device.launcher.ui.fragment.BaseComDialogFragment;
 import rk.device.launcher.ui.fragment.VerifyNoticeDialogFragment;
 import rk.device.launcher.ui.fragment.WaitDialog;
 import rk.device.launcher.ui.setting.SetNetWorkActivity;
+import rk.device.launcher.ui.setting.SleepActivity;
 import rk.device.launcher.utils.AppManager;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.PackageUtils;
@@ -84,7 +86,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         hideNavigationBar();
         registerRxBus();
         ButterKnife.bind(this);
-//        SleepTaskServer.getSleepHandler(this).sendEmptyMessage(0x11);
+        SleepTaskServer.getSleepHandler().sendEmptyMessage(0x11);
         AppManager.getAppManager().addActivity(this);
         setNetListener();
         makeFilters();
@@ -128,33 +130,16 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     }
 
 
-//    /**
-//     * 有人点击重新开始休眠
-//     */
-//    @Override
-//    public boolean dispatchTouchEvent(MotionEvent ev) {
-//        if (this instanceof SleepActivity) {
-//            return super.dispatchTouchEvent(ev);
-//        }
-//        SleepTaskServer.getSleepHandler(this).sendEmptyMessage(0x11);
-//        return super.dispatchTouchEvent(ev);
-//    }
-
-    private Handler handler = new Handler();
-
-    private long time = 1000L * 30;
-
+    /**
+     * 有人点击重新开始休眠
+     */
     @Override
-    public boolean dispatchTouchEvent(MotionEvent event) {
-        startAD();
-        return super.dispatchTouchEvent(event);
-    }
-
-    private Runnable runnable = () -> AppManager.getAppManager().goBackMain();
-
-    public void startAD() {
-        handler.removeCallbacks(runnable);
-        handler.postDelayed(runnable, time);
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (this instanceof SleepActivity) {
+            return super.dispatchTouchEvent(ev);
+        }
+        SleepTaskServer.getSleepHandler().sendEmptyMessage(0x11);
+        return super.dispatchTouchEvent(ev);
     }
 
 

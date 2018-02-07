@@ -49,6 +49,6 @@ public class BaseDialogFragment extends DialogFragment implements CustomFrameLay
         if (getActivity() instanceof SleepActivity) {
             return;
         }
-//        SleepTaskServer.getSleepHandler(getActivity()).sendEmptyMessage(0x11);
+        SleepTaskServer.getSleepHandler().sendEmptyMessage(0x11);
     }
 }

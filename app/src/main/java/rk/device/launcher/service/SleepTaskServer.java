@@ -1,15 +1,10 @@
 package rk.device.launcher.service;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 
-import cvc.EventUtil;
-import peripherals.MdHelper;
 import rk.device.launcher.global.Constant;
-import rk.device.launcher.ui.setting.SleepActivity;
+import rk.device.launcher.utils.AppManager;
 import rk.device.launcher.utils.SPUtils;
 
 /**
@@ -26,24 +21,20 @@ public class SleepTaskServer extends Handler {
     /**
      * 延时时间
      */
-    private long DenyTime = 30 * 1000L;    //默认30秒的待机时间
+    private long DenyTime = 20 * 1000L;    //默认20秒无操作返回首页
 
 
-    private Context context;
-
-
-    private SleepTaskServer(Context context) {
+    private SleepTaskServer() {
         super();
-        this.context = context;
-        DenyTime = SPUtils.getLong(Constant.KEY_SLEEP_TIME, DenyTime);
+//        DenyTime = SPUtils.getLong(Constant.KEY_SLEEP_TIME, DenyTime);
     }
 
 
-    public static SleepTaskServer getSleepHandler(Context context) {
+    public static SleepTaskServer getSleepHandler() {
         if (sleepTaskServer == null) {
             synchronized (SleepTaskServer.class) {
                 if (sleepTaskServer == null) {
-                    sleepTaskServer = new SleepTaskServer(context);
+                    sleepTaskServer = new SleepTaskServer();
                 }
             }
         }
@@ -76,10 +67,10 @@ public class SleepTaskServer extends Handler {
      * 开启休眠任务
      */
     private void startSleepTask() {
-        if (DenyTime == -1) {
-            stopSleepTask();
-            return;
-        }
+//        if (DenyTime == -1) {
+//            stopSleepTask();
+//            return;
+//        }
         removeCallbacks(sleepWindowTask);
         postDelayed(sleepWindowTask, DenyTime);
     }
@@ -99,14 +90,15 @@ public class SleepTaskServer extends Handler {
 
         @Override
         public void run() {
-            int[] mdStaus = new int[1];
-            int mdStatus = MdHelper.PER_mdGet(1, mdStaus);
-            if (mdStatus == 0 && mdStaus[0] == 1) {
-                startSleepTask();
-            } else {
-                Intent intent = new Intent(context, SleepActivity.class);
-                context.startActivity(intent);
-            }
+//            int[] mdStaus = new int[1];
+//            int mdStatus = MdHelper.PER_mdGet(1, mdStaus);
+//            if (mdStatus == 0 && mdStaus[0] == 1) {
+//                startSleepTask();
+//            } else {
+//                Intent intent = new Intent(context, SleepActivity.class);
+//                context.startActivity(intent);
+//            }
+            AppManager.getAppManager().goBackMain();
         }
     };
 }
