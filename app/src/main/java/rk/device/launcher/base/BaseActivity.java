@@ -140,24 +140,13 @@ public abstract class BaseActivity extends RxAppCompatActivity {
 //        return super.dispatchTouchEvent(ev);
 //    }
 
-
-    /**
-     * 在子页面30秒无操作，则返回主页面
-     */
     private Handler handler = new Handler();
 
-    private long time = 1000 * 30;
+    private long time = 1000L * 30;
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                handler.removeCallbacks(runnable);
-                break;
-            case MotionEvent.ACTION_UP:
-                startAD();
-                break;
-        }
+        startAD();
         return super.dispatchTouchEvent(event);
     }
 
@@ -167,6 +156,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         handler.removeCallbacks(runnable);
         handler.postDelayed(runnable, time);
     }
+
 
     /**
      * 常用的跳转方法

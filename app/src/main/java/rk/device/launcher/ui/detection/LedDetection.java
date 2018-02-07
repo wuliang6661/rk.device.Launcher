@@ -54,6 +54,12 @@ public class LedDetection extends BaseActivity implements View.OnClickListener {
      */
     @Override
     public void onClick(View v) {
+        finish();
+    }
+
+
+    @Override
+    protected void onDestroy() {
         // 读取保存的补光灯的开关状态
         boolean isLightTurnOn = SPUtils.getBoolean(Constant.KEY_LIGNT, false);
         if (isLightTurnOn) {
@@ -61,6 +67,6 @@ public class LedDetection extends BaseActivity implements View.OnClickListener {
         } else {
             LedHelper.PER_ledToggle(0);
         }
-        finish();
+        super.onDestroy();
     }
 }

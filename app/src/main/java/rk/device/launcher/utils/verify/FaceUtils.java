@@ -105,7 +105,7 @@ public class FaceUtils {
     private List<ASAE_FSDKAge> ages = new ArrayList<>();
     private List<ASGE_FSDKGender> genders = new ArrayList<>();
 
-    boolean isFaceStart = false;
+    private boolean isFaceStart = false;
 
 
     public static FaceUtils getInstance() {
@@ -399,10 +399,6 @@ public class FaceUtils {
         FaceRegist(String name) {
             mName = name;
             mFaceList = new ArrayList<>();
-        }
-
-        public String getmName() {
-            return mName;
         }
     }
 

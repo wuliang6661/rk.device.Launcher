@@ -27,6 +27,8 @@ public class CaremaDetection extends BaseActivity implements View.OnClickListene
     @Bind(R.id.btn_finish_setting)
     Button btnFinishSetting;
 
+    SurfaceHolder surfaceholder;
+
     @Override
     protected int getLayout() {
         return R.layout.act_carema;
@@ -48,7 +50,7 @@ public class CaremaDetection extends BaseActivity implements View.OnClickListene
 
 
     private void initSurfaceViewOne() {
-        SurfaceHolder surfaceholder = surfaceview.getHolder();
+        surfaceholder = surfaceview.getHolder();
         surfaceholder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         surfaceholder.addCallback(new SurfaceHolderCaremaFont());
     }
@@ -58,9 +60,15 @@ public class CaremaDetection extends BaseActivity implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_finish_setting:
-                SurfaceHolderCaremaBack.stopCarema();
                 finish();
                 break;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        surfaceholder.addCallback(null);
+        SurfaceHolderCaremaBack.stopCarema();
+        super.onDestroy();
     }
 }

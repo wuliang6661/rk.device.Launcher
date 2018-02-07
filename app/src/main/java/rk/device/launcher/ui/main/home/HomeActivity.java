@@ -144,7 +144,7 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
         menuPwd.setOnClickListener(this);
         menuQrcode.setOnClickListener(this);
         menuSetting.setOnClickListener(this);
-//        showView();
+        showView();
     }
 
 
@@ -168,7 +168,7 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
         if (!TextUtils.isEmpty(declareContent)) {
             gonggaoText.setText(String.format(getString(R.string.declare_content), declareContent, declareContent));
         } else {
-            gonggaoText.setText("");
+            gonggaoText.setText(getResources().getString(R.string.declare));
         }
     }
 
@@ -198,7 +198,6 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
         }, throwable -> {
         });
     }
-
 
     /**
      * 初始化摄像头显示
@@ -450,10 +449,10 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
     public void hasPerson(boolean hasPerson) {
         runOnUiThread(() -> {
             if (hasPerson) {
-                if (frameLayout != null)
+                if (frameLayout != null && frameLayout.getVisibility() == View.GONE)
                     frameLayout.setVisibility(View.VISIBLE);
             } else {
-                if (frameLayout != null)
+                if (frameLayout != null && frameLayout.getVisibility() == View.VISIBLE)
                     frameLayout.setVisibility(View.GONE);
             }
         });

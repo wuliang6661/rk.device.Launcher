@@ -361,9 +361,12 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
     /**
      * 启动人脸检测
      */
-    void registerFace() {
+    private void registerFace() {
         FaceUtils faceUtils = FaceUtils.getInstance();
         faceUtils.setFaceFeature((name, max_score) -> {
+            if (mView != null) {
+                mView.hasPerson(true);
+            }
             List<User> users = DbHelper.queryByFaceId(name);
             if (!users.isEmpty()) {
                 openDoor(users.get(0));
