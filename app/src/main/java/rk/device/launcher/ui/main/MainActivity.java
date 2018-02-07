@@ -63,6 +63,7 @@ import rk.device.launcher.widget.carema.DetectedFaceView;
 import rk.device.launcher.widget.carema.SurfaceHolderCaremaBack;
 import rk.device.launcher.widget.carema.SurfaceHolderCaremaFont;
 import rk.device.launcher.zxing.decode.CaptureActivity;
+import rk.device.server.service.AppHttpServerService;
 
 
 /**
@@ -190,6 +191,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
         mPresenter.initLocation(this);
         mPresenter.getData();
         startSocketService();
+        startService(new Intent(this, AppHttpServerService.class));
     }
 
     /**

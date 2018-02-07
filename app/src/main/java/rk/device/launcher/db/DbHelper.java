@@ -27,8 +27,8 @@ public class DbHelper {
     private static final String DB_NAME = CacheUtils.DB_PATH;
     private static final String DB_PATH_JOUR = CacheUtils.DB_PATH_JOUR;
 
-    private static UserDao sUserDao;
-    private static final String TAG = "DbHelper";
+    private static UserDao      sUserDao;
+    private static final String TAG          = "DbHelper";
 
     public static UserDao getUserDao() {
         if (sUserDao == null) {
@@ -218,7 +218,6 @@ public class DbHelper {
         return query.list();
     }
 
-
     /**
      * 查询未同步到服务器的所有user
      */
@@ -230,5 +229,20 @@ public class DbHelper {
         return query.list();
     }
 
+    /**
+     * 通过UserId 获取UniqueId
+     * 
+     * @param userId
+     * @return
+     */
+    public static String queryUniqueIdByUserId(long userId) {
+        Query<User> query = getUserDao().queryBuilder().where(UserDao.Properties.Id.eq(userId))
+                .build();
+        if (query.list().size() == 0) {
+            return null;
+        } else {
+            return query.list().get(0).getUniqueId();
+        }
+    }
 
 }

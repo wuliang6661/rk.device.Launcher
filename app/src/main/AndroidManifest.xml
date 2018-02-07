@@ -293,6 +293,7 @@
             android:exported="false" />
         <service android:name=".service.SocketService" />
         <service android:name=".service.VerifyService" />
+        <service android:name="rk.device.server.service.AppHttpServerService"/>
 
         <receiver android:name=".service.UpdateBroadcastReceiver">
             <intent-filter>

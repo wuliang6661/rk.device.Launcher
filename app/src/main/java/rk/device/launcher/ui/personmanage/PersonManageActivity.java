@@ -14,6 +14,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import rk.device.launcher.R;
+import rk.device.launcher.api.T;
 import rk.device.launcher.db.DbHelper;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.mvp.MVPBaseActivity;
@@ -104,8 +105,15 @@ public class PersonManageActivity extends MVPBaseActivity<PersonManageContract.V
             }
         };
         adapter.setOnItemClickListener(R.id.item_layout, (view, position) -> {
+            User user = users.get(position);
+            if(DbHelper.queryByUniqueId(user.getUniqueId()).size()==0){
+                T.showShort("该用户不存在");
+                users.remove(position);
+                adapter.notifyDataSetChanged();
+                return;
+            }
             Intent intent = new Intent(PersonManageActivity.this, Person_addActivity.class);
-            intent.putExtra("user", users.get(position));
+            intent.putExtra("user", user);
             startActivity(intent);
         });
         recycle.setAdapter(adapter);

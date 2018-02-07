@@ -214,6 +214,7 @@ public class DownLoadIntentService extends IntentService {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                Log.e(TAG, "response is onFailure");
                 e.printStackTrace();
             }
 

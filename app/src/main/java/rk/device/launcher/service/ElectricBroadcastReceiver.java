@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.BatteryManager;
 
+import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.utils.LogUtil;
 
 /**
@@ -43,6 +44,7 @@ public class ElectricBroadcastReceiver extends BroadcastReceiver {
                 LogUtil.d("放电中");
                 break;
         }
+        LauncherApplication.sLevel = levelPercent;
         if (callBack != null) {
             callBack.onElectricMessage(isChange, levelPercent);
         }

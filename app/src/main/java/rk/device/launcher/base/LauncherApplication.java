@@ -8,18 +8,12 @@ import android.os.Message;
 import java.lang.ref.WeakReference;
 
 import cat.ereza.customactivityoncrash.CustomActivityOnCrash;
-import cvc.CvcHelper;
 import cvc.EventUtil;
-import peripherals.FingerHelper;
-import peripherals.LedHelper;
-import peripherals.MdHelper;
-import peripherals.NfcHelper;
-import peripherals.NumberpadHelper;
-import peripherals.RelayHelper;
 import rk.device.launcher.R;
 import rk.device.launcher.service.SocketService;
 import rk.device.launcher.service.VerifyService;
 import rk.device.launcher.utils.LogUtil;
+import rk.device.launcher.utils.PackageUtils;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.STUtils;
 import rk.device.launcher.utils.Utils;
@@ -44,6 +38,11 @@ public class LauncherApplication extends Application {
     public static int sLevel;
 
     /**
+     * 温度
+     */
+    public static float sTemperature;
+
+    /**
      * 记录是否在充电
      */
     public static int sIsCharge;
@@ -62,6 +61,16 @@ public class LauncherApplication extends Application {
      * 当前指纹模块
      */
     public static int fingerModuleID;
+
+    /**
+     * 指纹头总容量
+     */
+    public static int totalUserCount;
+
+    /**
+     * 指纹头剩余容量
+     */
+    public static int remainUserCount;
 
     /**
      * 记录指纹模块是否初始化成功
@@ -92,6 +101,7 @@ public class LauncherApplication extends Application {
         Utils.init(this);
         STUtils.init(this);
         SPUtils.inviSp();
+        PackageUtils.getTemperature(this);
 //        setDb();
     }
 
