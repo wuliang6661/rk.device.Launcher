@@ -22,7 +22,7 @@
             android:layout_marginLeft="@dimen/dp_20"
             android:layout_gravity="center_vertical"
             android:textSize="27sp"
-            android:text="全部类型"
+            android:text="@string/all_classify"
             android:textColor="@color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>

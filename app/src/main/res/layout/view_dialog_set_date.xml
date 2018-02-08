@@ -27,7 +27,7 @@
                 android:layout_marginLeft="77dp"
                 android:layout_alignParentLeft="true"
                 android:textSize="21dp"
-                android:text="取消"
+                android:text="@string/cancel"
                 />
 
             <TextView
@@ -38,7 +38,7 @@
                 android:gravity="center"
                 android:minWidth="48dp"
                 android:textSize="21dp"
-                android:text="设置日期"
+                android:text="@string/set_date"
                 />
 
             <TextView
@@ -49,7 +49,7 @@
                 android:gravity="center"
                 android:layout_alignParentRight="true"
                 android:textSize="21dp"
-                android:text="确定"
+                android:text="@string/confirm"
                 android:textColor="@color/white" />
 
         </RelativeLayout>
@@ -71,7 +71,7 @@
                     android:textColor="@color/white"
                     android:gravity="center"
                     android:layout_weight="1"
-                    android:text="年"
+                    android:text="@string/year"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"/>
 
@@ -80,7 +80,7 @@
                     android:textColor="@color/white"
                     android:gravity="center"
                     android:layout_weight="1"
-                    android:text="月"
+                    android:text="@string/month"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"/>
 
@@ -89,7 +89,7 @@
                     android:textColor="@color/white"
                     android:gravity="center"
                     android:layout_weight="1"
-                    android:text="日"
+                    android:text="@string/day"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"/>
 

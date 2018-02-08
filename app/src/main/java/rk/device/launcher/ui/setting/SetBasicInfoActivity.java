@@ -190,7 +190,7 @@ public class SetBasicInfoActivity extends BaseActivity implements View.OnClickLi
      * 连接蓝牙
      */
     private boolean connectDevice(String deviceName) {
-        showMessageDialog("正在连接蓝牙锁...");
+        showMessageDialog(getString(R.string.connect_blue));
         mClient.connect(blueEvent.mac, (code, data) -> {
             MoreManager.setBlueToothEvent(blueEvent);
             MoreManager.setProfile(data);
@@ -237,7 +237,7 @@ public class SetBasicInfoActivity extends BaseActivity implements View.OnClickLi
         if (isFirstSetting) {
             SPUtils.putInt(Constant.SETTING_NUM, -1000);
             SPUtils.putBoolean(Constant.IS_FIRST_SETTING, false);
-            Toast.makeText(SetBasicInfoActivity.this, "完成设置", Toast.LENGTH_LONG).show();
+            Toast.makeText(SetBasicInfoActivity.this, R.string.setting_suress, Toast.LENGTH_LONG).show();
             AppManager.getAppManager().goBackMain();
         } else {
             finish();

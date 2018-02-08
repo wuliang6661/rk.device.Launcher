@@ -20,7 +20,7 @@
             android:background="@drawable/network_type_bg"
             android:gravity="center"
             android:padding="10dp"
-            android:text="WIFI列表"
+            android:text="@string/wifi_list"
             android:textColor="@color/white"
             android:textSize="@dimen/normal_textsize_sp27"/>
 

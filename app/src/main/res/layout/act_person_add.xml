@@ -24,7 +24,7 @@
             style="@style/btn_finish"
             android:layout_marginBottom="35dp"
             android:layout_marginTop="35dp"
-            android:text="完成设置" />
+            android:text="@string/setting_suress" />
 
     </LinearLayout>
 
@@ -88,7 +88,7 @@
                     android:layout_weight="1"
                     android:background="@null"
                     android:gravity="right"
-                    android:hint="请输入姓名"
+                    android:hint="@string/edit_name"
                     android:maxLength="10"
                     android:textColor="@color/white"
                     android:textColorHint="#666666"
@@ -185,7 +185,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="26dp"
                     android:layout_toRightOf="@+id/face_img"
-                    android:text="人脸信息"
+                    android:text="@string/face_message"
                     android:textColor="@color/white"
                     android:textSize="26dp" />
 
@@ -197,7 +197,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="20dp"
-                    android:text="未录入"
+                    android:text="@string/no_add"
                     android:textColor="@color/white"
                     android:textSize="26dp" />
 
@@ -229,7 +229,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="26dp"
                     android:layout_toRightOf="@+id/pass_img"
-                    android:text="密码：空"
+                    android:text="@string/pwd_null"
                     android:textColor="@color/white"
                     android:textSize="26dp" />
 
@@ -241,7 +241,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="20dp"
-                    android:text="未录入"
+                    android:text="@string/no_add"
                     android:textColor="@color/white"
                     android:textSize="26dp" />
 
@@ -273,7 +273,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="26dp"
                     android:layout_toRightOf="@+id/card_img"
-                    android:text="卡号：空"
+                    android:text="@string/card_null"
                     android:textColor="@color/white"
                     android:textSize="26dp" />
 
@@ -285,7 +285,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="20dp"
-                    android:text="未录入"
+                    android:text="@string/no_add"
                     android:textColor="@color/white"
                     android:textSize="26dp" />
 
@@ -316,7 +316,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="26dp"
                     android:layout_toRightOf="@+id/finger_img1"
-                    android:text="指纹1"
+                    android:text="@string/finder_1"
                     android:textColor="@color/white"
                     android:textSize="26dp" />
 
@@ -328,7 +328,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="20dp"
-                    android:text="未录入"
+                    android:text="@string/no_add"
                     android:textColor="@color/white"
                     android:textSize="26dp" />
 
@@ -359,7 +359,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="26dp"
                     android:layout_toRightOf="@+id/finger_img2"
-                    android:text="指纹2"
+                    android:text="@string/finder_2"
                     android:textColor="@color/white"
                     android:textSize="26dp" />
 
@@ -371,7 +371,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="20dp"
-                    android:text="未录入"
+                    android:text="@string/no_add"
                     android:textColor="@color/white"
                     android:textSize="26dp" />
 
@@ -402,7 +402,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="26dp"
                     android:layout_toRightOf="@+id/finger_img3"
-                    android:text="指纹3"
+                    android:text="@string/finder_3"
                     android:textColor="@color/white"
                     android:textSize="26dp" />
 
@@ -414,7 +414,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="20dp"
-                    android:text="未录入"
+                    android:text="@string/no_add"
                     android:textColor="@color/white"
                     android:textSize="26dp" />
 

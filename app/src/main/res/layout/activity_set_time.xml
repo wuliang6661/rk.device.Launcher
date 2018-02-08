@@ -27,7 +27,7 @@
                 android:layout_marginLeft="20dp"
                 android:textSize="27dp"
                 android:layout_gravity="center_vertical"
-                android:text="时区"
+                android:text="@string/shiqu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -41,7 +41,7 @@
                 android:textColor="@color/white"
                 android:textSize="27dp"
                 android:layout_gravity="center_vertical"
-                android:text="GMT+8:00 中国标准时间"
+                android:text="@string/gmt_8_00"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <ImageView
@@ -70,7 +70,7 @@
                 android:layout_marginLeft="20dp"
                 android:textSize="27dp"
                 android:layout_gravity="center_vertical"
-                android:text="日期"
+                android:text="@string/date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -113,7 +113,7 @@
                 android:layout_marginLeft="20dp"
                 android:textSize="27dp"
                 android:layout_gravity="center_vertical"
-                android:text="时间"
+                android:text="@string/time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -146,7 +146,7 @@
             android:layout_height="1dp"/>
 
         <Button
-            android:text="完成设置"
+            android:text="@string/setting_suress"
             android:id="@+id/btn_finish_setting"
             android:layout_marginTop="100dp"
             style="@style/btn_finish"/>

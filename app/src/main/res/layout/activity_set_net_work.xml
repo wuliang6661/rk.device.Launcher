@@ -40,7 +40,7 @@
                         android:gravity="center"
                         android:textColor="@color/white"
                         android:textSize="27dp"
-                        android:text="网络类型"
+                        android:text="@string/net_classify"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
 
@@ -70,7 +70,7 @@
                         android:layout_gravity="center_vertical"
                         android:textColor="@color/white"
                         android:textSize="@dimen/normal_textsize_sp27"
-                        android:text="有线 (自动)"
+                        android:text="@string/wried_self"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
 
@@ -100,7 +100,7 @@
                         android:layout_gravity="center_vertical"
                         android:textColor="@color/white"
                         android:textSize="@dimen/normal_textsize_sp27"
-                        android:text="有线 (手动)"
+                        android:text="@string/wried_hand"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
 
@@ -152,7 +152,7 @@
                     android:id="@+id/btn_finish_setting"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="80dp"
-                    android:text="完成设置"
+                    android:text="@string/setting_suress"
                     style="@style/btn_finish"
                     />
 

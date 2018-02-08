@@ -67,7 +67,7 @@ public class EyesCorrectActivity extends BaseActivity implements View.OnClickLis
     }
 
     protected void initView() {
-        setTitle("摄像头校准");
+        setTitle(getString(R.string.carema_correct));
         openCarmea();
 
         mHandler = JniHandler.getInstance();
@@ -132,7 +132,7 @@ public class EyesCorrectActivity extends BaseActivity implements View.OnClickLis
      * 设置棋盘格宽高
      */
     private void setCorrectWAndH(int line, int lie) {
-        showWaitProgress("正在初始化，请稍后...");
+        showWaitProgress(getString(R.string.init_loading));
         Message msg = new Message();
         msg.what = EventUtil.START_CVC;
         msg.arg1 = lie;
@@ -197,7 +197,7 @@ public class EyesCorrectActivity extends BaseActivity implements View.OnClickLis
                     T.showShort("校准完成！");
                     finish();
                 } else {
-                    runOnUiThread(() -> showMessageDialog("校准失败！请重新校准！"));
+                    runOnUiThread(() -> showMessageDialog(getString(R.string.correct_error)));
                 }
             }
         });
@@ -208,7 +208,7 @@ public class EyesCorrectActivity extends BaseActivity implements View.OnClickLis
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
-                showMessageDialog("校准照片未满" + CountNum + "张，\n\n确认退出后此次校准失败", "确定", view1 -> {
+                showMessageDialog("校准照片未满" + CountNum + "张，\n\n确认退出后此次校准失败", getString(R.string.sure), view1 -> {
                     dissmissMessageDialog();
                     Message msg = new Message();
                     msg.what = EventUtil.STOP_CORRECT;
@@ -231,7 +231,7 @@ public class EyesCorrectActivity extends BaseActivity implements View.OnClickLis
                     }
                     break;
                 case 0x22:
-                    showWaitProgress("正在校准，需要几分钟左右，请稍后...");
+                    showWaitProgress(getString(R.string.correct_loading));
                     break;
             }
         }

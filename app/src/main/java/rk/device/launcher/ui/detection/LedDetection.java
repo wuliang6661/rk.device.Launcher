@@ -12,6 +12,7 @@ import peripherals.LedHelper;
 import rk.device.launcher.R;
 import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.global.Constant;
+import rk.device.launcher.utils.ResUtil;
 import rk.device.launcher.utils.SPUtils;
 
 /**
@@ -37,7 +38,7 @@ public class LedDetection extends BaseActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
 
         goBack();
-        setTitle("补光灯检测");
+        setTitle(ResUtil.getString(R.string.led_detecation));
         btnFinishSetting.setOnClickListener(this);
 
         cbLight.setOnCheckedChangeListener((buttonView, isChecked) -> {

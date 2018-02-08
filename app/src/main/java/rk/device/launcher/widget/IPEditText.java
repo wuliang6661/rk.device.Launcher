@@ -60,7 +60,7 @@ public class IPEditText extends LinearLayout {
                 text1 = s.toString().trim();
                 if (s.length() > 2) {
                     if (Integer.parseInt(text1) > 255) {
-                        Toast.makeText(context, "请输入合法的ip地址", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, R.string.ip_nohefa, Toast.LENGTH_LONG).show();
                     } else {
                         Edit2.setFocusable(true);
                         Edit2.requestFocus();
@@ -83,7 +83,7 @@ public class IPEditText extends LinearLayout {
                 text2 = s.toString().trim();
                 if (s.length() > 2) {
                     if (Integer.parseInt(text2) > 255) {
-                        Toast.makeText(context, "请输入合法的ip地址", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, R.string.ip_nohefa, Toast.LENGTH_LONG).show();
                     } else {
                         Edit3.setFocusable(true);
                         Edit3.requestFocus();
@@ -117,7 +117,7 @@ public class IPEditText extends LinearLayout {
                 if (s.length() > 2) {
 
                     if (Integer.parseInt(text3) > 255) {
-                        Toast.makeText(context, "请输入合法的ip地址", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, R.string.ip_nohefa, Toast.LENGTH_LONG).show();
                     } else {
                         Edit4.setFocusable(true);
                         Edit4.requestFocus();
@@ -151,7 +151,7 @@ public class IPEditText extends LinearLayout {
                 if (s.length() > 2) {
 
                     if (Integer.parseInt(text4) > 255) {
-                        Toast.makeText(context, "请输入合法的ip地址", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, R.string.ip_nohefa, Toast.LENGTH_LONG).show();
                     }
                 }
                 /**

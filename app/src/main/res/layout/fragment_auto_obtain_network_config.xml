@@ -18,7 +18,7 @@
             android:gravity="center"
             android:textColor="@color/white"
             android:textSize="@dimen/normal_textsize_sp27"
-            android:text="自动获取网络配置"
+            android:text="@string/self_setting_net"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
@@ -35,7 +35,7 @@
         android:layout_height="@dimen/item_height">
         <TextView
             android:layout_marginLeft="15dp"
-            android:text="IP地址"
+            android:text="@string/ip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/tv_network_conf_item"/>
@@ -65,7 +65,7 @@
         android:layout_height="@dimen/item_height">
         <TextView
             android:layout_marginLeft="15dp"
-            android:text="子网掩码"
+            android:text="@string/dns"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/tv_network_conf_item"/>
@@ -95,7 +95,7 @@
         android:layout_height="@dimen/item_height">
         <TextView
             android:layout_marginLeft="15dp"
-            android:text="网关"
+            android:text="@string/wangguan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/tv_network_conf_item"/>

@@ -38,7 +38,7 @@
                 <TextView
                     android:id="@+id/tv_set_time"
                     style="@style/tv_setting_item"
-                    android:text="基础设置" />
+                    android:text="@string/basic_setting" />
 
             </LinearLayout>
 
@@ -64,7 +64,7 @@
                 <TextView
                     android:id="@+id/tv_set_network"
                     style="@style/tv_setting_item"
-                    android:text="网络设置" />
+                    android:text="@string/net_setting" />
 
             </LinearLayout>
 
@@ -98,7 +98,7 @@
                 <TextView
                     android:id="@+id/tv_set_door"
                     style="@style/tv_setting_item"
-                    android:text="门禁设置" />
+                    android:text="@string/setting_menjin" />
 
             </LinearLayout>
 
@@ -125,7 +125,7 @@
                 <TextView
                     android:id="@+id/tv_set_sys"
                     style="@style/tv_setting_item"
-                    android:text="系统设置" />
+                    android:text="@string/sys_setting" />
 
             </LinearLayout>
 
@@ -159,7 +159,7 @@
                 <TextView
                     android:id="@+id/tv_manage_user"
                     style="@style/tv_setting_item"
-                    android:text="用户管理" />
+                    android:text="@string/person_manger" />
 
             </LinearLayout>
 
@@ -186,7 +186,7 @@
                 <TextView
                     android:id="@+id/tv_manage_data"
                     style="@style/tv_setting_item"
-                    android:text="数据管理" />
+                    android:text="@string/data_manager" />
 
             </LinearLayout>
 
@@ -221,7 +221,7 @@
                 <TextView
                     android:id="@+id/tv_sys_info"
                     style="@style/tv_setting_item"
-                    android:text="系统信息" />
+                    android:text="@string/sys_info" />
 
             </LinearLayout>
 
@@ -248,7 +248,7 @@
                 <TextView
                     android:id="@+id/tv_recovery"
                     style="@style/tv_setting_item"
-                    android:text="恢复出厂" />
+                    android:text="@string/huifu_chuchang" />
 
             </LinearLayout>
 

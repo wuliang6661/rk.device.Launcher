@@ -33,7 +33,7 @@
                 android:gravity="center"
                 android:paddingBottom="70dp"
                 android:paddingTop="70dp"
-                android:text="确认要恢复出厂设置?"
+                android:text="@string/recover_hint"
                 android:textColor="@color/white"
                 android:textSize="30dp"/>
         </LinearLayout>
@@ -56,7 +56,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/shape_dialog_btn_cancel"
                 android:gravity="center"
-                android:text="取消"
+                android:text="@string/cancel"
                 android:textColor="@color/white"
                 android:textSize="22dp"/>
 
@@ -72,7 +72,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/shape_dialog_btn_confirm"
                 android:gravity="center"
-                android:text="确定"
+                android:text="@string/confirm"
                 android:textColor="@color/white"
                 android:textSize="22dp"
                 android:visibility="gone"/>

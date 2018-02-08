@@ -29,7 +29,7 @@
             android:id="@+id/btn_finish_setting"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="80dp"
-            android:text="完成设置"
+            android:text="@string/setting_suress"
             style="@style/btn_finish"/>
 
     </LinearLayout>

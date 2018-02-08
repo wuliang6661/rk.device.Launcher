@@ -27,6 +27,7 @@ import butterknife.ButterKnife;
 import rk.device.launcher.R;
 import rk.device.launcher.api.T;
 import rk.device.launcher.utils.LogUtil;
+import rk.device.launcher.utils.ResUtil;
 
 public class AutoObtainNetworkConfigFragment extends Fragment {
 
@@ -185,7 +186,7 @@ public class AutoObtainNetworkConfigFragment extends Fragment {
 	}
 
 	private final static String nullIpInfo = "0.0.0.0";
-	private final String STATE_CONNECTING = "正在获取...";
+	private final String STATE_CONNECTING = ResUtil.getString(R.string.now_loading);
 	private static String mEthHwAddress = null;
 	private static String mEthIpAddress = null;
 	private static String mEthNetmask = null;

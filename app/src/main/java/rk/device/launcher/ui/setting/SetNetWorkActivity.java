@@ -68,7 +68,7 @@ public class SetNetWorkActivity extends BaseActivity implements View.OnClickList
 
     protected void initView() {
         goBack();
-        setTitle("网络设置");
+        setTitle(getString(R.string.net_setting));
     }
 
     @Override
@@ -99,17 +99,17 @@ public class SetNetWorkActivity extends BaseActivity implements View.OnClickList
                 if (mCurrentFragment instanceof ManualConfigFragment) {
                     ManualConfigFragment fragment = (ManualConfigFragment) mCurrentFragment;
                     if (!fragment.saveIpConfig()) { // IP参数没有设置成功
-                        showMessageDialog("参数设置失败");
+                        showMessageDialog(getString(R.string.parameter_setting_failed));
                         return;
                     }
                     try {
                         boolean result = Settings.Global.putInt(getContentResolver(), Settings.Global.NETWORK_PREFERENCE, ConnectivityManager.TYPE_ETHERNET);
                         if (!result) {
-                            showMessageDialog("切换网络失败");
+                            showMessageDialog(getString(R.string.switch_net_error));
 //							return;
                         }
                     } catch (Exception e) {
-                        showMessageDialog("切换网络失败");
+                        showMessageDialog(getString(R.string.switch_net_error));
                         LogUtil.e(TAG, e.getMessage());
 //						return;
                     }
@@ -122,11 +122,11 @@ public class SetNetWorkActivity extends BaseActivity implements View.OnClickList
                         fragment.setIPConfigDHCP();
                         boolean result = Settings.Global.putInt(getContentResolver(), Settings.Global.NETWORK_PREFERENCE, ConnectivityManager.TYPE_ETHERNET);
                         if (!result) {
-                            showMessageDialog("切换网络失败");
+                            showMessageDialog(getString(R.string.switch_net_error));
 //							return;
                         }
                     } catch (Exception e) {
-                        showMessageDialog("切换网络失败");
+                        showMessageDialog(getString(R.string.switch_net_error));
                         LogUtil.e(TAG, e.getMessage());
 //						return;
                     }
@@ -135,11 +135,11 @@ public class SetNetWorkActivity extends BaseActivity implements View.OnClickList
                     try {
                         boolean result = Settings.Global.putInt(getContentResolver(), Settings.Global.NETWORK_PREFERENCE, ConnectivityManager.TYPE_WIFI);
                         if (!result) {
-                            showMessageDialog("切换网络失败");
+                            showMessageDialog(getString(R.string.switch_net_error));
 //							return;
                         }
                     } catch (Exception e) {
-                        showMessageDialog("切换网络失败");
+                        showMessageDialog(getString(R.string.switch_net_error));
                         LogUtil.e(TAG, e.getMessage());
 //						return;
                     }

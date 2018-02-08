@@ -15,7 +15,7 @@
 
         <TextView
             style="@style/tv_set_label"
-            android:text="摄像头检测" />
+            android:text="@string/carema_detecation" />
 
         <TextView
             android:layout_width="0dp"
@@ -43,7 +43,7 @@
 
         <TextView
             style="@style/tv_set_label"
-            android:text="NFC检测" />
+            android:text="@string/nfc_detection" />
 
         <TextView
             android:layout_width="0dp"
@@ -71,7 +71,7 @@
 
         <TextView
             style="@style/tv_set_label"
-            android:text="指纹检测" />
+            android:text="@string/title_finger_check" />
 
         <TextView
             android:layout_width="0dp"
@@ -99,7 +99,7 @@
 
         <TextView
             style="@style/tv_set_label"
-            android:text="LED补光灯检测" />
+            android:text="@string/led_detecation" />
 
         <TextView
             android:layout_width="0dp"
@@ -127,7 +127,7 @@
 
         <TextView
             style="@style/tv_set_label"
-            android:text="网络检测" />
+            android:text="@string/net_decation" />
 
         <TextView
             android:layout_width="0dp"

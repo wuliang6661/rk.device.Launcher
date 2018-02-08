@@ -15,12 +15,14 @@ import android.widget.TextView;
 import butterknife.Bind;
 import peripherals.FingerConstant;
 import peripherals.FingerHelper;
+import retrofit2.http.HEAD;
 import rk.device.launcher.R;
 import rk.device.launcher.api.T;
 import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.bean.event.FingerRegisterProgressEvent;
 import rk.device.launcher.utils.LogUtil;
+import rk.device.launcher.utils.ResUtil;
 import rk.device.launcher.utils.rxjava.RxBus;
 import rx.Subscriber;
 
@@ -261,13 +263,14 @@ public class FinderDetection extends BaseActivity implements View.OnClickListene
     private boolean doDeleteJniFinger(int uId) {
         int resultCode = FingerHelper.JNIFpDelUserByID(LauncherApplication.fingerModuleID, uId);
         if (resultCode == FingerConstant.SUCCESS) {
-            LogUtil.i(TAG,TAG+"doDeleteJniFinger success");
-            if(addFingerBtn.getText().toString().equals(getString(R.string.delete_finger))){
+            LogUtil.i(TAG, TAG + "doDeleteJniFinger success");
+            if (addFingerBtn.getText().toString().equals(getString(R.string.delete_finger))) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         addFingerBtn.setText(getString(R.string.finger_reload));
                         noticeTv.setText(getString(R.string.finger_add_notice));
+                        noticeTv.setBackground(null);
                         showAnimation(0);
                     }
                 });
@@ -275,7 +278,7 @@ public class FinderDetection extends BaseActivity implements View.OnClickListene
             isAdded = false;
             return true;
         } else {
-            LogUtil.i(TAG,TAG+"doDeleteJniFinger failed");
+            LogUtil.i(TAG, TAG + "doDeleteJniFinger failed");
             return false;
         }
     }

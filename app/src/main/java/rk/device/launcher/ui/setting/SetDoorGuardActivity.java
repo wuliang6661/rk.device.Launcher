@@ -77,7 +77,7 @@ public class SetDoorGuardActivity extends BaseActivity implements View.OnClickLi
 
     protected void initView() {
         goBack();
-        setTitle("门禁设置");
+        setTitle(getString(R.string.setting_menjin));
         mBtnFinishSetting.setBackgroundResource(R.drawable.shape_btn_finish_setting);
     }
 
@@ -138,7 +138,7 @@ public class SetDoorGuardActivity extends BaseActivity implements View.OnClickLi
                     return;
                 }
                 Bundle bundle = new Bundle();
-                bundle.putString("title", "关联设备");
+                bundle.putString("title", getString(R.string.guanlian_device));
                 bundle.putSerializable("data", device);
                 bundle.putInt("code", 1);     //辨别是哪个选项
                 bundle.putInt("position", selectPosition);
@@ -161,7 +161,7 @@ public class SetDoorGuardActivity extends BaseActivity implements View.OnClickLi
 
                     @Override
                     public void onError(Throwable e) {
-                        mTvConnectedDevice.setText("蓝牙锁");
+                        mTvConnectedDevice.setText(R.string.blue_lock);
                         deviceName = "1_蓝牙锁";
                     }
 

@@ -61,7 +61,7 @@
         android:id="@+id/btn_finish_setting"
         style="@style/btn_finish"
         android:layout_marginTop="180dp"
-        android:text="拍摄" />
+        android:text="@string/paishe" />
 
 
     <LinearLayout
@@ -84,7 +84,7 @@
             android:background="@drawable/shape_btn_finish_setting"
             android:paddingBottom="20dp"
             android:paddingTop="20dp"
-            android:text="重新录入"
+            android:text="@string/re_load"
             android:textColor="@color/white"
             android:textSize="22dp" />
 
@@ -97,7 +97,7 @@
             android:background="@drawable/shape_btn_finish_setting"
             android:paddingBottom="20dp"
             android:paddingTop="20dp"
-            android:text="保存"
+            android:text="@string/save"
             android:textColor="@color/white"
             android:textSize="22dp" />
 

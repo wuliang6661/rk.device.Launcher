@@ -15,6 +15,7 @@ import java.io.File;
 import butterknife.Bind;
 import rk.device.launcher.R;
 import rk.device.launcher.mvp.MVPBaseActivity;
+import rk.device.launcher.utils.ResUtil;
 import rk.device.launcher.utils.recoder.RecordPlayer;
 import rk.device.launcher.utils.recoder.RecorderUtil;
 
@@ -50,7 +51,7 @@ public class BbsActivity extends MVPBaseActivity<BbsContract.View, BbsPresenter>
         super.onCreate(savedInstanceState);
 
         goBack();
-        setTitle("留言");
+        setTitle(ResUtil.getString(R.string.liuyan));
         commitText.setOnTouchListener(this);
         commitText.setOnClickListener(this);
 

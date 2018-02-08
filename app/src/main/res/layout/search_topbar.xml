@@ -30,7 +30,7 @@
         android:layout_marginRight="@dimen/dp_20"
         android:layout_weight="1"
         android:background="@drawable/shape_bg_search_data"
-        android:hint="搜索用户姓名"
+        android:hint="@string/select_name"
         android:padding="@dimen/dp_10"
         android:textColor="@color/color_333333"
         android:textColorHint="@color/color_ccccc"

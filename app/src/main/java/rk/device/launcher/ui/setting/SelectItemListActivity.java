@@ -59,7 +59,7 @@ public class SelectItemListActivity extends BaseActivity {
             case 1:                       //关联设备
                 infoBean = (DeviceInfoBO) bundle.getSerializable("data");
                 selectPosition = bundle.getInt("position", Integer.MAX_VALUE);
-                setTitle(bundle.getString("title", "设置"));
+                setTitle(bundle.getString("title", getString(R.string.setting)));
                 break;
             default:
                 setDefalt();

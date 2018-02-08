@@ -7,6 +7,8 @@ import org.greenrobot.greendao.annotation.NotNull;
 import org.greenrobot.greendao.annotation.Transient;
 import org.greenrobot.greendao.annotation.Unique;
 
+import rk.device.launcher.R;
+import rk.device.launcher.utils.ResUtil;
 import rk.device.launcher.utils.TimeUtils;
 
 /**
@@ -77,8 +79,8 @@ public class Record {
 
     @Generated(hash = 1487740252)
     public Record(Long id, @NotNull String uniqueId, String popeName,
-            @NotNull String peopleId, int openType, String data, int slide_data,
-            long cdate) {
+                  @NotNull String peopleId, int openType, String data, int slide_data,
+                  long cdate) {
         this.id = id;
         this.uniqueId = uniqueId;
         this.popeName = popeName;
@@ -135,22 +137,22 @@ public class Record {
         this.openTypeText = "";
         switch (openType) {
             case 1:
-                this.openTypeText = "卡";
+                this.openTypeText = ResUtil.getString(R.string.open_card);
                 break;
             case 2:
-                this.openTypeText = "指纹";
+                this.openTypeText = ResUtil.getString(R.string.open_finder);
                 break;
             case 3:
-                this.openTypeText = "人脸";
+                this.openTypeText = ResUtil.getString(R.string.open_face);
                 break;
             case 4:
-                this.openTypeText = "密码";
+                this.openTypeText = ResUtil.getString(R.string.open_pwd);
                 break;
             case 5:
-                this.openTypeText = "二维码";
+                this.openTypeText = ResUtil.getString(R.string.open_qrcode);
                 break;
             case 6:
-                this.openTypeText = "远程开门";
+                this.openTypeText = ResUtil.getString(R.string.open_yuancheng);
                 break;
             default:
                 break;
@@ -187,33 +189,32 @@ public class Record {
         return this.dateText;
     }
 
-    public String getOpenTypeText(){
+    public String getOpenTypeText() {
         this.openTypeText = "";
         switch (openType) {
             case 1:
-                this.openTypeText = "卡";
+                this.openTypeText = ResUtil.getString(R.string.open_card);
                 break;
             case 2:
-                this.openTypeText = "指纹";
+                this.openTypeText = ResUtil.getString(R.string.open_finder);
                 break;
             case 3:
-                this.openTypeText = "人脸";
+                this.openTypeText = ResUtil.getString(R.string.open_face);
                 break;
             case 4:
-                this.openTypeText = "密码";
+                this.openTypeText = ResUtil.getString(R.string.open_pwd);
                 break;
             case 5:
-                this.openTypeText = "二维码";
+                this.openTypeText = ResUtil.getString(R.string.open_qrcode);
                 break;
             case 6:
-                this.openTypeText = "远程开门";
+                this.openTypeText = ResUtil.getString(R.string.open_yuancheng);
                 break;
             default:
                 break;
         }
         return this.openTypeText;
     }
-
 
 
 }

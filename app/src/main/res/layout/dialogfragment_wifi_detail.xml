@@ -67,7 +67,7 @@
                     android:layout_height="@dimen/item_height"
                     android:gravity="center"
                     android:padding="10dp"
-                    android:text="IP地址: 116.118.119.155"
+                    android:text="@string/ip_lizi"
                     android:textColor="@color/white"
                     android:textSize="33dp"/>
 
@@ -86,7 +86,7 @@
                     android:layout_height="@dimen/item_height"
                     android:gravity="center"
                     android:padding="10dp"
-                    android:text="子网掩码: 116.118.119.155"
+                    android:text="@string/dns_lizi"
                     android:textColor="@color/white"
                     android:textSize="33dp"/>
 
@@ -105,7 +105,7 @@
                     android:layout_height="@dimen/item_height"
                     android:gravity="center"
                     android:padding="10dp"
-                    android:text="网关: 116.118.119.155"
+                    android:text="@string/wangguan_lizi"
                     android:textColor="@color/white"
                     android:textSize="33dp"/>
 
@@ -149,7 +149,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="忘记网络"
+                android:text="@string/forword_net"
                 android:textColor="@color/white"
                 android:textSize="29dp"
                 />
@@ -165,7 +165,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="断开连接"
+                android:text="@string/off_connect"
                 android:textColor="@color/white"
                 android:textSize="29dp"/>
 

@@ -18,6 +18,7 @@ import butterknife.Bind;
 import peripherals.NumberpadHelper;
 import rk.device.launcher.R;
 import rk.device.launcher.mvp.MVPBaseActivity;
+import rk.device.launcher.utils.ResUtil;
 import rk.device.launcher.widget.lgrecycleadapter.LGRecycleViewAdapter;
 import rk.device.launcher.widget.lgrecycleadapter.LGViewHolder;
 
@@ -61,7 +62,7 @@ public class CallActivity extends MVPBaseActivity<CallContract.View, CallPresent
 
     protected void initView() {
         goBack();
-        setTitle("拨号通话");
+        setTitle(ResUtil.getString(R.string.call_tonghua));
         GridLayoutManager manager = new GridLayoutManager(this, 3);
         recycle.setLayoutManager(manager);
     }
