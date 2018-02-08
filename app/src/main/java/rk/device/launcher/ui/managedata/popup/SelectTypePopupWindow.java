@@ -18,6 +18,7 @@ import rk.device.launcher.R;
 import rk.device.launcher.ui.managedata.bean.OpenDoorTypeBean;
 import rk.device.launcher.ui.managedata.rv.SelectRvAdapter;
 import rk.device.launcher.ui.managedata.rv.SelectTypeDecoration;
+import rk.device.launcher.utils.ResUtil;
 
 /**
  * Created by mundane on 2018/1/5 下午4:05
@@ -40,20 +41,20 @@ public class SelectTypePopupWindow extends PopupWindow implements SelectRvAdapte
 
     private void initData(Context context) {
         mDataList = new ArrayList<>();
-        mDataList.add(new OpenDoorTypeBean("全部类型", 0, true));
-        mDataList.add(new OpenDoorTypeBean("刷脸开门", 3));
-        mDataList.add(new OpenDoorTypeBean("密码开门", 4));
-        mDataList.add(new OpenDoorTypeBean("刷卡开门", 1));
-        mDataList.add(new OpenDoorTypeBean("指纹开门", 2));
-        mDataList.add(new OpenDoorTypeBean("二维码开门", 5));
-        mDataList.add(new OpenDoorTypeBean("远程开门", 6));
+        mDataList.add(new OpenDoorTypeBean(ResUtil.getString(R.string.all_classify), 0, true));
+        mDataList.add(new OpenDoorTypeBean(ResUtil.getString(R.string.face_open), 3));
+        mDataList.add(new OpenDoorTypeBean(ResUtil.getString(R.string.pwd_open), 4));
+        mDataList.add(new OpenDoorTypeBean(ResUtil.getString(R.string.card_open), 1));
+        mDataList.add(new OpenDoorTypeBean(ResUtil.getString(R.string.finder_open), 2));
+        mDataList.add(new OpenDoorTypeBean(ResUtil.getString(R.string.qr_code_open), 5));
+        mDataList.add(new OpenDoorTypeBean(ResUtil.getString(R.string.open_yuancheng), 6));
         mRv.setLayoutManager(new LinearLayoutManager(context));
         mRv.addItemDecoration(new SelectTypeDecoration(context, R.color.color_2d5581));
         mRv.setAdapter(mAdapter = new SelectRvAdapter(mDataList));
         mAdapter.setOnItemClickedListener(this);
     }
 
-    public interface OnItemClickedListener{
+    public interface OnItemClickedListener {
         void onItemClicked(OpenDoorTypeBean bean);
     }
 

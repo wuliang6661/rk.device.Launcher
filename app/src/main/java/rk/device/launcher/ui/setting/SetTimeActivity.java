@@ -71,7 +71,7 @@ public class SetTimeActivity extends BaseActivity {
 	}
 	
 	protected void initView() {
-		setTitle("时间设置");
+		setTitle(getString(R.string.time_setting));
 		goBack();
 //		Calendar calendar = Calendar.getInstance();
 //		Date date = new Date();

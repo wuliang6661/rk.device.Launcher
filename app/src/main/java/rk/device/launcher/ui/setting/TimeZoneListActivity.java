@@ -61,7 +61,7 @@ public class TimeZoneListActivity extends BaseActivity implements TimeZoneRvAdap
     // 第2步
     protected void initView() {
         goBack();
-        setTitle("选择时区");
+        setTitle(getString(R.string.select_time));
     }
 
     // 第3步

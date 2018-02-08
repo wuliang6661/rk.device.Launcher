@@ -53,7 +53,7 @@ public class SystemInfoActivity extends BaseActivity implements View.OnClickList
 
     protected void initView() {
         goBack();
-        setTitle("关于设备");
+        setTitle(getString(R.string.guanyu_devices));
         invition();
     }
 

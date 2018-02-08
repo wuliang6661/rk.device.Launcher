@@ -58,7 +58,7 @@ public class ManagedataActivity extends MVPBaseActivity<ManagedataContract.View,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         goBack();
-        setTitle("数据管理");
+        setTitle(getString(R.string.data_manager));
         mIvSearch.setVisibility(View.VISIBLE);
         bindListener();
         mPresenter.initData(mRv);

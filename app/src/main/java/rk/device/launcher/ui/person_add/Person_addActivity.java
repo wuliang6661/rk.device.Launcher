@@ -102,7 +102,7 @@ public class Person_addActivity
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setTitle("添加用户");
+        setTitle(getString(R.string.add_person));
         setOnClick(R.id.face_layout, R.id.pass_layout, R.id.card_layout, R.id.finger_layout01,
                 R.id.finger_layout02, R.id.finger_layout03, R.id.btn_finish_setting, R.id.iv_back);
         llSetTime.setOnClickListener(this);
@@ -119,7 +119,7 @@ public class Person_addActivity
         if (user != null) {
             idLayout.setVisibility(View.VISIBLE);
             idView.setVisibility(View.VISIBLE);
-            setTitle("修改用户");
+            setTitle(getString(R.string.update_person));
             idText.setText(String.valueOf(user.getUniqueId()));
             tvTimeStart.setText(TimeUtils.getFormatTimeFromTimestamp(user.getStartTime(), null));
             tvTimeEnd.setText(TimeUtils.getFormatTimeFromTimestamp(user.getEndTime(), null));
@@ -197,7 +197,7 @@ public class Person_addActivity
                 getTimeDialog(tvTimeEnd, 1);
                 break;
             case R.id.title_right:     //删除用户
-                showMessageDialog("是否确认删除该用户\n\n删除后所有录入信息都被删除", "确定", v -> {
+                showMessageDialog(getString(R.string.delete_person_message), getString(R.string.confirm), v -> {
                     if (!StringUtils.isEmpty(user.getFaceID())) {    //删除本地人脸
                         FaceUtils faceUtils = FaceUtils.getInstance();
                         faceUtils.delete(user.getFaceID());
@@ -228,7 +228,7 @@ public class Person_addActivity
     private boolean isHasName() {
         String name = etPersonName.getText().toString().trim();
         if (StringUtils.isEmpty(name)) {
-            showMessageDialog("请输入用户名称！");
+            showMessageDialog(getString(R.string.please_edit_personname));
             return false;
         }
         if (user != null) {
@@ -258,12 +258,12 @@ public class Person_addActivity
             long endTime = TimeUtils.string2Millis(tvTimeEnd.getText().toString());
             if (type == 1) {    //结束时间
                 if (selTime <= staTime) {
-                    showMessageDialog("结束时间必须大于开始时间");
+                    showMessageDialog(getString(R.string.endtime_starttime));
                     return;
                 }
             } else {
                 if (selTime >= endTime) {
-                    showMessageDialog("开始时间必须小于结束时间");
+                    showMessageDialog(getString(R.string.starttime_endtime));
                     return;
                 }
             }
@@ -277,10 +277,10 @@ public class Person_addActivity
      */
     private void addNumPass() {
         if (isHasName()) {
-            showDialogFragment("开门密码", content -> {
+            showDialogFragment(getString(R.string.kaimen_pwd), content -> {
                 if (!StringUtils.isEmpty(content)) {
                     if (content.length() != 6) {
-                        dialogFragment.showError("请输入6位数密码！");
+                        dialogFragment.showError(getString(R.string.edit_pwd_hint));
                         return;
                     }
                 }
@@ -295,7 +295,7 @@ public class Person_addActivity
                     dialogFragment.dismiss();
                     loadUser();
                 } else {
-                    dialogFragment.showError("密码已存在！");
+                    dialogFragment.showError(getString(R.string.pwd_ishave));
                 }
             }, false);
             dialogFragment.show(getSupportFragmentManager(), "");
@@ -309,7 +309,7 @@ public class Person_addActivity
     private void showDialogFragment(String title, InputWifiPasswordDialogFragment.OnConfirmClickListener listener, boolean isHideInput) {
         dialogFragment = InputWifiPasswordDialogFragment.newInstance();
         dialogFragment.setTitle(title);
-        dialogFragment.showHite("请输入6位数密码");
+        dialogFragment.showHite(getString(R.string.edit_pwd_hint));
         dialogFragment.setMaxLength(6);
         if (isHideInput) {
             dialogFragment.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);   //隐藏密码
@@ -338,17 +338,17 @@ public class Person_addActivity
         faceText.setText(getType(user.getFaceID(), faceLayout));
         if (user.getPassWord() != 0) {
             passLayout.setBackgroundColor(Color.parseColor("#302d85"));
-            passMessage.setText("密码：******");
-            passText.setText("已录入");
+            passMessage.setText(R.string.pwd_all);
+            passText.setText(R.string.add_suress);
         } else {
-            passMessage.setText("密码：空");
-            passText.setText("未录入");
+            passMessage.setText(R.string.pwd_null);
+            passText.setText(R.string.no_add);
             passLayout.setBackgroundColor(Color.parseColor("#30374b"));
         }
         if (!StringUtils.isEmpty(user.getCardNo())) {
-            cardMessage.setText(String.valueOf("卡号：" + user.getCardNo()));
+            cardMessage.setText(String.valueOf(getString(R.string.card_num) + user.getCardNo()));
         } else {
-            cardMessage.setText("卡号：空");
+            cardMessage.setText(R.string.card_null);
         }
         cardText.setText(getType(user.getCardNo(), cardLayout));
         fingerText01.setText(getType(user.getFingerID1(), fingerLayout01));
@@ -363,10 +363,10 @@ public class Person_addActivity
     private String getType(String message, View view) {
         if (StringUtils.isEmpty(message)) {
             view.setBackgroundColor(Color.parseColor("#30374b"));
-            return "未录入";
+            return getString(R.string.no_add);
         } else {
             view.setBackgroundColor(Color.parseColor("#302d85"));
-            return "已录入";
+            return getString(R.string.add_suress);
         }
     }
 }

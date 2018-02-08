@@ -103,7 +103,7 @@ public class NfcDetection extends BaseActivity implements View.OnClickListener {
             noticeTv = cardNumberView.findViewById(R.id.tv_notice);
         }
         cardNumTv.setText(nfcCard);
-        saveBtn.setText("完成");
+        saveBtn.setText(R.string.finish);
         saveBtn.setOnClickListener(NfcDetection.this);
         if (showNotice) {
             noticeTv.setVisibility(View.VISIBLE);

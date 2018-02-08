@@ -81,17 +81,17 @@ public class SetSysActivity extends BaseActivity {
 
     protected void initView() {
         goBack();
-        setTitle("系统设置");
+        setTitle(getString(R.string.sys_setting));
     }
 
     protected void initData() {
         mSleepTimeDataList = new ArrayList<>();
-        mSleepTimeDataList.add(new SetDoorRvBO("30秒", 30000));
-        mSleepTimeDataList.add(new SetDoorRvBO("1分钟", 60000));
-        mSleepTimeDataList.add(new SetDoorRvBO("2分钟", 120000));
-        mSleepTimeDataList.add(new SetDoorRvBO("5分钟", 300000));
-        mSleepTimeDataList.add(new SetDoorRvBO("10分钟", 600000));
-        mSleepTimeDataList.add(new SetDoorRvBO("不休眠", -1));
+        mSleepTimeDataList.add(new SetDoorRvBO(getString(R.string.tirty_second), 30000));
+        mSleepTimeDataList.add(new SetDoorRvBO(getString(R.string.one_minutes), 60000));
+        mSleepTimeDataList.add(new SetDoorRvBO(getString(R.string.two_minutes), 120000));
+        mSleepTimeDataList.add(new SetDoorRvBO(getString(R.string.five_minutes), 300000));
+        mSleepTimeDataList.add(new SetDoorRvBO(getString(R.string.ten_minutes), 600000));
+        mSleepTimeDataList.add(new SetDoorRvBO(getString(R.string.dont_sleep), -1));
 
         // 读取保存的待机时间
         // 没有设置待机时间的话, 默认是30秒
@@ -135,23 +135,23 @@ public class SetSysActivity extends BaseActivity {
                 // 保存端口号
                 mport = mEtPort.getText().toString().trim();
                 if (!StringUtils.isEmpty(mip) && StringUtils.isEmpty(mport)) {
-                    showMessageDialog("请填写端口号！");
+                    showMessageDialog(getString(R.string.edit_post));
                     return;
                 }
                 mclientCode = mEtClientCode.getText().toString();
                 if (!TextUtils.isEmpty(mclientCode)) {
                     if (mclientCode.length() < 6) {
-                        showMessageDialog("客户号输入错误！！");
+                        showMessageDialog(getString(R.string.cid_error));
                         return;
                     }
                 }
                 if (!StringUtils.isEmpty(mip) || !StringUtils.isEmpty(mport)) {
                     if (NetWorkUtil.isNetConnected(SetSysActivity.this)) {
-                        showWaitProgress("正在连接服务器...");
+                        showWaitProgress(getString(R.string.connect_server_loading));
                         thread = new Thread(runnable);
                         thread.start();
                     } else {
-                        showMessageDialog("更换IP请先连接网络！");
+                        showMessageDialog(getString(R.string.ip_select_net));
                     }
                     return;
                 }
@@ -216,7 +216,7 @@ public class SetSysActivity extends BaseActivity {
             switch (msg.what) {
                 case 0x11:
                     hintWaitProgress();
-                    showMessageDialog("服务器IP地址不可用！");
+                    showMessageDialog(getString(R.string.ip_no_error));
                     break;
                 case 0x22:
                     hintWaitProgress();

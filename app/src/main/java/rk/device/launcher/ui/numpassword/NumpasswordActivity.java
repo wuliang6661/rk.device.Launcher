@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -21,6 +20,7 @@ import rk.device.launcher.db.DbHelper;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.global.VerifyTypeConstant;
 import rk.device.launcher.mvp.MVPBaseActivity;
+import rk.device.launcher.utils.ResUtil;
 import rk.device.launcher.utils.verify.OpenUtils;
 import rk.device.launcher.widget.lgrecycleadapter.LGRecycleViewAdapter;
 import rk.device.launcher.widget.lgrecycleadapter.LGViewHolder;
@@ -72,9 +72,9 @@ public class NumpasswordActivity extends MVPBaseActivity<NumpasswordContract.Vie
 
     protected void initView() {
         goBack();
-        setTitle("密码开门");
-        editText.setHint("请输入公共密码或户室密码");
-        hintText.setText(String.valueOf("参考：户室密码1508#123456（“户室号” + “#” + “户室密码”）"));
+        setTitle(ResUtil.getString(R.string.pwd_open));
+        editText.setHint(R.string.hushi_pwd_hint);
+        hintText.setText(String.valueOf(getString(R.string.hushi_lizi)));
         editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});
         commit.setVisibility(View.VISIBLE);
         commitImg.setVisibility(View.GONE);
@@ -154,10 +154,10 @@ public class NumpasswordActivity extends MVPBaseActivity<NumpasswordContract.Vie
                 String[] passwords = commitText.toString().split("#");
                 List<User> users = DbHelper.queryByPassword(passwords[passwords.length - 1]);
                 if (users.isEmpty()) {
-                    showMessageDialog("密码错误，请重新输入");
+                    showMessageDialog(getString(R.string.pwd_error_hint));
                 } else {
                     if (users.get(0).getPassWord() == 0) {
-                        showMessageDialog("密码错误，请重新输入");
+                        showMessageDialog(getString(R.string.pwd_error_hint));
                         return;
                     }
                     long time = System.currentTimeMillis();

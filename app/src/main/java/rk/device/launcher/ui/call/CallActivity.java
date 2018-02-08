@@ -129,7 +129,7 @@ public class CallActivity extends MVPBaseActivity<CallContract.View, CallPresent
         switch (view.getId()) {
             case R.id.call_commit:
                 if (commitText.length() != 4) {
-                    showMessageDialog("输入的房间号必须为4位！");
+                    showMessageDialog(getString(R.string.room_num_hint));
                 } else {
                     int suress = NumberpadHelper.PER_numberpadPress(commitText.toString());
                     Log.d("wuliang", "call_button " + commitText.toString() + "  code = " + suress);

@@ -50,7 +50,7 @@ public class PersonManageActivity extends MVPBaseActivity<PersonManageContract.V
         super.onCreate(savedInstanceState);
 
         goBack();
-        setTitle("用户管理");
+        setTitle(getString(R.string.person_manger));
         setRightButton(R.drawable.add_person, this);
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -107,7 +107,7 @@ public class PersonManageActivity extends MVPBaseActivity<PersonManageContract.V
         adapter.setOnItemClickListener(R.id.item_layout, (view, position) -> {
             User user = users.get(position);
             if(DbHelper.queryByUniqueId(user.getUniqueId()).size()==0){
-                T.showShort("该用户不存在");
+                T.showShort(getString(R.string.person_no_have));
                 users.remove(position);
                 adapter.notifyDataSetChanged();
                 return;
@@ -132,7 +132,7 @@ public class PersonManageActivity extends MVPBaseActivity<PersonManageContract.V
         switch (view.getId()) {
             case R.id.title_right:    //增加用户
                 if (DbHelper.loadAll().size() > 1000) {
-                    showMessageDialog("本机用户存储已达上限！");
+                    showMessageDialog(getString(R.string.person_shangxian));
                 } else {
                     gotoActivity(Person_addActivity.class, false);
                 }

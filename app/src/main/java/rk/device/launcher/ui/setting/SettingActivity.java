@@ -104,7 +104,7 @@ public class SettingActivity extends BaseActivity {
 
     protected void initView() {
         goBack();
-        setTitle("设置");
+        setTitle(getString(R.string.setting));
     }
 
     protected void initData() {
@@ -233,8 +233,8 @@ public class SettingActivity extends BaseActivity {
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
-        progressDialog.setTitle("清除中");
-        progressDialog.setMessage("请稍后");
+        progressDialog.setTitle(getString(R.string.clear_loading));
+        progressDialog.setMessage(getString(R.string.please_wait));
         return progressDialog;
     }
 

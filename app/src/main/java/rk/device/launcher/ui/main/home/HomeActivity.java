@@ -330,13 +330,13 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
      * 显示输入管理员密码进入设置
      */
     private void showManagerDialog(int type) {
-        showDialogFragment("请输入管理员密码", content -> {
+        showDialogFragment(getString(R.string.edit_person_pwd), content -> {
             if (StringUtils.isEmpty(content)) {
-                dialogFragment.showError("请输入管理员密码！");
+                dialogFragment.showError(getString(R.string.edit_person_pwd));
                 return;
             }
             if (content.length() != 6) {
-                dialogFragment.showError("请输入完整密码！");
+                dialogFragment.showError(getString(R.string.please_all_pwd));
                 return;
             }
             final String password = SPUtils.getString(Constant.KEY_PASSWORD);
@@ -387,7 +387,7 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
     private void showDialogFragment(String title, InputWifiPasswordDialogFragment.OnConfirmClickListener listener, boolean isHideInput) {
         dialogFragment = InputWifiPasswordDialogFragment.newInstance();
         dialogFragment.setTitle(title);
-        dialogFragment.showHite("请输入6位数密码");
+        dialogFragment.showHite(getString(R.string.edit_pwd_hint));
         dialogFragment.setMaxLength(6);
         if (isHideInput) {
             dialogFragment.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);   //隐藏密码

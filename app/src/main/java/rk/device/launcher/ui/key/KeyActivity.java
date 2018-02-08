@@ -67,13 +67,13 @@ public class KeyActivity extends MVPBaseActivity<KeyContract.View, KeyPresenter>
             case R.id.suress_button:
                 key = keyEdit.getText().toString().trim();
                 if (StringUtils.isEmpty(key) || key.length() < 14) {
-                    onRequestError("请输入正确激活码");
+                    onRequestError(getString(R.string.jihuo_edit_hint));
                 } else {
                     if (NetWorkUtil.isNetConnected(this)) {
                         mPresenter.activationDiveces(new DeviceUuidFactory(this).getUuid() + "", FileUtils.readFile2String("/proc/board_sn", "UTF-8"), key);
-                        showWaitProgress("正在激活...");
+                        showWaitProgress(getString(R.string.jihuo_loading));
                     } else {
-                        onRequestError("网络未连接");
+                        onRequestError(getString(R.string.net_no_connect));
                     }
                 }
                 break;
@@ -104,7 +104,7 @@ public class KeyActivity extends MVPBaseActivity<KeyContract.View, KeyPresenter>
             SPUtils.put(Constant.SETTING_NUM, Constant.SETTING_TYPE3);
             gotoActivity(SettingMangerPwdActivity.class, true);
         } else {
-            onRequestError("激活流程出现错误，请重新激活");
+            onRequestError(getString(R.string.jihuo_error_message));
         }
     }
 

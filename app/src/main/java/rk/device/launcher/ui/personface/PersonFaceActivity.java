@@ -78,7 +78,7 @@ public class PersonFaceActivity extends MVPBaseActivity<PersonFaceContract.View,
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setTitle("添加人脸");
+        setTitle(getString(R.string.add_face));
         String id = getIntent().getExtras().getString("id");
         user = DbHelper.queryUserById(id).get(0);
         faceUtils = FaceUtils.getInstance();
@@ -98,11 +98,11 @@ public class PersonFaceActivity extends MVPBaseActivity<PersonFaceContract.View,
     private void initView() {
         if (!StringUtils.isEmpty(user.getFaceID())) {
             isUpdate = true;
-            setTitle("人脸详情");
+            setTitle(getString(R.string.face_details));
             faceImg.setImageBitmap(BitmapFactory.decodeFile(CacheUtils.getFaceFile() + "/" + user.getFaceID() + ".png"));
             faceImg.setVisibility(View.VISIBLE);
             hintText.setVisibility(View.INVISIBLE);
-            btnFinishSetting.setText("重新拍摄");
+            btnFinishSetting.setText(R.string.restart_photo);
             setRightButton(R.drawable.delete_person, this);
         }
     }
@@ -159,7 +159,7 @@ public class PersonFaceActivity extends MVPBaseActivity<PersonFaceContract.View,
                 if (aa_face == null) {
                     finish();
                 } else {
-                    showMessageDialog("是否确认退出\n\n退出后人脸信息不保存", "确定", v1 -> {
+                    showMessageDialog(getString(R.string.exit_face_null), getString(R.string.confirm), v1 -> {
                         dissmissMessageDialog();
                         finish();
                     });
@@ -176,10 +176,10 @@ public class PersonFaceActivity extends MVPBaseActivity<PersonFaceContract.View,
         faceImg.setVisibility(View.GONE);
         btnFinishSetting.setVisibility(View.VISIBLE);
         hintText.setVisibility(View.VISIBLE);
-        hintText.setText("请将人脸对正摄像头，便于快速录入人脸");
+        hintText.setText(R.string.face_hint);
         hintText.setBackgroundResource(R.drawable.face_add_hint);
-        btnFinishSetting.setText("拍摄");
-        setTitle("添加人脸");
+        btnFinishSetting.setText(R.string.paishe);
+        setTitle(getString(R.string.add_face));
         hideRightButton();
         buttonLayout.setVisibility(View.GONE);
         isUpdate = false;
@@ -195,14 +195,14 @@ public class PersonFaceActivity extends MVPBaseActivity<PersonFaceContract.View,
         faceImg.setVisibility(View.VISIBLE);
         aa_face = faceUtils.bitmapToFace(faceBitmap);
         if (aa_face == null) {
-            btnFinishSetting.setText("重新拍摄");
-            hintText.setText("人脸信息不完整，请重新录入人脸");
+            btnFinishSetting.setText(R.string.restart_photo);
+            hintText.setText(R.string.face_no_full);
             hintText.setBackgroundResource(R.drawable.face_add_error);
             isUpdate = true;
         } else {
             btnFinishSetting.setVisibility(View.GONE);
             buttonLayout.setVisibility(View.VISIBLE);
-            hintText.setText("人脸录入成功");
+            hintText.setText(R.string.face_add_suress);
             hintText.setBackgroundResource(R.drawable.face_add_suress);
         }
     }
@@ -216,7 +216,7 @@ public class PersonFaceActivity extends MVPBaseActivity<PersonFaceContract.View,
         btnFinishSetting.setVisibility(View.VISIBLE);
         buttonLayout.setVisibility(View.GONE);
         aa_face = null;
-        hintText.setText("请将人脸对正摄像头，便于快速录入人脸");
+        hintText.setText(R.string.face_hint);
         hintText.setBackgroundResource(R.drawable.face_add_hint);
     }
 
@@ -225,7 +225,7 @@ public class PersonFaceActivity extends MVPBaseActivity<PersonFaceContract.View,
      */
     private void saveFace() {
         if (faceBitmap == null) {
-            showMessageDialog("请先拍摄人脸！");
+            showMessageDialog(getString(R.string.please_face));
             return;
         }
         faceUtils = FaceUtils.getInstance();
@@ -234,13 +234,13 @@ public class PersonFaceActivity extends MVPBaseActivity<PersonFaceContract.View,
             FileUtils.deleteFile(CacheUtils.getFaceFile() + "/" + user.getFaceID() + ".png");
         }
         if (faceUtils.getmRegister().size() > 1000) {
-            hintText.setText("人脸数量已达上限");
+            hintText.setText(R.string.face_limit);
             hintText.setBackgroundResource(R.drawable.face_add_error);
             return;
         }
         String name = faceUtils.saveFace(aa_face);
         if (StringUtils.isEmpty(name)) {
-            hintText.setText("存储失败");
+            hintText.setText(R.string.save_error);
             hintText.setBackgroundResource(R.drawable.face_add_error);
         } else {
             BitmapUtil.saveBitmap(name + ".png", faceBitmap);
@@ -255,14 +255,14 @@ public class PersonFaceActivity extends MVPBaseActivity<PersonFaceContract.View,
      * 删除人脸
      */
     private void deleteFace() {
-        showMessageDialog("是否删除该人脸", "确定", v1 -> {
+        showMessageDialog(getString(R.string.delete_face), getString(R.string.confirm), v1 -> {
             if (faceUtils.delete(user.getFaceID())) {
                 user.setFaceID("");
                 DbHelper.insertUser(user);
                 dissmissMessageDialog();
                 finish();
             } else {
-                showMessageDialog("删除失败！");
+                showMessageDialog(getString(R.string.delete_error));
             }
         });
     }
