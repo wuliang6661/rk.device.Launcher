@@ -208,7 +208,7 @@ public class EyesCorrectActivity extends BaseActivity implements View.OnClickLis
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
-                showMessageDialog("校准照片未满" + CountNum + "张，\n\n确认退出后此次校准失败", getString(R.string.sure), view1 -> {
+                showMessageDialog(String.format(getString(R.string.eyes_hint), CountNum + ""), getString(R.string.sure), view1 -> {
                     dissmissMessageDialog();
                     Message msg = new Message();
                     msg.what = EventUtil.STOP_CORRECT;
@@ -240,9 +240,10 @@ public class EyesCorrectActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         if (!SPUtils.getBoolean(Constant.KEY_LIGNT, false)) {
             LedHelper.PER_ledToggle(0);
         }
+        SurfaceHolderCaremaFont.stopCarema();
+        super.onDestroy();
     }
 }

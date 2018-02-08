@@ -245,7 +245,7 @@ public class WifiListFragment extends Fragment implements CompoundButton.OnCheck
                         confirmDialogFragment.dismiss();
                         final InputWifiPasswordDialogFragment inputWifiPasswordDialogFragment = InputWifiPasswordDialogFragment.newInstance();
                         inputWifiPasswordDialogFragment.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD)
-                                .setTitle(String.format("请输入“%s”的密码", scanResult.SSID))
+                                .setTitle(String.format(getString(R.string.please_edit_s_pwd), scanResult.SSID))
                                 .setOnCancelClickListener(new InputWifiPasswordDialogFragment.onCancelClickListener() {
                                     @Override
                                     public void onCancelClick() {

@@ -139,9 +139,9 @@ public class WifiDetailDialogFragment extends BaseDialogFragment {
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		mTvIp.setText(String.format("IP地址: %S", mIPAddress));
-		mTvNetMask.setText(String.format("子网掩码: %s", mNetMask));
-		mTvNetGate.setText(String.format("网关: %s", mNetGate));
+		mTvIp.setText(String.format(getString(R.string.ip_s), mIPAddress));
+		mTvNetMask.setText(String.format(getString(R.string.dns_s), mNetMask));
+		mTvNetGate.setText(String.format(getString(R.string.wangguan_s), mNetGate));
 		mTvDns.setText(String.format("DNS: %s", mDns));
 		mTvWifiName.setText(mWifiName);
 		DrawableUtil.addPressedDrawable(getContext(), R.drawable.shape_dialog_btn_cancel, mBtnLeft);
