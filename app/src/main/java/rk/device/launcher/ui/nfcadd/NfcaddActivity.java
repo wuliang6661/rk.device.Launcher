@@ -37,21 +37,21 @@ public class NfcaddActivity extends MVPBaseActivity<NfcaddContract.View, NfcaddP
         implements NfcaddContract.View, View.OnClickListener {
 
     private static final String EXTRA_UNIQUEID = "uniqueId";
-    private String uniqueId = null;
+    private String              uniqueId       = null;
 
-    private TextView cardNumTv;                  //卡号
+    private TextView            cardNumTv;                  //卡号
     @Bind(R.id.ll_card_notice)
-    LinearLayout cardNoticeLL;               //用于展示提示信息的Layout
+    LinearLayout                cardNoticeLL;               //用于展示提示信息的Layout
     @Bind(R.id.stub_layout)
-    ViewStub cardNumberStub;             //用于展示卡片信息的Layout
-    TextView noticeTv;                   //用于提示当前卡牌状态
+    ViewStub                    cardNumberStub;             //用于展示卡片信息的Layout
+    TextView                    noticeTv;                   //用于提示当前卡牌状态
     @Bind(R.id.iv_search)
-    ImageView deleteImg;                  //删除按钮
-    private View cardNumberView;
-    private Button saveBtn;
-    private boolean isDetail = false;
-    private boolean isChange = false;
-    private boolean isReload = false;
+    ImageView                   deleteImg;                  //删除按钮
+    private View                cardNumberView;
+    private Button              saveBtn;
+    private boolean             isDetail       = false;
+    private boolean             isChange       = false;
+    private boolean             isReload       = false;
 
     @Override
     protected int getLayout() {
@@ -131,7 +131,8 @@ public class NfcaddActivity extends MVPBaseActivity<NfcaddContract.View, NfcaddP
                             });
                             return;
                         }
-                        LogUtil.i("VerifyService", "VerifyService NFCAddEvent:" + nfcAddEvent.NFCCard);
+                        LogUtil.i("VerifyService",
+                                "VerifyService NFCAddEvent:" + nfcAddEvent.NFCCard);
                     }
                 }));
     }
@@ -209,7 +210,7 @@ public class NfcaddActivity extends MVPBaseActivity<NfcaddContract.View, NfcaddP
                     eUser.setCardNo(cardNumber);
                     eUser.setUploadStatus(0);
                     DbHelper.update(eUser);
-                    T.showShort("已成功绑定该卡");
+                    T.showShort(getString(R.string.card_add_success));
                     finish();
                 } else {
                     T.showShort(getResources().getString(R.string.illeagel_user_not_exist));
@@ -241,7 +242,7 @@ public class NfcaddActivity extends MVPBaseActivity<NfcaddContract.View, NfcaddP
             eUser.setCardNo("");
             eUser.setUploadStatus(0);
             DbHelper.update(eUser);
-            T.showShort("删除成功");
+            T.showShort(getString(R.string.delete_success));
             finish();
         } else {
             T.showShort(getResources().getString(R.string.illeagel_user_not_exist));

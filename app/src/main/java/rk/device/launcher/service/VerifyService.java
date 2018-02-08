@@ -28,6 +28,7 @@ public class VerifyService extends Service {
     private static final String NFC_ADD_PAGE = "rk.device.launcher.ui.nfcadd.NfcaddActivity";
     private static final String NFC_DETECTION = "rk.device.launcher.ui.detection.NfcDetection";
     private static final String FINGER_ADD_PAGE = "rk.device.launcher.ui.fingeradd.FingeraddActivity";
+    private static final String FINGER_DETECTION = "rk.device.launcher.ui.detection.FinderDetection";
     private boolean isOpen = true;
 
     @Override
@@ -81,6 +82,8 @@ public class VerifyService extends Service {
         }
         if (LauncherApplication.sIsFingerAdd == 1 && isTopActivity().equals(FINGER_ADD_PAGE)) {
             LogUtil.i(TAG, TAG + " model:finger add");
+        }else if (LauncherApplication.sIsFingerAdd == 2 && isTopActivity().equals(FINGER_DETECTION)) {
+            LogUtil.i(TAG, TAG + " model:finger detectiton");
         } else {
             LogUtil.i(TAG, TAG + " model:finger verify");
             int resultCode = FingerHelper.JNIFpFingerMatch(LauncherApplication.fingerModuleID);

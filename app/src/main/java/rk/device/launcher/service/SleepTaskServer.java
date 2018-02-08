@@ -21,7 +21,7 @@ public class SleepTaskServer extends Handler {
     /**
      * 延时时间
      */
-    private long DenyTime = 20 * 1000L;    //默认20秒无操作返回首页
+    private long DenyTime = 60 * 1000L;    //默认20秒无操作返回首页
 
 
     private SleepTaskServer() {

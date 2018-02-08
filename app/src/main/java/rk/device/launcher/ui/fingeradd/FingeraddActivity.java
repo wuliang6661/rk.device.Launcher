@@ -403,7 +403,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
         int remainSpace = FingerHelper.JNIFpGetRemainSpace(LauncherApplication.fingerModuleID);
         LogUtil.i(TAG, TAG + " JNIFpGetRemainSpace :" + remainSpace);
         if (remainSpace <= 0) {
-            showToastMsg("指纹头指纹信息已经录满，请清理指纹头中指纹信息");
+            showToastMsg(getString(R.string.illeagel_finger_number_overflow));
             return false;
         } else {
             addFinger();
@@ -442,7 +442,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
                 }
             } else {
                 isAdd = false;
-                showNoticeMsg("该指纹已录入，请更换手指", false);
+                showNoticeMsg(getString(R.string.notice_finger_existed), false);
                 return;
             }
         } else {
@@ -464,8 +464,8 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
                     isAdd = false;
                     if (addFingerBtn != null) {
                         addFingerBtn.setVisibility(View.VISIBLE);
-                        addFingerBtn.setText("重新录入");
-                        showNoticeMsg("指纹录入超时，请重新按压手指", false);
+                        addFingerBtn.setText(getString(R.string.finger_reload));
+                        showNoticeMsg(getString(R.string.illeagel_finger_add_timeout), false);
                     }
                 }
             });
@@ -477,14 +477,14 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
                     isAdd = false;
                     if (addFingerBtn != null) {
                         addFingerBtn.setVisibility(View.VISIBLE);
-                        addFingerBtn.setText("重新录入");
-                        showNoticeMsg("指纹信息不完整，请重新按压手指", false);
+                        addFingerBtn.setText(getString(R.string.finger_reload));
+                        showNoticeMsg(getString(R.string.illeagel_finger_add_incomplete), false);
                     }
                 }
             });
         } else if (resultCode > 0) {
             fingerId = String.valueOf(resultCode);
-            showDialogFragment("指纹" + number,
+            showDialogFragment(getString(R.string.finger) + number,
                     new InputWifiPasswordDialogFragment.OnConfirmClickListener() {
                         @Override
                         public void onConfirmClick(String content) {
@@ -493,13 +493,13 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
                                 @Override
                                 public void run() {
                                     if (content.length() == 0 || content.length() > 10) {
-                                        T.showShort("指纹名称长度为1-10位");
+                                        T.showShort(getString(R.string.finger_name_rule));
                                         return;
                                     }
                                     addFingerBtn.setVisibility(View.GONE);
                                     buttonLL.setVisibility(View.VISIBLE);
                                     saveTv.setVisibility(View.VISIBLE);
-                                    showNoticeMsg("指纹录入成功", true);
+                                    showNoticeMsg(getString(R.string.finger_add_success), true);
                                     dialogFragment.dismiss();
                                 }
                             });
@@ -544,8 +544,8 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
         if (dialogFragment == null) {
             dialogFragment = InputWifiPasswordDialogFragment.newInstance();
         }
-        dialogFragment.setTitle("请输入新的指纹名称");
-        dialogFragment.showHite("请输入指纹名称");
+        dialogFragment.setTitle(getString(R.string.notice_add_new_finger_name));
+        dialogFragment.showHite(getString(R.string.notice_add_finger_name));
         dialogFragment.setContent(content);
         dialogFragment.setInputType(InputType.TYPE_CLASS_TEXT);
         dialogFragment.setOnCancelClickListener(() -> dialogFragment.dismiss())
@@ -576,7 +576,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-                                            T.showShort("指纹名称长度为1-10位");
+                                            T.showShort(getString(R.string.finger_name_rule));
                                         }
                                     });
                                     return;
@@ -605,26 +605,29 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
         switch (number) {
             case 1:
                 eUser.setFingerID1(fingerId);
-                eUser.setFingerName1(fingerName == null ? "指纹1" : fingerName);
+                eUser.setFingerName1(
+                        fingerName == null ? getString(R.string.finger) + "1" : fingerName);
                 break;
             case 2:
                 eUser.setFingerID2(fingerId);
-                eUser.setFingerName2(fingerName == null ? "指纹2" : fingerName);
+                eUser.setFingerName2(
+                        fingerName == null ? getString(R.string.finger) + "2" : fingerName);
                 break;
             case 3:
                 eUser.setFingerID3(fingerId);
-                eUser.setFingerName3(fingerName == null ? "指纹3" : fingerName);
+                eUser.setFingerName3(
+                        fingerName == null ? getString(R.string.finger) + "3" : fingerName);
                 break;
         }
         eUser.setUploadStatus(0);
         DbHelper.update(eUser);
-        showToastMsg("已成功录入指纹");
+        showToastMsg(getString(R.string.finger_add_success));
         finish();
     }
 
     private boolean checkFingerModular() {
         if (LauncherApplication.sInitFingerSuccess == -1) {
-            showMessageDialog("请添加指纹模块");
+            showMessageDialog(getString(R.string.notice_finger_add));
             LogUtil.i(TAG, TAG + " finger init failed.");
             return false;
         }

@@ -86,7 +86,7 @@
             style="@style/btn_finish"
             android:layout_marginBottom="@dimen/dp_100"
             android:layout_marginTop="@dimen/dp_100"
-            android:text="添加指纹"
+            android:text="@string/finger_add"
             android:visibility="visible" />
     </LinearLayout>
 

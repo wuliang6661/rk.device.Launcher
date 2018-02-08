@@ -79,5 +79,20 @@
     <string name="notice">提示</string>
     <string name="verify_success">验证通过</string>
     <string name="finger_add_notice">请将手指放在指纹传感器上，待识别成功后抬起手指</string>
+    <string name="delete_finger">删除指纹</string>
+    <string name="finger_reload">重新录入</string>
+    <string name="illeagel_finger_number_overflow">指纹头指纹信息已经录满，请清理指纹头中指纹信息</string>
+    <string name="finger_add">添加指纹</string>
+    <string name="title_finger_check">指纹头检测</string>
+    <string name="notice_finger_add">请添加指纹模块</string>
+    <string name="finger_add_success">指纹录入成功</string>
+    <string name="illeagel_finger_add_incomplete">指纹信息不完整，请重新按压手指</string>
+    <string name="illeagel_finger_add_timeout">指纹录入超时，请重新按压手指</string>
+    <string name="finger_name_rule">指纹名称长度为1-10位</string>
+    <string name="finger">指纹</string>
+    <string name="notice_add_new_finger_name">请输入新的指纹名称</string>
+    <string name="notice_add_finger_name">请输入指纹名称</string>
+    <string name="notice_finger_existed">该指纹已录入，请更换手指</string>
+    <string name="card_add_success">已成功绑定该卡</string>
 
 </resources>
