@@ -13,6 +13,7 @@ import rk.device.launcher.R;
 import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.bean.event.NFCAddEvent;
+import rk.device.launcher.utils.ResUtil;
 import rk.device.launcher.utils.WindowManagerUtils;
 import rk.device.launcher.utils.rxjava.RxBus;
 import rx.Subscriber;
@@ -46,7 +47,7 @@ public class NfcDetection extends BaseActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
 
         goBack();
-        setTitle("NFC刷卡检测");
+        setTitle(ResUtil.getString(R.string.nfc_detection));
 
         invition();
     }

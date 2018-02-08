@@ -15,7 +15,7 @@
         android:paddingLeft="28dp"
         android:paddingRight="20dp"
         android:paddingTop="26dp"
-        android:text="跳出"
+        android:text="@string/tiaochu"
         android:textColor="@color/white"
         android:textSize="28dp" />
 
@@ -42,7 +42,7 @@
             android:gravity="center"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:text="设置管理员密码"
+            android:text="@string/setting_person_pwd"
             android:textColor="@color/white"
             android:textSize="30dp" />
 
@@ -215,7 +215,7 @@
             android:layout_marginLeft="46dp"
             android:layout_marginRight="46dp"
             android:layout_marginTop="33dp"
-            android:text="注：设定管理员密码不能修改，请谨慎提交"
+            android:text="@string/set_pwd_hint"
             android:textColor="#4aa5ef"
             android:textSize="28dp" />
 
@@ -228,7 +228,7 @@
             android:layout_marginRight="46dp"
             android:layout_marginTop="200dp"
             android:background="@drawable/btn_button_bg"
-            android:text="下一步"
+            android:text="@string/next"
             android:textColor="@color/white"
             android:textSize="28dp" />
 

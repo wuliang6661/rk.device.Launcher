@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="35dp"
                 android:gravity="center"
-                android:text="请按照示意图所示将卡靠近刷卡感应器"
+                android:text="@string/nfc_hint"
                 android:textColor="#ffffff"
                 android:textSize="18sp" />
         </LinearLayout>

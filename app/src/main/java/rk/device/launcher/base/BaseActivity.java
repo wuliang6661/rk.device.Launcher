@@ -38,6 +38,7 @@ import rk.device.launcher.ui.setting.SleepActivity;
 import rk.device.launcher.utils.AppManager;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.PackageUtils;
+import rk.device.launcher.utils.ResUtil;
 import rk.device.launcher.utils.rxjava.RxBus;
 import rk.device.launcher.zxing.decode.CaptureActivity;
 import rx.Subscriber;
@@ -243,7 +244,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         hintDialog = BaseComDialogFragment.newInstance();
         hintDialog.setMessage(message);
         hintDialog.setCancleable(true);
-        hintDialog.setLeftButton("取消", view -> hintDialog.dismiss());
+        hintDialog.setLeftButton(ResUtil.getString(R.string.cancel), view -> hintDialog.dismiss());
         hintDialog.setRightButton(right, listener);
         if (!hintDialog.isAdded()) {
             showDialog(hintDialog);
@@ -263,7 +264,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         hintDialog.setTitle(title);
         hintDialog.setMessage(message);
         hintDialog.setCancleable(true);
-        hintDialog.setLeftButton("取消", view -> hintDialog.dismiss());
+        hintDialog.setLeftButton(ResUtil.getString(R.string.cancel), view -> hintDialog.dismiss());
         hintDialog.setRightButton(right, listener);
         if (!hintDialog.isAdded()) {
             showDialog(hintDialog);
@@ -343,12 +344,12 @@ public abstract class BaseActivity extends RxAppCompatActivity {
             }
             hintDialog = BaseComDialogFragment.newInstance();
             hintDialog.setCancleable(false);
-            hintDialog.setMessage("网络已断开，请重新连接");
-            hintDialog.setLeftButton("取消", view -> {
+            hintDialog.setMessage(ResUtil.getString(R.string.network_cancle));
+            hintDialog.setLeftButton(ResUtil.getString(R.string.cancel), view -> {
                 hintDialog.dismiss();
                 hintDialog = null;
             });
-            hintDialog.setRightButton("去设置", view -> {
+            hintDialog.setRightButton(ResUtil.getString(R.string.go_setting), view -> {
                 BaseActivity.this.gotoActivity(SetNetWorkActivity.class, false);
                 hintDialog.dismiss();
                 hintDialog = null;
@@ -510,7 +511,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
                 if (verifyNoticeDialogFragment == null) {
                     verifyNoticeDialogFragment = VerifyNoticeDialogFragment.newInstance();
                 }
-                verifyNoticeDialogFragment.setStatusMsg("验证成功").setStatusImg(R.mipmap.verify_success);
+                verifyNoticeDialogFragment.setStatusMsg(ResUtil.getString(R.string.verify_success)).setStatusImg(R.mipmap.verify_success);
                 verifyNoticeDialogFragment.showDialog(((FragmentActivity) AppManager.getAppManager().curremtActivity()).getSupportFragmentManager());
             }
         });
@@ -526,7 +527,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
                 if (verifyNoticeDialogFragment == null) {
                     verifyNoticeDialogFragment = VerifyNoticeDialogFragment.newInstance();
                 }
-                verifyNoticeDialogFragment.setStatusMsg("验证失败").setStatusImg(R.drawable.icon_recovery_success);
+                verifyNoticeDialogFragment.setStatusMsg(ResUtil.getString(R.string.verify_error)).setStatusImg(R.drawable.icon_recovery_success);
                 verifyNoticeDialogFragment.showDialog(((FragmentActivity) AppManager.getAppManager().curremtActivity()).getSupportFragmentManager());
             }
         });

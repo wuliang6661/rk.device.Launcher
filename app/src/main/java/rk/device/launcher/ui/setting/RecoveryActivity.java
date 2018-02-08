@@ -40,7 +40,7 @@ public class RecoveryActivity extends BaseActivity {
             public void run() {
                 ((AnimationDrawable) mIv.getBackground()).stop();
                 mIv.setBackgroundResource(R.drawable.icon_recovery_success);
-                mTv.setText("恢复成功, 正在重启");
+                mTv.setText(R.string.recover_reboot);
             }
         }, 3000);
     }

@@ -32,6 +32,7 @@ import rk.device.launcher.db.entity.UserDao;
 import rk.device.launcher.global.VerifyTypeConstant;
 import rk.device.launcher.utils.DateUtil;
 import rk.device.launcher.utils.LogUtil;
+import rk.device.launcher.utils.ResUtil;
 import rk.device.launcher.utils.TimeUtils;
 import rk.device.launcher.utils.encrypt.AESOperator;
 import rk.device.launcher.utils.uuid.DeviceUuidFactory;
@@ -93,7 +94,7 @@ public class CaptureActivity extends BaseActivity implements SurfaceHolder.Callb
         mIvBack = (ImageView) findViewById(R.id.iv_back);
         mTvTitle = (TextView) findViewById(R.id.tv_title);
         mTvWarning = (TextView) findViewById(R.id.tv_warning);
-        mTvTitle.setText("二维码扫描");
+        mTvTitle.setText(ResUtil.getString(R.string.qr_code_saomiao));
         mIvBack.setOnClickListener(this);
     }
 
@@ -233,9 +234,9 @@ public class CaptureActivity extends BaseActivity implements SurfaceHolder.Callb
             }
             // 授权时间已过期
             if (currentDate.after(endDate)) {
-                showWarning("授权已过期, 请联系管理员");
+                showWarning(getString(R.string.auth_timeout));
             } else if (!isThisDevice){
-                showWarning("未授权该门禁");
+                showWarning(getString(R.string.auth_no));
             } else {
                 UserDao userDao = DbHelper.getUserDao();
                 Query<User> query = userDao.queryBuilder()
@@ -243,7 +244,7 @@ public class CaptureActivity extends BaseActivity implements SurfaceHolder.Callb
                         .build();
                 User user = query.unique();
                 if (user == null) {
-                    showWarning("未授权用户，请联系管理员");
+                    showWarning(getString(R.string.auth_lianxi));
                     return;
                 }
                 LogUtil.d(TAG, "二维码解析成功, 正在发送请求");
@@ -252,7 +253,7 @@ public class CaptureActivity extends BaseActivity implements SurfaceHolder.Callb
             }
 
         } catch (Exception e) {
-            showWarning("请扫描正确二维码");
+            showWarning(getString(R.string.qrcode_error));
             e.printStackTrace();
         }
     }

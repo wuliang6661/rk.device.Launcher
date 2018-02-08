@@ -18,7 +18,7 @@
             android:background="@drawable/shape_dialog_top"
             android:gravity="center"
             android:padding="10dp"
-            android:text="执行操作会造成设备断网, 是否继续?"
+            android:text="@string/network_execute"
             android:textColor="@color/white"
             android:textSize="33dp"/>
 
@@ -39,7 +39,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="取消"
+                android:text="@string/cancel"
                 android:textColor="@color/white"
                 android:textSize="29dp"
                 />
@@ -55,7 +55,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="确定"
+                android:text="@string/confirm"
                 android:textColor="@color/white"
                 android:textSize="29dp"/>
 

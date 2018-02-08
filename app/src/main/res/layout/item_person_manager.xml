@@ -46,7 +46,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="20dp"
-                android:text="吴亮"
+                android:text="@string/name_lizi"
                 android:textColor="@color/white"
                 android:textSize="26dp" />
 
@@ -127,7 +127,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="暂未设置开门方式"
+                    android:text="@string/no_open_type"
                     android:textColor="#aaaaaa"
                     android:textSize="26dp" />
 

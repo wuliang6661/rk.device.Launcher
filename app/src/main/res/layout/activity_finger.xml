@@ -57,7 +57,7 @@
         android:background="@drawable/shape_btn_finish_setting"
         android:gravity="center"
         android:padding="@dimen/dp_10"
-        android:text="验证"
+        android:text="@string/verify"
         android:textColor="@color/white" />
 
 
@@ -80,7 +80,7 @@
         android:background="@drawable/shape_btn_finish_setting"
         android:gravity="center"
         android:padding="@dimen/dp_10"
-        android:text="查找"
+        android:text="@string/select"
         android:textColor="@color/white" />
 
     <TextView
@@ -91,7 +91,7 @@
         android:background="@drawable/shape_btn_finish_setting"
         android:gravity="center"
         android:padding="@dimen/dp_10"
-        android:text="修改"
+        android:text="@string/update"
         android:textColor="@color/white" />
 
     <TextView
@@ -102,7 +102,7 @@
         android:background="@drawable/shape_btn_finish_setting"
         android:gravity="center"
         android:padding="@dimen/dp_10"
-        android:text="删除"
+        android:text="@string/delete"
         android:textColor="@color/white" />
 
     <ListView

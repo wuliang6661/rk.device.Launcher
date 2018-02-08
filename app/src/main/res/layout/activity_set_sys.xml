@@ -31,7 +31,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="20dp"
-                    android:text="设备ID"
+                    android:text="@string/device_id"
                     android:textColor="@color/white"
                     android:textSize="20dp" />
 
@@ -68,7 +68,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="20dp"
-                    android:text="客户号"
+                    android:text="@string/kehuhao"
                     android:textColor="@color/white"
                     android:textSize="20dp" />
 
@@ -86,7 +86,7 @@
                     android:background="@null"
                     android:digits="1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"
                     android:gravity="center_vertical|right"
-                    android:hint="请录入客户号"
+                    android:hint="@string/add_kehuhao"
                     android:maxLength="32"
                     android:singleLine="true"
                     android:textColor="@color/white"
@@ -111,7 +111,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="20dp"
-                    android:text="待机时间"
+                    android:text="@string/stand_time"
                     android:textColor="@color/white"
                     android:textSize="20dp" />
 
@@ -147,7 +147,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="20dp"
-                    android:text="补光灯"
+                    android:text="@string/led"
                     android:textColor="@color/white"
                     android:textSize="20dp" />
 
@@ -183,7 +183,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="20dp"
-                    android:text="识别参数"
+                    android:text="@string/shibie_canshu"
                     android:textColor="@color/white"
                     android:textSize="20dp" />
 
@@ -218,7 +218,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="20dp"
-                    android:text="服务器IP"
+                    android:text="@string/server_ip"
                     android:textColor="@color/white"
                     android:textSize="20dp" />
 
@@ -237,7 +237,7 @@
                     android:cursorVisible="true"
                     android:digits="0123456789."
                     android:gravity="center_vertical|right"
-                    android:hint="录入服务器地址"
+                    android:hint="@string/add_server_address"
                     android:inputType="number"
                     android:singleLine="true"
                     android:textColor="@color/white"
@@ -268,7 +268,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="20dp"
-                    android:text="端口号"
+                    android:text="@string/server_post"
                     android:textColor="@color/white"
                     android:textSize="20dp" />
 
@@ -285,7 +285,7 @@
                     android:layout_marginRight="15dp"
                     android:background="@null"
                     android:gravity="center_vertical|right"
-                    android:hint="录入端口号, 如3000"
+                    android:hint="@string/server_post_hint"
                     android:inputType="number"
                     android:maxLength="5"
                     android:singleLine="true"
@@ -309,7 +309,7 @@
                 android:id="@+id/btn_finish_setting"
                 style="@style/btn_finish"
                 android:layout_marginBottom="340dp"
-                android:text="完成设置" />
+                android:text="@string/setting_suress" />
 
         </LinearLayout>
 

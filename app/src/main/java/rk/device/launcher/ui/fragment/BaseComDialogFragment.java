@@ -18,6 +18,7 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import rk.device.launcher.R;
+import rk.device.launcher.utils.ResUtil;
 import rk.device.launcher.utils.ScreenUtil;
 
 /**
@@ -90,7 +91,7 @@ public class BaseComDialogFragment extends DialogFragment {
             titleTv.setVisibility(View.GONE);
         }
         if (leftListener == null) {
-            btnCancel.setText("知道啦");
+            btnCancel.setText(ResUtil.getString(R.string.know));
             btnCancel.setOnClickListener(view12 -> dismiss());
         } else {
             btnCancel.setText(leftStr);

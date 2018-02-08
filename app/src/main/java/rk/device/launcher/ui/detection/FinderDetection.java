@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 
 import rk.device.launcher.R;
 import rk.device.launcher.base.BaseActivity;
+import rk.device.launcher.utils.ResUtil;
 
 /**
  * Created by wuliang on 2018/2/6.
@@ -25,6 +26,6 @@ public class FinderDetection extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         goBack();
-        setTitle("指纹头检测");
+        setTitle(ResUtil.getString(R.string.finder_detecation));
     }
 }

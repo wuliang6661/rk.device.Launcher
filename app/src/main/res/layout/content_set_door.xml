@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="20dp"
-            android:text="关联设备"
+            android:text="@string/guanlian_device"
             android:textColor="@color/white"
             android:textSize="20dp" />
 
@@ -34,7 +34,7 @@
             android:layout_gravity="center_vertical"
             android:textColor="@color/white"
             android:textSize="20dp"
-            tools:text="一体机" />
+            tools:text="@string/yitiji" />
 
         <ImageView
             android:layout_width="12dp"
@@ -72,7 +72,7 @@
                 android:layout_marginLeft="20dp"
                 android:background="@drawable/smart_lock_bg"
                 android:gravity="center"
-                android:text="智能锁"
+                android:text="@string/zhinengsuo"
                 android:textColor="@color/white"
                 android:textSize="20dp" />
 
@@ -95,7 +95,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="20dp"
-                android:text="启用开关量"
+                android:text="@string/qiyong_kaiguanliang"
                 android:textColor="@color/white"
                 android:textSize="20dp" />
 
@@ -111,7 +111,7 @@
                 android:layout_gravity="center_vertical"
                 android:textColor="@color/white"
                 android:textSize="20dp"
-                tools:text="开关量3" />
+                tools:text="@string/kaiguanliang3" />
 
             <ImageView
                 android:layout_width="12dp"
@@ -139,7 +139,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="20dp"
-                android:text="开关时长"
+                android:text="@string/kaiguan_time"
                 android:textColor="@color/white"
                 android:textSize="20dp" />
 
@@ -184,7 +184,7 @@
                 android:layout_marginLeft="20dp"
                 android:background="@drawable/door_call_police_bg"
                 android:gravity="center"
-                android:text="门磁报警"
+                android:text="@string/menci_baojing"
                 android:textColor="@color/white"
                 android:textSize="20dp" />
 
@@ -207,7 +207,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="20dp"
-                android:text="输入"
+                android:text="@string/edit"
                 android:textColor="@color/white"
                 android:textSize="20dp" />
 
@@ -251,7 +251,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="20dp"
-                android:text="超时警报 (s)"
+                android:text="@string/chaoshibaojing"
                 android:textColor="@color/white"
                 android:textSize="20dp" />
 
@@ -296,7 +296,7 @@
                 android:layout_marginLeft="20dp"
                 android:background="@drawable/door_call_police_bg"
                 android:gravity="center"
-                android:text="出门按钮"
+                android:text="@string/chumen_naniu"
                 android:textColor="@color/white"
                 android:textSize="20dp" />
 
@@ -319,7 +319,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="20dp"
-                android:text="输入"
+                android:text="@string/edit"
                 android:textColor="@color/white"
                 android:textSize="20dp" />
 
@@ -364,7 +364,7 @@
                 android:layout_marginLeft="20dp"
                 android:background="@drawable/red_ray_sensor_bg"
                 android:gravity="center"
-                android:text="红外感应 (里门)"
+                android:text="@string/hongwaiganying"
                 android:textColor="@color/white"
                 android:textSize="20dp" />
 
@@ -387,7 +387,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="20dp"
-                android:text="输入"
+                android:text="@string/edit"
                 android:textColor="@color/white"
                 android:textSize="20dp" />
 

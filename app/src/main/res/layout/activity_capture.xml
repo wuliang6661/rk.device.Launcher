@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         app:corner_color="@color/corner_color"
         app:frame_color="@color/viewfinder_frame"
-        app:label_text="将二维码放入框内, 即可自动扫描"
+        app:label_text="@string/qr_code_hint"
         app:label_text_color="@color/white"
         app:laser_color="@color/laser_color"
         app:mask_color="@color/viewfinder_mask"
@@ -62,7 +62,7 @@
             android:layout_centerInParent="true"
             android:textColor="@android:color/white"
             android:textSize="29dp"
-            tools:text="设置"/>
+            tools:text="@string/setting"/>
 
     </RelativeLayout>
 
@@ -71,7 +71,7 @@
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/preview_view"
         android:layout_marginBottom="20dp"
-        tools:text="请扫描正确二维码"
+        tools:text="@string/qrcode_hint_suress"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:textSize="27sp"

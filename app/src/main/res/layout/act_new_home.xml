@@ -65,7 +65,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="13dp"
                     android:maxLines="1"
-                    android:text="浙江省杭州市拱墅区远洋国际中心A座601"
+                    android:text="@string/device_name_lizi"
                     android:textColor="#333333"
                     android:textSize="22dp"
                     android:textStyle="bold" />
@@ -171,7 +171,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
-                android:text="留言"
+                android:text="@string/liuyan"
                 android:textColor="#71fc67"
                 android:textSize="19dp" />
 
@@ -193,7 +193,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
-                android:text="联系物管"
+                android:text="@string/call_wuguan"
                 android:textColor="#71fc67"
                 android:textSize="19dp" />
 
@@ -215,7 +215,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
-                android:text="设置"
+                android:text="@string/setting"
                 android:textColor="#71fc67"
                 android:textSize="19dp" />
 
@@ -238,7 +238,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
-                android:text="密码开门"
+                android:text="@string/num_password"
                 android:textColor="#71fc67"
                 android:textSize="19dp" />
 
@@ -260,7 +260,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
-                android:text="拨号"
+                android:text="@string/call"
                 android:textColor="#71fc67"
                 android:textSize="19dp" />
 
@@ -282,7 +282,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
-                android:text="二维码"
+                android:text="@string/qr_code"
                 android:textColor="#71fc67"
                 android:textSize="19dp" />
 

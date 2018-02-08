@@ -21,7 +21,7 @@
             android:gravity="center"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:text="激活设备"
+            android:text="@string/jihuo_device"
             android:textColor="@color/white"
             android:textSize="30dp" />
 
@@ -35,7 +35,7 @@
             android:layout_marginTop="93dp"
             android:background="@drawable/call_edit_bg"
             android:digits="1234567890-"
-            android:hint="请输入激活码"
+            android:hint="@string/jihuo_edit"
             android:maxLength="14"
             android:maxLines="1"
             android:paddingLeft="20dp"
@@ -52,7 +52,7 @@
             android:layout_marginRight="20dp"
             android:layout_marginTop="66dp"
             android:background="@drawable/shape_btn_finish_setting"
-            android:text="确定激活"
+            android:text="@string/jihuo_sure"
             android:textColor="@color/white"
             android:textSize="28dp" />
 
@@ -62,7 +62,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="66dp"
-            android:text="去设置网络 >"
+            android:text="@string/go_setting_network"
             android:textColor="#338eff"
             android:textSize="26dp" />
 
@@ -88,7 +88,7 @@
             android:background="@drawable/shape_btn_finish_setting"
             android:gravity="center"
             android:maxLines="1"
-            android:text="激活码错误，请重新输入"
+            android:text="@string/jihuo_error"
             android:textColor="@color/white"
             android:textSize="30dp" />
 

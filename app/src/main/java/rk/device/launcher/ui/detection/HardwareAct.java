@@ -9,6 +9,7 @@ import butterknife.Bind;
 import rk.device.launcher.R;
 import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.ui.setting.SetNetWorkActivity;
+import rk.device.launcher.utils.ResUtil;
 
 /**
  * Created by wuliang on 2018/2/6.
@@ -40,7 +41,7 @@ public class HardwareAct extends BaseActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
 
         goBack();
-        setTitle("硬件检测");
+        setTitle(ResUtil.getString(R.string.hardware_detecation));
         carema.setOnClickListener(this);
         nfc.setOnClickListener(this);
         finder.setOnClickListener(this);

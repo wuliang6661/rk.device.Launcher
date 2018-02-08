@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="37dp"
-                android:text="更多相关信息，扫码了解详情"
+                android:text="@string/sys_info_message"
                 android:textColor="@color/white"
                 android:textSize="26dp" />
 
@@ -43,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="40dp"
-                android:text="人脸识别一体机"
+                android:text="@string/sys_device_name"
                 android:textColor="@color/white"
                 android:textSize="40dp"
                 android:textStyle="bold" />
@@ -67,7 +67,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="26dp"
-                    android:text="版本号"
+                    android:text="@string/sys_version"
                     android:textColor="@color/white"
                     android:textSize="26dp" />
 
@@ -108,7 +108,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="26dp"
-                    android:text="Android版本"
+                    android:text="@string/android_version"
                     android:textColor="@color/white"
                     android:textSize="26dp" />
 
@@ -150,7 +150,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="26dp"
-                    android:text="处理器"
+                    android:text="@string/chuliqi"
                     android:textColor="@color/white"
                     android:textSize="26dp" />
 
@@ -192,7 +192,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="26dp"
-                    android:text="分辨率"
+                    android:text="@string/fenbian_lv"
                     android:textColor="@color/white"
                     android:textSize="26dp" />
 
@@ -238,7 +238,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="66dp"
-                android:text="杭州软库科技有限公司"
+                android:text="@string/gongsi_name"
                 android:textColor="@color/white"
                 android:textSize="26dp" />
 

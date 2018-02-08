@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="20dp"
-            android:text="补光灯"
+            android:text="@string/led"
             android:textColor="@color/white"
             android:textSize="20dp" />
 
@@ -52,7 +52,7 @@
         style="@style/btn_finish"
         android:layout_marginBottom="80dp"
         android:layout_marginTop="60dp"
-        android:text="完成" />
+        android:text="@string/finish" />
 
 
 </LinearLayout>
