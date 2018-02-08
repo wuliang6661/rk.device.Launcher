@@ -6,6 +6,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 
 import com.koushikdutta.async.http.Multimap;
+import com.koushikdutta.async.http.body.MultipartFormDataBody;
 import com.koushikdutta.async.http.server.AsyncHttpServerResponse;
 
 import rk.device.server.api.HttpRequestUri;
@@ -74,14 +75,18 @@ public class AppHttpServerService extends Service {
                             case HttpRequestUri.AD:
                                 response.send(PublicLogic.getInstance().ad(params).toJSONString());
                                 break;
-                            case HttpRequestUri.UPLOAD:
-                                response.send(
-                                        MemberLogic.getInstance().upload(params).toJSONString());
+                            case HttpRequestUri.DELETE_FACE:
+                                response.send(MemberLogic.getInstance().deleteFace(params).toJSONString());
                                 break;
                             default:
                                 response.send("Invalid request url.");
                                 break;
                         }
+                    }
+
+                    @Override
+                    public void onFile(MultipartFormDataBody body, AsyncHttpServerResponse response) {
+                        MemberLogic.getInstance().upload(body,response);
                     }
                 });
             }

@@ -2,25 +2,12 @@ package rk.device.server.api;
 
 import android.text.TextUtils;
 
-import com.koushikdutta.async.ByteBufferList;
-import com.koushikdutta.async.DataEmitter;
-import com.koushikdutta.async.callback.CompletedCallback;
-import com.koushikdutta.async.callback.DataCallback;
 import com.koushikdutta.async.http.Multimap;
 import com.koushikdutta.async.http.body.MultipartFormDataBody;
-import com.koushikdutta.async.http.body.Part;
 import com.koushikdutta.async.http.server.AsyncHttpServer;
 import com.koushikdutta.async.http.server.AsyncHttpServerRequest;
 import com.koushikdutta.async.http.server.AsyncHttpServerResponse;
 import com.koushikdutta.async.http.server.HttpServerRequestCallback;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 import rk.device.launcher.utils.LogUtil;
 
@@ -69,6 +56,9 @@ public class LauncherHttpServer {
         public abstract void onSuccess(String uri, Multimap params,
                                        AsyncHttpServerResponse response);
 
+        public abstract void onFile(MultipartFormDataBody body,
+                                    AsyncHttpServerResponse response);
+
         @Override
         public void onRequest(AsyncHttpServerRequest request, AsyncHttpServerResponse response) {
             String uri = request.getPath();
@@ -81,63 +71,7 @@ public class LauncherHttpServer {
                 }
                 if (uri.equals(HttpRequestUri.UPLOAD)) {
                     MultipartFormDataBody body = (MultipartFormDataBody) request.getBody();
-                    body.setMultipartCallback(new MultipartFormDataBody.MultipartCallback() {
-                        @Override
-                        public void onPart(Part part) {
-                            if (part.isFile()) {
-                                LogUtil.d(TAG, "onPart = ");
-                                body.setDataCallback(new DataCallback() {
-                                    @Override
-                                    public void onDataAvailable(DataEmitter emitter,
-                                                                ByteBufferList bb) {
-                                        BufferedInputStream fileInputStream = null;
-                                        BufferedOutputStream fileOutPutStream = null;
-                                        byte[] buff = new byte[1024];
-                                        try {
-                                            fileInputStream = new BufferedInputStream(
-                                                    new ByteArrayInputStream(bb.getAllByteArray()));
-
-                                            fileOutPutStream = new BufferedOutputStream(
-                                                    new FileOutputStream(new File(
-                                                            "/data/rk_backup/app_cache/scene.png")));
-                                            int bytesRead = 0;
-                                            while (-1 != (bytesRead = fileInputStream.read(buff, 0,
-                                                    buff.length))) {
-                                                fileOutPutStream.write(buff, 0, bytesRead);
-                                            }
-                                            fileOutPutStream.flush();
-                                        } catch (FileNotFoundException e) {
-                                            e.printStackTrace();
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        } finally {
-                                            try {
-                                                fileInputStream.close();
-                                                fileOutPutStream.close();
-                                            } catch (IOException e) {
-                                                e.printStackTrace();
-                                            }
-
-                                        }
-                                    }
-                                });
-                                //                            response.send("onPart");
-                            } else {
-                                response.send("onPart else");
-                                //                            Multimap params = part.
-                                //                            if (params != null) {
-                                //                                LogUtil.d(TAG, "params = " + params.toString());
-                                //                            }
-                                LogUtil.d(TAG, "onPart =1 ");
-                            }
-                        }
-                    });
-                    body.setEndCallback(new CompletedCallback() {
-                        @Override
-                        public void onCompleted(Exception ex) {
-                            response.send("onCompleted");
-                        }
-                    });
+                    onFile(body,response);
                 } else {
                     Multimap params = (Multimap) request.getBody().get();
                     onSuccess(uri, params, response);
