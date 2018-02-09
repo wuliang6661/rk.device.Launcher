@@ -5,7 +5,6 @@ import java.util.Map;
 
 import okhttp3.RequestBody;
 import retrofit2.http.Body;
-import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
@@ -36,7 +35,6 @@ public interface BaseApi {
     /**
      * 获取配置接口
      */
-    @FormUrlEncoded
     @POST("/api/v1/public/config")
     Observable<BaseResult<DeviceInfoBO>> deviceConfiguration(@Body RequestBody requestBody); //客户号Id
 

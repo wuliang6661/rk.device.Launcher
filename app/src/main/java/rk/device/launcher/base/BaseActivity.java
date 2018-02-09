@@ -545,15 +545,15 @@ public abstract class BaseActivity extends RxAppCompatActivity {
             startService(socketService);
         } else {
             LogUtil.i("SocketService", "SocketService openService");
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (!SocketService.getInstance().checkConnected()) {
-                        SocketService.getInstance().closeThreadPool();
-                        SocketService.getInstance().openService();
-                    }
-                }
-            }, 2000);
+//            new Handler().postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    if (!SocketService.getInstance().checkConnected()) {
+//                        SocketService.getInstance().closeThreadPool();
+//                        SocketService.getInstance().openService();
+//                    }
+//                }
+//            }, 2000);
         }
 
     }

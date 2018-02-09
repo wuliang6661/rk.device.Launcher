@@ -117,6 +117,7 @@ public class SocketService extends Service {
 
                                   switch (msg.what) {
                                       case 1:
+                                          LogUtil.i(TAG,TAG+" uploadDeviceStatus");
                                           JSONObject params = new JSONObject();
                                           try {
                                               params.put("uuid", deviceUuidFactory.getUuid());
@@ -171,7 +172,7 @@ public class SocketService extends Service {
                           };
 
     private void sendDeviceStatusToPlatform() {
-        timer.schedule(task, 1000, 5000);
+        timer.schedule(task, 1000, 50000);
     }
 
     public void closeThreadPool() {
