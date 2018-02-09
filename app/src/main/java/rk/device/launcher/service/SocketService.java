@@ -2,7 +2,9 @@ package rk.device.launcher.service;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -16,6 +18,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -63,7 +67,7 @@ public class SocketService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        init();
+//        init();
     }
 
     private void init() {
@@ -79,8 +83,38 @@ public class SocketService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i(TAG, TAG + " onStartCommand");
-        openService();
+//        openService();
+        sendDeviceStatusToPlatform();
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    Timer timer = new Timer( );
+
+    TimerTask task = new TimerTask( ) {
+
+        public void run ( ) {
+            Message message = new Message( );
+            message.what = 1;
+            handler.sendMessage(message);
+        }
+
+    };
+
+    final Handler handler = new Handler( ) {
+
+        public void handleMessage(Message msg) {
+
+            switch (msg.what) {
+                case 1:
+                    
+                    break;
+            }
+            super.handleMessage(msg);
+        }
+    };
+
+    private void sendDeviceStatusToPlatform() {
+        timer.schedule(task,1000,5000);
     }
 
     public void closeThreadPool() {
@@ -215,12 +249,16 @@ public class SocketService extends Service {
     public void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "onDestroy: SocketService");
-        try {
-            CloseUtils.closeIOQuietly(writer, reader, socket);
-            Log.i("socket isConnected", "socket isConnected:" + socket.isConnected());
-        } catch (Exception e) {
-            LogUtil.e(TAG, e.getMessage());
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
         }
+//        try {
+//            CloseUtils.closeIOQuietly(writer, reader, socket);
+//            Log.i("socket isConnected", "socket isConnected:" + socket.isConnected());
+//        } catch (Exception e) {
+//            LogUtil.e(TAG, e.getMessage());
+//        }
     }
 
     @Nullable

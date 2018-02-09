@@ -1,5 +1,6 @@
 package rk.device.server.logic;
 
+import android.os.SystemClock;
 import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSONObject;
@@ -92,5 +93,29 @@ public class PublicLogic extends BaseLogic {
         JSONObject result = new JSONObject();
         result.put("status", 1);
         return onSuccess(result, "请求成功");
+    }
+
+    /**
+     * 更新一体机时间
+     * 
+     * @param params
+     * @return
+     */
+    public JSONObject updateTime(Multimap params) {
+        String accessToken = params.getString("access_token");
+        String uuid = params.getString("uuid");
+        if (TextUtils.isEmpty(uuid)) {
+            return onError(300, "UUID不能为空");
+        }
+        if (!getUUID().equals(uuid)) {
+            LogUtil.i(TAG, getUUID());
+            return onError(300, "请填写正确UUID: " + getUUID());
+        }
+        int time = TypeTranUtils.str2Int(params.getString("update_time"));
+        // 设置系统时间
+        SystemClock.setCurrentTimeMillis(time);
+        JSONObject result = new JSONObject();
+        result.put("status", 1);
+        return onSuccess(result, "设置成功");
     }
 }

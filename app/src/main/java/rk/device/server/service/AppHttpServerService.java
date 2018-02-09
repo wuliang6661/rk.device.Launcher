@@ -76,7 +76,11 @@ public class AppHttpServerService extends Service {
                                 response.send(PublicLogic.getInstance().ad(params).toJSONString());
                                 break;
                             case HttpRequestUri.DELETE_FACE:
-                                response.send(MemberLogic.getInstance().deleteFace(params).toJSONString());
+                                response.send(MemberLogic.getInstance().deleteFace(params)
+                                        .toJSONString());
+                                break;
+                            case HttpRequestUri.UPDATE_TIME:
+                                response.send(PublicLogic.getInstance().updateTime(params).toJSONString());
                                 break;
                             default:
                                 response.send("Invalid request url.");
@@ -85,8 +89,9 @@ public class AppHttpServerService extends Service {
                     }
 
                     @Override
-                    public void onFile(MultipartFormDataBody body, AsyncHttpServerResponse response) {
-                        MemberLogic.getInstance().upload(body,response);
+                    public void onFile(MultipartFormDataBody body,
+                                       AsyncHttpServerResponse response) {
+                        MemberLogic.getInstance().upload(body, response);
                     }
                 });
             }
