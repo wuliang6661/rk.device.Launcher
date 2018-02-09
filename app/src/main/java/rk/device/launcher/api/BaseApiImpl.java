@@ -225,10 +225,11 @@ public class BaseApiImpl {
 
     /**
      * 上传设备状态
-     * @param requestBody
+     * @param params
      * @return
      */
-    public static Observable<StatusBo> uploadDeviceStatus(RequestBody requestBody){
+    public static Observable<StatusBo> uploadDeviceStatus(JSONObject params){
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), setBaseMap(params).toString());
         return apiFactory().uploadDeviceStatus(requestBody).compose(RxResultHelper.httpResult());
     }
 
