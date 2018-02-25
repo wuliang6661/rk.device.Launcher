@@ -146,10 +146,10 @@
             android:layout_height="1dp"/>
 
         <Button
-            android:text="@string/setting_suress"
             android:id="@+id/btn_finish_setting"
+            style="@style/btn_finish"
             android:layout_marginTop="100dp"
-            style="@style/btn_finish"/>
+            android:text="@string/setting_suress"/>
 
 
     </LinearLayout>

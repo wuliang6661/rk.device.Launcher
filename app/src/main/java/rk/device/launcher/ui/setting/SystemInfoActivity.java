@@ -82,10 +82,6 @@ public class SystemInfoActivity extends BaseActivity implements View.OnClickList
 
     @Override
     public void onClick(View view) {
-//        if (NetWorkUtil.isNetConnected(this)) {
-//            UpdateManager.getUpdateManager().checkAppUpdate(this, getSupportFragmentManager(), true);
-//        } else {
-//            showMessageDialog("当前网络未连接!");
-//        }
+
     }
 }

@@ -15,8 +15,6 @@ import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.bean.DeviceInfoBO;
 import rk.device.launcher.bean.StatusBo;
 import rk.device.launcher.bean.TokenBo;
-import rk.device.launcher.bean.VerifyBO;
-import rk.device.launcher.bean.VersionBO;
 import rk.device.launcher.bean.WeatherBO;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.global.Config;
@@ -42,7 +40,7 @@ public class BaseApiImpl {
     /**
      * 动态分配IP地址
      **/
-    private static BaseApi weatherFactorys() {
+    private static BaseApi apiFactory() {
         String IP = SPUtils.getString(Constant.KEY_IP);
         String HOST = SPUtils.getString(Constant.KEY_PORT);
         if (StringUtils.isEmpty(IP) || StringUtils.isEmpty(HOST)) {
@@ -89,13 +87,13 @@ public class BaseApiImpl {
         return RetrofitManager.getInstance().getAddressAPI();
     }
 
-
     /**
      * 获取天气接口
      */
     public static Observable<List<WeatherBO>> weather(Map<String, Object> params) {
-        return weatherFactorys().weather(params).compose(RxResultHelper.httpResult());
+        return apiFactory().weather(params).compose(RxResultHelper.httpResult());
     }
+
 
     /**
      * 访问外网, 根据IP地址获取地址
@@ -105,25 +103,19 @@ public class BaseApiImpl {
     }
 
     /**
-     * 检测App是否更新
-     */
-    public static Observable<VersionBO> updateApp(String verCode) {
-        return weatherFactorys().updateApp(verCode).compose(RxResultHelper.httpResult()).compose(activity.bindUntilEvent(ActivityEvent.PAUSE));
-    }
-
-    /**
      * 获取配置接口
      */
     public static Observable<DeviceInfoBO> deviceConfiguration(String verCode, String cid) {
-        return weatherFactorys().deviceConfiguration(verCode, cid)
-                .compose(RxResultHelper.httpResult());
-    }
+        JSONObject params = new JSONObject();
+        try {
+            params.put("ver", verCode);
+            params.put("cid", cid);
+        } catch (JSONException e) {
 
-    /**
-     * 人脸识别
-     */
-    public static Observable<VerifyBO> verifyFace(Map<String, Object> params) {
-        return weatherFactorys().verify(params).compose(RxResultHelper.httpResult());
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), setBaseMap(params).toString());
+        return apiFactory().deviceConfiguration(requestBody)
+                .compose(RxResultHelper.httpResult());
     }
 
     /**
@@ -145,8 +137,8 @@ public class BaseApiImpl {
         } catch (JSONException e) {
 
         }
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), params.toString());
-        return weatherFactorys().openDoor(requestBody).compose(RxResultHelper.httpResult());
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), setBaseMap(params).toString());
+        return apiFactory().openDoor(requestBody).compose(RxResultHelper.httpResult());
     }
 
     /**
@@ -158,8 +150,8 @@ public class BaseApiImpl {
             object.put("uuid", uuid);
             object.put("mac", mac);
             object.put("license", license);
-            RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), object.toString());
-            return weatherFactorys().activationDiveces(requestBody).compose(RxResultHelper.httpResult());
+            RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), setBaseMap(object).toString());
+            return apiFactory().activationDiveces(requestBody).compose(RxResultHelper.httpResult());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -175,8 +167,8 @@ public class BaseApiImpl {
         try {
             object.put("uuid", uuid);
             object.put("license", license);
-            RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), object.toString());
-            return weatherFactorys().getToken(requestBody).compose(RxResultHelper.httpResult());
+            RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), setBaseMap(object).toString());
+            return apiFactory().getToken(requestBody).compose(RxResultHelper.httpResult());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -190,8 +182,8 @@ public class BaseApiImpl {
      * @return
      */
     public static Observable<StatusBo> syncRecords(JSONObject params) {
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), params.toString());
-        return weatherFactorys().syncRecords(requestBody).compose(RxResultHelper.httpResult());
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), setBaseMap(params).toString());
+        return apiFactory().syncRecords(requestBody).compose(RxResultHelper.httpResult());
     }
 
 
@@ -220,15 +212,44 @@ public class BaseApiImpl {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), object.toString());
-        return weatherFactorys().syncPerson(requestBody).compose(RxResultHelper.httpResult());
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), setBaseMap(object).toString());
+        return apiFactory().syncPerson(requestBody).compose(RxResultHelper.httpResult());
     }
 
     /**
      * 上传用户人脸
      */
     public static Observable<String> updataImage(RequestBody requestBody) {
-        return weatherFactorys().uploadFile(requestBody).compose(RxResultHelper.httpResult());
+        return apiFactory().uploadFile(requestBody).compose(RxResultHelper.httpResult());
+    }
+
+    /**
+     * 上传设备状态
+     * @param params
+     * @return
+     */
+    public static Observable<StatusBo> uploadDeviceStatus(JSONObject params){
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), setBaseMap(params).toString());
+        return apiFactory().uploadDeviceStatus(requestBody).compose(RxResultHelper.httpResult());
+    }
+
+    /**
+     * 封装初始化数据
+     *
+     * @param jsonObject
+     * @return
+     */
+    private static JSONObject setBaseMap(JSONObject jsonObject){
+        JSONObject postData = new JSONObject();
+        try {
+            postData.put("result",200);
+            postData.put("code",11);
+            postData.put("message","post");
+            postData.put("data",jsonObject);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return postData;
     }
 
 }

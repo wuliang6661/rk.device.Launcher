@@ -6,29 +6,16 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.Message;
-import android.util.Log;
-
-import com.alibaba.fastjson.JSON;
-import com.alibaba.sdk.android.oss.ClientException;
-import com.alibaba.sdk.android.oss.ServiceException;
-import com.alibaba.sdk.android.oss.model.PutObjectRequest;
-import com.trello.rxlifecycle.ActivityEvent;
 
 import java.lang.ref.WeakReference;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import cvc.EventUtil;
 import peripherals.MdHelper;
 import rk.device.launcher.api.BaseApiImpl;
-import rk.device.launcher.api.T;
 import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.base.JniHandler;
-import rk.device.launcher.bean.AddressBO;
 import rk.device.launcher.bean.DeviceInfoBO;
-import rk.device.launcher.bean.VerifyBO;
-import rk.device.launcher.bean.WeatherBO;
 import rk.device.launcher.db.DbHelper;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.global.Constant;
@@ -42,19 +29,11 @@ import rk.device.launcher.utils.AppManager;
 import rk.device.launcher.utils.AppUtils;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.StatSoFiles;
-import rk.device.launcher.utils.StringUtils;
-import rk.device.launcher.utils.TimeUtils;
 import rk.device.launcher.utils.Utils;
 import rk.device.launcher.utils.gps.GpsUtils;
-import rk.device.launcher.utils.oss.AliYunOssUtils;
-import rk.device.launcher.utils.oss.OssUploadListener;
-import rk.device.launcher.utils.uuid.DeviceUuidFactory;
 import rk.device.launcher.utils.verify.FaceUtils;
 import rk.device.launcher.utils.verify.OpenUtils;
-import rx.Observable;
 import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * MVPPlugin
@@ -65,13 +44,6 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
 
 
     private GpsUtils gpsUtils;
-
-    /**
-     * UUID工具
-     */
-    private DeviceUuidFactory uuidFactory = null;
-    private String uUid;
-
     private ElectricBroadcastReceiver mBatteryReceiver;
     private NetChangeBroadcastReceiver netChangeBroadcastRecever;
     private NetBroadcastReceiver netOffReceiver;
@@ -179,11 +151,10 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
                 if (address.size() > 0) {
                     String area = address.get(0).getSubAdminArea();
                     SPUtils.putString(Constant.KEY_ADDRESS, area);
-                    httpGetWeather(area);
                 }
             });
         } else { // 定位不可用, 通过IP获取地址
-            getIPLocation(activity);
+//            getIPLocation(activity);
         }
     }
 
@@ -198,67 +169,42 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
         // requestQueue.register(observable).subscribe(subscriber)
         // 将所有的Subscription添加到一个CompositeSubscription里
         // activity在ondestroy的时候调用requestQueue.cancelAll()将CompositeSubscription.unsubscribe()
-        BaseApiImpl.address("js").subscribeOn(Schedulers.io())
-                .flatMap(s -> {
-                    int start = s.indexOf("{");
-                    int end = s.indexOf("}");
-                    String json = s.substring(start, end + 1);
-                    AddressBO addressModel = JSON.parseObject(json, AddressBO.class);
-                    Map<String, Object> params = new HashMap<>();
-                    params.put("city", addressModel.city);
-                    Observable<List<WeatherBO>> observable;
-                    try {
-                        observable = BaseApiImpl.weather(params);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        throw new RuntimeException("error throw ip");
-                    }
-                    return observable;
-                }).observeOn(AndroidSchedulers.mainThread())
-                .compose(activity.bindUntilEvent(ActivityEvent.DESTROY))
-                .subscribe(new Subscriber<List<WeatherBO>>() {
-                               @Override
-                               public void onCompleted() {
-
-                               }
-
-                               @Override
-                               public void onError(Throwable e) {
-//                                   isIpError = true;
-                               }
-
-                               @Override
-                               public void onNext(List<WeatherBO> weatherModel) {
-//                                   isIpError = false;
-//                                   mView.showWeather(weatherModel);
-                               }
-                           }
-                );
-    }
-
-
-    /**
-     * 天气Api
-     */
-    private void httpGetWeather(String area) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("city", area);
-        BaseApiImpl.weather(params).subscribe(new Subscriber<List<WeatherBO>>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                T.showShort(e.getMessage());
-            }
-
-            @Override
-            public void onNext(List<WeatherBO> weatherModel) {
-//                mView.showWeather(weatherModel);
-            }
-        });
+//        BaseApiImpl.address("js").subscribeOn(Schedulers.io())
+//                .flatMap(s -> {
+//                    int start = s.indexOf("{");
+//                    int end = s.indexOf("}");
+//                    String json = s.substring(start, end + 1);
+//                    AddressBO addressModel = JSON.parseObject(json, AddressBO.class);
+//                    Map<String, Object> params = new HashMap<>();
+//                    params.put("city", addressModel.city);
+//                    Observable<List<WeatherBO>> observable;
+//                    try {
+//                        observable = BaseApiImpl.weather(params);
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                        throw new RuntimeException("error throw ip");
+//                    }
+//                    return observable;
+//                }).observeOn(AndroidSchedulers.mainThread())
+//                .compose(activity.bindUntilEvent(ActivityEvent.DESTROY))
+//                .subscribe(new Subscriber<List<WeatherBO>>() {
+//                               @Override
+//                               public void onCompleted() {
+//
+//                               }
+//
+//                               @Override
+//                               public void onError(Throwable e) {
+////                                   isIpError = true;
+//                               }
+//
+//                               @Override
+//                               public void onNext(List<WeatherBO> weatherModel) {
+////                                   isIpError = false;
+////                                   mView.showWeather(weatherModel);
+//                               }
+//                           }
+//                );
     }
 
 
@@ -284,79 +230,6 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
         });
     }
 
-
-    private int faceSuress = 0;   //活体检测通过次数，每5次请求一下人脸识别
-
-    /**
-     * 人脸数据上传到阿里云进行识别
-     */
-    void httpUploadPic(byte[] result) {
-        faceSuress++;
-        if (faceSuress % 2 != 0) {
-            return;
-        }
-        faceSuress = 0;
-        AliYunOssUtils.getInstance(mView.getContext()).putObjectFromByteArray(result, new OssUploadListener() {
-            @Override
-            public void onSuccess(String filePath) {
-                Log.d("wuliang", "end aliFace " + TimeUtils.getTime());
-                //自定义人脸识别post数据
-                if (uuidFactory == null) {
-                    uuidFactory = new DeviceUuidFactory(mView.getContext());
-                }
-                uUid = uuidFactory.getUuid() + "";
-                httpFaceVerifyPath(filePath, uUid);
-            }
-
-            @Override
-            public void onFailure(PutObjectRequest request, ClientException clientException,
-                                  ServiceException serviceException) {
-                Log.i("oss-upload-fail", clientException.getMessage());
-                Log.i("oss-upload-fail", serviceException.getErrorCode() + ":" + serviceException.getRawMessage());
-            }
-        });
-    }
-
-    /**
-     * 判断返回数据是否成功，成功则开门
-     */
-    private void httpFaceVerifyPath(String filePath, String uuid) {
-        String spDevice = SPUtils.getString(Constant.DEVICE_TYPE);
-        String myType = "1";   //默认是1
-        if (!StringUtils.isEmpty(spDevice)) {
-            String[] device = spDevice.split("_");
-            myType = device[0];
-        }
-        Map<String, Object> params = new HashMap<>();
-        params.put("image_url", filePath);
-        params.put("uuid", uuid);
-        params.put("type", myType);
-        BaseApiImpl.verifyFace(params).subscribe(new Subscriber<VerifyBO>() {
-
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onNext(VerifyBO model) {
-                if (!model.isIsrepeat()) {
-                    if (model.isIsmatch()) {
-//                        SoundPlayUtils.play(3);//播放声音
-                        Log.i("wuliang", "face scusess!!!!");
-//                        mView.showSuress(model.getName());
-                    } else {
-                        Log.i("wuliang", "face no  no   no!!!!");
-                    }
-                }
-            }
-        });
-    }
 
     /**
      * 启动人脸检测

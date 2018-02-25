@@ -595,7 +595,6 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
         synchronized (faces) {
             System.arraycopy(faces, 0, result, 0, lenght[0]);
         }
-        mPresenter.httpUploadPic(result);
     }
 
 

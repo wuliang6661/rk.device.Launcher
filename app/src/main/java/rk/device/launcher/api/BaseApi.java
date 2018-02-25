@@ -5,9 +5,6 @@ import java.util.Map;
 
 import okhttp3.RequestBody;
 import retrofit2.http.Body;
-import retrofit2.http.Field;
-import retrofit2.http.FieldMap;
-import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
@@ -18,8 +15,6 @@ import rk.device.launcher.bean.BaseResult;
 import rk.device.launcher.bean.DeviceInfoBO;
 import rk.device.launcher.bean.StatusBo;
 import rk.device.launcher.bean.TokenBo;
-import rk.device.launcher.bean.VerifyBO;
-import rk.device.launcher.bean.VersionBO;
 import rk.device.launcher.bean.WeatherBO;
 import rx.Observable;
 
@@ -38,29 +33,10 @@ public interface BaseApi {
     Observable<BaseResult<List<WeatherBO>>> weather(@QueryMap Map<String, Object> params);
 
     /**
-     * 检查app是否有更新
-     */
-    @FormUrlEncoded
-    @POST(ApiName.UPDATE)
-    Observable<BaseResult<VersionBO>> updateApp(@Field("ver") String ver); //版本号
-
-    /**
      * 获取配置接口
      */
-    @FormUrlEncoded
-    @POST("/public/rest/face/config")
-    Observable<BaseResult<DeviceInfoBO>> deviceConfiguration(@Field("ver") String ver, //版本号
-                                                             @Field("cid") String cid); //客户号Id
-
-    /**
-     * 人脸验证
-     *
-     * @param params
-     * @return
-     */
-    @FormUrlEncoded
-    @POST(ApiName.VERIFY)
-    Observable<BaseResult<VerifyBO>> verify(@FieldMap Map<String, Object> params);
+    @POST("/api/v1/public/config")
+    Observable<BaseResult<DeviceInfoBO>> deviceConfiguration(@Body RequestBody requestBody); //客户号Id
 
     /**
      * 开门
@@ -68,19 +44,19 @@ public interface BaseApi {
      * @param requestBody
      * @return
      */
-    @POST("/public/rest/face/openDoor")
+    @POST("/api/v1/public/opendoor")
     Observable<BaseResult<StatusBo>> openDoor(@Body RequestBody requestBody);
 
     /**
      * 激活设备接口
      */
-    @POST("/public/rest/face/activation")
+    @POST("/api/v1/public/activation")
     Observable<BaseResult<Object>> activationDiveces(@Body RequestBody requestBody);
 
     /**
      * 获取开门token
      */
-    @POST("/public/rest/face/token")
+    @POST("/api/v1/public/token")
     Observable<BaseResult<TokenBo>> getToken(@Body RequestBody requestBody);
 
     /**
@@ -89,21 +65,29 @@ public interface BaseApi {
      * @param requestBody
      * @return
      */
-    @POST("/public/rest/face/openHistory")
+    @POST("/api/v1/public/synchistory")
     Observable<BaseResult<StatusBo>> syncRecords(@Body RequestBody requestBody);
 
 
     /**
      * 提交新增用户接口
      */
-    @POST("/public/rest/face/upAuthlist")
+    @POST("/api/v1/public/syncgrant")
     Observable<BaseResult<Object>> syncPerson(@Body RequestBody requestBody);
 
     /**
      * 上传用户图片
      */
     @Multipart
-    @POST("/public/rest/face/upload")
+    @POST("/api/v1/public/upload")
     Observable<BaseResult<String>> uploadFile(@Part("headerImage\"; filename=\"avatar.jpg") RequestBody file);
 
+    /**
+     * 上传设备状态
+     *
+     * @param requestBody
+     * @return
+     */
+    @POST("/api/v1/public/updateDeviceStatus")
+    Observable<BaseResult<StatusBo>> uploadDeviceStatus(@Body RequestBody  requestBody);
 }
