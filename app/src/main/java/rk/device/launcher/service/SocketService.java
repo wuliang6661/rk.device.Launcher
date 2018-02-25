@@ -49,7 +49,6 @@ public class SocketService extends Service {
      * 接收服务器消息 变量
      */
     BufferedReader reader = null;
-    private DeviceUuidFactory uuidFactory;
     private String uuid;
     private static SocketService mService = null;
 
@@ -70,7 +69,7 @@ public class SocketService extends Service {
         mService = this;
         //初始化线程池
         mThreadPool = Executors.newCachedThreadPool();
-        uuidFactory = new DeviceUuidFactory(this);
+        DeviceUuidFactory uuidFactory = new DeviceUuidFactory(this);
         uuid = uuidFactory.getUuid() + "";
         Log.i("SocketService", "mac:" + FileUtils.readFile2String("/proc/board_sn", "UTF-8"));
         Log.i("SocketService", "uuid:" + uuid);
