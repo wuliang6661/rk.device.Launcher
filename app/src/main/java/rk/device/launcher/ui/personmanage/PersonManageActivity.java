@@ -106,7 +106,7 @@ public class PersonManageActivity extends MVPBaseActivity<PersonManageContract.V
         };
         adapter.setOnItemClickListener(R.id.item_layout, (view, position) -> {
             User user = users.get(position);
-            if(DbHelper.queryByUniqueId(user.getUniqueId()).size()==0){
+            if (DbHelper.queryByUniqueId(user.getUniqueId()).size() == 0) {
                 T.showShort(getString(R.string.person_no_have));
                 users.remove(position);
                 adapter.notifyDataSetChanged();
