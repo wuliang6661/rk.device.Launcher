@@ -84,7 +84,7 @@ public class SocketService extends Service {
         mService = this;
         //初始化线程池
         mThreadPool = Executors.newCachedThreadPool();
-        uuidFactory = new DeviceUuidFactory(this);
+        DeviceUuidFactory uuidFactory = new DeviceUuidFactory(this);
         uuid = uuidFactory.getUuid() + "";
         LogUtil.i("SocketService", "mac:" + FileUtils.readFile2String("/proc/board_sn", "UTF-8"));
         LogUtil.i("SocketService", "uuid:" + uuid);
