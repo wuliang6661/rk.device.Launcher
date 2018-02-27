@@ -57,7 +57,7 @@ public class IMEUtils {
      */
     public static void hideIME(Activity context) {
         try {
-            ((InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE))
+            ((InputMethodManager) context.getApplication().getSystemService(Activity.INPUT_METHOD_SERVICE))
                     .hideSoftInputFromWindow(context.getCurrentFocus().getWindowToken(),
                             InputMethodManager.HIDE_NOT_ALWAYS);
         } catch (NullPointerException npe) {

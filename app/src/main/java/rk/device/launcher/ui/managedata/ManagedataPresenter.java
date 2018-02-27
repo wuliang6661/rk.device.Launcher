@@ -5,18 +5,17 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.PopupWindow;
-
-import org.greenrobot.greendao.query.Query;
-import org.greenrobot.greendao.rx.RxDao;
-
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-
+import org.greenrobot.greendao.query.Query;
+import org.greenrobot.greendao.rx.RxDao;
 import rk.device.launcher.R;
 import rk.device.launcher.db.DbRecordHelper;
 import rk.device.launcher.db.entity.Record;
 import rk.device.launcher.db.entity.RecordDao;
+import rk.device.launcher.db.entity.RecordDao.Properties;
 import rk.device.launcher.mvp.BasePresenterImpl;
 import rk.device.launcher.ui.managedata.bean.OpenDoorTypeBean;
 import rk.device.launcher.ui.managedata.popup.SelectTypePopupWindow;
@@ -95,6 +94,7 @@ public class ManagedataPresenter extends BasePresenterImpl<ManagedataContract.Vi
                     public void call(List<Record> records) {
                         mView.hideProgress();
                         mDataList.clear();
+                        Collections.reverse(records);
                         mDataList.addAll(records);
                         mRvAdapter = new ManageDataRvAdapter(mDataList);
                         recyclerView.setAdapter(mRvAdapter);
@@ -108,10 +108,12 @@ public class ManagedataPresenter extends BasePresenterImpl<ManagedataContract.Vi
         // 筛选数据然后刷新adapter
         RecordDao recordDao = DbRecordHelper.getRecordDao();
         List<Record> recordList;
+        Query<Record> query;
         if (bean.typeId == 0) {
-            recordList = recordDao.loadAll();
+            query = recordDao.queryBuilder().orderDesc(Properties.Cdate).build();
+            recordList = query.list();
         } else {
-            Query<Record> query = recordDao.queryBuilder()
+            query = recordDao.queryBuilder().orderDesc(Properties.Cdate)
                     .where(RecordDao.Properties.OpenType.eq(bean.typeId))
                     .build();
             recordList = query.list();
