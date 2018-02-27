@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.igexin.sdk.PushManager;
 
@@ -85,15 +84,15 @@ public class SocketService extends Service {
         mService = this;
         //初始化线程池
         mThreadPool = Executors.newCachedThreadPool();
-        uuidFactory = new DeviceUuidFactory(this);
+        DeviceUuidFactory uuidFactory = new DeviceUuidFactory(this);
         uuid = uuidFactory.getUuid() + "";
-        Log.i("SocketService", "mac:" + FileUtils.readFile2String("/proc/board_sn", "UTF-8"));
-        Log.i("SocketService", "uuid:" + uuid);
+        LogUtil.i("SocketService", "mac:" + FileUtils.readFile2String("/proc/board_sn", "UTF-8"));
+        LogUtil.i("SocketService", "uuid:" + uuid);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.i(TAG, TAG + " onStartCommand");
+        LogUtil.i(TAG, TAG + " onStartCommand");
         //        openService();
         sendDeviceStatusToPlatform();
         return super.onStartCommand(intent, flags, startId);
@@ -181,7 +180,7 @@ public class SocketService extends Service {
             mThreadPool.shutdownNow();
             if (mThreadPool != null) {
                 int threadCount = ((ThreadPoolExecutor) mThreadPool).getActiveCount();
-                Log.i(TAG, "threadCount:" + threadCount);
+                LogUtil.i(TAG, "threadCount:" + threadCount);
             }
             mThreadPool = null;
         }
@@ -239,13 +238,13 @@ public class SocketService extends Service {
             writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             while (true) {
-                Log.i(TAG, TAG + " is connect:" + socket.isConnected());
+                LogUtil.i(TAG, TAG + " is connect:" + socket.isConnected());
                 if (socket.isClosed()) {
                     socket.close();
                     socket = null;
                     socket = new Socket();
                     socket.connect(new InetSocketAddress("121.41.123.16", 3004), 5000);
-                    Log.i(TAG, TAG + " is reconnect");
+                    LogUtil.i(TAG, TAG + " is reconnect");
                     // 步骤1：从Socket 获得输出流对象OutputStream
                     // 该对象作用：发送数据
                     writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -278,7 +277,7 @@ public class SocketService extends Service {
         try {
             writer.write(jsonObject.toString() + "\n");
             writer.flush();
-            Log.i(TAG, TAG + " send data success:" + jsonObject.toString());
+            LogUtil.i(TAG, TAG + " send data success:" + jsonObject.toString());
         } catch (IOException e) {
             LogUtil.e(TAG, e.getMessage());
             closeThreadPool();
@@ -294,7 +293,7 @@ public class SocketService extends Service {
                         while (reader.ready()) {
                             responseInfo.append((char) reader.read());
                         }
-                        Log.i(TAG, TAG + " server responseInfo:" + responseInfo.toString());
+                        LogUtil.i(TAG, TAG + " server responseInfo:" + responseInfo.toString());
                     }
                 } catch (Exception e) {
                     LogUtil.e(TAG, e.getMessage());
@@ -306,14 +305,14 @@ public class SocketService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "onDestroy: SocketService");
+        LogUtil.d(TAG, "onDestroy: SocketService");
         if (timer != null) {
             timer.cancel();
             timer = null;
         }
         //        try {
         //            CloseUtils.closeIOQuietly(writer, reader, socket);
-        //            Log.i("socket isConnected", "socket isConnected:" + socket.isConnected());
+        //            LogUtil.i("socket isConnected", "socket isConnected:" + socket.isConnected());
         //        } catch (Exception e) {
         //            LogUtil.e(TAG, e.getMessage());
         //        }
