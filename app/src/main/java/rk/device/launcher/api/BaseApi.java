@@ -28,7 +28,7 @@ public interface BaseApi {
     /**
      * 天气接口
      */
-    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @Headers({ "Content-Type: application/json", "Accept: application/json" })
     @GET(ApiName.WEATHER)
     Observable<BaseResult<List<WeatherBO>>> weather(@QueryMap Map<String, Object> params);
 
@@ -68,7 +68,6 @@ public interface BaseApi {
     @POST("/api/v1/public/synchistory")
     Observable<BaseResult<StatusBo>> syncRecords(@Body RequestBody requestBody);
 
-
     /**
      * 提交新增用户接口
      */
@@ -89,5 +88,15 @@ public interface BaseApi {
      * @return
      */
     @POST("/api/v1/public/updateDeviceStatus")
-    Observable<BaseResult<StatusBo>> uploadDeviceStatus(@Body RequestBody  requestBody);
+    Observable<BaseResult<StatusBo>> uploadDeviceStatus(@Body RequestBody requestBody);
+
+    /**
+     * 删除用户
+     *
+     * @param requestBody
+     * @return
+     */
+    @POST("/api/v1/public/delete")
+    Observable<BaseResult<StatusBo>> deleteUser(@Body RequestBody requestBody);
+
 }

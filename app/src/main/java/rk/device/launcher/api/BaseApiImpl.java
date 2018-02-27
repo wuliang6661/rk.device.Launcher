@@ -233,6 +233,19 @@ public class BaseApiImpl {
         return apiFactory().uploadDeviceStatus(requestBody).compose(RxResultHelper.httpResult());
     }
 
+     /**
+      * 删除用户
+      *
+      * @param params
+      * @return
+      */
+    public static Observable<StatusBo> deleteUser(JSONObject params){
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), setBaseMap(params).toString());
+        return apiFactory().deleteUser(requestBody).compose(RxResultHelper.httpResult());
+    }
+
+
+
     /**
      * 封装初始化数据
      *

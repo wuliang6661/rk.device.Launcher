@@ -11,26 +11,37 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
 
 import butterknife.Bind;
 import peripherals.FingerHelper;
 import rk.device.launcher.R;
+import rk.device.launcher.api.BaseApiImpl;
 import rk.device.launcher.base.LauncherApplication;
+import rk.device.launcher.bean.StatusBo;
+import rk.device.launcher.bean.TokenBo;
 import rk.device.launcher.db.DbHelper;
 import rk.device.launcher.db.entity.User;
+import rk.device.launcher.global.Constant;
 import rk.device.launcher.mvp.MVPBaseActivity;
 import rk.device.launcher.ui.fingeradd.FingeraddActivity;
 import rk.device.launcher.ui.fragment.InputWifiPasswordDialogFragment;
 import rk.device.launcher.ui.nfcadd.NfcaddActivity;
 import rk.device.launcher.ui.personface.PersonFaceActivity;
 import rk.device.launcher.utils.FileUtils;
+import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.StringUtils;
 import rk.device.launcher.utils.TimeUtils;
 import rk.device.launcher.utils.TypeTranUtils;
 import rk.device.launcher.utils.cache.CacheUtils;
+import rk.device.launcher.utils.key.KeyUtils;
+import rk.device.launcher.utils.uuid.DeviceUuidFactory;
 import rk.device.launcher.utils.verify.FaceUtils;
 import rk.device.launcher.utils.verify.SyncPersonUtils;
+import rx.Subscriber;
 
 /**
  * MVPPlugin
@@ -91,6 +102,7 @@ public class Person_addActivity
 
     User user;
     InputWifiPasswordDialogFragment dialogFragment;
+    DeviceUuidFactory deviceUuidFactory = new DeviceUuidFactory(this);
 
 
     @Override
@@ -198,6 +210,37 @@ public class Person_addActivity
                 break;
             case R.id.title_right:     //删除用户
                 showMessageDialog(getString(R.string.delete_person_message), getString(R.string.confirm), v -> {
+                    obtainToken();
+                });
+                break;
+        }
+    }
+
+    /**
+     * 删除用户
+     */
+    private void doDeleteUser() {
+        JSONObject params = new JSONObject();
+        try {
+            params.put("access_token",SPUtils.getString(Constant.ACCENT_TOKEN));
+            params.put("uuid",deviceUuidFactory.getUuid());
+            params.put("peopleId",user.getUniqueId());
+        } catch (JSONException e) {
+        }
+        BaseApiImpl.deleteUser(params).subscribe(new Subscriber<StatusBo>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(StatusBo statusBo) {
+                if(statusBo.getStatus() == 1){
                     if (!StringUtils.isEmpty(user.getFaceID())) {    //删除本地人脸
                         FaceUtils faceUtils = FaceUtils.getInstance();
                         faceUtils.delete(user.getFaceID());
@@ -216,10 +259,35 @@ public class Person_addActivity
                     DbHelper.delete(user);
                     dissmissMessageDialog();
                     finish();
-                });
-                break;
-        }
+                }
+            }
+        });
     }
+
+    /**
+     * token请求接口
+     */
+    private void obtainToken() {
+        BaseApiImpl.postToken(deviceUuidFactory.getUuid().toString(), KeyUtils.getKey())
+                .subscribe(new Subscriber<TokenBo>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(TokenBo tokenBo) {
+                        SPUtils.put(Constant.ACCENT_TOKEN, tokenBo.getAccess_token());
+                        doDeleteUser();
+                    }
+                });
+    }
+
 
 
     /**
