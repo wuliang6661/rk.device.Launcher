@@ -139,6 +139,7 @@ public class VerifyService extends Service {
 //                RxBus.getDefault().post(new OpenDoorSuccessEvent("", VerifyTypeConstant.TYPE_CARD, 1));
             }
         } else {
+            NfcHelper.PER_nfcInit();
             LogUtil.i(TAG, TAG + " read nfc failed.");
         }
         sleep();

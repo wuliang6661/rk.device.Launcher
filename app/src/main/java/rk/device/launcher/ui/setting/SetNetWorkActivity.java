@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
+import android.view.View.OnScrollChangeListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -19,6 +20,7 @@ import butterknife.Bind;
 import rk.device.launcher.R;
 import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.ui.key.KeyActivity;
+import rk.device.launcher.utils.IMEUtils;
 import rk.device.launcher.utils.rxjava.RxBus;
 import rk.device.launcher.bean.event.IpHostEvent;
 import rk.device.launcher.global.Constant;
@@ -30,6 +32,8 @@ import rk.device.launcher.utils.DrawableUtil;
 import rk.device.launcher.utils.KeyBoardHelper;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.SPUtils;
+import rk.device.launcher.widget.CustomScrollView;
+import rk.device.launcher.widget.CustomScrollView.ScrollListener;
 
 public class SetNetWorkActivity extends BaseActivity implements View.OnClickListener, AndroidBug5497Workaround.KeyBoardChangeListener {
 
@@ -54,7 +58,7 @@ public class SetNetWorkActivity extends BaseActivity implements View.OnClickList
     @Bind(R.id.ll_content)
     LinearLayout mLlContent;
     @Bind(R.id.scrollView)
-    ScrollView mScrollView;
+    CustomScrollView mScrollView;
     private FragmentManager mFragmentManager;
     private String mFragmentTag = "1";
     private KeyBoardHelper mKeyBoardHelper;
@@ -69,6 +73,13 @@ public class SetNetWorkActivity extends BaseActivity implements View.OnClickList
     protected void initView() {
         goBack();
         setTitle(getString(R.string.net_setting));
+
+        mScrollView.setScrollListener(new ScrollListener() {
+            @Override
+            public void onScrollDown() {
+                IMEUtils.hideIME(SetNetWorkActivity.this);
+            }
+        });
     }
 
     @Override
@@ -219,6 +230,7 @@ public class SetNetWorkActivity extends BaseActivity implements View.OnClickList
                 mLlAuto.setBackgroundResource(R.color.half_transparent_white);
                 mCurrentCheckedLl = mLlAuto;
                 mCurrentCheckedIv = mIvAuto;
+                IMEUtils.hideIME(this);
                 turnToFragment("1");
                 break;
             case R.id.ll_manul:
@@ -233,6 +245,8 @@ public class SetNetWorkActivity extends BaseActivity implements View.OnClickList
                 mLlWifi.setBackgroundResource(R.color.half_transparent_white);
                 mCurrentCheckedLl = mLlWifi;
                 mCurrentCheckedIv = mIvWifi;
+                // 当点击wifi的时候收起软键盘
+                IMEUtils.hideIME(this);
                 turnToFragment("3");
                 break;
         }

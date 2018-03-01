@@ -5,32 +5,44 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
 
 import butterknife.Bind;
 import peripherals.FingerHelper;
 import rk.device.launcher.R;
+import rk.device.launcher.api.BaseApiImpl;
+import rk.device.launcher.api.T;
 import rk.device.launcher.base.LauncherApplication;
+import rk.device.launcher.bean.TokenBo;
 import rk.device.launcher.db.DbHelper;
 import rk.device.launcher.db.entity.User;
+import rk.device.launcher.global.Constant;
 import rk.device.launcher.mvp.MVPBaseActivity;
 import rk.device.launcher.ui.fingeradd.FingeraddActivity;
 import rk.device.launcher.ui.fragment.InputWifiPasswordDialogFragment;
 import rk.device.launcher.ui.nfcadd.NfcaddActivity;
 import rk.device.launcher.ui.personface.PersonFaceActivity;
 import rk.device.launcher.utils.FileUtils;
+import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.StringUtils;
 import rk.device.launcher.utils.TimeUtils;
 import rk.device.launcher.utils.TypeTranUtils;
 import rk.device.launcher.utils.cache.CacheUtils;
+import rk.device.launcher.utils.key.KeyUtils;
+import rk.device.launcher.utils.uuid.DeviceUuidFactory;
 import rk.device.launcher.utils.verify.FaceUtils;
 import rk.device.launcher.utils.verify.SyncPersonUtils;
+import rx.Subscriber;
 
 /**
  * MVPPlugin
@@ -91,6 +103,7 @@ public class Person_addActivity
 
     User user;
     InputWifiPasswordDialogFragment dialogFragment;
+    DeviceUuidFactory deviceUuidFactory = new DeviceUuidFactory(this);
 
 
     @Override
@@ -186,9 +199,10 @@ public class Person_addActivity
                     user.setStartTime(TimeUtils.string2Millis(tvTimeStart.getText().toString().trim()));
                     user.setEndTime(TimeUtils.string2Millis(tvTimeEnd.getText().toString().trim()));
                     DbHelper.insertUser(user);
+                    Log.i("SyncPersonUtils","SyncPersonUtils btn_finish_setting");
                     SyncPersonUtils.getInstance().syncPerosn();
-                    finish();
                 }
+                finish();
                 break;
             case R.id.ll_set_time:    //开始时间
                 getTimeDialog(tvTimeStart, 0);
@@ -198,29 +212,89 @@ public class Person_addActivity
                 break;
             case R.id.title_right:     //删除用户
                 showMessageDialog(getString(R.string.delete_person_message), getString(R.string.confirm), v -> {
-                    if (!StringUtils.isEmpty(user.getFaceID())) {    //删除本地人脸
-                        FaceUtils faceUtils = FaceUtils.getInstance();
-                        faceUtils.delete(user.getFaceID());
-                        FileUtils.deleteFile(CacheUtils.getFaceFile() + "/" + user.getFaceID() + ".png");
-                    }
-                    //删除指纹
-                    if (!TextUtils.isEmpty(user.getFingerID1())) {
-                        FingerHelper.JNIFpDelUserByID(LauncherApplication.fingerModuleID, TypeTranUtils.str2Int(user.getFingerID1()));
-                    }
-                    if (!TextUtils.isEmpty(user.getFingerID2())) {
-                        FingerHelper.JNIFpDelUserByID(LauncherApplication.fingerModuleID, TypeTranUtils.str2Int(user.getFingerID2()));
-                    }
-                    if (!TextUtils.isEmpty(user.getFingerID3())) {
-                        FingerHelper.JNIFpDelUserByID(LauncherApplication.fingerModuleID, TypeTranUtils.str2Int(user.getFingerID3()));
-                    }
-                    DbHelper.delete(user);
-                    dissmissMessageDialog();
-                    finish();
+                    doDeleteLocalUser();
+                    obtainToken();
                 });
                 break;
         }
     }
 
+    /**
+     * 删除本地用户
+     */
+    private void doDeleteLocalUser() {
+        if (!StringUtils.isEmpty(user.getFaceID())) {    //删除本地人脸
+            FaceUtils faceUtils = FaceUtils.getInstance();
+            faceUtils.delete(user.getFaceID());
+            FileUtils.deleteFile(CacheUtils.getFaceFile() + "/" + user.getFaceID() + ".png");
+        }
+        //删除指纹
+        if (!TextUtils.isEmpty(user.getFingerID1())) {
+            FingerHelper.JNIFpDelUserByID(LauncherApplication.fingerModuleID, TypeTranUtils.str2Int(user.getFingerID1()));
+        }
+        if (!TextUtils.isEmpty(user.getFingerID2())) {
+            FingerHelper.JNIFpDelUserByID(LauncherApplication.fingerModuleID, TypeTranUtils.str2Int(user.getFingerID2()));
+        }
+        if (!TextUtils.isEmpty(user.getFingerID3())) {
+            FingerHelper.JNIFpDelUserByID(LauncherApplication.fingerModuleID, TypeTranUtils.str2Int(user.getFingerID3()));
+        }
+        DbHelper.delete(user);
+        dissmissMessageDialog();
+        finish();
+    }
+
+    /**
+     * 删除用户
+     */
+    private void doDeleteUser() {
+        JSONObject params = new JSONObject();
+        try {
+            params.put("access_token",SPUtils.getString(Constant.ACCENT_TOKEN));
+            params.put("uuid",deviceUuidFactory.getUuid());
+            params.put("peopleId",user.getUniqueId());
+        } catch (JSONException e) {
+        }
+        BaseApiImpl.deleteUser(params).subscribe(new Subscriber<Object>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(Object Object) {
+                T.showShort("删除成功");
+            }
+        });
+    }
+
+    /**
+     * token请求接口
+     */
+    private void obtainToken() {
+        BaseApiImpl.postToken(deviceUuidFactory.getUuid().toString(), KeyUtils.getKey())
+                .subscribe(new Subscriber<TokenBo>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(TokenBo tokenBo) {
+                        SPUtils.put(Constant.ACCENT_TOKEN, tokenBo.getAccess_token());
+                        doDeleteUser();
+                    }
+                });
+    }
 
     /**
      * 判断人名是否存在
@@ -238,11 +312,13 @@ public class Person_addActivity
         user.setName(name);
         user.setStartTime(TimeUtils.string2Millis(tvTimeStart.getText().toString().trim()));
         user.setEndTime(TimeUtils.string2Millis(tvTimeEnd.getText().toString().trim()));
-        user.setPopedomType("1");
+        user.setRole(Constant.USER_TYPE_OPEN_ONLY);
+        user.setStatus(Constant.TO_BE_ADD);
         DbHelper.insertUser(user);
-        return true;
+        //新增
+        SyncPersonUtils.getInstance().syncPerosn();
+        return false;
     }
-
 
     /**
      * 设置时间选择器

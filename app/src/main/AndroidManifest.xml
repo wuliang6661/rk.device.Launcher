@@ -99,6 +99,7 @@
     <uses-permission android:name="android.permission.RESTART_PACKAGES" />
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
 
     <application
         android:name=".base.LauncherApplication"

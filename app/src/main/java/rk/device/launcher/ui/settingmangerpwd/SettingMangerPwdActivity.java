@@ -16,7 +16,6 @@ import butterknife.Bind;
 import rk.device.launcher.R;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.mvp.MVPBaseActivity;
-import rk.device.launcher.ui.setting.SetBasicInfoActivity;
 import rk.device.launcher.ui.setting.SetDoorGuardActivity;
 import rk.device.launcher.utils.IMEUtils;
 import rk.device.launcher.utils.SPUtils;
@@ -119,7 +118,7 @@ public class SettingMangerPwdActivity extends MVPBaseActivity<SettingMangerPwdCo
             case R.id.btn_finish:
                 if (etPass.length() == 6) {
                     SPUtils.putString(Constant.KEY_PASSWORD, etPass); //缓存密码
-                    SPUtils.put(Constant.SETTING_NUM, Constant.SETTING_TYPE3);
+                    SPUtils.put(Constant.SETTING_NUM, Constant.SETTING_TYPE4);
                     gotoActivity(SetDoorGuardActivity.class, true);
                 }
                 break;
