@@ -2,6 +2,7 @@ package rk.device.launcher.utils;
 
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -11,6 +12,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Build;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -175,5 +177,18 @@ public class PackageUtils {
         }, mTempSensor, SensorManager.SENSOR_DELAY_GAME);
     }
 
+    //当前应用是否处于前台
+    public static boolean isForeground(Context context) {
+        if (context != null) {
+            ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+            ComponentName cn = am.getRunningTasks(1).get(0).topActivity;
+            String currentPackageName = cn.getPackageName();
+            if (!TextUtils.isEmpty(currentPackageName) && currentPackageName.equals(context.getPackageName())) {
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
 
 }

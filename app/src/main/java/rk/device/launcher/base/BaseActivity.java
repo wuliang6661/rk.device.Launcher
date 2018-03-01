@@ -508,6 +508,9 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                if(!PackageUtils.isForeground(BaseActivity.this)){
+                    return;
+                }
                 if (verifyNoticeDialogFragment == null) {
                     verifyNoticeDialogFragment = VerifyNoticeDialogFragment.newInstance();
                 }

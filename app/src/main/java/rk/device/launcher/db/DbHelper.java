@@ -96,7 +96,7 @@ public class DbHelper {
         UserDao userDao = DbHelper.getUserDao();
         // where里面是可变参数
         Query<User> query = userDao.queryBuilder()
-                .where(UserDao.Properties.Name.eq("小明"), UserDao.Properties.PopedomType.eq(14))
+                .where(UserDao.Properties.Name.eq("小明"), UserDao.Properties.Role.eq(14))
                 .build();
         return query.list();
     }
@@ -161,7 +161,7 @@ public class DbHelper {
      */
     public static List<User> queryByFaceId(String faceId) {
         Query<User> query = getUserDao().queryBuilder()
-                .where(UserDao.Properties.FaceID.eq(faceId), UserDao.Properties.PopedomType.eq(1))
+                .where(UserDao.Properties.FaceID.eq(faceId), UserDao.Properties.Role.eq(1))
                 .build();
         return query.list();
     }
@@ -178,13 +178,14 @@ public class DbHelper {
             return Constant.NULL_NAME;
         }
         //权限类型为空
-        if (TextUtils.isEmpty(user.getPopedomType())) {
+        if (user.getRole() == 0) {
             return Constant.NULL_POPEDOMTYPE;
         }
         //        //唯一标识
         //        if (TextUtils.isEmpty(user.getUniqueId())) {
         //            return Constant.NULL_UNIQUEID;
         //        }
+        user.setStatus(Constant.TO_BE_UPDATE);
         if (user.getId() == null) {
             user.setUniqueId(MD5.get16Lowercase(UUID.randomUUID().toString()));
             user.setCreateTime(System.currentTimeMillis());
@@ -203,7 +204,7 @@ public class DbHelper {
         UserDao userDao = DbHelper.getUserDao();
         // where里面是可变参数
         Query<User> query = userDao.queryBuilder().where(UserDao.Properties.PassWord.eq(password),
-                UserDao.Properties.PopedomType.eq(1)).build();
+                UserDao.Properties.Role.eq(1)).build();
         return query.list();
     }
 
@@ -224,7 +225,7 @@ public class DbHelper {
     public static List<User> queryUserByUpdate() {
         UserDao userDao = DbHelper.getUserDao();
         // where里面是可变参数
-        Query<User> query = userDao.queryBuilder().where(UserDao.Properties.UploadStatus.eq(0))
+        Query<User> query = userDao.queryBuilder().whereOr(UserDao.Properties.Status.eq(Constant.TO_BE_ADD),UserDao.Properties.Status.eq(Constant.TO_BE_UPDATE))
                 .build();
         return query.list();
     }

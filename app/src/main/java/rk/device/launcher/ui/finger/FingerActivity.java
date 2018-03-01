@@ -79,7 +79,7 @@ public class FingerActivity extends MVPBaseActivity<FingerContract.View, FingerP
                 user.setEndTime(System.currentTimeMillis() + 10000000);
                 user.setStartTime(System.currentTimeMillis());
                 user.setUniqueId(String.valueOf(System.currentTimeMillis()));
-                user.setPopedomType("1");
+                user.setRole(1);
                 user.setFingerID1("123123");
                 user.setFingerCode("123code");
                 user.setName("hanbin");
@@ -116,7 +116,7 @@ public class FingerActivity extends MVPBaseActivity<FingerContract.View, FingerP
                 user.setEndTime(System.currentTimeMillis() + 10000000);
                 user.setStartTime(System.currentTimeMillis());
                 user.setUniqueId(String.valueOf(System.currentTimeMillis()));
-                user.setPopedomType("2");
+                user.setRole(2);
                 user.setFingerID1("123123");
                 user.setFingerCode("123code");
                 user.setName("hanbin");
@@ -153,7 +153,7 @@ public class FingerActivity extends MVPBaseActivity<FingerContract.View, FingerP
                 user.setEndTime(System.currentTimeMillis() + 10000000);
                 user.setStartTime(System.currentTimeMillis());
                 user.setUniqueId(String.valueOf(System.currentTimeMillis()));
-                user.setPopedomType("3");
+                user.setRole(3);
                 user.setFingerID1("123123");
                 user.setFingerCode("123code");
                 user.setName("hanbin");
@@ -182,7 +182,7 @@ public class FingerActivity extends MVPBaseActivity<FingerContract.View, FingerP
             case R.id.tv_verify:
                 nfc = nfcEt.getText().toString().trim();
                 User userModel = VerifyUtils.getInstance().verifyByNfc(nfc);
-                switch (userModel.getPopedomType()) {
+                switch (userModel.getRole()) {
                     case Constant.USER_TYPE_OPEN_ONLY://只能开门
                         T.showShort("open door only.");
                         break;

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -20,8 +21,8 @@ import butterknife.Bind;
 import peripherals.FingerHelper;
 import rk.device.launcher.R;
 import rk.device.launcher.api.BaseApiImpl;
+import rk.device.launcher.api.T;
 import rk.device.launcher.base.LauncherApplication;
-import rk.device.launcher.bean.StatusBo;
 import rk.device.launcher.bean.TokenBo;
 import rk.device.launcher.db.DbHelper;
 import rk.device.launcher.db.entity.User;
@@ -198,9 +199,10 @@ public class Person_addActivity
                     user.setStartTime(TimeUtils.string2Millis(tvTimeStart.getText().toString().trim()));
                     user.setEndTime(TimeUtils.string2Millis(tvTimeEnd.getText().toString().trim()));
                     DbHelper.insertUser(user);
+                    Log.i("SyncPersonUtils","SyncPersonUtils btn_finish_setting");
                     SyncPersonUtils.getInstance().syncPerosn();
-                    finish();
                 }
+                finish();
                 break;
             case R.id.ll_set_time:    //开始时间
                 getTimeDialog(tvTimeStart, 0);
@@ -210,10 +212,35 @@ public class Person_addActivity
                 break;
             case R.id.title_right:     //删除用户
                 showMessageDialog(getString(R.string.delete_person_message), getString(R.string.confirm), v -> {
+                    doDeleteLocalUser();
                     obtainToken();
                 });
                 break;
         }
+    }
+
+    /**
+     * 删除本地用户
+     */
+    private void doDeleteLocalUser() {
+        if (!StringUtils.isEmpty(user.getFaceID())) {    //删除本地人脸
+            FaceUtils faceUtils = FaceUtils.getInstance();
+            faceUtils.delete(user.getFaceID());
+            FileUtils.deleteFile(CacheUtils.getFaceFile() + "/" + user.getFaceID() + ".png");
+        }
+        //删除指纹
+        if (!TextUtils.isEmpty(user.getFingerID1())) {
+            FingerHelper.JNIFpDelUserByID(LauncherApplication.fingerModuleID, TypeTranUtils.str2Int(user.getFingerID1()));
+        }
+        if (!TextUtils.isEmpty(user.getFingerID2())) {
+            FingerHelper.JNIFpDelUserByID(LauncherApplication.fingerModuleID, TypeTranUtils.str2Int(user.getFingerID2()));
+        }
+        if (!TextUtils.isEmpty(user.getFingerID3())) {
+            FingerHelper.JNIFpDelUserByID(LauncherApplication.fingerModuleID, TypeTranUtils.str2Int(user.getFingerID3()));
+        }
+        DbHelper.delete(user);
+        dissmissMessageDialog();
+        finish();
     }
 
     /**
@@ -227,7 +254,7 @@ public class Person_addActivity
             params.put("peopleId",user.getUniqueId());
         } catch (JSONException e) {
         }
-        BaseApiImpl.deleteUser(params).subscribe(new Subscriber<StatusBo>() {
+        BaseApiImpl.deleteUser(params).subscribe(new Subscriber<Object>() {
             @Override
             public void onCompleted() {
 
@@ -239,27 +266,8 @@ public class Person_addActivity
             }
 
             @Override
-            public void onNext(StatusBo statusBo) {
-                if(statusBo.getStatus() == 1){
-                    if (!StringUtils.isEmpty(user.getFaceID())) {    //删除本地人脸
-                        FaceUtils faceUtils = FaceUtils.getInstance();
-                        faceUtils.delete(user.getFaceID());
-                        FileUtils.deleteFile(CacheUtils.getFaceFile() + "/" + user.getFaceID() + ".png");
-                    }
-                    //删除指纹
-                    if (!TextUtils.isEmpty(user.getFingerID1())) {
-                        FingerHelper.JNIFpDelUserByID(LauncherApplication.fingerModuleID, TypeTranUtils.str2Int(user.getFingerID1()));
-                    }
-                    if (!TextUtils.isEmpty(user.getFingerID2())) {
-                        FingerHelper.JNIFpDelUserByID(LauncherApplication.fingerModuleID, TypeTranUtils.str2Int(user.getFingerID2()));
-                    }
-                    if (!TextUtils.isEmpty(user.getFingerID3())) {
-                        FingerHelper.JNIFpDelUserByID(LauncherApplication.fingerModuleID, TypeTranUtils.str2Int(user.getFingerID3()));
-                    }
-                    DbHelper.delete(user);
-                    dissmissMessageDialog();
-                    finish();
-                }
+            public void onNext(Object Object) {
+                T.showShort("删除成功");
             }
         });
     }
@@ -288,8 +296,6 @@ public class Person_addActivity
                 });
     }
 
-
-
     /**
      * 判断人名是否存在
      */
@@ -306,11 +312,13 @@ public class Person_addActivity
         user.setName(name);
         user.setStartTime(TimeUtils.string2Millis(tvTimeStart.getText().toString().trim()));
         user.setEndTime(TimeUtils.string2Millis(tvTimeEnd.getText().toString().trim()));
-        user.setPopedomType("1");
+        user.setRole(Constant.USER_TYPE_OPEN_ONLY);
+        user.setStatus(Constant.TO_BE_ADD);
         DbHelper.insertUser(user);
-        return true;
+        //新增
+        SyncPersonUtils.getInstance().syncPerosn();
+        return false;
     }
-
 
     /**
      * 设置时间选择器

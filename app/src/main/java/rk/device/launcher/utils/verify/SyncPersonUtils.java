@@ -1,5 +1,7 @@
 package rk.device.launcher.utils.verify;
 
+import android.util.Log;
+
 import java.io.File;
 import java.util.List;
 
@@ -46,16 +48,21 @@ public class SyncPersonUtils {
      * 同步人员到服务器
      */
     public void syncPerosn() {
-        new Thread(() -> {
-            if (StringUtils.isEmpty(SPUtils.getString(Constant.ACCENT_TOKEN))) {
-                syncToken(null, "");
-            } else {
-                List<User> users = DbHelper.queryUserByUpdate();
-                if (!users.isEmpty()) {
-                    if (!StringUtils.isEmpty(users.get(0).getFaceID())) {
-                        uploadImage(users.get(0));
-                    } else {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Log.i("edit","editperson");
+                if (StringUtils.isEmpty(SPUtils.getString(Constant.ACCENT_TOKEN))) {
+                    syncToken(null, "");
+                } else {
+                    List<User> users = DbHelper.queryUserByUpdate();
+                    Log.i("SyncPersonUtils","SyncPersonUtils size:"+users.size());
+                    if (!users.isEmpty()) {
+//                    if (!StringUtils.isEmpty(users.get(0).getFaceID())) {
+//                        uploadImage(users.get(0));
+//                    } else {
                         updatePerson(users.get(0), null);
+//                    }
                     }
                 }
             }
@@ -125,7 +132,12 @@ public class SyncPersonUtils {
      * 上传到服务器
      */
     private void updatePerson(User user, String faceImgUrl) {
-        BaseApiImpl.syncPersons(user, faceImgUrl).subscribe(new Subscriber<Object>() {
+        Log.i("updatePerson","updatePerson" + user.getStatus());
+        if(user.getStatus() == Constant.NORMAL){
+            user.setStartTime(Constant.TO_BE_UPDATE);
+        }
+        DbHelper.insertUser(user);
+        BaseApiImpl.addUser(user, faceImgUrl).subscribe(new Subscriber<Object>() {
             @Override
             public void onCompleted() {
 
@@ -140,9 +152,8 @@ public class SyncPersonUtils {
 
             @Override
             public void onNext(Object s) {
-                user.setUploadStatus(1);
+                user.setStatus(Constant.NORMAL);
                 DbHelper.insertUser(user);
-                syncPerosn();
             }
         });
     }

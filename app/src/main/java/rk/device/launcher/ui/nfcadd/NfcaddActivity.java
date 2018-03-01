@@ -210,6 +210,7 @@ public class NfcaddActivity extends MVPBaseActivity<NfcaddContract.View, NfcaddP
                     eUser.setCardNo(cardNumber);
                     eUser.setUploadStatus(0);
                     DbHelper.update(eUser);
+//                    BaseApiImpl.addCard()；
                     T.showShort(getString(R.string.card_add_success));
                     finish();
                 } else {

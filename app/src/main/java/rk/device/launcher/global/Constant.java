@@ -108,9 +108,9 @@ public interface Constant {
     int NULL_UNIQUEID = -1003;                  //唯一标识为空
 
     /********* User Type Code **********/
-    String USER_TYPE_OPEN_ONLY = "1";                    // 1:  开门权限，只能开门
-    String USER_TYPE_PATROL_ONLY = "2";                    // 2:  巡更权限，向服务器发送一条上报消息，代表已巡更
-    String USER_TYPE_ADMINISTRATOR = "3";                    // 3:  管理员权限，可以开门、巡更、或进入设置页面更改设置
+    int USER_TYPE_OPEN_ONLY = 1;                    // 1:  开门权限，只能开门
+    int USER_TYPE_PATROL_ONLY = 2;                    // 2:  巡更权限，向服务器发送一条上报消息，代表已巡更
+    int USER_TYPE_ADMINISTRATOR = 3;                    // 3:  管理员权限，可以开门、巡更、或进入设置页面更改设置
 
     String IS_FIRST_OPEN_APP = "is_first_open_app";
 
@@ -119,6 +119,15 @@ public interface Constant {
      *
      */
     String ACCENT_TOKEN = "access_token";
+
+
+
+    /*************** status //1：正常，2：待添加，3：待更新，4：待删除 *******************/
+
+    int NORMAL = 1;
+    int TO_BE_ADD = 2;
+    int TO_BE_UPDATE = 3;
+    int TO_BE_DELETE = 4;
 
 
 }

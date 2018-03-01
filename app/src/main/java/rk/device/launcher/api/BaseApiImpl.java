@@ -33,9 +33,8 @@ import rx.Observable;
 
 public class BaseApiImpl {
 
-
     private static volatile Retrofit mApiRetrofit;
-    private static BaseActivity activity;
+    private static BaseActivity      activity;
 
     /**
      * 动态分配IP地址
@@ -69,11 +68,9 @@ public class BaseApiImpl {
         }
     }
 
-
     public static void setActivity(BaseActivity activity) {
         BaseApiImpl.activity = activity;
     }
-
 
     /**
      * 切換IP和端口之后需清空请求对象
@@ -81,7 +78,6 @@ public class BaseApiImpl {
     public static void clearIP() {
         mApiRetrofit = null;
     }
-
 
     private static AddressAPI createAddressAPI() {
         return RetrofitManager.getInstance().getAddressAPI();
@@ -94,12 +90,12 @@ public class BaseApiImpl {
         return apiFactory().weather(params).compose(RxResultHelper.httpResult());
     }
 
-
     /**
      * 访问外网, 根据IP地址获取地址
      */
     public static Observable<String> address(String format) {
-        return createAddressAPI().getAddress(format).compose(activity.bindUntilEvent(ActivityEvent.PAUSE));
+        return createAddressAPI().getAddress(format)
+                .compose(activity.bindUntilEvent(ActivityEvent.PAUSE));
     }
 
     /**
@@ -113,9 +109,9 @@ public class BaseApiImpl {
         } catch (JSONException e) {
 
         }
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), setBaseMap(params).toString());
-        return apiFactory().deviceConfiguration(requestBody)
-                .compose(RxResultHelper.httpResult());
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),
+                params.toString());
+        return apiFactory().deviceConfiguration(requestBody).compose(RxResultHelper.httpResult());
     }
 
     /**
@@ -137,7 +133,8 @@ public class BaseApiImpl {
         } catch (JSONException e) {
 
         }
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), setBaseMap(params).toString());
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),
+                params.toString());
         return apiFactory().openDoor(requestBody).compose(RxResultHelper.httpResult());
     }
 
@@ -150,14 +147,14 @@ public class BaseApiImpl {
             object.put("uuid", uuid);
             object.put("mac", mac);
             object.put("license", license);
-            RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), setBaseMap(object).toString());
+            RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),
+                    object.toString());
             return apiFactory().activationDiveces(requestBody).compose(RxResultHelper.httpResult());
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return null;
     }
-
 
     /**
      * 获取accens_token
@@ -167,7 +164,8 @@ public class BaseApiImpl {
         try {
             object.put("uuid", uuid);
             object.put("license", license);
-            RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), setBaseMap(object).toString());
+            RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),
+                    object.toString());
             return apiFactory().getToken(requestBody).compose(RxResultHelper.httpResult());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -182,38 +180,39 @@ public class BaseApiImpl {
      * @return
      */
     public static Observable<StatusBo> syncRecords(JSONObject params) {
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), setBaseMap(params).toString());
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),
+                params.toString());
         return apiFactory().syncRecords(requestBody).compose(RxResultHelper.httpResult());
     }
-
 
     /**
      * 新增用户接口
      */
-    public static Observable<Object> syncPersons(User user, String url) {
+    public static Observable<Object> addUser(User user, String url) {
         JSONObject object = new JSONObject();
         try {
-            object.put("peopleId", user.getUniqueId());
-            object.put("peopleName", user.getName());
-            object.put("popedomType", user.getPopedomType());
-            object.put("startTime", user.getStartTime() / 1000);
-            object.put("endTime", user.getEndTime() / 1000);
-            object.put("createTime", user.getCreateTime() / 1000);
-            object.put("cardNo", user.getCardNo());
-            object.put("fingerID1", user.getFingerID1());
-            object.put("fingerID2", user.getFingerID2());
-            object.put("fingerID3", user.getFingerID3());
-            object.put("password", user.getPassWord());
             object.put("access_token", SPUtils.getString(Constant.ACCENT_TOKEN));
             object.put("uuid", new DeviceUuidFactory(Utils.getContext()).getUuid() + "");
+            object.put("peopleId", user.getUniqueId());
+            object.put("peopleName", user.getName());
+            object.put("role", user.getRole());
+            //            object.put("startTime", user.getStartTime() / 1000);
+            //            object.put("endTime", user.getEndTime() / 1000);
             if (!StringUtils.isEmpty(url)) {
                 object.put("faceID", url);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), setBaseMap(object).toString());
-        return apiFactory().syncPerson(requestBody).compose(RxResultHelper.httpResult());
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),
+                object.toString());
+        if (user.getStatus() == Constant.TO_BE_UPDATE) {
+            return apiFactory().editUser(requestBody).compose(RxResultHelper.httpResult());
+        } else if (user.getStatus() == Constant.TO_BE_ADD) {
+            return apiFactory().addUser(requestBody).compose(RxResultHelper.httpResult());
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -225,44 +224,62 @@ public class BaseApiImpl {
 
     /**
      * 上传设备状态
+     * 
      * @param params
      * @return
      */
-    public static Observable<StatusBo> uploadDeviceStatus(JSONObject params){
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), setBaseMap(params).toString());
+    public static Observable<StatusBo> uploadDeviceStatus(JSONObject params) {
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),
+                params.toString());
         return apiFactory().uploadDeviceStatus(requestBody).compose(RxResultHelper.httpResult());
     }
 
-     /**
-      * 删除用户
-      *
-      * @param params
-      * @return
-      */
-    public static Observable<StatusBo> deleteUser(JSONObject params){
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), setBaseMap(params).toString());
+    /**
+     * 删除用户
+     *
+     * @param params
+     * @return
+     */
+    public static Observable<Object> deleteUser(JSONObject params) {
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),
+                params.toString());
         return apiFactory().deleteUser(requestBody).compose(RxResultHelper.httpResult());
     }
 
-
-
     /**
-     * 封装初始化数据
+     * 添加卡
      *
-     * @param jsonObject
+     * @param params
      * @return
      */
-    private static JSONObject setBaseMap(JSONObject jsonObject){
-        JSONObject postData = new JSONObject();
-        try {
-            postData.put("result",200);
-            postData.put("code",11);
-            postData.put("message","post");
-            postData.put("data",jsonObject);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return postData;
+    public static Observable<Object> addCard(JSONObject params) {
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),
+                params.toString());
+        return apiFactory().addCard(requestBody).compose(RxResultHelper.httpResult());
+    }
+
+    /**
+     * 编辑卡
+     *
+     * @param params
+     * @return
+     */
+    public static Observable<Object> editCard(JSONObject params) {
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),
+                params.toString());
+        return apiFactory().editCard(requestBody).compose(RxResultHelper.httpResult());
+    }
+
+    /**
+     * 删除卡
+     *
+     * @param params
+     * @return
+     */
+    public static Observable<Object> deleteCard(JSONObject params) {
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),
+                params.toString());
+        return apiFactory().deleteCard(requestBody).compose(RxResultHelper.httpResult());
     }
 
 }

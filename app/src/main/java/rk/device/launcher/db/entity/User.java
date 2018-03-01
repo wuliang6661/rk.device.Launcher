@@ -34,7 +34,7 @@ public class User implements Serializable {
      * 3:  管理员权限，可以开门、巡更、或进入设置页面更改设置
      */
     @NotNull
-    private String popedomType; // 权限类型
+    private int role; // 权限类型
 
     private String cardNo;
 
@@ -54,29 +54,30 @@ public class User implements Serializable {
 
     private int passWord;
 
-    private long startTime;
-
-    private long endTime;
-
     private String fingerCode;
 
     private int uploadStatus;
+    
+    private int    status;     //1：正常，2：待添加，3：待更新，4：待删除
+
+    private long startTime;
+
+    private long endTime;
 
     private long createTime;
 
     private long updateTime;
 
-    @Generated(hash = 427907020)
-    public User(Long id, @NotNull String uniqueId, @NotNull String name,
-            @NotNull String popedomType, String cardNo, String fingerID1,
-            String fingerName1, String fingerID2, String fingerName2,
-            String fingerID3, String fingerName3, String faceID, int passWord,
-            long startTime, long endTime, String fingerCode, int uploadStatus,
-            long createTime, long updateTime) {
+    @Generated(hash = 1103820833)
+    public User(Long id, @NotNull String uniqueId, @NotNull String name, int role,
+            String cardNo, String fingerID1, String fingerName1, String fingerID2,
+            String fingerName2, String fingerID3, String fingerName3, String faceID,
+            int passWord, String fingerCode, int uploadStatus, int status,
+            long startTime, long endTime, long createTime, long updateTime) {
         this.id = id;
         this.uniqueId = uniqueId;
         this.name = name;
-        this.popedomType = popedomType;
+        this.role = role;
         this.cardNo = cardNo;
         this.fingerID1 = fingerID1;
         this.fingerName1 = fingerName1;
@@ -86,10 +87,11 @@ public class User implements Serializable {
         this.fingerName3 = fingerName3;
         this.faceID = faceID;
         this.passWord = passWord;
-        this.startTime = startTime;
-        this.endTime = endTime;
         this.fingerCode = fingerCode;
         this.uploadStatus = uploadStatus;
+        this.status = status;
+        this.startTime = startTime;
+        this.endTime = endTime;
         this.createTime = createTime;
         this.updateTime = updateTime;
     }
@@ -122,12 +124,12 @@ public class User implements Serializable {
         this.name = name;
     }
 
-    public String getPopedomType() {
-        return this.popedomType;
+    public int getRole() {
+        return this.role;
     }
 
-    public void setPopedomType(String popedomType) {
-        this.popedomType = popedomType;
+    public void setRole(int role) {
+        this.role = role;
     }
 
     public String getCardNo() {
@@ -202,22 +204,6 @@ public class User implements Serializable {
         this.passWord = passWord;
     }
 
-    public long getStartTime() {
-        return this.startTime;
-    }
-
-    public void setStartTime(long startTime) {
-        this.startTime = startTime;
-    }
-
-    public long getEndTime() {
-        return this.endTime;
-    }
-
-    public void setEndTime(long endTime) {
-        this.endTime = endTime;
-    }
-
     public String getFingerCode() {
         return this.fingerCode;
     }
@@ -232,6 +218,30 @@ public class User implements Serializable {
 
     public void setUploadStatus(int uploadStatus) {
         this.uploadStatus = uploadStatus;
+    }
+
+    public int getStatus() {
+        return this.status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public long getStartTime() {
+        return this.startTime;
+    }
+
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
+    }
+
+    public long getEndTime() {
+        return this.endTime;
+    }
+
+    public void setEndTime(long endTime) {
+        this.endTime = endTime;
     }
 
     public long getCreateTime() {
@@ -249,7 +259,6 @@ public class User implements Serializable {
     public void setUpdateTime(long updateTime) {
         this.updateTime = updateTime;
     }
-
-
+    
 
 }
