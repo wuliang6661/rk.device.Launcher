@@ -114,7 +114,7 @@ public class PersonFaceActivity extends MVPBaseActivity<PersonFaceContract.View,
     private void initCrema() {
         surfaceholder = surfaceview.getHolder();
         surfaceholder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-        callbackFont = new SurfaceHolderCaremaFont();
+        callbackFont = new SurfaceHolderCaremaFont(this);
         callbackFont.setCallBack(new SurfaceHolderCaremaFont.CallBack() {
             @Override
             public void callMessage(byte[] data, int width, int height) {

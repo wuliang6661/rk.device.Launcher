@@ -11,16 +11,14 @@
         android:id="@+id/ll_connected_device"
         android:layout_width="match_parent"
         android:layout_height="@dimen/item_height"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/tv_set_label"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="20dp"
-            android:text="@string/guanlian_device"
-            android:textColor="@color/white"
-            android:textSize="20dp" />
+            android:text="@string/guanlian_device" />
 
         <Space
             android:layout_width="0dp"
@@ -29,11 +27,8 @@
 
         <TextView
             android:id="@+id/tv_connected_device"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/tv_set_label"
             android:layout_gravity="center_vertical"
-            android:textColor="@color/white"
-            android:textSize="20dp"
             tools:text="@string/yitiji" />
 
         <ImageView
@@ -43,6 +38,72 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="15dp"
             android:src="@drawable/arrow_right" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_height"
+        android:background="@color/blue_31598a" />
+
+
+    <LinearLayout
+        android:id="@+id/connected_device_type"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/tv_set_label"
+            android:layout_gravity="center_vertical"
+            android:text="@string/kaiguanleixing" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <CheckBox
+            android:id="@+id/checkbox_off"
+            style="@style/style_check_box"
+            android:checked="true" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_height"
+        android:background="@color/blue_31598a" />
+
+
+    <LinearLayout
+        android:id="@+id/ll_switch_time"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/tv_set_label"
+            android:layout_gravity="center_vertical"
+            android:text="@string/kaiguan_time" />
+
+
+        <EditText
+            android:id="@+id/edit_open_time"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_marginRight="@dimen/dp_15"
+            android:layout_weight="1"
+            android:background="@null"
+            android:inputType="number"
+            android:gravity="right|center_vertical"
+            android:hint="请输入开关时长（默认0.5秒）"
+            android:maxLength="10"
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:textColorHint="#999999"
+            android:textSize="@dimen/sp_24" />
 
     </LinearLayout>
 
@@ -128,49 +189,6 @@
             android:layout_height="@dimen/divider_height"
             android:background="@color/blue_31598a" />
 
-        <LinearLayout
-            android:id="@+id/ll_switch_time"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/item_height"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="20dp"
-                android:text="@string/kaiguan_time"
-                android:textColor="@color/white"
-                android:textSize="20dp" />
-
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-
-            <TextView
-                android:id="@+id/tv_lock_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="30s"
-                android:textColor="@color/white"
-                android:textSize="20dp" />
-
-            <ImageView
-                android:layout_width="12dp"
-                android:layout_height="22dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="15dp"
-                android:src="@drawable/arrow_right" />
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/divider_height"
-            android:background="@color/blue_31598a" />
 
         <LinearLayout
             android:layout_width="match_parent"

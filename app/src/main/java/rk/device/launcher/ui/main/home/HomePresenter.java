@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
+import android.os.Handler;
 import android.os.Message;
 
 import java.lang.ref.WeakReference;
@@ -269,14 +270,23 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
             StatSoFiles statSoFiles = new StatSoFiles(Utils.getContext());
             statSoFiles.verifyAndReleaseLibSo();
             statSoFiles.initNativeDirectory(Utils.getContext());
+            handler.sendEmptyMessage(0x11);
+        }).start();
+    }
+
+
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
             FaceUtils.getInstance().init(Utils.getContext());
             FaceUtils.getInstance().loadFaces();
             registerFace();
             initJni();
             mView.getContext().startService(new Intent(mView.getContext(), VerifyService.class));
             mView.startVideo();
-        }).start();
-    }
+        }
+    };
 
 
     private int isHasPerson = 0;   //连续5次检测到没人，关闭摄像头

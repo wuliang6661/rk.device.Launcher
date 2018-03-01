@@ -1,6 +1,7 @@
 package rk.device.server.logic;
 
 import android.os.SystemClock;
+import android.provider.Settings;
 import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSONObject;
@@ -13,7 +14,9 @@ import rk.device.launcher.global.Constant;
 import rk.device.launcher.service.DownLoadIntentService;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.PackageUtils;
+import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.TypeTranUtils;
+import rk.device.launcher.utils.Utils;
 import rk.device.launcher.utils.uuid.DeviceUuidFactory;
 
 /**
@@ -21,9 +24,9 @@ import rk.device.launcher.utils.uuid.DeviceUuidFactory;
  */
 public class PublicLogic extends BaseLogic {
 
-    private static final String TAG               = "PublicLogic";
-    private static PublicLogic  publicLogic       = null;
-    private DeviceUuidFactory   deviceUuidFactory = null;
+    private static final String TAG = "PublicLogic";
+    private static PublicLogic publicLogic = null;
+    private DeviceUuidFactory deviceUuidFactory = null;
 
     public PublicLogic() {
         if (deviceUuidFactory == null) {
@@ -97,7 +100,7 @@ public class PublicLogic extends BaseLogic {
 
     /**
      * 更新一体机时间
-     * 
+     *
      * @param params
      * @return
      */
@@ -112,8 +115,11 @@ public class PublicLogic extends BaseLogic {
             return onError(300, "请填写正确UUID: " + getUUID());
         }
         int time = TypeTranUtils.str2Int(params.getString("update_time"));
+        int updateTime = TypeTranUtils.str2Int(params.getString("shouldAutoUpdate"));
         // 设置系统时间
         SystemClock.setCurrentTimeMillis(time);
+        Settings.Global.putInt(Utils.getContext().getContentResolver(), Settings.Global.AUTO_TIME, updateTime);
+        SPUtils.putBoolean(Constant.UPDATE_TIME, updateTime == 1 ? true : false);
         JSONObject result = new JSONObject();
         result.put("status", 1);
         return onSuccess(result, "设置成功");

@@ -20,9 +20,11 @@ import rk.device.launcher.db.entity.Record;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.global.VerifyTypeConstant;
+import rk.device.launcher.utils.AppManager;
 import rk.device.launcher.utils.MD5;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.SoundPlayUtils;
+import rk.device.launcher.utils.StringUtils;
 import rk.device.launcher.utils.TimeUtils;
 import rk.device.launcher.utils.key.KeyUtils;
 import rk.device.launcher.utils.rxjava.RxBus;
@@ -297,30 +299,54 @@ public class OpenUtils {
     /**
      * 使用本地jni方法开门
      */
-    public void openDoorJni(int type, String personId, String personName) {
-        int relayOff = RelayHelper.RelaySetOff();
-        if (relayOff == 0) {
-            try {
-                Thread.sleep(300);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            int relayOn = RelayHelper.RelaySetOn();
-            if (relayOn == 0) {
-                justTime = System.currentTimeMillis();
-                openDoorSuress = true;
-                String data = openStatus(type, personId);
-                RxBus.getDefault().post(
-                        new OpenDoorSuccessEvent(personName, type, 1));
+    public synchronized void openDoorJni(int type, String personId, String personName) {
+        RxBus.getDefault().post(new OpenDoorSuccessEvent(personName, type, 1));
+        if (SPUtils.getBoolean(Constant.DEVICE_MP3, true)) {
+            soundPlayUtils.play(3);
+        }
+        AppManager.getAppManager().goBackMain();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int relayOff;
+                if (SPUtils.getBoolean(Constant.DEVICE_OFF, true)) {
+                    relayOff = RelayHelper.RelaySetOff();
+                } else {
+                    relayOff = RelayHelper.RelaySetOn();
+                }
+                if (relayOff == 0) {
+                    try {
+                        String time = SPUtils.getString(Constant.DEVICE_TIME);
+                        long sleepTime;
+                        if (StringUtils.isEmpty(time)) {
+                            sleepTime = (long) (0.5 * 1000);
+                        } else {
+                            sleepTime = Long.parseLong(time) * 1000;
+                        }
+                        Thread.sleep(sleepTime);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    int relayOn;
+                    if (SPUtils.getBoolean(Constant.DEVICE_OFF, true)) {
+                        relayOn = RelayHelper.RelaySetOn();
+                    } else {
+                        relayOn = RelayHelper.RelaySetOff();
+                    }
+                    if (relayOn == 0) {
+                        justTime = System.currentTimeMillis();
+                        openDoorSuress = true;
+                        String data = openStatus(type, personId);
 //            syncRecords(token, type, personId, personName, TimeUtils.getTimeStamp(),
 //                    data);
-                insertToLocalDB(type, personId, personName, TimeUtils.getTimeStamp(), data);
-                if (SPUtils.getBoolean(Constant.DEVICE_MP3, true)) {
-                    soundPlayUtils.play(3);
+                        insertToLocalDB(type, personId, personName, TimeUtils.getTimeStamp(), data);
+                    } else {
+                        openDoorSuress = false;
+                    }
                 }
-            } else {
-                openDoorSuress = false;
             }
-        }
+        }).start();
     }
+
+
 }

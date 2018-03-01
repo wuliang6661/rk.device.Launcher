@@ -2,6 +2,7 @@ package rk.device.launcher.ui.setting;
 
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
@@ -25,7 +26,6 @@ import rk.device.launcher.bean.event.BlueToothEvent;
 import rk.device.launcher.bean.event.HomeInfoEvent;
 import rk.device.launcher.bean.event.TimeEvent;
 import rk.device.launcher.global.Constant;
-import rk.device.launcher.ui.detection.CaremaDetection;
 import rk.device.launcher.ui.detection.HardwareAct;
 import rk.device.launcher.utils.AppManager;
 import rk.device.launcher.utils.SPUtils;
@@ -44,6 +44,7 @@ import static rk.device.launcher.utils.SPUtils.get;
 public class SetBasicInfoActivity extends BaseActivity implements View.OnClickListener {
 
     private long when_time = 0;
+    private boolean isCheckTime = true;
 
     @Bind(R.id.eyes_verify)
     LinearLayout eyesVerify;
@@ -107,6 +108,7 @@ public class SetBasicInfoActivity extends BaseActivity implements View.OnClickLi
                             c.set(Calendar.SECOND, 0);
                             c.set(Calendar.MILLISECOND, 0);
                             when_time = c.getTimeInMillis();
+                            isCheckTime = timeEvent.isUpdateTime;
                             timeTv.setText(
                                     timeEvent.year + "-" + realMonth + "-" + timeEvent.day
                                             + " " + timeEvent.hour + ":" + timeEvent.minute);
@@ -229,10 +231,12 @@ public class SetBasicInfoActivity extends BaseActivity implements View.OnClickLi
         SPUtils.put(Constant.DEVICE_NAME, deviceName);
         //语音设置
         SPUtils.put(Constant.DEVICE_MP3, isVoice);
+        SPUtils.putBoolean(Constant.UPDATE_TIME, isCheckTime);
         // 设置系统时间
         if (when_time / 1000 < Integer.MAX_VALUE) {
             SystemClock.setCurrentTimeMillis(when_time);
         }
+        Settings.Global.putInt(getContentResolver(), Settings.Global.AUTO_TIME, isCheckTime ? 1 : 0);   //关闭自动更新时间
         boolean isFirstSetting = SPUtils.getBoolean(Constant.IS_FIRST_SETTING, true);    //是否第一次进入设置
         if (isFirstSetting) {
             SPUtils.putInt(Constant.SETTING_NUM, -1000);

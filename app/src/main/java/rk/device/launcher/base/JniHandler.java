@@ -136,7 +136,11 @@ public class JniHandler extends Handler {
         int faceSuress = CvcHelper.CVC_setLivingFaceThreshold(faceThreshold);
         int callsuress = NumberpadHelper.PER_numberpadInit();
         int relayStatus = RelayHelper.RelayInit();
-        int relayOn = RelayHelper.RelaySetOn();
+        if (SPUtils.getBoolean(Constant.DEVICE_OFF, true)) {
+            RelayHelper.RelaySetOn();
+        } else {
+            RelayHelper.RelaySetOff();
+        }
         Log.d("wuliang", "relayStatus == " + relayStatus);
         //init finger
         if (fingerStatus <= 0) {

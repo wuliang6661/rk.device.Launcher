@@ -8,6 +8,9 @@ import android.view.SurfaceHolder;
 
 import java.io.IOException;
 
+import rk.device.launcher.base.BaseActivity;
+import rk.device.launcher.crash.CrashUtils;
+import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.verify.FaceUtils;
 
 /**
@@ -28,6 +31,13 @@ public class SurfaceHolderCaremaFont implements SurfaceHolder.Callback {
 
     private int mWidth = 0;
     private int mHeight = 0;
+
+    BaseActivity activity;
+
+    public SurfaceHolderCaremaFont(BaseActivity activity) {
+        super();
+        this.activity = activity;
+    }
 
 
     @Override
@@ -99,11 +109,20 @@ public class SurfaceHolderCaremaFont implements SurfaceHolder.Callback {
     /**
      * 第一次进入页面，开始打开camera
      */
-    private void openCamera(SurfaceHolder holder) {
+    private boolean openCamera(SurfaceHolder holder) {
         int cameraCount = Camera.getNumberOfCameras();
         Log.d(TAG, cameraCount + "");
         if (cameraCount == 2) {
-            camera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
+            try {
+                camera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
+                SPUtils.putInt(CrashUtils.CAREMA_TIME, 0);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                if (new CrashUtils().caremaCrash()) {   //摄像头已损坏
+                    activity.showMessageDialog("摄像头已损坏");
+                    return false;
+                }
+            }
         }
         if (null != camera) {
             // 设置预览监听
@@ -121,6 +140,7 @@ public class SurfaceHolderCaremaFont implements SurfaceHolder.Callback {
                 }
             });
         }
+        return true;
     }
 
 
@@ -175,6 +195,4 @@ public class SurfaceHolderCaremaFont implements SurfaceHolder.Callback {
         void callHeightAndWidth(int width, int height);
 
     }
-
-
 }
