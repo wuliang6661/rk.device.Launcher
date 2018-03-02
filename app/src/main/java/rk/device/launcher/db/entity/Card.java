@@ -26,15 +26,16 @@ public class Card {
     private int    createTime; //创建时间时间
     private int    updateTime; //更新时间
 
-    @Generated(hash = 221804366)
+    @Generated(hash = 1090027107)
     public Card(Long id, @NotNull String personId, @NotNull String number, int status,
-            int beginTime, int endTime, int updateTime) {
+            int beginTime, int endTime, int createTime, int updateTime) {
         this.id = id;
         this.personId = personId;
         this.number = number;
         this.status = status;
         this.beginTime = beginTime;
         this.endTime = endTime;
+        this.createTime = createTime;
         this.updateTime = updateTime;
     }
 
@@ -96,5 +97,13 @@ public class Card {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public int getCreateTime() {
+        return this.createTime;
+    }
+
+    public void setCreateTime(int createTime) {
+        this.createTime = createTime;
     }
 }

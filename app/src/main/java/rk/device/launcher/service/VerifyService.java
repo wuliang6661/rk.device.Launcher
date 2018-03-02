@@ -9,11 +9,14 @@ import android.support.annotation.Nullable;
 
 import peripherals.FingerHelper;
 import peripherals.NfcHelper;
+import rk.device.launcher.R;
+import rk.device.launcher.api.T;
 import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.bean.event.NFCAddEvent;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.global.VerifyTypeConstant;
 import rk.device.launcher.utils.LogUtil;
+import rk.device.launcher.utils.TimeUtils;
 import rk.device.launcher.utils.rxjava.RxBus;
 import rk.device.launcher.utils.verify.OpenUtils;
 import rk.device.launcher.utils.verify.VerifyUtils;
@@ -92,10 +95,13 @@ public class VerifyService extends Service {
             if (resultCode > 0) {
                 User user = VerifyUtils.getInstance().verifyByFinger(resultCode);
                 if (user == null) {
-                    LogUtil.i(TAG, TAG + " user is null");
                     return;
                 }
-                LogUtil.i(TAG, TAG + " user " + user.getName());
+                if (TimeUtils.getTimeStamp() < user.getStartTime() / 1000l
+                        || TimeUtils.getTimeStamp() > user.getEndTime()/1000l) {
+                    T.showShort(LauncherApplication.getContext().getString(R.string.illeagel_user));
+                    return;
+                }
                 OpenUtils.getInstance().open(VerifyTypeConstant.TYPE_FINGER, user.getUniqueId(),
                         user.getName(), resultCode);
             } else {
@@ -142,7 +148,11 @@ public class VerifyService extends Service {
                 if (user == null) {
                     return;
                 }
-                //TextUtils.isEmpty(user.getPopedomType())
+                if (TimeUtils.getTimeStamp() < user.getStartTime() / 1000l
+                        || TimeUtils.getTimeStamp() > user.getEndTime()/1000l) {
+                    T.showShort(LauncherApplication.getContext().getString(R.string.illeagel_user));
+                    return;
+                }
                 OpenUtils.getInstance().open(VerifyTypeConstant.TYPE_CARD, user.getUniqueId(),
                         user.getName());
                 //                RxBus.getDefault().post(new OpenDoorSuccessEvent("", VerifyTypeConstant.TYPE_CARD, 1));

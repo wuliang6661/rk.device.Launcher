@@ -29,6 +29,7 @@
                 android:src="@mipmap/card_notice" />
 
             <TextView
+                android:id="@+id/tv_notice"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="35dp"

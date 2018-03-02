@@ -430,5 +430,5 @@
     <string name="eyes_hint">校准照片未满%s张，\n\n确认退出后此次校准失败</string>
     <string name="kaiguanleixing">开关常开</string>
     <string name="auto_time_update">自动更新时间</string>
-
+    <string name="illeagel_user">用户已过期，重新录入用户</string>
 </resources>
