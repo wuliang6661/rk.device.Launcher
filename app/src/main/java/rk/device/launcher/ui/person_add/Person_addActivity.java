@@ -238,7 +238,8 @@ public class Person_addActivity
         if (!TextUtils.isEmpty(user.getFingerID3())) {
             FingerHelper.JNIFpDelUserByID(LauncherApplication.fingerModuleID, TypeTranUtils.str2Int(user.getFingerID3()));
         }
-        DbHelper.delete(user);
+        user.setStatus(Constant.TO_BE_DELETE);
+        DbHelper.update(user);
         dissmissMessageDialog();
         finish();
     }
@@ -267,6 +268,7 @@ public class Person_addActivity
 
             @Override
             public void onNext(Object Object) {
+                DbHelper.delete(user);
                 T.showShort("删除成功");
             }
         });
