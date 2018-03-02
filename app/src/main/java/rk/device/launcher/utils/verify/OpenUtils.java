@@ -299,7 +299,7 @@ public class OpenUtils {
     /**
      * 使用本地jni方法开门
      */
-    public synchronized void openDoorJni(int type, String personId, String personName) {
+    public void openDoorJni(int type, String personId, String personName) {
         RxBus.getDefault().post(new OpenDoorSuccessEvent(personName, type, 1));
         if (SPUtils.getBoolean(Constant.DEVICE_MP3, true)) {
             soundPlayUtils.play(3);
@@ -321,7 +321,7 @@ public class OpenUtils {
                         if (StringUtils.isEmpty(time)) {
                             sleepTime = (long) (0.5 * 1000);
                         } else {
-                            sleepTime = Long.parseLong(time) * 1000;
+                            sleepTime = (long) (Double.parseDouble(time) * 1000);
                         }
                         Thread.sleep(sleepTime);
                     } catch (InterruptedException e) {

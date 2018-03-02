@@ -22,6 +22,7 @@ import rk.device.launcher.utils.cache.CacheUtils;
 import rk.device.launcher.utils.verify.FaceUtils;
 import rk.device.launcher.widget.carema.SurfaceHolderCaremaBack;
 import rk.device.launcher.widget.carema.SurfaceHolderCaremaFont;
+import rk.device.server.service.AppHttpServerService;
 
 /**
  * Created by wuliang on 2017/11/11 下午3:49
@@ -170,6 +171,7 @@ public class LauncherApplication extends Application {
             if (application != null) {
                 application.stopService(new Intent(application, SocketService.class));
                 application.stopService(new Intent(application, VerifyService.class));
+                application.stopService(new Intent(application, AppHttpServerService.class));
             }
             SurfaceHolderCaremaFont.stopCarema();
             SurfaceHolderCaremaBack.stopCarema();

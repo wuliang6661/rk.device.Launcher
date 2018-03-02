@@ -16,6 +16,7 @@ import butterknife.Bind;
 import rk.device.launcher.R;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.mvp.MVPBaseActivity;
+import rk.device.launcher.ui.detection.HardwareAct;
 import rk.device.launcher.ui.setting.SetBasicInfoActivity;
 import rk.device.launcher.ui.setting.SetNetWorkActivity;
 import rk.device.launcher.ui.settingmangerpwd.SettingMangerPwdActivity;
@@ -66,6 +67,10 @@ public class KeyActivity extends MVPBaseActivity<KeyContract.View, KeyPresenter>
         switch (v.getId()) {
             case R.id.suress_button:
                 key = keyEdit.getText().toString().trim();
+                if ("----------".equals(key)) {    //进入产线模式
+                    gotoActivity(HardwareAct.class, false);
+                    return;
+                }
                 if (StringUtils.isEmpty(key) || key.length() < 14) {
                     onRequestError(getString(R.string.jihuo_edit_hint));
                 } else {
