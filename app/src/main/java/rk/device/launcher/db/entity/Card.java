@@ -20,20 +20,22 @@ public class Card {
     private String personId;   //用户唯一标识ID
     @NotNull
     private String number;     //卡号
-    private int    status;     //1：正常，2：待更新，3：待删除
+    private int    status;     //1：正常，2：待添加，3：待更新，4：待删除
     private int    beginTime;  //开始时间
     private int    endTime;    //结束时间
+    private int    createTime; //创建时间时间
     private int    updateTime; //更新时间
 
-    @Generated(hash = 221804366)
+    @Generated(hash = 1090027107)
     public Card(Long id, @NotNull String personId, @NotNull String number, int status,
-            int beginTime, int endTime, int updateTime) {
+            int beginTime, int endTime, int createTime, int updateTime) {
         this.id = id;
         this.personId = personId;
         this.number = number;
         this.status = status;
         this.beginTime = beginTime;
         this.endTime = endTime;
+        this.createTime = createTime;
         this.updateTime = updateTime;
     }
 
@@ -95,5 +97,13 @@ public class Card {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public int getCreateTime() {
+        return this.createTime;
+    }
+
+    public void setCreateTime(int createTime) {
+        this.createTime = createTime;
     }
 }

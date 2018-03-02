@@ -19,7 +19,7 @@ public class CodePassword {
     private String personId;   //用户唯一标识ID
     @NotNull
     private String password;   //卡号
-    private int    status;     //1：正常，2：待更新，3：待删除
+    private int    status;     //1：正常，2：待添加，3：待更新，4：待删除
     private int    beginTime;  //开始时间
     private int    endTime;    //结束时间
     private int    createTime; //创建时间时间

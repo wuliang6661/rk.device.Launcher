@@ -45,6 +45,8 @@ public class NfcaddActivity extends MVPBaseActivity<NfcaddContract.View, NfcaddP
     @Bind(R.id.stub_layout)
     ViewStub                    cardNumberStub;             //用于展示卡片信息的Layout
     TextView                    noticeTv;                   //用于提示当前卡牌状态
+    @Bind(R.id.tv_notice)
+    TextView                    noticeTv2;
     @Bind(R.id.iv_search)
     ImageView                   deleteImg;                  //删除按钮
     private View                cardNumberView;
@@ -124,9 +126,15 @@ public class NfcaddActivity extends MVPBaseActivity<NfcaddContract.View, NfcaddP
                                 @Override
                                 public void run() {
                                     //判断当前卡已经存在
-                                    if (noticeTv != null)
+                                    if (noticeTv != null) {
+                                        noticeTv.setVisibility(View.VISIBLE);
                                         noticeTv.setText(getResources()
                                                 .getString(R.string.notice_card_is_exist));
+                                    }
+                                    if (noticeTv2.getVisibility() == View.VISIBLE) {
+                                        noticeTv2.setText(getResources()
+                                                .getString(R.string.notice_card_is_exist));
+                                    }
                                 }
                             });
                             return;
@@ -196,6 +204,8 @@ public class NfcaddActivity extends MVPBaseActivity<NfcaddContract.View, NfcaddP
             case R.id.btn_save:
                 if (isDetail && !isReload) {
                     isReload = true;
+                    cardNumTv.setText("");
+                    noticeTv.setText(getString(R.string.notice_nfc_add));
                     saveBtn.setText(getResources().getString(R.string.save));
                     return;
                 }
@@ -210,7 +220,7 @@ public class NfcaddActivity extends MVPBaseActivity<NfcaddContract.View, NfcaddP
                     eUser.setCardNo(cardNumber);
                     eUser.setUploadStatus(0);
                     DbHelper.update(eUser);
-//                    BaseApiImpl.addCard()；
+                    //                    BaseApiImpl.addCard()；
                     T.showShort(getString(R.string.card_add_success));
                     finish();
                 } else {

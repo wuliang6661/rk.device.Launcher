@@ -118,10 +118,11 @@ public interface Constant {
     String KEY_ADDRESS = "key_address";
 
     /********* DataBase Operation Feedback Code *********/
-    int UPDATE_SUCCESS = -1000;                  //更新用户信息成功
+    int UPDATE_SUCCESS = 1000;                  //更新用户信息成功
     int NULL_NAME = -1001;                  //用户名称为空
     int NULL_POPEDOMTYPE = -1002;                  //权限类型为空
     int NULL_UNIQUEID = -1003;                  //唯一标识为空
+    int NOT_EXIST = -1004;
 
     /********* User Type Code **********/
     int USER_TYPE_OPEN_ONLY = 1;                    // 1:  开门权限，只能开门
