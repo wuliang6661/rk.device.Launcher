@@ -1,155 +1,181 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="rk.device.launcher.ui.setting.SetTimeActivity">
 
-    <include layout="@layout/topbar"/>
+    <include layout="@layout/topbar" />
 
     <LinearLayout
-        android:background="@drawable/shape_normal_bg"
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/shape_normal_bg"
+        android:orientation="vertical">
+
+
+        <LinearLayout style="@style/ll_set_item">
+
+            <TextView
+                style="@style/tv_set_label"
+                android:text="@string/auto_time_update" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <CheckBox
+                android:id="@+id/checkbox_time"
+                style="@style/style_check_box"
+                android:checked="true" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_height"
+            android:background="@color/blue_31598a" />
 
         <LinearLayout
             android:id="@+id/ll_set_time_zone"
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/item_height">
+            android:layout_height="@dimen/item_height"
+            android:orientation="horizontal">
 
             <TextView
-                android:textColor="@color/white"
-                android:layout_marginLeft="20dp"
-                android:textSize="27dp"
-                android:layout_gravity="center_vertical"
-                android:text="@string/shiqu"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="20dp"
+                android:text="@string/shiqu"
+                android:textColor="@color/white"
+                android:textSize="27dp" />
 
             <Space
-                android:layout_weight="1"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
 
             <TextView
                 android:id="@+id/tv_time_zone"
-                android:textColor="@color/white"
-                android:textSize="27dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:text="@string/gmt_8_00"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:textColor="@color/white"
+                android:textSize="27dp" />
+
             <ImageView
+                android:layout_width="16dp"
+                android:layout_height="29dp"
+                android:layout_gravity="center_vertical"
                 android:layout_marginLeft="27dp"
                 android:layout_marginRight="20dp"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/arrow_right"
-                android:layout_width="16dp"
-                android:layout_height="29dp"/>
+                android:src="@drawable/arrow_right" />
 
         </LinearLayout>
 
         <View
-            android:background="@color/blue_31598a"
             android:layout_width="match_parent"
-            android:layout_height="1dp"/>
+            android:layout_height="1dp"
+            android:background="@color/blue_31598a" />
 
         <LinearLayout
             android:id="@+id/ll_set_date"
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/item_height">
+            android:layout_height="@dimen/item_height"
+            android:orientation="horizontal">
 
             <TextView
-                android:textColor="@color/white"
-                android:layout_marginLeft="20dp"
-                android:textSize="27dp"
-                android:layout_gravity="center_vertical"
-                android:text="@string/date"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="20dp"
+                android:text="@string/date"
+                android:textColor="@color/white"
+                android:textSize="27dp" />
 
             <Space
-                android:layout_weight="1"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
 
             <TextView
                 android:id="@+id/tv_date"
-                android:textColor="@color/white"
-                android:textSize="27dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:text="2017-08-09"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:textColor="@color/white"
+                android:textSize="27dp" />
+
             <ImageView
+                android:layout_width="16dp"
+                android:layout_height="29dp"
+                android:layout_gravity="center_vertical"
                 android:layout_marginLeft="27dp"
                 android:layout_marginRight="20dp"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/arrow_right"
-                android:layout_width="16dp"
-                android:layout_height="29dp"/>
+                android:src="@drawable/arrow_right" />
 
         </LinearLayout>
 
         <View
-            android:background="@color/blue_31598a"
             android:layout_width="match_parent"
-            android:layout_height="1dp"/>
+            android:layout_height="1dp"
+            android:background="@color/blue_31598a" />
 
         <LinearLayout
             android:id="@+id/ll_set_time"
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/item_height">
+            android:layout_height="@dimen/item_height"
+            android:orientation="horizontal">
 
             <TextView
-                android:textColor="@color/white"
-                android:layout_marginLeft="20dp"
-                android:textSize="27dp"
-                android:layout_gravity="center_vertical"
-                android:text="@string/time"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="20dp"
+                android:text="@string/time"
+                android:textColor="@color/white"
+                android:textSize="27dp" />
 
             <Space
-                android:layout_weight="1"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
 
             <TextView
                 android:id="@+id/tv_time"
-                android:textColor="@color/white"
-                android:textSize="27dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:text="14:30"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:textColor="@color/white"
+                android:textSize="27dp" />
+
             <ImageView
+                android:layout_width="16dp"
+                android:layout_height="29dp"
+                android:layout_gravity="center_vertical"
                 android:layout_marginLeft="27dp"
                 android:layout_marginRight="20dp"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/arrow_right"
-                android:layout_width="16dp"
-                android:layout_height="29dp"/>
+                android:src="@drawable/arrow_right" />
 
         </LinearLayout>
 
         <View
-            android:background="@color/blue_31598a"
             android:layout_width="match_parent"
-            android:layout_height="1dp"/>
+            android:layout_height="1dp"
+            android:background="@color/blue_31598a" />
 
         <Button
             android:id="@+id/btn_finish_setting"
             style="@style/btn_finish"
             android:layout_marginTop="100dp"
-            android:text="@string/setting_suress"/>
+            android:text="@string/setting_suress" />
 
 
     </LinearLayout>

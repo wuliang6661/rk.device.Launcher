@@ -84,6 +84,22 @@ public interface Constant {
     String KEY_PORT = "key_port";
 
     /**
+     * 继电器的常开还是常闭
+     */
+    String DEVICE_OFF = "DEVICE_OFF";
+
+    /**
+     * 继电器开关时长
+     */
+    String DEVICE_TIME = "DEVICE_TIME";
+
+    /**
+     * 是否自动更新时间
+     */
+    String UPDATE_TIME = "UPDATE_TIME";
+
+
+    /**
      * 蓝牙
      */
     String BLUE_TOOTH = "blue_tooth";
@@ -117,7 +133,6 @@ public interface Constant {
 
     /**
      * access_token保存的key值，鉴权Token
-     *
      */
     String ACCENT_TOKEN = "access_token";
 

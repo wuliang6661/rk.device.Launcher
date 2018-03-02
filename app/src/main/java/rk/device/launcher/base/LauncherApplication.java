@@ -10,6 +10,7 @@ import java.lang.ref.WeakReference;
 import cat.ereza.customactivityoncrash.CustomActivityOnCrash;
 import cvc.EventUtil;
 import rk.device.launcher.R;
+import rk.device.launcher.crash.CrashHandler;
 import rk.device.launcher.service.SocketService;
 import rk.device.launcher.service.VerifyService;
 import rk.device.launcher.utils.LogUtil;

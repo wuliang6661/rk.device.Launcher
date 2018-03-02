@@ -28,7 +28,5 @@ public class QrcodePresenter extends BasePresenterImpl<QrcodeContract.View> impl
 
 
     private void setCallback(SurfaceHolder surfaceholder) {
-        SurfaceHolderCaremaFont callbackFont = new SurfaceHolderCaremaFont();
-        surfaceholder.addCallback(callbackFont);
     }
 }

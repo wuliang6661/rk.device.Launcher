@@ -124,7 +124,7 @@ public class EyesCorrectActivity extends BaseActivity implements View.OnClickLis
     private void openCarmea() {
         SurfaceHolder surfaceholder = surfaceview.getHolder();
         surfaceholder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-        surfaceholder.addCallback(new SurfaceHolderCaremaFont());
+        surfaceholder.addCallback(new SurfaceHolderCaremaFont(this));
     }
 
 

@@ -285,5 +285,7 @@
     <string name="wangguan_s">网关: %s</string>
     <string name="please_edit_s_pwd">请输入“%s”的密码</string>
     <string name="eyes_hint">校准照片未满%s张，\n\n确认退出后此次校准失败</string>
+    <string name="kaiguanleixing">开关常开</string>
+    <string name="auto_time_update">自动更新时间</string>
 
 </resources>

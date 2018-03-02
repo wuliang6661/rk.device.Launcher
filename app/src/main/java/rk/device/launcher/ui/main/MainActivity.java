@@ -270,7 +270,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
     private void initSurfaceViewOne() {
         SurfaceHolder surfaceholder = surfaceview.getHolder();
         surfaceholder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-        callbackFont = new SurfaceHolderCaremaFont();
+        callbackFont = new SurfaceHolderCaremaFont(this);
         openCamera();
         surfaceholder.addCallback(callbackFont);
     }
