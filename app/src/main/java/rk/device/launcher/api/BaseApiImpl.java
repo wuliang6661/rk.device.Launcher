@@ -172,8 +172,8 @@ public class BaseApiImpl {
             object.put("peopleId", user.getUniqueId());
             object.put("peopleName", user.getName());
             object.put("role", user.getRole());
-            //            object.put("startTime", user.getStartTime() / 1000);
-            //            object.put("endTime", user.getEndTime() / 1000);
+//            object.put("startTime", user.getStartTime() / 1000);
+//            object.put("endTime", user.getEndTime() / 1000);
             if (!StringUtils.isEmpty(url)) {
                 object.put("faceID", url);
             }

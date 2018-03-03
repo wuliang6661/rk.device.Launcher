@@ -3,12 +3,15 @@ package rk.device.launcher.ui.nfcadd;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,7 +25,6 @@ import rk.device.launcher.api.T;
 import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.bean.event.NFCAddEvent;
 import rk.device.launcher.db.CardHelper;
-import rk.device.launcher.db.DbHelper;
 import rk.device.launcher.db.entity.Card;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.global.Constant;
@@ -34,6 +36,8 @@ import rk.device.launcher.utils.rxjava.RxBus;
 import rk.device.launcher.utils.uuid.DeviceUuidFactory;
 import rk.device.launcher.utils.verify.VerifyUtils;
 import rx.Subscriber;
+
+import static rk.device.launcher.db.CardHelper.update;
 
 /**
  * NFC 卡添加 and 详情
@@ -238,8 +242,7 @@ public class NfcaddActivity extends MVPBaseActivity<NfcaddContract.View, NfcaddP
                     //添加card到本地
                     List<Card> cardList = CardHelper.getList(uniqueId);
                     if (cardList.size() > 0) {
-                        CardHelper.update(cardList.get(0).getId(), cardNumber,
-                                Constant.TO_BE_UPDATE, 0, 0);
+                        update(cardList.get(0).getId(), cardNumber, Constant.TO_BE_UPDATE, 0, 0);
                     } else {
                         CardHelper.insert(eUser.getUniqueId(), cardNumber, Constant.TO_BE_ADD, 0,
                                 0);
@@ -299,7 +302,7 @@ public class NfcaddActivity extends MVPBaseActivity<NfcaddContract.View, NfcaddP
                     List<Card> cardList = CardHelper.getList(uniqueId);
                     if (cardList.size() > 0) {
                         Card card = CardHelper.getList(uniqueId).get(0);
-                        CardHelper.update(card.getId(), cardNumber, Constant.NORMAL, 0, 0);
+                        update(card.getId(), cardNumber, Constant.NORMAL, 0, 0);
                     }
                 }
             });
@@ -317,10 +320,9 @@ public class NfcaddActivity extends MVPBaseActivity<NfcaddContract.View, NfcaddP
 
                 @Override
                 public void onNext(Object o) {
-                    List<Card> cardList = CardHelper.getList(uniqueId);
-                    if (cardList.size() > 0) {
-                        Card card = CardHelper.getList(uniqueId).get(0);
-                        CardHelper.update(card.getId(), cardNumber, Constant.NORMAL, 0, 0);
+                    Card card = CardHelper.queryOne(uniqueId);
+                    if (card != null) {
+                        update(card.getId(), cardNumber, Constant.NORMAL, 0, 0);
                     }
                 }
             });
@@ -337,8 +339,47 @@ public class NfcaddActivity extends MVPBaseActivity<NfcaddContract.View, NfcaddP
         }
         User eUser = VerifyUtils.getInstance().queryUserByUniqueId(uniqueId);
         if (eUser != null) {
-            eUser.setUploadStatus(0);
-            DbHelper.update(eUser);
+            Card card = CardHelper.queryOne(uniqueId);
+            Log.i("VerifyService","VerifyService gson:" + new Gson().toJson(card).toString());
+            int resultCode = CardHelper.update(card.getId(), card.getNumber(), Constant.TO_BE_DELETE, 0, 0);
+            if(resultCode != Constant.UPDATE_SUCCESS){
+                T.showShort("更新失败");
+                return;
+            }
+            JSONObject params = new JSONObject();
+            try {
+                params.put("access_token", SPUtils.getString(Constant.ACCENT_TOKEN));
+                params.put("uuid", factory.getUuid());
+                params.put("peopleId", eUser.getUniqueId());
+                params.put("cardNo", card.getNumber());
+                params.put("startTime", eUser.getStartTime() / 1000);
+                params.put("endTime", eUser.getEndTime() / 1000);
+            } catch (JSONException e) {
+            }
+            BaseApiImpl.deleteCard(params).subscribe(new Subscriber<Object>() {
+                @Override
+                public void onCompleted() {
+
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    if(e.getMessage().equals("6")){
+                        Card card = CardHelper.queryOne(uniqueId);
+                        if (card != null) {
+                            CardHelper.delete(card);
+                        }
+                    }
+                }
+
+                @Override
+                public void onNext(Object o) {
+                    Card card = CardHelper.queryOne(uniqueId);
+                    if (card != null) {
+                        CardHelper.delete(card);
+                    }
+                }
+            });
             T.showShort(getString(R.string.delete_success));
             finish();
         } else {

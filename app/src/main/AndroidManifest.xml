@@ -216,7 +216,9 @@
         <!--激活码激活页面-->
         <activity
             android:name=".ui.key.KeyActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait" >
+
+            </activity>
 
         <!--输入管理员密码页面-->
         <activity

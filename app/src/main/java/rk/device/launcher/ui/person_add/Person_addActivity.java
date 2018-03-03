@@ -12,6 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -310,6 +312,7 @@ public class Person_addActivity
             return false;
         }
         if (user != null) {
+            Log.i("SyncPersonUtils","SyncPersonUtils edit");
             return true;
         }
         user = new User();
@@ -317,8 +320,8 @@ public class Person_addActivity
         user.setStartTime(TimeUtils.string2Millis(tvTimeStart.getText().toString().trim()));
         user.setEndTime(TimeUtils.string2Millis(tvTimeEnd.getText().toString().trim()));
         user.setRole(Constant.USER_TYPE_OPEN_ONLY);
-        user.setStatus(Constant.TO_BE_ADD);
         DbHelper.insertUser(user);
+        Log.i("SyncPersonUtils","SyncPersonUtils add");
         //新增
         SyncPersonUtils.getInstance().syncPerosn();
         return false;
@@ -403,6 +406,7 @@ public class Person_addActivity
     @Override
     protected void onResume() {
         super.onResume();
+        Log.i("VerifyService","VerifyService onResume");
         loadUser();
     }
 
@@ -427,6 +431,7 @@ public class Person_addActivity
         }
 
         Card card = CardHelper.queryOne(user.getUniqueId());
+        Log.i("VerifyService","VerifyService Card:"+new Gson().toJson(card).toString());
         String cardNumber = "";
         if (card != null) {
             cardNumber = card.getNumber();

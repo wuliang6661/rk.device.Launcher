@@ -1,8 +1,6 @@
 package rk.device.launcher.ui.setting;
 
 import android.os.Bundle;
-import android.os.SystemClock;
-import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
@@ -234,9 +232,9 @@ public class SetBasicInfoActivity extends BaseActivity implements View.OnClickLi
         SPUtils.putBoolean(Constant.UPDATE_TIME, isCheckTime);
         // 设置系统时间
         if (when_time / 1000 < Integer.MAX_VALUE) {
-            SystemClock.setCurrentTimeMillis(when_time);
+//            SystemClock.setCurrentTimeMillis(when_time);
         }
-        Settings.Global.putInt(getContentResolver(), Settings.Global.AUTO_TIME, isCheckTime ? 1 : 0);   //关闭自动更新时间
+//        Settings.Global.putInt(getContentResolver(), Settings.Global.AUTO_TIME, isCheckTime ? 1 : 0);   //关闭自动更新时间
         boolean isFirstSetting = SPUtils.getBoolean(Constant.IS_FIRST_SETTING, true);    //是否第一次进入设置
         if (isFirstSetting) {
             SPUtils.putInt(Constant.SETTING_NUM, -1000);
