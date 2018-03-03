@@ -17,6 +17,7 @@ public class EditUtil {
 	public static void limitInput(EditText editText) {
 		editText.setInputType(3);
 		editText.addTextChangedListener(new TextWatcher() {
+			private String mBeforeText;
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 			}
@@ -26,6 +27,11 @@ public class EditUtil {
 				String text = s.toString();
 				LogUtil.d(TAG, text);
 				if (TextUtils.isEmpty(text)) {
+					return;
+				}
+				int beforeLength = mBeforeText.length();
+				int currentLength = text.length();
+				if (currentLength < beforeLength) {
 					return;
 				}
 				// 连续出现了4个数字

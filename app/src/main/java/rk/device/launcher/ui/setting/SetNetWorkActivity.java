@@ -2,36 +2,33 @@ package rk.device.launcher.ui.setting;
 
 import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
-import android.view.View.OnScrollChangeListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-
 import butterknife.Bind;
 import rk.device.launcher.R;
 import rk.device.launcher.base.BaseActivity;
-import rk.device.launcher.ui.key.KeyActivity;
-import rk.device.launcher.utils.IMEUtils;
-import rk.device.launcher.utils.rxjava.RxBus;
 import rk.device.launcher.bean.event.IpHostEvent;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.ui.fragment.AutoObtainNetworkConfigFragment;
 import rk.device.launcher.ui.fragment.ManualConfigFragment;
 import rk.device.launcher.ui.fragment.WifiListFragment;
+import rk.device.launcher.ui.key.KeyActivity;
 import rk.device.launcher.utils.AndroidBug5497Workaround;
 import rk.device.launcher.utils.DrawableUtil;
+import rk.device.launcher.utils.IMEUtils;
 import rk.device.launcher.utils.KeyBoardHelper;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.SPUtils;
+import rk.device.launcher.utils.rxjava.RxBus;
 import rk.device.launcher.widget.CustomScrollView;
 import rk.device.launcher.widget.CustomScrollView.ScrollListener;
 
@@ -258,13 +255,21 @@ public class SetNetWorkActivity extends BaseActivity implements View.OnClickList
 
     @Override
     public void OnKeyBoardPop() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-//				mScrollView.scrollBy(0, mScrollView.getChildAt(0).getHeight());
-                mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
-            }
-        }, 200);
+        //new Handler().postDelayed(new Runnable() {
+        //    @Override
+        //    public void run() {
+        //        mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
+        //    }
+        //}, 200);
+        //mScrollView.post(new Runnable() {
+        //    @Override
+        //    public void run() {
+        //        mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
+        //        if (mCurrentFragment instanceof ManualConfigFragment) {
+        //            ((ManualConfigFragment) mCurrentFragment).requestFocus();
+        //        }
+        //    }
+        //});
     }
 
     @Override
