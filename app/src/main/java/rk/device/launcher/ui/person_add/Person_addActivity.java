@@ -12,8 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -33,9 +31,6 @@ import rk.device.launcher.db.FaceHelper;
 import rk.device.launcher.db.entity.Card;
 import rk.device.launcher.db.entity.CodePassword;
 import rk.device.launcher.db.entity.Face;
-import rk.device.launcher.db.entity.Finger;
-import rk.device.launcher.db.DbHelper;
-import rk.device.launcher.db.entity.Card;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.mvp.MVPBaseActivity;
@@ -457,19 +452,7 @@ public class Person_addActivity
             passText.setText(R.string.no_add);
             passLayout.setBackgroundColor(Color.parseColor("#30374b"));
         }
-        List<Card> cards = CardHelper.getList(user.getUniqueId());
-        if (!cards.isEmpty()) {
-            cardMessage.setText(String.valueOf(getString(R.string.card_num) + cards.get(0).getNumber()));
-        } else {
-            cardMessage.setText(R.string.card_null);
-        }
-        cardText.setText(getType(cards, cardLayout));
-        List<Finger> fingers = rk.device.launcher.db.FingerHelper.getList(user.getUniqueId());
-//        fingerText01.setText(getType(user.getFingerID1(), fingerLayout01));
-//        fingerText02.setText(getType(user.getFingerID2(), fingerLayout02));
-//        fingerText03.setText(getType(user.getFingerID3(), fingerLayout03));
         Card card = CardHelper.queryOne(user.getUniqueId());
-        Log.i("VerifyService", "VerifyService Card:" + new Gson().toJson(card).toString());
         String cardNumber = "";
         if (card != null) {
             cardNumber = card.getNumber();
@@ -477,10 +460,10 @@ public class Person_addActivity
         } else {
             cardMessage.setText(R.string.card_null);
         }
-//        cardText.setText(getType(cardNumber, cardLayout));
-//        fingerText01.setText(getType(user.getFingerID1(), fingerLayout01));
-//        fingerText02.setText(getType(user.getFingerID2(), fingerLayout02));
-//        fingerText03.setText(getType(user.getFingerID3(), fingerLayout03));
+        cardText.setText(getType(cardNumber, cardLayout));
+        fingerText01.setText(getType(user.getFingerID1(), fingerLayout01));
+        fingerText02.setText(getType(user.getFingerID2(), fingerLayout02));
+        fingerText03.setText(getType(user.getFingerID3(), fingerLayout03));
     }
 
 
@@ -489,6 +472,19 @@ public class Person_addActivity
      */
     private String getType(List message, View view) {
         if (message.isEmpty()) {
+            view.setBackgroundColor(Color.parseColor("#30374b"));
+            return getString(R.string.no_add);
+        } else {
+            view.setBackgroundColor(Color.parseColor("#302d85"));
+            return getString(R.string.add_suress);
+        }
+    }
+
+    /**
+     * 判断数据是否存在，返回显示
+     */
+    private String getType(String message, View view) {
+        if (StringUtils.isEmpty(message)) {
             view.setBackgroundColor(Color.parseColor("#30374b"));
             return getString(R.string.no_add);
         } else {
