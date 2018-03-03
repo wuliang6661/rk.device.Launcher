@@ -258,7 +258,7 @@ public class OpenUtils {
                         if (StringUtils.isEmpty(time)) {
                             sleepTime = (long) (0.5 * 1000);
                         } else {
-                            sleepTime = Long.parseLong(time) * 1000;
+                            sleepTime = (long) (Double.parseDouble(time) * 1000);
                         }
                         Thread.sleep(sleepTime);
                     } catch (InterruptedException e) {

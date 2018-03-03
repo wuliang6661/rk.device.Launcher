@@ -300,6 +300,7 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
         FaceUtils.getInstance().destory();
         stopService(new Intent(this, SocketService.class));
         stopService(new Intent(this, VerifyService.class));
+        stopService(new Intent(this, AppHttpServerService.class));
         super.onDestroy();
     }
 

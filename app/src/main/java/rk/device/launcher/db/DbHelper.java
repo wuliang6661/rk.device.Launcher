@@ -27,8 +27,8 @@ public class DbHelper {
     private static final String DB_NAME = CacheUtils.DB_PATH;
     private static final String DB_PATH_JOUR = CacheUtils.DB_PATH_JOUR;
 
-    private static UserDao      sUserDao;
-    private static final String TAG          = "DbHelper";
+    private static UserDao sUserDao;
+    private static final String TAG = "DbHelper";
 
     public static UserDao getUserDao() {
         if (sUserDao == null) {
@@ -87,7 +87,7 @@ public class DbHelper {
     }
 
     public static List<User> loadAll() {
-        return getUserDao().loadAll();
+        return getUserDao().queryBuilder().orderDesc(UserDao.Properties.CreateTime).build().list();
     }
 
     // 根据条件查询, 这里只是举个例子
@@ -182,14 +182,14 @@ public class DbHelper {
     public static List<User> queryUserByUpdate() {
         UserDao userDao = DbHelper.getUserDao();
         // where里面是可变参数
-        Query<User> query = userDao.queryBuilder().whereOr(UserDao.Properties.Status.eq(Constant.TO_BE_ADD),UserDao.Properties.Status.eq(Constant.TO_BE_UPDATE))
+        Query<User> query = userDao.queryBuilder().whereOr(UserDao.Properties.Status.eq(Constant.TO_BE_ADD), UserDao.Properties.Status.eq(Constant.TO_BE_UPDATE))
                 .build();
         return query.list();
     }
 
     /**
      * 通过UserId 获取UniqueId
-     * 
+     *
      * @param userId
      * @return
      */

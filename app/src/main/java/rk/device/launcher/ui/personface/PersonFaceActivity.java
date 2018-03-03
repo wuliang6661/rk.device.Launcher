@@ -18,6 +18,7 @@ import com.arcsoft.facerecognition.AFR_FSDKFace;
 import butterknife.Bind;
 import rk.device.launcher.R;
 import rk.device.launcher.db.DbHelper;
+import rk.device.launcher.db.entity.Face;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.mvp.MVPBaseActivity;
 import rk.device.launcher.utils.BitmapUtil;
@@ -59,6 +60,7 @@ public class PersonFaceActivity extends MVPBaseActivity<PersonFaceContract.View,
     private Bitmap faceBitmap;
 
     private User user;
+    private Face face;
     private boolean isUpdate = false;
     private FaceUtils faceUtils;
 
@@ -81,6 +83,7 @@ public class PersonFaceActivity extends MVPBaseActivity<PersonFaceContract.View,
         setTitle(getString(R.string.add_face));
         String id = getIntent().getExtras().getString("id");
         user = DbHelper.queryUserById(id).get(0);
+
         faceUtils = FaceUtils.getInstance();
 
         initView();
@@ -232,6 +235,7 @@ public class PersonFaceActivity extends MVPBaseActivity<PersonFaceContract.View,
         if (!StringUtils.isEmpty(user.getFaceID())) {
             faceUtils.delete(user.getFaceID());
             FileUtils.deleteFile(CacheUtils.getFaceFile() + "/" + user.getFaceID() + ".png");
+
         }
         if (faceUtils.getmRegister().size() > 1000) {
             hintText.setText(R.string.face_limit);
