@@ -347,6 +347,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
         if (eUser != null) {
             switch (number) {
                 case 1:
+//                    rk.device.launcher.db.FingerHelper
                     uId = TypeTranUtils.str2Int(eUser.getFingerID1());
                     eUser.setFingerID1("");
                     break;

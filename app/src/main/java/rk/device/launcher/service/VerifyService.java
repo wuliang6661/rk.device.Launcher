@@ -105,7 +105,7 @@ public class VerifyService extends Service {
                 OpenUtils.getInstance().open(VerifyTypeConstant.TYPE_FINGER, user.getUniqueId(),
                         user.getName(), resultCode);
             } else {
-                if (resultCode == -1) {//未初始化
+                if (resultCode == -3) {//未初始化
                     FingerHelper.JNIFpInit();
                 } else if (resultCode == -2) {//匹配失败
 

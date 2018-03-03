@@ -15,11 +15,15 @@ import android.widget.TextView;
 
 import com.arcsoft.facerecognition.AFR_FSDKFace;
 
+import java.util.List;
+
 import butterknife.Bind;
 import rk.device.launcher.R;
 import rk.device.launcher.db.DbHelper;
+import rk.device.launcher.db.FaceHelper;
 import rk.device.launcher.db.entity.Face;
 import rk.device.launcher.db.entity.User;
+import rk.device.launcher.global.Constant;
 import rk.device.launcher.mvp.MVPBaseActivity;
 import rk.device.launcher.utils.BitmapUtil;
 import rk.device.launcher.utils.FileUtils;
@@ -59,7 +63,7 @@ public class PersonFaceActivity extends MVPBaseActivity<PersonFaceContract.View,
     private byte[] mData;
     private Bitmap faceBitmap;
 
-    private User user;
+    private User person;
     private Face face;
     private boolean isUpdate = false;
     private FaceUtils faceUtils;
@@ -82,8 +86,11 @@ public class PersonFaceActivity extends MVPBaseActivity<PersonFaceContract.View,
 
         setTitle(getString(R.string.add_face));
         String id = getIntent().getExtras().getString("id");
-        user = DbHelper.queryUserById(id).get(0);
-
+        person = DbHelper.queryUserById(id).get(0);
+        List<Face> faces = FaceHelper.getList(person.getUniqueId());
+        if (faces.size() != 0) {
+            face = faces.get(0);
+        }
         faceUtils = FaceUtils.getInstance();
 
         initView();
@@ -99,10 +106,10 @@ public class PersonFaceActivity extends MVPBaseActivity<PersonFaceContract.View,
      * 初始化布局
      */
     private void initView() {
-        if (!StringUtils.isEmpty(user.getFaceID())) {
+        if (face != null) {
             isUpdate = true;
             setTitle(getString(R.string.face_details));
-            faceImg.setImageBitmap(BitmapFactory.decodeFile(CacheUtils.getFaceFile() + "/" + user.getFaceID() + ".png"));
+            faceImg.setImageBitmap(BitmapFactory.decodeFile(CacheUtils.getFaceFile() + "/" + face.getFaceId() + ".png"));
             faceImg.setVisibility(View.VISIBLE);
             hintText.setVisibility(View.INVISIBLE);
             btnFinishSetting.setText(R.string.restart_photo);
@@ -232,11 +239,6 @@ public class PersonFaceActivity extends MVPBaseActivity<PersonFaceContract.View,
             return;
         }
         faceUtils = FaceUtils.getInstance();
-        if (!StringUtils.isEmpty(user.getFaceID())) {
-            faceUtils.delete(user.getFaceID());
-            FileUtils.deleteFile(CacheUtils.getFaceFile() + "/" + user.getFaceID() + ".png");
-
-        }
         if (faceUtils.getmRegister().size() > 1000) {
             hintText.setText(R.string.face_limit);
             hintText.setBackgroundResource(R.drawable.face_add_error);
@@ -247,11 +249,26 @@ public class PersonFaceActivity extends MVPBaseActivity<PersonFaceContract.View,
             hintText.setText(R.string.save_error);
             hintText.setBackgroundResource(R.drawable.face_add_error);
         } else {
-            BitmapUtil.saveBitmap(name + ".png", faceBitmap);
-            user.setFaceID(name);
-            user.setUploadStatus(0);
-            DbHelper.insertUser(user);
-            finish();
+            if (face != null) {                         //修改人脸
+                faceUtils.delete(face.getFaceId());
+                FileUtils.deleteFile(CacheUtils.getFaceFile() + "/" + face.getFaceId() + ".png");
+                if (Constant.UPDATE_SUCCESS == FaceHelper.update(face.getId(), name, 3, 0, 0)) {    //更新成功
+                    mPresenter.updateFace(FaceHelper.getList(person.getUniqueId()).get(0));
+                    finish();
+                } else {
+                    hintText.setText(R.string.save_error);
+                    hintText.setBackgroundResource(R.drawable.face_add_error);
+                }
+            } else {                                 //新增人脸
+                BitmapUtil.saveBitmap(name + ".png", faceBitmap);
+                if (FaceHelper.insert(person.getUniqueId(), name, 2, 0, 0)) {
+                    mPresenter.addFace(FaceHelper.getList(person.getUniqueId()).get(0));
+                    finish();
+                } else {
+                    hintText.setText(R.string.save_error);
+                    hintText.setBackgroundResource(R.drawable.face_add_error);
+                }
+            }
         }
     }
 
@@ -260,9 +277,9 @@ public class PersonFaceActivity extends MVPBaseActivity<PersonFaceContract.View,
      */
     private void deleteFace() {
         showMessageDialog(getString(R.string.delete_face), getString(R.string.confirm), v1 -> {
-            if (faceUtils.delete(user.getFaceID())) {
-                user.setFaceID("");
-                DbHelper.insertUser(user);
+            if (faceUtils.delete(face.getFaceId())) {
+                FaceHelper.update(face.getId(), "", 4, 0, 0);
+                mPresenter.deleteFace(FaceHelper.getList(person.getUniqueId()).get(0));
                 dissmissMessageDialog();
                 finish();
             } else {

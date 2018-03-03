@@ -34,7 +34,7 @@ import rx.Observable;
 public class BaseApiImpl {
 
     private static volatile Retrofit mApiRetrofit;
-    private static BaseActivity      activity;
+    private static BaseActivity activity;
 
     /**
      * 动态分配IP地址
@@ -121,7 +121,8 @@ public class BaseApiImpl {
         JSONObject object = new JSONObject();
         try {
             object.put("uuid", uuid);
-            object.put("mac", mac);
+//            object.put("mac", mac);
+            object.put("mac", "123456");
             object.put("license", license);
             RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),
                     object.toString());
@@ -200,7 +201,7 @@ public class BaseApiImpl {
 
     /**
      * 上传设备状态
-     * 
+     *
      * @param params
      * @return
      */
@@ -257,5 +258,63 @@ public class BaseApiImpl {
                 params.toString());
         return apiFactory().deleteCard(requestBody).compose(RxResultHelper.httpResult());
     }
+
+
+    /**
+     * 增加人脸
+     */
+    public static Observable<Object> addFace(JSONObject params) {
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),
+                params.toString());
+        return apiFactory().addFace(requestBody).compose(RxResultHelper.httpResult());
+    }
+
+    /**
+     * 修改人脸
+     */
+    public static Observable<Object> updateFace(JSONObject params) {
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),
+                params.toString());
+        return apiFactory().editFace(requestBody).compose(RxResultHelper.httpResult());
+    }
+
+    /**
+     * 删除人脸
+     */
+    public static Observable<Object> deleteFace(JSONObject params) {
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),
+                params.toString());
+        return apiFactory().deleteFace(requestBody).compose(RxResultHelper.httpResult());
+    }
+
+    /**
+     * 增加密码
+     */
+    public static Observable<Object> addPassWord(JSONObject params) {
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),
+                params.toString());
+        return apiFactory().addPassword(requestBody).compose(RxResultHelper.httpResult());
+    }
+
+
+    /**
+     * 修改密码
+     */
+    public static Observable<Object> updatePassWord(JSONObject params) {
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),
+                params.toString());
+        return apiFactory().editPassword(requestBody).compose(RxResultHelper.httpResult());
+    }
+
+
+    /**
+     * 删除密码
+     */
+    public static Observable<Object> deletePassWord(JSONObject params) {
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),
+                params.toString());
+        return apiFactory().deletePassword(requestBody).compose(RxResultHelper.httpResult());
+    }
+
 
 }
