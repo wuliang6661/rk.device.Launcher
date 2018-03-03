@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.InputType;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -203,7 +202,6 @@ public class Person_addActivity
                     user.setStartTime(TimeUtils.string2Millis(tvTimeStart.getText().toString().trim()));
                     user.setEndTime(TimeUtils.string2Millis(tvTimeEnd.getText().toString().trim()));
                     DbHelper.insertUser(user);
-                    Log.i("SyncPersonUtils", "SyncPersonUtils btn_finish_setting");
                     SyncPersonUtils.getInstance().syncPerosn(user);
                 }
                 finish();
@@ -399,7 +397,6 @@ public class Person_addActivity
     @Override
     protected void onResume() {
         super.onResume();
-        Log.i("VerifyService", "VerifyService onResume");
         loadUser();
     }
 

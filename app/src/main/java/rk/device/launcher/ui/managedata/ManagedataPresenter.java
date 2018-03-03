@@ -84,7 +84,7 @@ public class ManagedataPresenter extends BasePresenterImpl<ManagedataContract.Vi
                 .doOnSubscribe(new Action0() {
                     @Override
                     public void call() {
-                        mView.showProgress();
+                        //mView.showProgress();
                     }
                 })
                 .subscribeOn(AndroidSchedulers.mainThread())

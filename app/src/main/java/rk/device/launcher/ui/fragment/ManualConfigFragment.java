@@ -79,8 +79,8 @@ public class ManualConfigFragment extends Fragment {
 		ButterKnife.bind(this, view);
 		return view;
 	}
-	
-	@Override
+
+    @Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		limitInput(mEtIp);
 		limitInput(mEtNetMask);
@@ -91,9 +91,11 @@ public class ManualConfigFragment extends Fragment {
 	private void limitInput(EditText editText) {
 		editText.setInputType(3);
 		editText.addTextChangedListener(new TextWatcher() {
+            private String mBeforeText;
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-			}
+                mBeforeText = s.toString();
+            }
 			
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -102,7 +104,13 @@ public class ManualConfigFragment extends Fragment {
 				if (TextUtils.isEmpty(text)) {
 					return;
 				}
-				// 连续出现了4个数字
+                int beforeLength = mBeforeText.length();
+                int currentLength = text.length();
+                if (currentLength < beforeLength) {
+                    return;
+                }
+
+                // 连续出现了4个数字
 				// .*表示任何字符一次或多次
 				String regex1 = "^.*\\d{4,}.*$";
 				// 表示整个输入中出现了4个.

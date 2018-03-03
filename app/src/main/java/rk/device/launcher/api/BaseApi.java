@@ -81,7 +81,7 @@ public interface BaseApi {
      * @param requestBody
      * @return
      */
-    @POST("/api/v1/public/updateDeviceStatus")
+    @POST("/api/v1/device/heartbeat")
     Observable<BaseResult<StatusBo>> uploadDeviceStatus(@Body RequestBody requestBody);
 
     /**

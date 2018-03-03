@@ -19,7 +19,7 @@ import rk.device.launcher.db.CardHelper;
 import rk.device.launcher.db.CodePasswordHelper;
 import rk.device.launcher.db.DbHelper;
 import rk.device.launcher.db.FaceHelper;
-import rk.device.launcher.db.FingerHelper;
+import rk.device.launcher.db.FingerPrintHelper;
 import rk.device.launcher.db.entity.Card;
 import rk.device.launcher.db.entity.CodePassword;
 import rk.device.launcher.db.entity.Face;
@@ -101,7 +101,7 @@ public class PersonManageActivity extends MVPBaseActivity<PersonManageContract.V
                 } else {
                     holder.getView(R.id.person_card).setVisibility(View.VISIBLE);
                 }
-                List<Finger> fingers = FingerHelper.getList(user.getUniqueId());
+                List<Finger> fingers = FingerPrintHelper.getList(user.getUniqueId());
                 if (fingers.isEmpty()) {
                     holder.getView(R.id.person_finger).setVisibility(View.GONE);
                 } else {
