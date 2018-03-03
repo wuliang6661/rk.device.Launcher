@@ -23,7 +23,6 @@ import rk.device.launcher.R;
 import rk.device.launcher.api.BaseApiImpl;
 import rk.device.launcher.api.T;
 import rk.device.launcher.base.LauncherApplication;
-import rk.device.launcher.bean.TokenBo;
 import rk.device.launcher.db.CardHelper;
 import rk.device.launcher.db.CodePasswordHelper;
 import rk.device.launcher.db.DbHelper;
@@ -44,7 +43,6 @@ import rk.device.launcher.utils.StringUtils;
 import rk.device.launcher.utils.TimeUtils;
 import rk.device.launcher.utils.TypeTranUtils;
 import rk.device.launcher.utils.cache.CacheUtils;
-import rk.device.launcher.utils.key.KeyUtils;
 import rk.device.launcher.utils.uuid.DeviceUuidFactory;
 import rk.device.launcher.utils.verify.FaceUtils;
 import rk.device.launcher.utils.verify.SyncPersonUtils;
@@ -219,7 +217,7 @@ public class Person_addActivity
             case R.id.title_right:     //删除用户
                 showMessageDialog(getString(R.string.delete_person_message), getString(R.string.confirm), v -> {
                     doDeleteLocalUser();
-                    obtainToken();
+                    doDeleteUser();
                 });
                 break;
         }
@@ -278,30 +276,6 @@ public class Person_addActivity
                 T.showShort("删除成功");
             }
         });
-    }
-
-    /**
-     * token请求接口
-     */
-    private void obtainToken() {
-        BaseApiImpl.postToken(deviceUuidFactory.getUuid().toString(), KeyUtils.getKey())
-                .subscribe(new Subscriber<TokenBo>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(TokenBo tokenBo) {
-                        SPUtils.put(Constant.ACCENT_TOKEN, tokenBo.getAccess_token());
-                        doDeleteUser();
-                    }
-                });
     }
 
     /**
