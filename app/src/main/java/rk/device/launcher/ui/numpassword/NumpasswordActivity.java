@@ -163,6 +163,8 @@ public class NumpasswordActivity extends MVPBaseActivity<NumpasswordContract.Vie
                     long time = System.currentTimeMillis();
                     if (users.get(0).getStartTime() < time && users.get(0).getEndTime() > time) {    //在有效时间内，则开门
                         OpenUtils.getInstance().open(VerifyTypeConstant.TYPE_PASSWORD, users.get(0).getUniqueId(), users.get(0).getName());
+                    } else {
+                        showMessageDialog("密码已过期，请重新输入");
                     }
                 }
                 break;

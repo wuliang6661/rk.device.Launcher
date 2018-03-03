@@ -4,6 +4,7 @@ package rk.device.launcher.ui.main.home;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -24,8 +25,10 @@ import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
 import java.lang.ref.WeakReference;
 
 import butterknife.Bind;
+import cvc.EventUtil;
 import rk.device.launcher.R;
 import rk.device.launcher.api.T;
+import rk.device.launcher.base.JniHandler;
 import rk.device.launcher.bean.SetPageContentBO;
 import rk.device.launcher.bean.event.IpHostEvent;
 import rk.device.launcher.global.Constant;
@@ -207,7 +210,7 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
     private void initSurfaceViewOne() {
         SurfaceHolder surfaceholder = surfaceview.getHolder();
         surfaceholder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-        callbackFont = new SurfaceHolderCaremaFont();
+        callbackFont = new SurfaceHolderCaremaFont(this);
         openCamera();
         surfaceholder.addCallback(callbackFont);
     }
@@ -297,6 +300,7 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
         FaceUtils.getInstance().destory();
         stopService(new Intent(this, SocketService.class));
         stopService(new Intent(this, VerifyService.class));
+        stopService(new Intent(this, AppHttpServerService.class));
         super.onDestroy();
     }
 
@@ -348,7 +352,7 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
                     goToSetting(type);
                 }
             } else {
-                dialogFragment.showError();
+                dialogFragment.showError(getString(R.string.password_error));
             }
         }, true);
         dialogFragment.show(getSupportFragmentManager(), "");
@@ -451,11 +455,21 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
     public void hasPerson(boolean hasPerson) {
         runOnUiThread(() -> {
             if (hasPerson) {
-                if (frameLayout != null && frameLayout.getVisibility() == View.GONE)
+                if (frameLayout != null && frameLayout.getVisibility() == View.GONE) {
                     frameLayout.setVisibility(View.VISIBLE);
+                    JniHandler handler = JniHandler.getInstance();
+                    Message message = Message.obtain();
+                    message.what = EventUtil.MEDIA_OPEN;
+                    handler.sendMessage(message);
+                }
             } else {
-                if (frameLayout != null && frameLayout.getVisibility() == View.VISIBLE)
+                if (frameLayout != null && frameLayout.getVisibility() == View.VISIBLE) {
                     frameLayout.setVisibility(View.GONE);
+                    JniHandler handler = JniHandler.getInstance();
+                    Message message = Message.obtain();
+                    message.what = EventUtil.MEDIA_CLOSE;
+                    handler.sendMessage(message);
+                }
             }
         });
     }

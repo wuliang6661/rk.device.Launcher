@@ -27,8 +27,8 @@ public class DbHelper {
     private static final String DB_NAME = CacheUtils.DB_PATH;
     private static final String DB_PATH_JOUR = CacheUtils.DB_PATH_JOUR;
 
-    private static UserDao      sUserDao;
-    private static final String TAG          = "DbHelper";
+    private static UserDao sUserDao;
+    private static final String TAG = "DbHelper";
 
     public static UserDao getUserDao() {
         if (sUserDao == null) {
@@ -87,7 +87,8 @@ public class DbHelper {
     }
 
     public static List<User> loadAll() {
-        return getUserDao().loadAll();
+        return getUserDao().queryBuilder().orderDesc(UserDao.Properties.CreateTime).where(UserDao.Properties.Status
+                .in(Constant.TO_BE_UPDATE, Constant.NORMAL, Constant.TO_BE_ADD)).build().list();
     }
 
     // 根据条件查询, 这里只是举个例子
@@ -96,52 +97,9 @@ public class DbHelper {
         UserDao userDao = DbHelper.getUserDao();
         // where里面是可变参数
         Query<User> query = userDao.queryBuilder()
-                .where(UserDao.Properties.Name.eq("小明"), UserDao.Properties.PopedomType.eq(14))
+                .where(UserDao.Properties.Name.eq("小明"), UserDao.Properties.Role.eq(14))
                 .build();
         return query.list();
-    }
-
-    /**
-     * 通过NFC CardNum 获取当前记录
-     *
-     * @param cardNum
-     * @return
-     */
-    public static List<User> queryByNFCCard(String cardNum) {
-        Query<User> query = getUserDao().queryBuilder().where(UserDao.Properties.CardNo.eq(cardNum))
-                .build();
-        return query.list();
-    }
-
-    /**
-     * 通过指纹ID 获取当前记录
-     *
-     * @param fingerId
-     * @return
-     * @value 1 指纹1
-     * @value 2 指纹2
-     * @value 3 指纹3
-     */
-    public static User queryByFinger(int fingerId) {
-        Query<User> query = getUserDao().queryBuilder()
-                .where(UserDao.Properties.FingerID1.eq(fingerId)).build();
-        if (query.list().size() == 0) {
-            query = getUserDao().queryBuilder().where(UserDao.Properties.FingerID2.eq(fingerId))
-                    .build();
-        } else {
-            return query.list().get(0);
-        }
-        if (query.list().size() == 0) {
-            query = getUserDao().queryBuilder().where(UserDao.Properties.FingerID3.eq(fingerId))
-                    .build();
-        } else {
-            return query.list().get(0);
-        }
-        if (query.list().size() == 0) {
-            return null;
-        } else {
-            return query.list().get(0);
-        }
     }
 
     /**
@@ -161,7 +119,7 @@ public class DbHelper {
      */
     public static List<User> queryByFaceId(String faceId) {
         Query<User> query = getUserDao().queryBuilder()
-                .where(UserDao.Properties.FaceID.eq(faceId), UserDao.Properties.PopedomType.eq(1))
+                .where(UserDao.Properties.FaceID.eq(faceId), UserDao.Properties.Role.eq(1))
                 .build();
         return query.list();
     }
@@ -178,18 +136,16 @@ public class DbHelper {
             return Constant.NULL_NAME;
         }
         //权限类型为空
-        if (TextUtils.isEmpty(user.getPopedomType())) {
+        if (user.getRole() == 0) {
             return Constant.NULL_POPEDOMTYPE;
         }
-        //        //唯一标识
-        //        if (TextUtils.isEmpty(user.getUniqueId())) {
-        //            return Constant.NULL_UNIQUEID;
-        //        }
         if (user.getId() == null) {
+            user.setStatus(Constant.TO_BE_ADD);
             user.setUniqueId(MD5.get16Lowercase(UUID.randomUUID().toString()));
             user.setCreateTime(System.currentTimeMillis());
             return getUserDao().insert(user);
         } else {
+            user.setStatus(Constant.TO_BE_UPDATE);
             user.setUpdateTime(System.currentTimeMillis());
             getUserDao().update(user);
             return Constant.UPDATE_SUCCESS;
@@ -203,7 +159,7 @@ public class DbHelper {
         UserDao userDao = DbHelper.getUserDao();
         // where里面是可变参数
         Query<User> query = userDao.queryBuilder().where(UserDao.Properties.PassWord.eq(password),
-                UserDao.Properties.PopedomType.eq(1)).build();
+                UserDao.Properties.Role.eq(1)).build();
         return query.list();
     }
 
@@ -224,14 +180,14 @@ public class DbHelper {
     public static List<User> queryUserByUpdate() {
         UserDao userDao = DbHelper.getUserDao();
         // where里面是可变参数
-        Query<User> query = userDao.queryBuilder().where(UserDao.Properties.UploadStatus.eq(0))
+        Query<User> query = userDao.queryBuilder().whereOr(UserDao.Properties.Status.eq(Constant.TO_BE_ADD), UserDao.Properties.Status.eq(Constant.TO_BE_UPDATE))
                 .build();
         return query.list();
     }
 
     /**
      * 通过UserId 获取UniqueId
-     * 
+     *
      * @param userId
      * @return
      */

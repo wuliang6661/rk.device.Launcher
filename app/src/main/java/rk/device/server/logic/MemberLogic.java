@@ -76,7 +76,7 @@ public class MemberLogic extends BaseLogic {
         }
         String peopleId = params.getString("peopleId");
         String popeName = params.getString("popeName");
-        String popedomType = params.getString("popedomType");
+        int role = TypeTranUtils.str2Int(params.getString("role"));
         String startTime = params.getString("startTime");
         String endTime = params.getString("endTime");
         String cardNo = params.getString("cardNo");
@@ -86,7 +86,7 @@ public class MemberLogic extends BaseLogic {
             if (TextUtils.isEmpty(popeName)) {
                 return onError(HttpResponseCode.Error, "请填写用户名");
             }
-            if (TextUtils.isEmpty(popedomType)) {
+            if (role == 0) {
                 return onError(HttpResponseCode.Error, "请选择用户权限类型");
             }
             if (TextUtils.isEmpty(startTime)) {
@@ -97,10 +97,9 @@ public class MemberLogic extends BaseLogic {
             }
             User user = new User();
             user.setName(popeName);
-            user.setPopedomType(popedomType);
+            user.setRole(role);
             user.setStartTime(TypeTranUtils.str2Int(startTime));
             user.setEndTime(TypeTranUtils.str2Int(endTime));
-            user.setCardNo(cardNo);
             user.setFaceID(faceID);
             user.setPassWord(TypeTranUtils.str2Int(password));
             long userId = DbHelper.insertUser(user);
@@ -119,13 +118,11 @@ public class MemberLogic extends BaseLogic {
             user.setId(oldUser.getId());
             user.setUniqueId(peopleId);
             user.setName(TextUtils.isEmpty(popeName) ? oldUser.getName() : popeName);
-            user.setPopedomType(
-                    TextUtils.isEmpty(popedomType) ? oldUser.getPopedomType() : popedomType);
+            user.setRole(role == 0 ? oldUser.getRole() : role);
             user.setStartTime(TextUtils.isEmpty(startTime) ? oldUser.getStartTime()
                     : TypeTranUtils.str2Int(startTime));
             user.setEndTime(TextUtils.isEmpty(endTime) ? oldUser.getEndTime()
                     : TypeTranUtils.str2Int(endTime));
-            user.setCardNo(TextUtils.isEmpty(cardNo) ? oldUser.getCardNo() : cardNo);
             user.setFaceID(TextUtils.isEmpty(faceID) ? oldUser.getFaceID() : faceID);
             user.setPassWord(TextUtils.isEmpty(password) ? oldUser.getPassWord()
                     : TypeTranUtils.str2Int(password));
@@ -169,8 +166,7 @@ public class MemberLogic extends BaseLogic {
                 DbHelper.delete(user);
                 break;
             case 2://卡
-                user.setCardNo("");
-                DbHelper.update(user);
+
                 break;
             case 3://密码
                 user.setPassWord(0);

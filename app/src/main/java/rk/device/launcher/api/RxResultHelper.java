@@ -24,10 +24,10 @@ public class RxResultHelper {
                             @Override
                             public Observable<T> call(BaseResult<T> baseResult) {
                                 Log.d(TAG, "call_button() called with: baseResult = [" + baseResult + "]");
-                                if (baseResult.getResult() == 200) {
+                                if (baseResult.getResult() == 0) {
                                     return createData(baseResult.getData());
                                 } else {
-                                    return Observable.error(new RuntimeException(String.valueOf(baseResult.getCode())));
+                                    return Observable.error(new RuntimeException(String.valueOf(baseResult.getResult())));
                                 }
                             }
                         }

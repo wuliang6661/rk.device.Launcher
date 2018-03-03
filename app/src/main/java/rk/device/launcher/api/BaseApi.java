@@ -35,7 +35,7 @@ public interface BaseApi {
     /**
      * 获取配置接口
      */
-    @POST("/api/v1/public/config")
+    @POST("/api/v1/public/getconfig")
     Observable<BaseResult<DeviceInfoBO>> deviceConfiguration(@Body RequestBody requestBody); //客户号Id
 
     /**
@@ -50,13 +50,13 @@ public interface BaseApi {
     /**
      * 激活设备接口
      */
-    @POST("/api/v1/public/activation")
+    @POST("/api/v1/device/activation")
     Observable<BaseResult<Object>> activationDiveces(@Body RequestBody requestBody);
 
     /**
      * 获取开门token
      */
-    @POST("/api/v1/public/token")
+    @POST("/api/v1/device/get_token")
     Observable<BaseResult<TokenBo>> getToken(@Body RequestBody requestBody);
 
     /**
@@ -65,14 +65,8 @@ public interface BaseApi {
      * @param requestBody
      * @return
      */
-    @POST("/api/v1/public/synchistory")
-    Observable<BaseResult<StatusBo>> syncRecords(@Body RequestBody requestBody);
-
-    /**
-     * 提交新增用户接口
-     */
-    @POST("/api/v1/public/syncgrant")
-    Observable<BaseResult<Object>> syncPerson(@Body RequestBody requestBody);
+    @POST("/api/v1/device/upload_access_record")
+    Observable<BaseResult<Object>> syncRecords(@Body RequestBody requestBody);
 
     /**
      * 上传用户图片
@@ -91,12 +85,135 @@ public interface BaseApi {
     Observable<BaseResult<StatusBo>> uploadDeviceStatus(@Body RequestBody requestBody);
 
     /**
+     * 提交新增用户接口
+     */
+    @POST("/api/v1/person/add")
+    Observable<BaseResult<Object>> addUser(@Body RequestBody requestBody);
+
+    /**
+     * 修改用户
+     *
+     * @param requestBody
+     * @return
+     */
+    @POST("/api/v1/person/edit")
+    Observable<BaseResult<Object>> editUser(@Body RequestBody requestBody);
+
+    /**
      * 删除用户
      *
      * @param requestBody
      * @return
      */
-    @POST("/api/v1/public/delete")
-    Observable<BaseResult<StatusBo>> deleteUser(@Body RequestBody requestBody);
+    @POST("/api/v1/person/delete")
+    Observable<BaseResult<Object>> deleteUser(@Body RequestBody requestBody);
+
+    /**
+     * 增加凭据 - 卡
+     *
+     * @param requestBody
+     * @return
+     */
+    @POST("/api/v1/credential_card/add")
+    Observable<BaseResult<Object>> addCard(@Body RequestBody requestBody);
+
+    /**
+     * 修改凭据 - 卡
+     *
+     * @param requestBody
+     * @return
+     */
+    @POST("/api/v1/credential_card/edit")
+    Observable<BaseResult<Object>> editCard(@Body RequestBody requestBody);
+
+    /**
+     * 删除凭据 - 卡
+     *
+     * @param requestBody
+     * @return
+     */
+    @POST("/api/v1/credential_card/delete")
+    Observable<BaseResult<Object>> deleteCard(@Body RequestBody requestBody);
+
+    /**
+     * 增加凭据 - 人脸
+     *
+     * @param requestBody
+     * @return
+     */
+    @POST("/api/v1/credential_face/add")
+    Observable<BaseResult<Object>> addFace(@Body RequestBody requestBody);
+
+    /**
+     * 修改凭据 - 人脸
+     *
+     * @param requestBody
+     * @return
+     */
+    @POST("/api/v1/credential_face/edit")
+    Observable<BaseResult<Object>> editFace(@Body RequestBody requestBody);
+
+    /**
+     * 删除凭据 - 人脸
+     *
+     * @param requestBody
+     * @return
+     */
+    @POST("/api/v1/credential_face/delete")
+    Observable<BaseResult<Object>> deleteFace(@Body RequestBody requestBody);
+
+    /**
+     * 增加凭据 - 密码
+     *
+     * @param requestBody
+     * @return
+     */
+    @POST("/api/v1/credential_password/add")
+    Observable<BaseResult<Object>> addPassword(@Body RequestBody requestBody);
+
+    /**
+     * 修改凭据 - 密码
+     *
+     * @param requestBody
+     * @return
+     */
+    @POST("/api/v1/credential_password/edit")
+    Observable<BaseResult<Object>> editPassword(@Body RequestBody requestBody);
+
+    /**
+     * 删除凭据 - 密码
+     *
+     * @param requestBody
+     * @return
+     */
+    @POST("/api/v1/credential_password/delete")
+    Observable<BaseResult<Object>> deletePassword(@Body RequestBody requestBody);
+
+    /**
+     * 增加凭据 - 指纹
+     *
+     * @param requestBody
+     * @return
+     */
+    @POST("/api/v1/credential_fingerprint/add")
+    Observable<BaseResult<Object>> addFinger(@Body RequestBody requestBody);
+
+    /**
+     * 修改凭据 - 指纹
+     *
+     * @param requestBody
+     * @return
+     */
+    @POST("/api/v1/credential_fingerprint/edit")
+    Observable<BaseResult<Object>> editFinger(@Body RequestBody requestBody);
+
+    /**
+     * 删除凭据 - 指纹
+     *
+     * @param requestBody
+     * @return
+     */
+    @POST("/api/v1/credential_fingerprint/delete")
+    Observable<BaseResult<Object>> deleteFinger(@Body RequestBody requestBody);
 
 }

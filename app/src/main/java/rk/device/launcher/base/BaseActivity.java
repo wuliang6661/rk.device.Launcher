@@ -218,7 +218,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     /**
      * 显示提示弹窗
      */
-    protected BaseComDialogFragment showMessageDialog(String message) {
+    public BaseComDialogFragment showMessageDialog(String message) {
         if (hintDialog != null && hintDialog.getDialog() != null
                 && hintDialog.getDialog().isShowing()) {
             return null;
@@ -508,6 +508,9 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                if(!PackageUtils.isForeground(BaseActivity.this)){
+                    return;
+                }
                 if (verifyNoticeDialogFragment == null) {
                     verifyNoticeDialogFragment = VerifyNoticeDialogFragment.newInstance();
                 }

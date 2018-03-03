@@ -9,11 +9,14 @@ import android.support.annotation.Nullable;
 
 import peripherals.FingerHelper;
 import peripherals.NfcHelper;
+import rk.device.launcher.R;
+import rk.device.launcher.api.T;
 import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.bean.event.NFCAddEvent;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.global.VerifyTypeConstant;
 import rk.device.launcher.utils.LogUtil;
+import rk.device.launcher.utils.TimeUtils;
 import rk.device.launcher.utils.rxjava.RxBus;
 import rk.device.launcher.utils.verify.OpenUtils;
 import rk.device.launcher.utils.verify.VerifyUtils;
@@ -23,13 +26,13 @@ import rk.device.launcher.utils.verify.VerifyUtils;
  */
 
 public class VerifyService extends Service {
-    private static final int DELAY = 500;
-    private static final String TAG = "VerifyService";
-    private static final String NFC_ADD_PAGE = "rk.device.launcher.ui.nfcadd.NfcaddActivity";
-    private static final String NFC_DETECTION = "rk.device.launcher.ui.detection.NfcDetection";
-    private static final String FINGER_ADD_PAGE = "rk.device.launcher.ui.fingeradd.FingeraddActivity";
+    private static final int    DELAY            = 500;
+    private static final String TAG              = "VerifyService";
+    private static final String NFC_ADD_PAGE     = "rk.device.launcher.ui.nfcadd.NfcaddActivity";
+    private static final String NFC_DETECTION    = "rk.device.launcher.ui.detection.NfcDetection";
+    private static final String FINGER_ADD_PAGE  = "rk.device.launcher.ui.fingeradd.FingeraddActivity";
     private static final String FINGER_DETECTION = "rk.device.launcher.ui.detection.FinderDetection";
-    private boolean isOpen = true;
+    private boolean             isOpen           = true;
 
     @Override
     public void onCreate() {
@@ -76,13 +79,14 @@ public class VerifyService extends Service {
      */
     private void fingerService() {
         if (LauncherApplication.sInitFingerSuccess == -1) {
-//            LogUtil.i(TAG, TAG + " finger init failed.");
+            //            LogUtil.i(TAG, TAG + " finger init failed.");
             sleep();
             return;
         }
         if (LauncherApplication.sIsFingerAdd == 1 && isTopActivity().equals(FINGER_ADD_PAGE)) {
             LogUtil.i(TAG, TAG + " model:finger add");
-        }else if (LauncherApplication.sIsFingerAdd == 2 && isTopActivity().equals(FINGER_DETECTION)) {
+        } else if (LauncherApplication.sIsFingerAdd == 2
+                && isTopActivity().equals(FINGER_DETECTION)) {
             LogUtil.i(TAG, TAG + " model:finger detectiton");
         } else {
             LogUtil.i(TAG, TAG + " model:finger verify");
@@ -91,12 +95,21 @@ public class VerifyService extends Service {
             if (resultCode > 0) {
                 User user = VerifyUtils.getInstance().verifyByFinger(resultCode);
                 if (user == null) {
-                    LogUtil.i(TAG, TAG + " user is null");
                     return;
                 }
-                LogUtil.i(TAG, TAG + " user " + user.getName());
+                if (TimeUtils.getTimeStamp() < user.getStartTime() / 1000l
+                        || TimeUtils.getTimeStamp() > user.getEndTime()/1000l) {
+                    T.showShort(LauncherApplication.getContext().getString(R.string.illeagel_user));
+                    return;
+                }
                 OpenUtils.getInstance().open(VerifyTypeConstant.TYPE_FINGER, user.getUniqueId(),
                         user.getName(), resultCode);
+            } else {
+                if (resultCode == -1) {//未初始化
+                    FingerHelper.JNIFpInit();
+                } else if (resultCode == -2) {//匹配失败
+
+                }
             }
         }
         sleep();
@@ -126,7 +139,8 @@ public class VerifyService extends Service {
             LogUtil.i(TAG, TAG + "NfcCard:" + bytesToHexString(cardNumber, cardType[0]) + "NfcType:"
                     + cardType[0]);
             //nfc add model
-            if (LauncherApplication.sIsNFCAdd == 1 && (isTopActivity().equals(NFC_ADD_PAGE) || isTopActivity().equals(NFC_DETECTION))) {
+            if (LauncherApplication.sIsNFCAdd == 1 && (isTopActivity().equals(NFC_ADD_PAGE)
+                    || isTopActivity().equals(NFC_DETECTION))) {
                 RxBus.getDefault().post(new NFCAddEvent(NFCCard));
             } else {
                 //nfc verify model
@@ -134,11 +148,18 @@ public class VerifyService extends Service {
                 if (user == null) {
                     return;
                 }
-                //TextUtils.isEmpty(user.getPopedomType())
-                OpenUtils.getInstance().open(VerifyTypeConstant.TYPE_CARD, user.getUniqueId(), user.getName());
-//                RxBus.getDefault().post(new OpenDoorSuccessEvent("", VerifyTypeConstant.TYPE_CARD, 1));
+                if (TimeUtils.getTimeStamp() < user.getStartTime() / 1000l
+                        || TimeUtils.getTimeStamp() > user.getEndTime()/1000l) {
+                    T.showShort(LauncherApplication.getContext().getString(R.string.illeagel_user));
+                    return;
+                }
+                OpenUtils.getInstance().open(VerifyTypeConstant.TYPE_CARD, user.getUniqueId(),
+                        user.getName());
             }
         } else {
+            if (resultCode == 1) {//未初始化
+                NfcHelper.PER_nfcInit();
+            }
             LogUtil.i(TAG, TAG + " read nfc failed.");
         }
         sleep();

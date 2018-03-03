@@ -85,6 +85,7 @@
     <uses-permission android:name="android.permission.READ_SEARCH_INDEXABLES" />
     <uses-permission android:name="android.permission.OEM_UNLOCK_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.SHUTDOWN" />
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
@@ -98,6 +99,7 @@
     <uses-permission android:name="android.permission.RESTART_PACKAGES" />
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
 
     <application
         android:name=".base.LauncherApplication"
@@ -180,11 +182,6 @@
             android:name=".ui.call.CallActivity"
             android:screenOrientation="portrait" />
 
-        <!--指纹-->
-        <activity
-            android:name=".ui.finger.FingerActivity"
-            android:screenOrientation="portrait" />
-
         <!--添加指纹-->
         <activity android:name=".ui.fingeradd.FingeraddActivity" />
         <!--新增NFC-->
@@ -219,7 +216,9 @@
         <!--激活码激活页面-->
         <activity
             android:name=".ui.key.KeyActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait" >
+
+            </activity>
 
         <!--输入管理员密码页面-->
         <activity
@@ -293,7 +292,7 @@
             android:exported="false" />
         <service android:name=".service.SocketService" />
         <service android:name=".service.VerifyService" />
-        <service android:name="rk.device.server.service.AppHttpServerService"/>
+        <service android:name="rk.device.server.service.AppHttpServerService" />
 
         <receiver android:name=".service.UpdateBroadcastReceiver">
             <intent-filter>

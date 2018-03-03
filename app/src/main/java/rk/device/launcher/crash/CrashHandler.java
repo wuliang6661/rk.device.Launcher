@@ -1,11 +1,10 @@
-package rk.device.launcher.base;
+package rk.device.launcher.crash;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.SystemClock;
 import android.util.Log;
 
 import java.io.File;
@@ -156,7 +155,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         try {
             SimpleDateFormat sDateFormat = new SimpleDateFormat(
                     "yyyy-MM-dd HH:mm:ss");
-            String date = sDateFormat.format(new java.util.Date());
+            String date = sDateFormat.format(new Date());
             sb.append("\r\n" + date + "\n");
             for (Map.Entry<String, String> entry : infos.entrySet()) {
                 String key = entry.getKey();

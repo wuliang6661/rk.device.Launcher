@@ -29,22 +29,22 @@ import rk.device.launcher.utils.ScreenUtil;
 public class VerifyNoticeDialogFragment extends BaseDialogFragment {
 
     private static VerifyNoticeDialogFragment dialogFragment = null;
-    private ImageView                         statusImg;
-    private TextView                          noticeStatusTv;
-    private String                            statusMsg;
-    private int                               statusImgDrawable;
+    private ImageView statusImg;
+    private TextView noticeStatusTv;
+    private String statusMsg;
+    private int statusImgDrawable;
 
     /**
      * 获取dialog对象
      */
     public static VerifyNoticeDialogFragment newInstance() {
-        if (dialogFragment == null) {
-            synchronized (VerifyNoticeDialogFragment.class) {
-                if (dialogFragment == null) {
-                    dialogFragment = new VerifyNoticeDialogFragment();
-                }
-            }
-        }
+//        if (dialogFragment == null) {
+//            synchronized (VerifyNoticeDialogFragment.class) {
+//                if (dialogFragment == null) {
+        dialogFragment = new VerifyNoticeDialogFragment();
+//                }
+//            }
+//        }
         return dialogFragment;
     }
 

@@ -2,8 +2,12 @@ package rk.device.launcher.db;
 
 import org.greenrobot.greendao.database.Database;
 
+import rk.device.launcher.db.entity.CardDao;
+import rk.device.launcher.db.entity.CodePasswordDao;
 import rk.device.launcher.db.entity.DaoMaster;
 import rk.device.launcher.db.entity.DaoSession;
+import rk.device.launcher.db.entity.FaceDao;
+import rk.device.launcher.db.entity.FingerDao;
 import rk.device.launcher.db.entity.RecordDao;
 import rk.device.launcher.db.entity.UserDao;
 import rk.device.launcher.utils.CommonUtils;
@@ -46,6 +50,22 @@ public class DbManager {
 
     public RecordDao getRecordDao() {
         return getDaoSession().getRecordDao();
+    }
+
+    public CardDao getCardDao(){
+        return getDaoSession().getCardDao();
+    }
+
+    public CodePasswordDao getCodePasswordDao(){
+        return getDaoSession().getCodePasswordDao();
+    }
+
+    public FaceDao getFaceDao(){
+        return getDaoSession().getFaceDao();
+    }
+
+    public FingerDao getFingerDao(){
+        return getDaoSession().getFingerDao();
     }
 
 

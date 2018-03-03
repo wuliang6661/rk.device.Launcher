@@ -84,6 +84,22 @@ public interface Constant {
     String KEY_PORT = "key_port";
 
     /**
+     * 继电器的常开还是常闭
+     */
+    String DEVICE_OFF = "DEVICE_OFF";
+
+    /**
+     * 继电器开关时长
+     */
+    String DEVICE_TIME = "DEVICE_TIME";
+
+    /**
+     * 是否自动更新时间
+     */
+    String UPDATE_TIME = "UPDATE_TIME";
+
+
+    /**
      * 蓝牙
      */
     String BLUE_TOOTH = "blue_tooth";
@@ -102,23 +118,32 @@ public interface Constant {
     String KEY_ADDRESS = "key_address";
 
     /********* DataBase Operation Feedback Code *********/
-    int UPDATE_SUCCESS = -1000;                  //更新用户信息成功
+    int UPDATE_SUCCESS = 1000;                  //更新用户信息成功
     int NULL_NAME = -1001;                  //用户名称为空
     int NULL_POPEDOMTYPE = -1002;                  //权限类型为空
     int NULL_UNIQUEID = -1003;                  //唯一标识为空
+    int NOT_EXIST = -1004;
 
     /********* User Type Code **********/
-    String USER_TYPE_OPEN_ONLY = "1";                    // 1:  开门权限，只能开门
-    String USER_TYPE_PATROL_ONLY = "2";                    // 2:  巡更权限，向服务器发送一条上报消息，代表已巡更
-    String USER_TYPE_ADMINISTRATOR = "3";                    // 3:  管理员权限，可以开门、巡更、或进入设置页面更改设置
+    int USER_TYPE_OPEN_ONLY = 1;                    // 1:  开门权限，只能开门
+    int USER_TYPE_PATROL_ONLY = 2;                    // 2:  巡更权限，向服务器发送一条上报消息，代表已巡更
+    int USER_TYPE_ADMINISTRATOR = 3;                    // 3:  管理员权限，可以开门、巡更、或进入设置页面更改设置
 
     String IS_FIRST_OPEN_APP = "is_first_open_app";
 
     /**
      * access_token保存的key值，鉴权Token
-     *
      */
     String ACCENT_TOKEN = "access_token";
+
+
+
+    /*************** status //1：正常，2：待添加，3：待更新，4：待删除 *******************/
+
+    int NORMAL = 1;
+    int TO_BE_ADD = 2;
+    int TO_BE_UPDATE = 3;
+    int TO_BE_DELETE = 4;
 
 
 }
