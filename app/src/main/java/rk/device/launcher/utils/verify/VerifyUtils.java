@@ -4,7 +4,7 @@ import java.util.List;
 
 import rk.device.launcher.db.CardHelper;
 import rk.device.launcher.db.DbHelper;
-import rk.device.launcher.db.FingerHelper;
+import rk.device.launcher.db.FingerPrintHelper;
 import rk.device.launcher.db.entity.Card;
 import rk.device.launcher.db.entity.Finger;
 import rk.device.launcher.db.entity.User;
@@ -61,7 +61,7 @@ public class VerifyUtils {
         if (fingerId == 0) {
             return null;
         }
-        List<Finger> fingerList = FingerHelper.getListByFingerId(fingerId);
+        List<Finger> fingerList = FingerPrintHelper.getListByFingerId(fingerId);
         if (fingerList.size() > 0) {
             List<User> userList = DbHelper.queryByUniqueId(fingerList.get(0).getPersonId());
             if (userList.size() > 0) {

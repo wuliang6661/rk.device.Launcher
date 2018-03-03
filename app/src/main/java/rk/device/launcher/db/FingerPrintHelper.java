@@ -1,5 +1,7 @@
 package rk.device.launcher.db;
 
+import android.text.TextUtils;
+
 import org.greenrobot.greendao.query.Query;
 
 import java.util.List;
@@ -14,7 +16,7 @@ import rk.device.launcher.utils.TimeUtils;
  * <p/>
  * 对于指纹的增删改
  */
-public class FingerHelper {
+public class FingerPrintHelper {
 
     private static FingerDao sFingerDao;
 
@@ -35,11 +37,12 @@ public class FingerHelper {
      * @param endTime
      * @return
      */
-    public static boolean insert(String personId, int fingerId, int status, int beginTime,
-                                 int endTime) {
+    public static boolean insert(String personId, int fingerId, int number, int status,
+                                 int beginTime, int endTime) {
         Finger card = new Finger();
         card.setPersonId(personId);
         card.setFingerId(fingerId);
+        card.setNumber(number);
         card.setStatus(status);
         card.setBeginTime(beginTime);
         card.setEndTime(endTime);
@@ -58,7 +61,8 @@ public class FingerHelper {
      * 
      * @param
      */
-    public static int update(int id, int fingerId, int status, int beginTime, int endTime) {
+    public static int update(long id, int fingerId, String fingerName, int status, int beginTime,
+                             int endTime) {
         Query<Finger> query = getFingerDao().queryBuilder()
                 .where(FingerDao.Properties.Id.eq(id), FingerDao.Properties.Status
                         .in(Constant.TO_BE_UPDATE, Constant.NORMAL, Constant.TO_BE_ADD))
@@ -70,6 +74,9 @@ public class FingerHelper {
         Finger finger = query.list().get(0);
         if (fingerId != 0) {
             finger.setFingerId(fingerId);
+        }
+        if (!TextUtils.isEmpty(fingerName)) {
+            finger.setFingerName(fingerName);
         }
         if (status != 0) {
             finger.setStatus(status);
@@ -120,5 +127,21 @@ public class FingerHelper {
                         .in(Constant.TO_BE_UPDATE, Constant.NORMAL, Constant.TO_BE_ADD))
                 .build();
         return query.list();
+    }
+
+    /**
+     * 获取一条记录
+     *
+     * @param personId
+     * @param number
+     * @return
+     */
+    public static Finger queryOne(String personId, int number) {
+        Query<Finger> query = getFingerDao().queryBuilder()
+                .where(FingerDao.Properties.PersonId.eq(personId),
+                        FingerDao.Properties.Number.eq(number), FingerDao.Properties.Status
+                                .in(Constant.TO_BE_UPDATE, Constant.NORMAL, Constant.TO_BE_ADD))
+                .build();
+        return query.list().size() > 0 ? query.list().get(0) : null;
     }
 }

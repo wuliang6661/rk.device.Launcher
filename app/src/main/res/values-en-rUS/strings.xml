@@ -416,6 +416,7 @@
     <string name="eyes_hint">Less than 20 pictures, if confirm quit, the calibration failed</string>
     <string name="kaiguanleixing">On</string>
     <string name="auto_time_update">Automatic update time</string>
+    <string name="illeagel_user">用户已过期，重新录入用户</string>
     <string name="notice_nfc_add">将卡靠近刷卡感应器</string>
 
 </resources>

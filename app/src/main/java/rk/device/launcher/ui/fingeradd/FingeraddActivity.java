@@ -9,7 +9,6 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.text.InputType;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -23,12 +22,13 @@ import rk.device.launcher.R;
 import rk.device.launcher.api.T;
 import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.bean.event.FingerRegisterProgressEvent;
-import rk.device.launcher.db.DbHelper;
+import rk.device.launcher.db.FingerPrintHelper;
+import rk.device.launcher.db.entity.Finger;
 import rk.device.launcher.db.entity.User;
+import rk.device.launcher.global.Constant;
 import rk.device.launcher.mvp.MVPBaseActivity;
 import rk.device.launcher.ui.fragment.InputWifiPasswordDialogFragment;
 import rk.device.launcher.utils.LogUtil;
-import rk.device.launcher.utils.TypeTranUtils;
 import rk.device.launcher.utils.WindowManagerUtils;
 import rk.device.launcher.utils.rxjava.RxBus;
 import rk.device.launcher.utils.verify.VerifyUtils;
@@ -64,7 +64,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
     private String              uniqueId             = "";
     private int                 number               = 0;
     private FingerAddHandler    fingerAddHandler     = null;
-    private String              fingerId             = "";
+    private int                 fingerId             = 0;
     private boolean             isDetail             = false;
     private boolean             isChange             = false;
     private boolean             isAdd                = false;
@@ -111,7 +111,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
                             getResources().getString(R.string.sure), new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    doDeleteJniFinger(TypeTranUtils.str2Int(fingerId));
+                                    doDeleteJniFinger(fingerId);
                                     finish();
                                 }
                             });
@@ -246,23 +246,9 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
      * 判断当前是添加还是详情
      */
     private void checkIsDetail() {
-        User eUser = VerifyUtils.getInstance().queryUserByUniqueId(uniqueId);
-        switch (number) {
-            case 1:
-                fingerId = eUser.getFingerID1();
-                fingerName = eUser.getFingerName1();
-                break;
-            case 2:
-                fingerId = eUser.getFingerID2();
-                fingerName = eUser.getFingerName2();
-                break;
-            case 3:
-                fingerId = eUser.getFingerID3();
-                fingerName = eUser.getFingerName3();
-                break;
-        }
+        Finger finger = FingerPrintHelper.queryOne(uniqueId, number);
         String title;
-        if (!TextUtils.isEmpty(fingerId)) {
+        if (finger != null) {
             isDetail = true;
             deleteImg.setVisibility(View.VISIBLE);
             deleteImg.setImageDrawable(getResources().getDrawable(R.mipmap.delete));
@@ -345,24 +331,9 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
         User eUser = VerifyUtils.getInstance().queryUserByUniqueId(uniqueId);
         int uId = 0;
         if (eUser != null) {
-            switch (number) {
-                case 1:
-//                    rk.device.launcher.db.FingerHelper
-                    uId = TypeTranUtils.str2Int(eUser.getFingerID1());
-                    eUser.setFingerID1("");
-                    break;
-                case 2:
-                    uId = TypeTranUtils.str2Int(eUser.getFingerID2());
-                    eUser.setFingerID2("");
-                    break;
-                case 3:
-                    uId = TypeTranUtils.str2Int(eUser.getFingerID3());
-                    eUser.setFingerID3("");
-                    break;
-            }
             if (doDeleteJniFinger(uId)) {
-                eUser.setUploadStatus(0);
-                DbHelper.update(eUser);
+                Finger finger = FingerPrintHelper.queryOne(eUser.getUniqueId(), number);
+                FingerPrintHelper.delete(finger);
                 showToastMsg(getResources().getString(R.string.delete_success));
                 finish();
             } else {
@@ -427,7 +398,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
         }
         isAdd = true;
         int oFingerId = FingerHelper.JNIFpFingerMatch(LauncherApplication.fingerModuleID);
-        Log.i(TAG, TAG + " JNIFpFingerMatch " + oFingerId);
+        LogUtil.i(TAG, TAG + " JNIFpFingerMatch " + oFingerId);
         //如果指纹已存在
         //step 1 判断该指纹是否已入库 1 提示已存在 0 删除该指纹
         //如果不存在，直接添加
@@ -484,7 +455,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
                 }
             });
         } else if (resultCode > 0) {
-            fingerId = String.valueOf(resultCode);
+            fingerId = resultCode;
             showDialogFragment(getString(R.string.finger) + number,
                     new InputWifiPasswordDialogFragment.OnConfirmClickListener() {
                         @Override
@@ -558,7 +529,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
      */
     private void doSaveFinger(boolean isRename) {
         LogUtil.i(TAG, TAG + " finger doSaveFinger");
-        if (fingerId.equals(FINGER_ERROR)) {
+        if (fingerId < 0) {
             showToastMsg(getResources().getString(R.string.finger_add_error));
             return;
         }
@@ -584,13 +555,13 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
                                 }
                                 noticeTv.setText(content);
                                 fingerName = content;
-                                updateUser(eUser);
+                                updateUser();
                                 dialogFragment.dismiss();
                             }
                         });
                 dialogFragment.show(getSupportFragmentManager(), "");
             } else {
-                updateUser(eUser);
+                updateUser();
             }
         } else {
             showToastMsg(getResources().getString(R.string.illeagel_user_not_exist));
@@ -599,29 +570,17 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
 
     /**
      * 更新用户数据
-     * 
-     * @param eUser
      */
-    private void updateUser(User eUser) {
-        switch (number) {
-            case 1:
-                eUser.setFingerID1(fingerId);
-                eUser.setFingerName1(
-                        fingerName == null ? getString(R.string.finger) + "1" : fingerName);
-                break;
-            case 2:
-                eUser.setFingerID2(fingerId);
-                eUser.setFingerName2(
-                        fingerName == null ? getString(R.string.finger) + "2" : fingerName);
-                break;
-            case 3:
-                eUser.setFingerID3(fingerId);
-                eUser.setFingerName3(
-                        fingerName == null ? getString(R.string.finger) + "3" : fingerName);
-                break;
+    private void updateUser() {
+        Finger finger = FingerPrintHelper.queryOne(uniqueId, number);
+        if(finger==null){
+            FingerPrintHelper.insert(uniqueId, fingerId,number, Constant.TO_BE_ADD,
+                    0, 0);
+        }else{
+            FingerPrintHelper.update(finger.getId(), fingerId,
+                    fingerName == null ? getString(R.string.finger) + number : fingerName,
+                    Constant.TO_BE_UPDATE, 0, 0);
         }
-        eUser.setUploadStatus(0);
-        DbHelper.update(eUser);
         showToastMsg(getString(R.string.finger_add_success));
         finish();
     }

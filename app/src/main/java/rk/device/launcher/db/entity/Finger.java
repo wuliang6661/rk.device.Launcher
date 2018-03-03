@@ -21,19 +21,21 @@ public class Finger {
     private int    fingerId;   //指纹ID
     private int    status;     //1：正常，2：待添加，3：待更新，4：待删除
     private int    number;     //当前指纹，1，2，3
+    private String fingerName;//指纹名称
     private int    beginTime;  //开始时间
     private int    endTime;    //结束时间
     private int    createTime; //创建时间时间
     private int    updateTime; //更新时间
 
-    @Generated(hash = 343576601)
+    @Generated(hash = 1731663882)
     public Finger(Long id, @NotNull String personId, int fingerId, int status, int number,
-            int beginTime, int endTime, int createTime, int updateTime) {
+            String fingerName, int beginTime, int endTime, int createTime, int updateTime) {
         this.id = id;
         this.personId = personId;
         this.fingerId = fingerId;
         this.status = status;
         this.number = number;
+        this.fingerName = fingerName;
         this.beginTime = beginTime;
         this.endTime = endTime;
         this.createTime = createTime;
@@ -116,4 +118,11 @@ public class Finger {
         this.number = number;
     }
 
+    public String getFingerName() {
+        return fingerName;
+    }
+
+    public void setFingerName(String fingerName) {
+        this.fingerName = fingerName;
+    }
 }

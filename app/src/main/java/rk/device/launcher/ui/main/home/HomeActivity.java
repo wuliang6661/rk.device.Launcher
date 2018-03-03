@@ -550,7 +550,6 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
         }
         isNetWork = true;
         if (WifiorNetStatus != 0) {
-            mPresenter.getToken();
             startSocketService();
         }
     }

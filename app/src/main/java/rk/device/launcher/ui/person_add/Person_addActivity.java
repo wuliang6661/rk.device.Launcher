@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.InputType;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -203,7 +202,6 @@ public class Person_addActivity
                     user.setStartTime(TimeUtils.string2Millis(tvTimeStart.getText().toString().trim()));
                     user.setEndTime(TimeUtils.string2Millis(tvTimeEnd.getText().toString().trim()));
                     DbHelper.insertUser(user);
-                    Log.i("SyncPersonUtils", "SyncPersonUtils btn_finish_setting");
                     SyncPersonUtils.getInstance().syncPerosn();
                 }
                 finish();
@@ -288,7 +286,6 @@ public class Person_addActivity
             return false;
         }
         if (user != null) {
-            Log.i("SyncPersonUtils", "SyncPersonUtils edit");
             return true;
         }
         user = new User();
@@ -297,7 +294,6 @@ public class Person_addActivity
         user.setEndTime(TimeUtils.string2Millis(tvTimeEnd.getText().toString().trim()));
         user.setRole(Constant.USER_TYPE_OPEN_ONLY);
         DbHelper.insertUser(user);
-        Log.i("SyncPersonUtils", "SyncPersonUtils add");
         //新增
         SyncPersonUtils.getInstance().syncPerosn();
         return false;
@@ -401,7 +397,6 @@ public class Person_addActivity
     @Override
     protected void onResume() {
         super.onResume();
-        Log.i("VerifyService", "VerifyService onResume");
         loadUser();
     }
 

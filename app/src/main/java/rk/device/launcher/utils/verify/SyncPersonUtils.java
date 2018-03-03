@@ -1,7 +1,5 @@
 package rk.device.launcher.utils.verify;
 
-import android.util.Log;
-
 import java.io.File;
 import java.util.List;
 
@@ -11,9 +9,7 @@ import rk.device.launcher.api.BaseApiImpl;
 import rk.device.launcher.db.DbHelper;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.global.Constant;
-import rk.device.launcher.utils.Utils;
 import rk.device.launcher.utils.cache.CacheUtils;
-import rk.device.launcher.utils.uuid.DeviceUuidFactory;
 import rx.Subscriber;
 
 /**
@@ -26,7 +22,6 @@ public class SyncPersonUtils {
 
     private static SyncPersonUtils syncPersonUtils;
 
-    private DeviceUuidFactory      factory = new DeviceUuidFactory(Utils.getContext());
 
     public static SyncPersonUtils getInstance() {
         if (syncPersonUtils == null) {
@@ -46,9 +41,7 @@ public class SyncPersonUtils {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Log.i("edit", "editperson");
                 List<User> users = DbHelper.queryUserByUpdate();
-                Log.i("SyncPersonUtils", "SyncPersonUtils size:" + users.size());
                 if (!users.isEmpty()) {
                     updatePerson(users.get(0), null);
                 }
@@ -88,11 +81,6 @@ public class SyncPersonUtils {
      * 上传到服务器
      */
     private void updatePerson(User user, String faceImgUrl) {
-        Log.i("updatePerson", "updatePerson" + user.getStatus());
-        //        if(user.getStatus() == Constant.NORMAL){
-        //            user.setStartTime(Constant.TO_BE_UPDATE);
-        //        }
-        //        DbHelper.insertUser(user);
         BaseApiImpl.addUser(user, faceImgUrl).subscribe(new Subscriber<Object>() {
             @Override
             public void onCompleted() {
