@@ -204,7 +204,7 @@ public class Person_addActivity
                     user.setEndTime(TimeUtils.string2Millis(tvTimeEnd.getText().toString().trim()));
                     DbHelper.insertUser(user);
                     Log.i("SyncPersonUtils", "SyncPersonUtils btn_finish_setting");
-                    SyncPersonUtils.getInstance().syncPerosn();
+                    SyncPersonUtils.getInstance().syncPerosn(user);
                 }
                 finish();
                 break;
@@ -288,7 +288,6 @@ public class Person_addActivity
             return false;
         }
         if (user != null) {
-            Log.i("SyncPersonUtils", "SyncPersonUtils edit");
             return true;
         }
         user = new User();
@@ -297,10 +296,9 @@ public class Person_addActivity
         user.setEndTime(TimeUtils.string2Millis(tvTimeEnd.getText().toString().trim()));
         user.setRole(Constant.USER_TYPE_OPEN_ONLY);
         DbHelper.insertUser(user);
-        Log.i("SyncPersonUtils", "SyncPersonUtils add");
         //新增
-        SyncPersonUtils.getInstance().syncPerosn();
-        return false;
+        SyncPersonUtils.getInstance().syncPerosn(user);
+        return true;
     }
 
     /**

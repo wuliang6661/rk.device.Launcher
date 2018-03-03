@@ -143,7 +143,8 @@ public class DbHelper {
             user.setStatus(Constant.TO_BE_ADD);
             user.setUniqueId(MD5.get16Lowercase(UUID.randomUUID().toString()));
             user.setCreateTime(System.currentTimeMillis());
-            return getUserDao().insert(user);
+            getUserDao().insert(user);
+            return 0;
         } else {
             user.setStatus(Constant.TO_BE_UPDATE);
             user.setUpdateTime(System.currentTimeMillis());

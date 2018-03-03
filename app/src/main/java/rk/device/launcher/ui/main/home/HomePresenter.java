@@ -79,19 +79,6 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
 
 
     /**
-     * 注册电量监听
-     */
-    @Override
-    public ElectricBroadcastReceiver registerBatteryReceiver() {
-        IntentFilter intentFilter = new IntentFilter();
-        mBatteryReceiver = new ElectricBroadcastReceiver();
-        intentFilter.addAction(Intent.ACTION_BATTERY_CHANGED);
-        mView.getContext().registerReceiver(mBatteryReceiver, intentFilter);
-        return mBatteryReceiver;
-    }
-
-
-    /**
      * 注册网络变化监听
      */
     public NetChangeBroadcastReceiver registerNetReceiver() {

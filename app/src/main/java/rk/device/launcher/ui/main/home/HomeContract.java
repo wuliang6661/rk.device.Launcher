@@ -3,7 +3,6 @@ package rk.device.launcher.ui.main.home;
 import rk.device.launcher.base.JniHandler;
 import rk.device.launcher.mvp.BasePresenter;
 import rk.device.launcher.mvp.BaseView;
-import rk.device.launcher.service.ElectricBroadcastReceiver;
 import rk.device.launcher.service.NetChangeBroadcastReceiver;
 
 /**
@@ -28,8 +27,6 @@ public class HomeContract {
 
 
         JniHandler initJni();
-
-        ElectricBroadcastReceiver registerBatteryReceiver();
 
         NetChangeBroadcastReceiver registerNetReceiver();
 
