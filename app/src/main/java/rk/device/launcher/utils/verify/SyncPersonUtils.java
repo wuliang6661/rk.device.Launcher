@@ -58,11 +58,7 @@ public class SyncPersonUtils {
                     List<User> users = DbHelper.queryUserByUpdate();
                     Log.i("SyncPersonUtils","SyncPersonUtils size:"+users.size());
                     if (!users.isEmpty()) {
-//                    if (!StringUtils.isEmpty(users.get(0).getFaceID())) {
-//                        uploadImage(users.get(0));
-//                    } else {
                         updatePerson(users.get(0), null);
-//                    }
                     }
                 }
             }
@@ -133,10 +129,10 @@ public class SyncPersonUtils {
      */
     private void updatePerson(User user, String faceImgUrl) {
         Log.i("updatePerson","updatePerson" + user.getStatus());
-        if(user.getStatus() == Constant.NORMAL){
-            user.setStartTime(Constant.TO_BE_UPDATE);
-        }
-        DbHelper.insertUser(user);
+//        if(user.getStatus() == Constant.NORMAL){
+//            user.setStartTime(Constant.TO_BE_UPDATE);
+//        }
+//        DbHelper.insertUser(user);
         BaseApiImpl.addUser(user, faceImgUrl).subscribe(new Subscriber<Object>() {
             @Override
             public void onCompleted() {

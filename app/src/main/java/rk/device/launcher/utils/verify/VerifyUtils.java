@@ -2,9 +2,15 @@ package rk.device.launcher.utils.verify;
 
 import java.util.List;
 
+import rk.device.launcher.db.CardHelper;
 import rk.device.launcher.db.DbHelper;
+import rk.device.launcher.db.FingerHelper;
+import rk.device.launcher.db.entity.Card;
+import rk.device.launcher.db.entity.Finger;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.utils.LogUtil;
+
+import static rk.device.launcher.db.DbHelper.queryByUniqueId;
 
 /**
  * Created by hanbin on 2017/12/28.
@@ -37,8 +43,9 @@ public class VerifyUtils {
      * @return
      */
     public User verifyByNfc(String nfcCard) {
-        List<User> userList = DbHelper.queryByNFCCard(nfcCard);
-        if (userList.size() > 0) {
+        List<Card> cardList = CardHelper.queryByCardNumber(nfcCard);
+        if (cardList.size() > 0) {
+            List<User> userList = queryByUniqueId(cardList.get(0).getPersonId());
             return userList.get(0);
         }
         return null;
@@ -54,7 +61,14 @@ public class VerifyUtils {
         if (fingerId == 0) {
             return null;
         }
-        return DbHelper.queryByFinger(fingerId);
+        List<Finger> fingerList = FingerHelper.getListByFingerId(fingerId);
+        if (fingerList.size() > 0) {
+            List<User> userList = DbHelper.queryByUniqueId(fingerList.get(0).getPersonId());
+            if (userList.size() > 0) {
+                return userList.get(0);
+            }
+        }
+        return null;
     }
 
     /**
@@ -64,7 +78,7 @@ public class VerifyUtils {
      * @return
      */
     public User queryUserByUniqueId(String uniqueId) {
-        List<User> userList = DbHelper.queryByUniqueId(uniqueId);
+        List<User> userList = queryByUniqueId(uniqueId);
         if (userList.size() > 0) {
             LogUtil.i("VerifyUtils", "uniqueId:" + userList.get(0).getUniqueId());
             return userList.get(0);

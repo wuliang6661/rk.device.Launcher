@@ -62,7 +62,7 @@ public class CodePasswordHelper {
      */
     public static int update(long id, String password, int status, int beginTime, int endTime) {
         Query<CodePassword> query = getCodePasswordDao().queryBuilder()
-                .whereOr(CodePasswordDao.Properties.Id.eq(id), CodePasswordDao.Properties.Status
+                .where(CodePasswordDao.Properties.Id.eq(id), CodePasswordDao.Properties.Status
                         .in(Constant.TO_BE_UPDATE, Constant.NORMAL, Constant.TO_BE_ADD))
                 .build();
         List<CodePassword> codePasswords = query.list();
@@ -104,7 +104,7 @@ public class CodePasswordHelper {
      */
     public static List<CodePassword> getList(String personId) {
         Query<CodePassword> query = getCodePasswordDao().queryBuilder()
-                .whereOr(CodePasswordDao.Properties.PersonId.eq(personId), CodePasswordDao.Properties.Status
+                .where(CodePasswordDao.Properties.PersonId.eq(personId), CodePasswordDao.Properties.Status
                         .in(Constant.TO_BE_UPDATE, Constant.NORMAL, Constant.TO_BE_ADD))
                 .build();
         return query.list();

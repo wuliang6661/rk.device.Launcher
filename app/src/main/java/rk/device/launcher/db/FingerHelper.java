@@ -1,7 +1,5 @@
 package rk.device.launcher.db;
 
-import android.text.TextUtils;
-
 import org.greenrobot.greendao.query.Query;
 
 import java.util.List;
@@ -37,7 +35,7 @@ public class FingerHelper {
      * @param endTime
      * @return
      */
-    public static boolean insert(String personId, String fingerId, int status, int beginTime,
+    public static boolean insert(String personId, int fingerId, int status, int beginTime,
                                  int endTime) {
         Finger card = new Finger();
         card.setPersonId(personId);
@@ -60,9 +58,9 @@ public class FingerHelper {
      * 
      * @param
      */
-    public static int update(int id, String fingerId, int status, int beginTime, int endTime) {
+    public static int update(int id, int fingerId, int status, int beginTime, int endTime) {
         Query<Finger> query = getFingerDao().queryBuilder()
-                .whereOr(FingerDao.Properties.Id.eq(id), FingerDao.Properties.Status
+                .where(FingerDao.Properties.Id.eq(id), FingerDao.Properties.Status
                         .in(Constant.TO_BE_UPDATE, Constant.NORMAL, Constant.TO_BE_ADD))
                 .build();
         List<Finger> fingers = query.list();
@@ -70,7 +68,7 @@ public class FingerHelper {
             return Constant.NOT_EXIST;
         }
         Finger finger = query.list().get(0);
-        if (!TextUtils.isEmpty(fingerId)) {
+        if (fingerId != 0) {
             finger.setFingerId(fingerId);
         }
         if (status != 0) {
@@ -104,7 +102,21 @@ public class FingerHelper {
      */
     public static List<Finger> getList(String personId) {
         Query<Finger> query = getFingerDao().queryBuilder()
-                .whereOr(FingerDao.Properties.PersonId.eq(personId), FingerDao.Properties.Status
+                .where(FingerDao.Properties.PersonId.eq(personId), FingerDao.Properties.Status
+                        .in(Constant.TO_BE_UPDATE, Constant.NORMAL, Constant.TO_BE_ADD))
+                .build();
+        return query.list();
+    }
+
+    /**
+     * 通过指纹ID获取指纹列表
+     * 
+     * @param fingerId
+     * @return
+     */
+    public static List<Finger> getListByFingerId(int fingerId) {
+        Query<Finger> query = getFingerDao().queryBuilder()
+                .where(FingerDao.Properties.FingerId.eq(fingerId), FingerDao.Properties.Status
                         .in(Constant.TO_BE_UPDATE, Constant.NORMAL, Constant.TO_BE_ADD))
                 .build();
         return query.list();

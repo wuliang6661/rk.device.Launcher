@@ -87,7 +87,8 @@ public class DbHelper {
     }
 
     public static List<User> loadAll() {
-        return getUserDao().queryBuilder().orderDesc(UserDao.Properties.CreateTime).build().list();
+        return getUserDao().queryBuilder().orderDesc(UserDao.Properties.CreateTime).where(UserDao.Properties.Status
+                .in(Constant.TO_BE_UPDATE, Constant.NORMAL, Constant.TO_BE_ADD)).build().list();
     }
 
     // 根据条件查询, 这里只是举个例子
@@ -99,49 +100,6 @@ public class DbHelper {
                 .where(UserDao.Properties.Name.eq("小明"), UserDao.Properties.Role.eq(14))
                 .build();
         return query.list();
-    }
-
-    /**
-     * 通过NFC CardNum 获取当前记录
-     *
-     * @param cardNum
-     * @return
-     */
-    public static List<User> queryByNFCCard(String cardNum) {
-        Query<User> query = getUserDao().queryBuilder().where(UserDao.Properties.CardNo.eq(cardNum))
-                .build();
-        return query.list();
-    }
-
-    /**
-     * 通过指纹ID 获取当前记录
-     *
-     * @param fingerId
-     * @return
-     * @value 1 指纹1
-     * @value 2 指纹2
-     * @value 3 指纹3
-     */
-    public static User queryByFinger(int fingerId) {
-        Query<User> query = getUserDao().queryBuilder()
-                .where(UserDao.Properties.FingerID1.eq(fingerId)).build();
-        if (query.list().size() == 0) {
-            query = getUserDao().queryBuilder().where(UserDao.Properties.FingerID2.eq(fingerId))
-                    .build();
-        } else {
-            return query.list().get(0);
-        }
-        if (query.list().size() == 0) {
-            query = getUserDao().queryBuilder().where(UserDao.Properties.FingerID3.eq(fingerId))
-                    .build();
-        } else {
-            return query.list().get(0);
-        }
-        if (query.list().size() == 0) {
-            return null;
-        } else {
-            return query.list().get(0);
-        }
     }
 
     /**
@@ -181,16 +139,13 @@ public class DbHelper {
         if (user.getRole() == 0) {
             return Constant.NULL_POPEDOMTYPE;
         }
-        //        //唯一标识
-        //        if (TextUtils.isEmpty(user.getUniqueId())) {
-        //            return Constant.NULL_UNIQUEID;
-        //        }
-        user.setStatus(Constant.TO_BE_UPDATE);
         if (user.getId() == null) {
+            user.setStatus(Constant.TO_BE_ADD);
             user.setUniqueId(MD5.get16Lowercase(UUID.randomUUID().toString()));
             user.setCreateTime(System.currentTimeMillis());
             return getUserDao().insert(user);
         } else {
+            user.setStatus(Constant.TO_BE_UPDATE);
             user.setUpdateTime(System.currentTimeMillis());
             getUserDao().update(user);
             return Constant.UPDATE_SUCCESS;

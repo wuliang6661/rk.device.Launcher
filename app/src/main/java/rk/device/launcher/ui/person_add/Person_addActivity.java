@@ -12,6 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -32,6 +34,8 @@ import rk.device.launcher.db.entity.Card;
 import rk.device.launcher.db.entity.CodePassword;
 import rk.device.launcher.db.entity.Face;
 import rk.device.launcher.db.entity.Finger;
+import rk.device.launcher.db.DbHelper;
+import rk.device.launcher.db.entity.Card;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.mvp.MVPBaseActivity;
@@ -315,6 +319,7 @@ public class Person_addActivity
             return false;
         }
         if (user != null) {
+            Log.i("SyncPersonUtils", "SyncPersonUtils edit");
             return true;
         }
         user = new User();
@@ -322,8 +327,8 @@ public class Person_addActivity
         user.setStartTime(TimeUtils.string2Millis(tvTimeStart.getText().toString().trim()));
         user.setEndTime(TimeUtils.string2Millis(tvTimeEnd.getText().toString().trim()));
         user.setRole(Constant.USER_TYPE_OPEN_ONLY);
-        user.setStatus(Constant.TO_BE_ADD);
         DbHelper.insertUser(user);
+        Log.i("SyncPersonUtils", "SyncPersonUtils add");
         //新增
         SyncPersonUtils.getInstance().syncPerosn();
         return false;
@@ -427,6 +432,7 @@ public class Person_addActivity
     @Override
     protected void onResume() {
         super.onResume();
+        Log.i("VerifyService", "VerifyService onResume");
         loadUser();
     }
 
@@ -453,12 +459,25 @@ public class Person_addActivity
         }
         List<Card> cards = CardHelper.getList(user.getUniqueId());
         if (!cards.isEmpty()) {
-            cardMessage.setText(String.valueOf(getString(R.string.card_num) + user.getCardNo()));
+            cardMessage.setText(String.valueOf(getString(R.string.card_num) + cards.get(0).getNumber()));
         } else {
             cardMessage.setText(R.string.card_null);
         }
         cardText.setText(getType(cards, cardLayout));
         List<Finger> fingers = rk.device.launcher.db.FingerHelper.getList(user.getUniqueId());
+//        fingerText01.setText(getType(user.getFingerID1(), fingerLayout01));
+//        fingerText02.setText(getType(user.getFingerID2(), fingerLayout02));
+//        fingerText03.setText(getType(user.getFingerID3(), fingerLayout03));
+        Card card = CardHelper.queryOne(user.getUniqueId());
+        Log.i("VerifyService", "VerifyService Card:" + new Gson().toJson(card).toString());
+        String cardNumber = "";
+        if (card != null) {
+            cardNumber = card.getNumber();
+            cardMessage.setText(String.valueOf(getString(R.string.card_num) + cardNumber));
+        } else {
+            cardMessage.setText(R.string.card_null);
+        }
+//        cardText.setText(getType(cardNumber, cardLayout));
 //        fingerText01.setText(getType(user.getFingerID1(), fingerLayout01));
 //        fingerText02.setText(getType(user.getFingerID2(), fingerLayout02));
 //        fingerText03.setText(getType(user.getFingerID3(), fingerLayout03));

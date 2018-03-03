@@ -9,6 +9,7 @@ import rx.Subscriber;
  * 邮箱 784787081@qq.com
  */
 
+// 感觉没必要在KeyContract.Presenter里面写接口, 要什么方法直接写在KeyPresenter里面就好了
 public class KeyPresenter extends BasePresenterImpl<KeyContract.View> implements KeyContract.Presenter {
 
     private static final String TAG = "KeyPresenter";

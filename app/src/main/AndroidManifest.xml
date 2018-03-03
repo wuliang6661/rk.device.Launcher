@@ -182,11 +182,6 @@
             android:name=".ui.call.CallActivity"
             android:screenOrientation="portrait" />
 
-        <!--指纹-->
-        <activity
-            android:name=".ui.finger.FingerActivity"
-            android:screenOrientation="portrait" />
-
         <!--添加指纹-->
         <activity android:name=".ui.fingeradd.FingeraddActivity" />
         <!--新增NFC-->
@@ -221,7 +216,9 @@
         <!--激活码激活页面-->
         <activity
             android:name=".ui.key.KeyActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait" >
+
+            </activity>
 
         <!--输入管理员密码页面-->
         <activity

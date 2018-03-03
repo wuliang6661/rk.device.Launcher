@@ -18,16 +18,15 @@ public class Finger {
     @NotNull
     private String personId;   //用户唯一标识ID
     @NotNull
-    private String fingerId;   //指纹ID
+    private int fingerId;   //指纹ID
     private int    status;     //1：正常，2：待添加，3：待更新，4：待删除
     private int    beginTime;  //开始时间
     private int    endTime;    //结束时间
     private int    createTime; //创建时间时间
     private int    updateTime; //更新时间
-    @Generated(hash = 988980047)
-    public Finger(Long id, @NotNull String personId, @NotNull String fingerId,
-            int status, int beginTime, int endTime, int createTime,
-            int updateTime) {
+    @Generated(hash = 1258374500)
+    public Finger(Long id, @NotNull String personId, int fingerId, int status,
+            int beginTime, int endTime, int createTime, int updateTime) {
         this.id = id;
         this.personId = personId;
         this.fingerId = fingerId;
@@ -52,11 +51,17 @@ public class Finger {
     public void setPersonId(String personId) {
         this.personId = personId;
     }
-    public String getFingerId() {
+    public int getFingerId() {
         return this.fingerId;
     }
-    public void setFingerId(String fingerId) {
+    public void setFingerId(int fingerId) {
         this.fingerId = fingerId;
+    }
+    public int getStatus() {
+        return this.status;
+    }
+    public void setStatus(int status) {
+        this.status = status;
     }
     public int getBeginTime() {
         return this.beginTime;
@@ -82,10 +87,5 @@ public class Finger {
     public void setUpdateTime(int updateTime) {
         this.updateTime = updateTime;
     }
-    public int getStatus() {
-        return this.status;
-    }
-    public void setStatus(int status) {
-        this.status = status;
-    }
+   
 }
