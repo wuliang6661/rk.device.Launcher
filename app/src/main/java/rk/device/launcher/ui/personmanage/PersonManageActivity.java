@@ -24,12 +24,9 @@ import rk.device.launcher.db.entity.Card;
 import rk.device.launcher.db.entity.CodePassword;
 import rk.device.launcher.db.entity.Face;
 import rk.device.launcher.db.entity.Finger;
-import rk.device.launcher.db.DbHelper;
-import rk.device.launcher.db.entity.Card;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.mvp.MVPBaseActivity;
 import rk.device.launcher.ui.person_add.Person_addActivity;
-import rk.device.launcher.utils.StringUtils;
 import rk.device.launcher.widget.lgrecycleadapter.LGRecycleViewAdapter;
 import rk.device.launcher.widget.lgrecycleadapter.LGViewHolder;
 
@@ -98,28 +95,22 @@ public class PersonManageActivity extends MVPBaseActivity<PersonManageContract.V
                 } else {
                     holder.getView(R.id.person_password).setVisibility(View.VISIBLE);
                 }
-                List<Card> cards = CardHelper.getList(user.getUniqueId());
-                if (cards.isEmpty()) {
-                    Card card = CardHelper.queryOne(user.getUniqueId());
-                    if (card == null) {
-                        holder.getView(R.id.person_card).setVisibility(View.GONE);
-                    } else {
-                        holder.getView(R.id.person_card).setVisibility(View.VISIBLE);
-                    }
-                    List<Finger> fingers = FingerHelper.getList(user.getUniqueId());
-                    if (fingers.isEmpty()) {
-                        holder.getView(R.id.person_finger).setVisibility(View.GONE);
-                    } else {
-                        holder.getView(R.id.person_finger).setVisibility(View.VISIBLE);
-                    }
-                    if (faces.isEmpty() && password.isEmpty() && cards.isEmpty() && fingers.isEmpty()) {
-                        if (StringUtils.isEmpty(user.getFaceID()) && user.getPassWord() == 0 && card == null &&
-                                StringUtils.isEmpty(user.getFingerID1()) && StringUtils.isEmpty(user.getFingerID2()) && StringUtils.isEmpty(user.getFingerID3())) {
-                            holder.getView(R.id.none_type).setVisibility(View.VISIBLE);
-                        } else {
-                            holder.getView(R.id.none_type).setVisibility(View.GONE);
-                        }
-                    }
+                Card card = CardHelper.queryOne(user.getUniqueId());
+                if (card == null) {
+                    holder.getView(R.id.person_card).setVisibility(View.GONE);
+                } else {
+                    holder.getView(R.id.person_card).setVisibility(View.VISIBLE);
+                }
+                List<Finger> fingers = FingerHelper.getList(user.getUniqueId());
+                if (fingers.isEmpty()) {
+                    holder.getView(R.id.person_finger).setVisibility(View.GONE);
+                } else {
+                    holder.getView(R.id.person_finger).setVisibility(View.VISIBLE);
+                }
+                if (faces.isEmpty() && password.isEmpty() && card == null && fingers.isEmpty()) {
+                    holder.getView(R.id.none_type).setVisibility(View.VISIBLE);
+                } else {
+                    holder.getView(R.id.none_type).setVisibility(View.GONE);
                 }
             }
         };
