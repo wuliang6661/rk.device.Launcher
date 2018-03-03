@@ -60,7 +60,7 @@ public class FingerHelper {
      */
     public static int update(int id, int fingerId, int status, int beginTime, int endTime) {
         Query<Finger> query = getFingerDao().queryBuilder()
-                .whereOr(FingerDao.Properties.Id.eq(id), FingerDao.Properties.Status
+                .where(FingerDao.Properties.Id.eq(id), FingerDao.Properties.Status
                         .in(Constant.TO_BE_UPDATE, Constant.NORMAL, Constant.TO_BE_ADD))
                 .build();
         List<Finger> fingers = query.list();
@@ -102,7 +102,7 @@ public class FingerHelper {
      */
     public static List<Finger> getList(String personId) {
         Query<Finger> query = getFingerDao().queryBuilder()
-                .whereOr(FingerDao.Properties.PersonId.eq(personId), FingerDao.Properties.Status
+                .where(FingerDao.Properties.PersonId.eq(personId), FingerDao.Properties.Status
                         .in(Constant.TO_BE_UPDATE, Constant.NORMAL, Constant.TO_BE_ADD))
                 .build();
         return query.list();
@@ -116,7 +116,7 @@ public class FingerHelper {
      */
     public static List<Finger> getListByFingerId(int fingerId) {
         Query<Finger> query = getFingerDao().queryBuilder()
-                .whereOr(FingerDao.Properties.FingerId.eq(fingerId), FingerDao.Properties.Status
+                .where(FingerDao.Properties.FingerId.eq(fingerId), FingerDao.Properties.Status
                         .in(Constant.TO_BE_UPDATE, Constant.NORMAL, Constant.TO_BE_ADD))
                 .build();
         return query.list();
