@@ -100,7 +100,6 @@ public class MemberLogic extends BaseLogic {
             user.setRole(role);
             user.setStartTime(TypeTranUtils.str2Int(startTime));
             user.setEndTime(TypeTranUtils.str2Int(endTime));
-            user.setCardNo(cardNo);
             user.setFaceID(faceID);
             user.setPassWord(TypeTranUtils.str2Int(password));
             long userId = DbHelper.insertUser(user);
@@ -124,7 +123,6 @@ public class MemberLogic extends BaseLogic {
                     : TypeTranUtils.str2Int(startTime));
             user.setEndTime(TextUtils.isEmpty(endTime) ? oldUser.getEndTime()
                     : TypeTranUtils.str2Int(endTime));
-            user.setCardNo(TextUtils.isEmpty(cardNo) ? oldUser.getCardNo() : cardNo);
             user.setFaceID(TextUtils.isEmpty(faceID) ? oldUser.getFaceID() : faceID);
             user.setPassWord(TextUtils.isEmpty(password) ? oldUser.getPassWord()
                     : TypeTranUtils.str2Int(password));
@@ -168,8 +166,7 @@ public class MemberLogic extends BaseLogic {
                 DbHelper.delete(user);
                 break;
             case 2://卡
-                user.setCardNo("");
-                DbHelper.update(user);
+
                 break;
             case 3://密码
                 user.setPassWord(0);

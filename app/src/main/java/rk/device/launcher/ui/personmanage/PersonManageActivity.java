@@ -15,7 +15,9 @@ import java.util.List;
 import butterknife.Bind;
 import rk.device.launcher.R;
 import rk.device.launcher.api.T;
+import rk.device.launcher.db.CardHelper;
 import rk.device.launcher.db.DbHelper;
+import rk.device.launcher.db.entity.Card;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.mvp.MVPBaseActivity;
 import rk.device.launcher.ui.person_add.Person_addActivity;
@@ -86,7 +88,8 @@ public class PersonManageActivity extends MVPBaseActivity<PersonManageContract.V
                 } else {
                     holder.getView(R.id.person_password).setVisibility(View.VISIBLE);
                 }
-                if (StringUtils.isEmpty(user.getCardNo())) {
+                Card card = CardHelper.queryOne(user.getUniqueId());
+                if (card == null) {
                     holder.getView(R.id.person_card).setVisibility(View.GONE);
                 } else {
                     holder.getView(R.id.person_card).setVisibility(View.VISIBLE);
@@ -96,7 +99,7 @@ public class PersonManageActivity extends MVPBaseActivity<PersonManageContract.V
                 } else {
                     holder.getView(R.id.person_finger).setVisibility(View.VISIBLE);
                 }
-                if (StringUtils.isEmpty(user.getFaceID()) && user.getPassWord() == 0 && StringUtils.isEmpty(user.getCardNo()) &&
+                if (StringUtils.isEmpty(user.getFaceID()) && user.getPassWord() == 0 && card ==null &&
                         StringUtils.isEmpty(user.getFingerID1()) && StringUtils.isEmpty(user.getFingerID2()) && StringUtils.isEmpty(user.getFingerID3())) {
                     holder.getView(R.id.none_type).setVisibility(View.VISIBLE);
                 } else {

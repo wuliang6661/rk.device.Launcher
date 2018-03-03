@@ -24,7 +24,9 @@ import rk.device.launcher.api.BaseApiImpl;
 import rk.device.launcher.api.T;
 import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.bean.TokenBo;
+import rk.device.launcher.db.CardHelper;
 import rk.device.launcher.db.DbHelper;
+import rk.device.launcher.db.entity.Card;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.mvp.MVPBaseActivity;
@@ -423,12 +425,16 @@ public class Person_addActivity
             passText.setText(R.string.no_add);
             passLayout.setBackgroundColor(Color.parseColor("#30374b"));
         }
-        if (!StringUtils.isEmpty(user.getCardNo())) {
-            cardMessage.setText(String.valueOf(getString(R.string.card_num) + user.getCardNo()));
+
+        Card card = CardHelper.queryOne(user.getUniqueId());
+        String cardNumber = "";
+        if (card != null) {
+            cardNumber = card.getNumber();
+            cardMessage.setText(String.valueOf(getString(R.string.card_num) + cardNumber));
         } else {
             cardMessage.setText(R.string.card_null);
         }
-        cardText.setText(getType(user.getCardNo(), cardLayout));
+        cardText.setText(getType(cardNumber, cardLayout));
         fingerText01.setText(getType(user.getFingerID1(), fingerLayout01));
         fingerText02.setText(getType(user.getFingerID2(), fingerLayout02));
         fingerText03.setText(getType(user.getFingerID3(), fingerLayout03));

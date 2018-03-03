@@ -123,4 +123,18 @@ public class CardHelper {
                 .build();
         return query.list();
     }
+
+    /**
+     * 获取一条记录
+     * 
+     * @param personId
+     * @return
+     */
+    public static Card queryOne(String personId) {
+        Query<Card> query = getCardDao().queryBuilder()
+                .whereOr(CardDao.Properties.PersonId.eq(personId), CardDao.Properties.Status
+                        .in(Constant.TO_BE_UPDATE, Constant.NORMAL, Constant.TO_BE_ADD))
+                .build();
+        return query.list().size() > 0 ? query.list().get(0) : null;
+    }
 }
