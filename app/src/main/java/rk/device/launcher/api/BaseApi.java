@@ -28,7 +28,7 @@ public interface BaseApi {
     /**
      * 天气接口
      */
-    @Headers({ "Content-Type: application/json", "Accept: application/json" })
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
     @GET(ApiName.WEATHER)
     Observable<BaseResult<List<WeatherBO>>> weather(@QueryMap Map<String, Object> params);
 

@@ -16,6 +16,14 @@ import butterknife.Bind;
 import rk.device.launcher.R;
 import rk.device.launcher.api.T;
 import rk.device.launcher.db.CardHelper;
+import rk.device.launcher.db.CodePasswordHelper;
+import rk.device.launcher.db.DbHelper;
+import rk.device.launcher.db.FaceHelper;
+import rk.device.launcher.db.FingerHelper;
+import rk.device.launcher.db.entity.Card;
+import rk.device.launcher.db.entity.CodePassword;
+import rk.device.launcher.db.entity.Face;
+import rk.device.launcher.db.entity.Finger;
 import rk.device.launcher.db.DbHelper;
 import rk.device.launcher.db.entity.Card;
 import rk.device.launcher.db.entity.User;
@@ -78,32 +86,40 @@ public class PersonManageActivity extends MVPBaseActivity<PersonManageContract.V
             public void convert(LGViewHolder holder, User user, int position) {
                 holder.setText(R.id.person_id, "ID：" + user.getUniqueId());
                 holder.setText(R.id.person_name, user.getName());
-                if (StringUtils.isEmpty(user.getFaceID())) {
+                List<Face> faces = FaceHelper.getList(user.getUniqueId());
+                if (faces.isEmpty()) {
                     holder.getView(R.id.person_face).setVisibility(View.GONE);
                 } else {
                     holder.getView(R.id.person_face).setVisibility(View.VISIBLE);
                 }
-                if (user.getPassWord() == 0) {
+                List<CodePassword> password = CodePasswordHelper.getList(user.getUniqueId());
+                if (password.isEmpty()) {
                     holder.getView(R.id.person_password).setVisibility(View.GONE);
                 } else {
                     holder.getView(R.id.person_password).setVisibility(View.VISIBLE);
                 }
-                Card card = CardHelper.queryOne(user.getUniqueId());
-                if (card == null) {
-                    holder.getView(R.id.person_card).setVisibility(View.GONE);
-                } else {
-                    holder.getView(R.id.person_card).setVisibility(View.VISIBLE);
-                }
-                if (StringUtils.isEmpty(user.getFingerID1()) && StringUtils.isEmpty(user.getFingerID2()) && StringUtils.isEmpty(user.getFingerID3())) {
-                    holder.getView(R.id.person_finger).setVisibility(View.GONE);
-                } else {
-                    holder.getView(R.id.person_finger).setVisibility(View.VISIBLE);
-                }
-                if (StringUtils.isEmpty(user.getFaceID()) && user.getPassWord() == 0 && card ==null &&
-                        StringUtils.isEmpty(user.getFingerID1()) && StringUtils.isEmpty(user.getFingerID2()) && StringUtils.isEmpty(user.getFingerID3())) {
-                    holder.getView(R.id.none_type).setVisibility(View.VISIBLE);
-                } else {
-                    holder.getView(R.id.none_type).setVisibility(View.GONE);
+                List<Card> cards = CardHelper.getList(user.getUniqueId());
+                if (cards.isEmpty()) {
+                    Card card = CardHelper.queryOne(user.getUniqueId());
+                    if (card == null) {
+                        holder.getView(R.id.person_card).setVisibility(View.GONE);
+                    } else {
+                        holder.getView(R.id.person_card).setVisibility(View.VISIBLE);
+                    }
+                    List<Finger> fingers = FingerHelper.getList(user.getUniqueId());
+                    if (fingers.isEmpty()) {
+                        holder.getView(R.id.person_finger).setVisibility(View.GONE);
+                    } else {
+                        holder.getView(R.id.person_finger).setVisibility(View.VISIBLE);
+                    }
+                    if (faces.isEmpty() && password.isEmpty() && cards.isEmpty() && fingers.isEmpty()) {
+                        if (StringUtils.isEmpty(user.getFaceID()) && user.getPassWord() == 0 && card == null &&
+                                StringUtils.isEmpty(user.getFingerID1()) && StringUtils.isEmpty(user.getFingerID2()) && StringUtils.isEmpty(user.getFingerID3())) {
+                            holder.getView(R.id.none_type).setVisibility(View.VISIBLE);
+                        } else {
+                            holder.getView(R.id.none_type).setVisibility(View.GONE);
+                        }
+                    }
                 }
             }
         };
