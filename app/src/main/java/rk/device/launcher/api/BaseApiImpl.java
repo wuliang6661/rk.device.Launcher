@@ -121,7 +121,8 @@ public class BaseApiImpl {
         JSONObject object = new JSONObject();
         try {
             object.put("uuid", uuid);
-            object.put("mac", mac);
+//            object.put("mac", mac);
+            object.put("mac", "123456");
             object.put("license", license);
             RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),
                     object.toString());
