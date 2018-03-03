@@ -155,7 +155,6 @@ public class VerifyService extends Service {
                 }
                 OpenUtils.getInstance().open(VerifyTypeConstant.TYPE_CARD, user.getUniqueId(),
                         user.getName());
-                //                RxBus.getDefault().post(new OpenDoorSuccessEvent("", VerifyTypeConstant.TYPE_CARD, 1));
             }
         } else {
             if (resultCode == 1) {//未初始化

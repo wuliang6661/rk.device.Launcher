@@ -18,7 +18,7 @@ import rk.device.launcher.utils.TimeUtils;
  */
 public class CardHelper {
 
-    private static CardDao      sCardDao;
+    private static CardDao sCardDao;
 
     public static CardDao getCardDao() {
         if (sCardDao == null) {
@@ -60,7 +60,7 @@ public class CardHelper {
      * 
      * @param
      */
-    public static int update(int id, String number, int status, int beginTime, int endTime) {
+    public static int update(long id, String number, int status, int beginTime, int endTime) {
         Query<Card> query = getCardDao().queryBuilder()
                 .whereOr(CardDao.Properties.Id.eq(id), CardDao.Properties.Status
                         .in(Constant.TO_BE_UPDATE, Constant.NORMAL, Constant.TO_BE_ADD))
@@ -105,6 +105,20 @@ public class CardHelper {
     public static List<Card> getList(String personId) {
         Query<Card> query = getCardDao().queryBuilder()
                 .whereOr(CardDao.Properties.PersonId.eq(personId), CardDao.Properties.Status
+                        .in(Constant.TO_BE_UPDATE, Constant.NORMAL, Constant.TO_BE_ADD))
+                .build();
+        return query.list();
+    }
+
+    /**
+     * 通过卡号获取卡的记录
+     * 
+     * @param nfcCard
+     * @return
+     */
+    public static List<Card> queryByCardNumber(String nfcCard) {
+        Query<Card> query = getCardDao().queryBuilder()
+                .whereOr(CardDao.Properties.Number.eq(nfcCard), CardDao.Properties.Status
                         .in(Constant.TO_BE_UPDATE, Constant.NORMAL, Constant.TO_BE_ADD))
                 .build();
         return query.list();

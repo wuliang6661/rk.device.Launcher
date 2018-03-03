@@ -10,17 +10,28 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.List;
+
 import butterknife.Bind;
 import rk.device.launcher.R;
+import rk.device.launcher.api.BaseApiImpl;
 import rk.device.launcher.api.T;
 import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.bean.event.NFCAddEvent;
+import rk.device.launcher.db.CardHelper;
 import rk.device.launcher.db.DbHelper;
+import rk.device.launcher.db.entity.Card;
 import rk.device.launcher.db.entity.User;
+import rk.device.launcher.global.Constant;
 import rk.device.launcher.mvp.MVPBaseActivity;
 import rk.device.launcher.utils.LogUtil;
+import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.WindowManagerUtils;
 import rk.device.launcher.utils.rxjava.RxBus;
+import rk.device.launcher.utils.uuid.DeviceUuidFactory;
 import rk.device.launcher.utils.verify.VerifyUtils;
 import rx.Subscriber;
 
@@ -39,21 +50,22 @@ public class NfcaddActivity extends MVPBaseActivity<NfcaddContract.View, NfcaddP
     private static final String EXTRA_UNIQUEID = "uniqueId";
     private String              uniqueId       = null;
 
-    private TextView            cardNumTv;                  //卡号
+    private TextView            cardNumTv;                                   //卡号
     @Bind(R.id.ll_card_notice)
-    LinearLayout                cardNoticeLL;               //用于展示提示信息的Layout
+    LinearLayout                cardNoticeLL;                                //用于展示提示信息的Layout
     @Bind(R.id.stub_layout)
-    ViewStub                    cardNumberStub;             //用于展示卡片信息的Layout
-    TextView                    noticeTv;                   //用于提示当前卡牌状态
+    ViewStub                    cardNumberStub;                              //用于展示卡片信息的Layout
+    TextView                    noticeTv;                                    //用于提示当前卡牌状态
     @Bind(R.id.tv_notice)
     TextView                    noticeTv2;
     @Bind(R.id.iv_search)
-    ImageView                   deleteImg;                  //删除按钮
+    ImageView                   deleteImg;                                   //删除按钮
     private View                cardNumberView;
     private Button              saveBtn;
     private boolean             isDetail       = false;
     private boolean             isChange       = false;
     private boolean             isReload       = false;
+    private DeviceUuidFactory   factory        = new DeviceUuidFactory(this);
 
     @Override
     protected int getLayout() {
@@ -178,9 +190,15 @@ public class NfcaddActivity extends MVPBaseActivity<NfcaddContract.View, NfcaddP
             return;
         }
         User eUser = VerifyUtils.getInstance().queryUserByUniqueId(uniqueId);
-        if (!TextUtils.isEmpty(eUser.getCardNo())) {
+        if (eUser == null) {
+            T.showShort(getString(R.string.illeagel_user_not_exist));
+            finish();
+            return;
+        }
+        List<Card> cardList = CardHelper.getList(uniqueId);
+        if (cardList.size() > 0) {
             isDetail = true;
-            setCardInfo(eUser.getCardNo(), false);
+            setCardInfo(cardList.get(0).getNumber(), false);
             deleteImg.setVisibility(View.VISIBLE);
             deleteImg.setImageDrawable(getResources().getDrawable(R.mipmap.delete));
             title = getString(R.string.title_nfc_card_detail);
@@ -217,10 +235,16 @@ public class NfcaddActivity extends MVPBaseActivity<NfcaddContract.View, NfcaddP
                 String cardNumber = cardNumTv.getText().toString().trim();
                 User eUser = VerifyUtils.getInstance().queryUserByUniqueId(uniqueId);
                 if (eUser != null) {
-                    eUser.setCardNo(cardNumber);
-                    eUser.setUploadStatus(0);
-                    DbHelper.update(eUser);
-                    //                    BaseApiImpl.addCard()；
+                    //添加card到本地
+                    List<Card> cardList = CardHelper.getList(uniqueId);
+                    if (cardList.size() > 0) {
+                        CardHelper.update(cardList.get(0).getId(), cardNumber,
+                                Constant.TO_BE_UPDATE, 0, 0);
+                    } else {
+                        CardHelper.insert(eUser.getUniqueId(), cardNumber, Constant.TO_BE_ADD, 0,
+                                0);
+                    }
+                    httpUpdateCard(eUser, cardList, cardNumber);
                     T.showShort(getString(R.string.card_add_success));
                     finish();
                 } else {
@@ -241,6 +265,69 @@ public class NfcaddActivity extends MVPBaseActivity<NfcaddContract.View, NfcaddP
     }
 
     /**
+     * 更新服务端数据
+     * 
+     * @param eUser
+     * @param cardList
+     * @param cardNumber
+     */
+    private void httpUpdateCard(User eUser, List<Card> cardList, String cardNumber) {
+        JSONObject params = new JSONObject();
+        try {
+            params.put("access_token", SPUtils.getString(Constant.ACCENT_TOKEN));
+            params.put("uuid", factory.getUuid());
+            params.put("peopleId", eUser.getUniqueId());
+            params.put("cardNo", cardNumber);
+            params.put("startTime", eUser.getStartTime() / 1000);
+            params.put("endTime", eUser.getEndTime() / 1000);
+        } catch (JSONException e) {
+        }
+        if (cardList.size() > 0) {
+            BaseApiImpl.editCard(params).subscribe(new Subscriber<Object>() {
+                @Override
+                public void onCompleted() {
+
+                }
+
+                @Override
+                public void onError(Throwable e) {
+
+                }
+
+                @Override
+                public void onNext(Object o) {
+                    List<Card> cardList = CardHelper.getList(uniqueId);
+                    if (cardList.size() > 0) {
+                        Card card = CardHelper.getList(uniqueId).get(0);
+                        CardHelper.update(card.getId(), cardNumber, Constant.NORMAL, 0, 0);
+                    }
+                }
+            });
+        } else {
+            BaseApiImpl.addCard(params).subscribe(new Subscriber<Object>() {
+                @Override
+                public void onCompleted() {
+
+                }
+
+                @Override
+                public void onError(Throwable e) {
+
+                }
+
+                @Override
+                public void onNext(Object o) {
+                    List<Card> cardList = CardHelper.getList(uniqueId);
+                    if (cardList.size() > 0) {
+                        Card card = CardHelper.getList(uniqueId).get(0);
+                        CardHelper.update(card.getId(), cardNumber, Constant.NORMAL, 0, 0);
+                    }
+                }
+            });
+        }
+    }
+
+    /**
      * 删除卡
      */
     private void deleteCard() {
@@ -250,7 +337,6 @@ public class NfcaddActivity extends MVPBaseActivity<NfcaddContract.View, NfcaddP
         }
         User eUser = VerifyUtils.getInstance().queryUserByUniqueId(uniqueId);
         if (eUser != null) {
-            eUser.setCardNo("");
             eUser.setUploadStatus(0);
             DbHelper.update(eUser);
             T.showShort(getString(R.string.delete_success));

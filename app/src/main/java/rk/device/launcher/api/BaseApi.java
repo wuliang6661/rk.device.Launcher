@@ -65,8 +65,8 @@ public interface BaseApi {
      * @param requestBody
      * @return
      */
-    @POST("/api/v1/public/synchistory")
-    Observable<BaseResult<StatusBo>> syncRecords(@Body RequestBody requestBody);
+    @POST("/api/v1/device/upload_access_record")
+    Observable<BaseResult<Object>> syncRecords(@Body RequestBody requestBody);
 
     /**
      * 上传用户图片

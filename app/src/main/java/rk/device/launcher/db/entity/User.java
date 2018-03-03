@@ -9,8 +9,7 @@ import org.greenrobot.greendao.annotation.NotNull;
 import java.io.Serializable;
 
 /**
- * Created by mundane on 2017/12/27 下午3:00
- * 授权信息数据表
+ * Created by mundane on 2017/12/27 下午3:00 授权信息数据表
  */
 @Entity
 public class User implements Serializable {
@@ -18,59 +17,54 @@ public class User implements Serializable {
     private static final long serialVersionUID = 42L;
 
     @Id(autoincrement = true)
-    private Long id;
+    private Long              id;
 
     @NotNull
     @Index(unique = true)
-    private String uniqueId;    // 这就是那个唯一标识id
+    private String            uniqueId;              // 这就是那个唯一标识id
 
     @NotNull
-    private String name;        // 用户名称
-
+    private String            name;                  // 用户名称
 
     /**
-     * 1:  开门权限，只能开门
-     * 2:  巡更权限，向服务器发送一条上报消息，代表已巡更
-     * 3:  管理员权限，可以开门、巡更、或进入设置页面更改设置
+     * 1: 开门权限，只能开门 2: 巡更权限，向服务器发送一条上报消息，代表已巡更 3: 管理员权限，可以开门、巡更、或进入设置页面更改设置
      */
     @NotNull
-    private int role; // 权限类型
+    private int               role;                  // 权限类型
 
-    private String cardNo;
+    private String            fingerID1;
 
-    private String fingerID1;
+    private String            fingerName1;
 
-    private String fingerName1;
+    private String            fingerID2;
 
-    private String fingerID2;
+    private String            fingerName2;
 
-    private String fingerName2;
+    private String            fingerID3;
 
-    private String fingerID3;
+    private String            fingerName3;
 
-    private String fingerName3;
+    private String            faceID;
 
-    private String faceID;
+    private int               passWord;
 
-    private int passWord;
+    private String            fingerCode;
 
-    private String fingerCode;
+    private int               uploadStatus;
 
-    private int uploadStatus;
-    
-    private int    status;     //1：正常，2：待添加，3：待更新，4：待删除
+    private int               status;                //1：正常，2：待添加，3：待更新，4：待删除
 
-    private long startTime;
+    private long              startTime;
 
-    private long endTime;
+    private long              endTime;
 
-    private long createTime;
+    private long              createTime;
 
-    private long updateTime;
+    private long              updateTime;
 
-    @Generated(hash = 1103820833)
+    @Generated(hash = 1771229480)
     public User(Long id, @NotNull String uniqueId, @NotNull String name, int role,
-            String cardNo, String fingerID1, String fingerName1, String fingerID2,
+            String fingerID1, String fingerName1, String fingerID2,
             String fingerName2, String fingerID3, String fingerName3, String faceID,
             int passWord, String fingerCode, int uploadStatus, int status,
             long startTime, long endTime, long createTime, long updateTime) {
@@ -78,7 +72,6 @@ public class User implements Serializable {
         this.uniqueId = uniqueId;
         this.name = name;
         this.role = role;
-        this.cardNo = cardNo;
         this.fingerID1 = fingerID1;
         this.fingerName1 = fingerName1;
         this.fingerID2 = fingerID2;
@@ -130,14 +123,6 @@ public class User implements Serializable {
 
     public void setRole(int role) {
         this.role = role;
-    }
-
-    public String getCardNo() {
-        return this.cardNo;
-    }
-
-    public void setCardNo(String cardNo) {
-        this.cardNo = cardNo;
     }
 
     public String getFingerID1() {
@@ -259,6 +244,6 @@ public class User implements Serializable {
     public void setUpdateTime(long updateTime) {
         this.updateTime = updateTime;
     }
-    
+
 
 }

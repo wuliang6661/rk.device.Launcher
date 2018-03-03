@@ -115,30 +115,6 @@ public class BaseApiImpl {
     }
 
     /**
-     * 开门
-     *
-     * @param token
-     * @param uuid
-     * @param type
-     * @param time
-     * @return
-     */
-    public static Observable<StatusBo> openDoor(String token, String uuid, int type, int time) {
-        JSONObject params = new JSONObject();
-        try {
-            params.put("access_token", token);
-            params.put("uuid", uuid);
-            params.put("openType", type);
-            params.put("time", time);
-        } catch (JSONException e) {
-
-        }
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),
-                params.toString());
-        return apiFactory().openDoor(requestBody).compose(RxResultHelper.httpResult());
-    }
-
-    /**
      * 激活设备
      */
     public static Observable<Object> activationDiveces(String uuid, String mac, String license) {
@@ -179,7 +155,7 @@ public class BaseApiImpl {
      * @param params
      * @return
      */
-    public static Observable<StatusBo> syncRecords(JSONObject params) {
+    public static Observable<Object> syncRecords(JSONObject params) {
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),
                 params.toString());
         return apiFactory().syncRecords(requestBody).compose(RxResultHelper.httpResult());

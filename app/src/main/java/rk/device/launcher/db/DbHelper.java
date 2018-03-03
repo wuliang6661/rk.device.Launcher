@@ -102,49 +102,6 @@ public class DbHelper {
     }
 
     /**
-     * 通过NFC CardNum 获取当前记录
-     *
-     * @param cardNum
-     * @return
-     */
-    public static List<User> queryByNFCCard(String cardNum) {
-        Query<User> query = getUserDao().queryBuilder().where(UserDao.Properties.CardNo.eq(cardNum))
-                .build();
-        return query.list();
-    }
-
-    /**
-     * 通过指纹ID 获取当前记录
-     *
-     * @param fingerId
-     * @return
-     * @value 1 指纹1
-     * @value 2 指纹2
-     * @value 3 指纹3
-     */
-    public static User queryByFinger(int fingerId) {
-        Query<User> query = getUserDao().queryBuilder()
-                .where(UserDao.Properties.FingerID1.eq(fingerId)).build();
-        if (query.list().size() == 0) {
-            query = getUserDao().queryBuilder().where(UserDao.Properties.FingerID2.eq(fingerId))
-                    .build();
-        } else {
-            return query.list().get(0);
-        }
-        if (query.list().size() == 0) {
-            query = getUserDao().queryBuilder().where(UserDao.Properties.FingerID3.eq(fingerId))
-                    .build();
-        } else {
-            return query.list().get(0);
-        }
-        if (query.list().size() == 0) {
-            return null;
-        } else {
-            return query.list().get(0);
-        }
-    }
-
-    /**
      * Get User List By UniqueId
      *
      * @param uniqueId
