@@ -431,4 +431,5 @@
     <string name="kaiguanleixing">开关常开</string>
     <string name="auto_time_update">自动更新时间</string>
     <string name="illeagel_user">用户已过期，重新录入用户</string>
+    <string name="notice_nfc_add">将卡靠近刷卡感应器</string>
 </resources>

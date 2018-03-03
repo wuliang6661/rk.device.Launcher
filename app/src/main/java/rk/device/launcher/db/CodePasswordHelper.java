@@ -45,7 +45,7 @@ public class CodePasswordHelper {
         codePassword.setStatus(status);
         codePassword.setBeginTime(beginTime);
         codePassword.setEndTime(endTime);
-        codePassword.setUpdateTime(TimeUtils.getTimeStamp());
+        codePassword.setCreateTime(TimeUtils.getTimeStamp());
         try {
             long rowId = getCodePasswordDao().insert(codePassword);
             return true;
@@ -60,7 +60,7 @@ public class CodePasswordHelper {
      * 
      * @param
      */
-    public static int update(int id, String password, int status, int beginTime, int endTime) {
+    public static int update(long id, String password, int status, int beginTime, int endTime) {
         Query<CodePassword> query = getCodePasswordDao().queryBuilder()
                 .whereOr(CodePasswordDao.Properties.Id.eq(id), CodePasswordDao.Properties.Status
                         .in(Constant.TO_BE_UPDATE, Constant.NORMAL, Constant.TO_BE_ADD))
@@ -109,4 +109,17 @@ public class CodePasswordHelper {
                 .build();
         return query.list();
     }
+
+
+    /**
+     * 根据密码查询列表
+     */
+    public static List<CodePassword> getPassword(String password){
+        Query<CodePassword> query = getCodePasswordDao().queryBuilder()
+                .whereOr(CodePasswordDao.Properties.Password.eq(password), CodePasswordDao.Properties.Status
+                        .in(Constant.TO_BE_UPDATE, Constant.NORMAL, Constant.TO_BE_ADD))
+                .build();
+        return query.list();
+    }
+
 }

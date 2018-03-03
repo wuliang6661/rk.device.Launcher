@@ -24,7 +24,14 @@ import rk.device.launcher.api.BaseApiImpl;
 import rk.device.launcher.api.T;
 import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.bean.TokenBo;
+import rk.device.launcher.db.CardHelper;
+import rk.device.launcher.db.CodePasswordHelper;
 import rk.device.launcher.db.DbHelper;
+import rk.device.launcher.db.FaceHelper;
+import rk.device.launcher.db.entity.Card;
+import rk.device.launcher.db.entity.CodePassword;
+import rk.device.launcher.db.entity.Face;
+import rk.device.launcher.db.entity.Finger;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.mvp.MVPBaseActivity;
@@ -199,7 +206,7 @@ public class Person_addActivity
                     user.setStartTime(TimeUtils.string2Millis(tvTimeStart.getText().toString().trim()));
                     user.setEndTime(TimeUtils.string2Millis(tvTimeEnd.getText().toString().trim()));
                     DbHelper.insertUser(user);
-                    Log.i("SyncPersonUtils","SyncPersonUtils btn_finish_setting");
+                    Log.i("SyncPersonUtils", "SyncPersonUtils btn_finish_setting");
                     SyncPersonUtils.getInstance().syncPerosn();
                 }
                 finish();
@@ -250,9 +257,9 @@ public class Person_addActivity
     private void doDeleteUser() {
         JSONObject params = new JSONObject();
         try {
-            params.put("access_token",SPUtils.getString(Constant.ACCENT_TOKEN));
-            params.put("uuid",deviceUuidFactory.getUuid());
-            params.put("peopleId",user.getUniqueId());
+            params.put("access_token", SPUtils.getString(Constant.ACCENT_TOKEN));
+            params.put("uuid", deviceUuidFactory.getUuid());
+            params.put("peopleId", user.getUniqueId());
         } catch (JSONException e) {
         }
         BaseApiImpl.deleteUser(params).subscribe(new Subscriber<Object>() {
@@ -362,19 +369,38 @@ public class Person_addActivity
                         return;
                     }
                 }
-                if (StringUtils.isEmpty(content)) {
-                    content = "0";
-                }
-                List<User> users = DbHelper.queryByPassword(content);
-                if (users.isEmpty() || content.equals("0")) {
-                    user.setPassWord(Integer.parseInt(content));
-                    user.setUploadStatus(0);
-                    DbHelper.insertUser(user);
+                List<CodePassword> oldPassword = CodePasswordHelper.getPassword(content);
+                if (oldPassword.isEmpty()) {                        //此密码不存在
+                    List<CodePassword> codePasswords = CodePasswordHelper.getList(user.getUniqueId());
+                    if (StringUtils.isEmpty(content)) {
+                        if (!codePasswords.isEmpty()) {     //删除密码
+                            CodePasswordHelper.update(codePasswords.get(0).getId(), "", 4, 0, 0);
+                            mPresenter.deletePassWord(CodePasswordHelper.getList(user.getUniqueId()).get(0));
+                        }
+                    } else {
+                        if (!codePasswords.isEmpty()) {     //更新密码
+                            CodePasswordHelper.update(codePasswords.get(0).getId(), content, 3, 0, 0);
+                            mPresenter.editPassWord(CodePasswordHelper.getList(user.getUniqueId()).get(0));
+                        } else {                           //新增密码
+                            CodePasswordHelper.insert(user.getUniqueId(), content, 2, 0, 0);
+                            mPresenter.addPassWord(CodePasswordHelper.getList(user.getUniqueId()).get(0));
+                        }
+                    }
                     dialogFragment.dismiss();
                     loadUser();
                 } else {
                     dialogFragment.showError(getString(R.string.pwd_ishave));
                 }
+//                List<User> users = DbHelper.queryByPassword(content);
+//                if (users.isEmpty() || content.equals("0")) {
+//                    user.setPassWord(Integer.parseInt(content));
+//                    user.setUploadStatus(0);
+//                    DbHelper.insertUser(user);
+//                    dialogFragment.dismiss();
+//                    loadUser();
+//                } else {
+//                    dialogFragment.showError(getString(R.string.pwd_ishave));
+//                }
             }, false);
             dialogFragment.show(getSupportFragmentManager(), "");
         }
@@ -413,8 +439,10 @@ public class Person_addActivity
             return;
         }
         user = DbHelper.queryUserById(user.getUniqueId()).get(0);
-        faceText.setText(getType(user.getFaceID(), faceLayout));
-        if (user.getPassWord() != 0) {
+        List<Face> faces = FaceHelper.getList(user.getUniqueId());
+        faceText.setText(getType(faces, faceLayout));
+        List<CodePassword> passwords = CodePasswordHelper.getList(user.getUniqueId());
+        if (!passwords.isEmpty()) {
             passLayout.setBackgroundColor(Color.parseColor("#302d85"));
             passMessage.setText(R.string.pwd_all);
             passText.setText(R.string.add_suress);
@@ -423,23 +451,25 @@ public class Person_addActivity
             passText.setText(R.string.no_add);
             passLayout.setBackgroundColor(Color.parseColor("#30374b"));
         }
-        if (!StringUtils.isEmpty(user.getCardNo())) {
+        List<Card> cards = CardHelper.getList(user.getUniqueId());
+        if (!cards.isEmpty()) {
             cardMessage.setText(String.valueOf(getString(R.string.card_num) + user.getCardNo()));
         } else {
             cardMessage.setText(R.string.card_null);
         }
-        cardText.setText(getType(user.getCardNo(), cardLayout));
-        fingerText01.setText(getType(user.getFingerID1(), fingerLayout01));
-        fingerText02.setText(getType(user.getFingerID2(), fingerLayout02));
-        fingerText03.setText(getType(user.getFingerID3(), fingerLayout03));
+        cardText.setText(getType(cards, cardLayout));
+        List<Finger> fingers = rk.device.launcher.db.FingerHelper.getList(user.getUniqueId());
+//        fingerText01.setText(getType(user.getFingerID1(), fingerLayout01));
+//        fingerText02.setText(getType(user.getFingerID2(), fingerLayout02));
+//        fingerText03.setText(getType(user.getFingerID3(), fingerLayout03));
     }
 
 
     /**
      * 判断数据是否存在，返回显示
      */
-    private String getType(String message, View view) {
-        if (StringUtils.isEmpty(message)) {
+    private String getType(List message, View view) {
+        if (message.isEmpty()) {
             view.setBackgroundColor(Color.parseColor("#30374b"));
             return getString(R.string.no_add);
         } else {

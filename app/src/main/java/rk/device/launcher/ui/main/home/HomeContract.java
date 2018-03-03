@@ -34,5 +34,8 @@ public class HomeContract {
         NetChangeBroadcastReceiver registerNetReceiver();
 
         void registerNetOffReceiver();
+
+        void getToken();
+
     }
 }

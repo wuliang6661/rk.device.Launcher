@@ -28,7 +28,7 @@ public interface BaseApi {
     /**
      * 天气接口
      */
-    @Headers({ "Content-Type: application/json", "Accept: application/json" })
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
     @GET(ApiName.WEATHER)
     Observable<BaseResult<List<WeatherBO>>> weather(@QueryMap Map<String, Object> params);
 
@@ -50,13 +50,13 @@ public interface BaseApi {
     /**
      * 激活设备接口
      */
-    @POST("/api/v1/public/activation")
+    @POST("/api/v1/device/activation")
     Observable<BaseResult<Object>> activationDiveces(@Body RequestBody requestBody);
 
     /**
      * 获取开门token
      */
-    @POST("/api/v1/public/gettoken")
+    @POST("/api/v1/device/get_token")
     Observable<BaseResult<TokenBo>> getToken(@Body RequestBody requestBody);
 
     /**

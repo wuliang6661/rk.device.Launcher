@@ -17,6 +17,7 @@ import rk.device.launcher.api.BaseApiImpl;
 import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.base.JniHandler;
 import rk.device.launcher.bean.DeviceInfoBO;
+import rk.device.launcher.bean.TokenBo;
 import rk.device.launcher.db.DbHelper;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.global.Constant;
@@ -32,6 +33,8 @@ import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.StatSoFiles;
 import rk.device.launcher.utils.Utils;
 import rk.device.launcher.utils.gps.GpsUtils;
+import rk.device.launcher.utils.key.KeyUtils;
+import rk.device.launcher.utils.uuid.DeviceUuidFactory;
 import rk.device.launcher.utils.verify.FaceUtils;
 import rk.device.launcher.utils.verify.OpenUtils;
 import rx.Subscriber;
@@ -121,6 +124,27 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
         // "android.net.wifi.STATE_CHANGE"
         intentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
         mView.getContext().registerReceiver(netOffReceiver, intentFilter);
+    }
+
+    @Override
+    public void getToken() {
+        BaseApiImpl.postToken(new DeviceUuidFactory(mView.getContext()).getUuid().toString(), KeyUtils.getKey())
+                .subscribe(new Subscriber<TokenBo>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(TokenBo tokenBo) {
+                        SPUtils.put(Constant.ACCENT_TOKEN, tokenBo.getAccess_token());
+                    }
+                });
     }
 
 

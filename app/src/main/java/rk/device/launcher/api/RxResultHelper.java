@@ -3,7 +3,14 @@ package rk.device.launcher.api;
 import android.util.Log;
 
 import rk.device.launcher.bean.BaseResult;
+import rk.device.launcher.bean.TokenBo;
+import rk.device.launcher.global.Constant;
+import rk.device.launcher.utils.SPUtils;
+import rk.device.launcher.utils.Utils;
+import rk.device.launcher.utils.key.KeyUtils;
+import rk.device.launcher.utils.uuid.DeviceUuidFactory;
 import rx.Observable;
+import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -26,14 +33,36 @@ public class RxResultHelper {
                                 Log.d(TAG, "call_button() called with: baseResult = [" + baseResult + "]");
                                 if (baseResult.getResult() == 0) {
                                     return createData(baseResult.getData());
-                                } else {
-                                    return Observable.error(new RuntimeException(String.valueOf(baseResult.getResult())));
+                                } else if (baseResult.getResult() == 4) {   //token失效，重新获取
+                                    getToken();
                                 }
+                                return Observable.error(new RuntimeException(String.valueOf(baseResult.getResult())));
                             }
                         }
                 ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
             }
         };
+    }
+
+
+    public static void getToken() {
+        BaseApiImpl.postToken(new DeviceUuidFactory(Utils.getContext()).getUuid().toString(), KeyUtils.getKey())
+                .subscribe(new Subscriber<TokenBo>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(TokenBo tokenBo) {
+                        SPUtils.put(Constant.ACCENT_TOKEN, tokenBo.getAccess_token());
+                    }
+                });
     }
 
 

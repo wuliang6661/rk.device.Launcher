@@ -45,7 +45,7 @@ public class FaceHelper {
         face.setStatus(status);
         face.setBeginTime(beginTime);
         face.setEndTime(endTime);
-        face.setUpdateTime(TimeUtils.getTimeStamp());
+        face.setCreateTime(TimeUtils.getTimeStamp());
         try {
             long rowId = getFaceDao().insert(face);
             return true;
@@ -60,7 +60,7 @@ public class FaceHelper {
      * 
      * @param
      */
-    public static int update(int id, String faceId, int status, int beginTime, int endTime) {
+    public static int update(long id, String faceId, int status, int beginTime, int endTime) {
         Query<Face> query = getFaceDao().queryBuilder()
                 .whereOr(FaceDao.Properties.Id.eq(id), FaceDao.Properties.Status
                         .in(Constant.TO_BE_UPDATE, Constant.NORMAL, Constant.TO_BE_ADD))
@@ -109,4 +109,6 @@ public class FaceHelper {
                 .build();
         return query.list();
     }
+
+
 }
