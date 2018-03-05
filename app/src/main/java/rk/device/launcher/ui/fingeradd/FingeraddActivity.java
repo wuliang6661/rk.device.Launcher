@@ -614,26 +614,11 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
         } catch (JSONException e) {
         }
         if (finger.getStatus() == Constant.TO_BE_UPDATE) {
-            BaseApiImpl.editFinger(params).subscribe(new Subscriber<Object>() {
-                @Override
-                public void onCompleted() {
-
-                }
-
-                @Override
-                public void onError(Throwable e) {
-
-                }
-
-                @Override
-                public void onNext(Object o) {
-                    Finger editFinger = FingerPrintHelper.queryOne(eUser.getUniqueId(), number);
-                    if (editFinger != null) {
-                        FingerPrintHelper.update(editFinger.getId(), editFinger.getFingerId(),
-                                editFinger.getFingerName(), Constant.NORMAL, 0, 0);
-                    }
-                }
-            });
+            Finger editFinger = FingerPrintHelper.queryOne(eUser.getUniqueId(), number);
+            if (editFinger != null) {
+                FingerPrintHelper.update(editFinger.getId(), editFinger.getFingerId(),
+                        editFinger.getFingerName(), Constant.NORMAL, 0, 0);
+            }
         } else if (finger.getStatus() == Constant.TO_BE_ADD) {
             BaseApiImpl.addFinger(params).subscribe(new Subscriber<Object>() {
                 @Override
