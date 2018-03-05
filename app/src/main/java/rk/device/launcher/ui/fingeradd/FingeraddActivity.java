@@ -15,10 +15,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import butterknife.Bind;
 import peripherals.FingerConstant;
 import peripherals.FingerHelper;
 import rk.device.launcher.R;
+import rk.device.launcher.api.BaseApiImpl;
 import rk.device.launcher.api.T;
 import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.bean.event.FingerRegisterProgressEvent;
@@ -29,8 +33,10 @@ import rk.device.launcher.global.Constant;
 import rk.device.launcher.mvp.MVPBaseActivity;
 import rk.device.launcher.ui.fragment.InputWifiPasswordDialogFragment;
 import rk.device.launcher.utils.LogUtil;
+import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.WindowManagerUtils;
 import rk.device.launcher.utils.rxjava.RxBus;
+import rk.device.launcher.utils.uuid.DeviceUuidFactory;
 import rk.device.launcher.utils.verify.VerifyUtils;
 import rx.Subscriber;
 
@@ -40,13 +46,12 @@ import rx.Subscriber;
 
 public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, FingeraddPresenter>
         implements FingeraddContract.View, View.OnClickListener {
-    private static final int    MSG_FINGER_ADD       = 1001;               //添加指纹信息
-    private static final int    MSG_READ_FINGER_INFO = 1002;               //读取指纹信息
-    private static final int    MSG_DELETE_FINGER    = 1003;               //删除指纹信息
+    private static final int    MSG_FINGER_ADD       = 1001;                       //添加指纹信息
+    private static final int    MSG_READ_FINGER_INFO = 1002;                       //读取指纹信息
+    private static final int    MSG_DELETE_FINGER    = 1003;                       //删除指纹信息
     private static final String EXTRA_UNIQUEID       = "uniqueId";
     private static final String EXTRA_NUMBER         = "number";
     private static final String TAG                  = "FingerAddActivity";
-    private static final String FINGER_ERROR         = "fingerError";      //录入失败
     @Bind(R.id.ll_button)
     LinearLayout                buttonLL;
     @Bind(R.id.ll_finger_notice)
@@ -58,7 +63,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
     @Bind(R.id.tv_save)
     TextView                    saveTv;
     @Bind(R.id.iv_search)
-    ImageView                   deleteImg;                                 //删除按钮
+    ImageView                   deleteImg;                                         //删除按钮
     @Bind(R.id.img_finger)
     ImageView                   fingerImg;
     private String              uniqueId             = "";
@@ -69,6 +74,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
     private boolean             isChange             = false;
     private boolean             isAdd                = false;
     private String              fingerName           = null;
+    private DeviceUuidFactory   factory              = new DeviceUuidFactory(this);
 
     @Override
     protected int getLayout() {
@@ -249,12 +255,13 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
         Finger finger = FingerPrintHelper.queryOne(uniqueId, number);
         String title;
         if (finger != null) {
+            fingerName = finger.getFingerName();
             isDetail = true;
             deleteImg.setVisibility(View.VISIBLE);
             deleteImg.setImageDrawable(getResources().getDrawable(R.mipmap.delete));
             buttonLL.setVisibility(View.VISIBLE);
             saveTv.setVisibility(View.GONE);
-            noticeTv.setText(fingerName);
+            noticeTv.setText(finger.getFingerName());
             title = getString(R.string.title_finger_detail);
         } else {
             isDetail = false;
@@ -334,6 +341,7 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
             if (doDeleteJniFinger(uId)) {
                 Finger finger = FingerPrintHelper.queryOne(eUser.getUniqueId(), number);
                 FingerPrintHelper.delete(finger);
+                httpDeleteFinger(finger);
                 showToastMsg(getResources().getString(R.string.delete_success));
                 finish();
             } else {
@@ -573,18 +581,88 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
      */
     private void updateUser() {
         Finger finger = FingerPrintHelper.queryOne(uniqueId, number);
-        if(finger==null){
-            FingerPrintHelper.insert(uniqueId, fingerId,number, Constant.TO_BE_ADD,
-                    0, 0);
-        }else{
+        if (finger == null) {
+            FingerPrintHelper.insert(uniqueId, fingerId, fingerName, number, Constant.TO_BE_ADD, 0,
+                    0);
+        } else {
             FingerPrintHelper.update(finger.getId(), fingerId,
                     fingerName == null ? getString(R.string.finger) + number : fingerName,
                     Constant.TO_BE_UPDATE, 0, 0);
         }
+        finger = FingerPrintHelper.queryOne(uniqueId, number);
+        httpUpdateFinger(finger, number);
         showToastMsg(getString(R.string.finger_add_success));
         finish();
     }
 
+    /**
+     * 更新服务端数据
+     *
+     * @param finger
+     * @param number
+     */
+    private void httpUpdateFinger(Finger finger, int number) {
+        User eUser = VerifyUtils.getInstance().queryUserByUniqueId(uniqueId);
+        JSONObject params = new JSONObject();
+        try {
+            params.put("access_token", SPUtils.getString(Constant.ACCENT_TOKEN));
+            params.put("uuid", factory.getUuid());
+            params.put("peopleId", eUser.getUniqueId());
+            params.put("fingerID", finger == null ? "" : finger.getFingerId());
+            params.put("startTime", eUser.getStartTime() / 1000);
+            params.put("endTime", eUser.getEndTime() / 1000);
+        } catch (JSONException e) {
+        }
+        if (finger.getStatus() == Constant.TO_BE_UPDATE) {
+            BaseApiImpl.editFinger(params).subscribe(new Subscriber<Object>() {
+                @Override
+                public void onCompleted() {
+
+                }
+
+                @Override
+                public void onError(Throwable e) {
+
+                }
+
+                @Override
+                public void onNext(Object o) {
+                    Finger editFinger = FingerPrintHelper.queryOne(eUser.getUniqueId(), number);
+                    if (editFinger != null) {
+                        FingerPrintHelper.update(editFinger.getId(), editFinger.getFingerId(),
+                                editFinger.getFingerName(), Constant.NORMAL, 0, 0);
+                    }
+                }
+            });
+        } else if (finger.getStatus() == Constant.TO_BE_ADD) {
+            BaseApiImpl.addFinger(params).subscribe(new Subscriber<Object>() {
+                @Override
+                public void onCompleted() {
+
+                }
+
+                @Override
+                public void onError(Throwable e) {
+
+                }
+
+                @Override
+                public void onNext(Object o) {
+                    Finger editFinger = FingerPrintHelper.queryOne(eUser.getUniqueId(), number);
+                    if (editFinger != null) {
+                        FingerPrintHelper.update(editFinger.getId(), editFinger.getFingerId(),
+                                editFinger.getFingerName(), Constant.NORMAL, 0, 0);
+                    }
+                }
+            });
+        }
+    }
+
+    /**
+     * 判断是否有指纹模块
+     *
+     * @return
+     */
     private boolean checkFingerModular() {
         if (LauncherApplication.sInitFingerSuccess == -1) {
             showMessageDialog(getString(R.string.notice_finger_add));
@@ -592,5 +670,43 @@ public class FingeraddActivity extends MVPBaseActivity<FingeraddContract.View, F
             return false;
         }
         return true;
+    }
+
+    /**
+     * 删除指纹Http
+     * 
+     * @param finger
+     */
+    private void httpDeleteFinger(Finger finger) {
+        User eUser = VerifyUtils.getInstance().queryUserByUniqueId(uniqueId);
+        JSONObject params = new JSONObject();
+        try {
+            params.put("access_token", SPUtils.getString(Constant.ACCENT_TOKEN));
+            params.put("uuid", factory.getUuid());
+            params.put("peopleId", eUser.getUniqueId());
+            params.put("fingerID", finger == null ? "" : finger.getFingerId());
+            params.put("startTime", eUser.getStartTime() / 1000);
+            params.put("endTime", eUser.getEndTime() / 1000);
+        } catch (JSONException e) {
+        }
+        BaseApiImpl.deleteFinger(params).subscribe(new Subscriber<Object>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(Object o) {
+                Finger finger = FingerPrintHelper.queryOne(uniqueId, number);
+                if (finger != null) {
+                    FingerPrintHelper.delete(finger);
+                }
+            }
+        });
     }
 }

@@ -34,7 +34,7 @@ import rx.Observable;
 public class BaseApiImpl {
 
     private static volatile Retrofit mApiRetrofit;
-    private static BaseActivity activity;
+    private static BaseActivity      activity;
 
     /**
      * 动态分配IP地址
@@ -121,7 +121,7 @@ public class BaseApiImpl {
         JSONObject object = new JSONObject();
         try {
             object.put("uuid", uuid);
-//            object.put("mac", mac);
+            //            object.put("mac", mac);
             object.put("mac", "123456");
             object.put("license", license);
             RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),
@@ -173,8 +173,8 @@ public class BaseApiImpl {
             object.put("peopleId", user.getUniqueId());
             object.put("peopleName", user.getName());
             object.put("role", user.getRole());
-//            object.put("startTime", user.getStartTime() / 1000);
-//            object.put("endTime", user.getEndTime() / 1000);
+            //            object.put("startTime", user.getStartTime() / 1000);
+            //            object.put("endTime", user.getEndTime() / 1000);
             if (!StringUtils.isEmpty(url)) {
                 object.put("faceID", url);
             }
@@ -259,7 +259,6 @@ public class BaseApiImpl {
         return apiFactory().deleteCard(requestBody).compose(RxResultHelper.httpResult());
     }
 
-
     /**
      * 增加人脸
      */
@@ -296,7 +295,6 @@ public class BaseApiImpl {
         return apiFactory().addPassword(requestBody).compose(RxResultHelper.httpResult());
     }
 
-
     /**
      * 修改密码
      */
@@ -305,7 +303,6 @@ public class BaseApiImpl {
                 params.toString());
         return apiFactory().editPassword(requestBody).compose(RxResultHelper.httpResult());
     }
-
 
     /**
      * 删除密码
@@ -316,5 +313,40 @@ public class BaseApiImpl {
         return apiFactory().deletePassword(requestBody).compose(RxResultHelper.httpResult());
     }
 
+    /**
+     * 添加指纹
+     * 
+     * @param params
+     * @return
+     */
+    public static Observable<Object> addFinger(JSONObject params) {
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),
+                params.toString());
+        return apiFactory().addFinger(requestBody).compose(RxResultHelper.httpResult());
+    }
+
+    /**
+     * 更新指纹
+     * 
+     * @param params
+     * @return
+     */
+    public static Observable<Object> editFinger(JSONObject params) {
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),
+                params.toString());
+        return apiFactory().editFinger(requestBody).compose(RxResultHelper.httpResult());
+    }
+
+    /**
+     * 删除指纹
+     * 
+     * @param params
+     * @return
+     */
+    public static Observable<Object> deleteFinger(JSONObject params) {
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),
+                params.toString());
+        return apiFactory().deleteFinger(requestBody).compose(RxResultHelper.httpResult());
+    }
 
 }

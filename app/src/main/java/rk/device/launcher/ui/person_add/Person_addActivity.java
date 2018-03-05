@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.InputType;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -26,9 +25,11 @@ import rk.device.launcher.db.CardHelper;
 import rk.device.launcher.db.CodePasswordHelper;
 import rk.device.launcher.db.DbHelper;
 import rk.device.launcher.db.FaceHelper;
+import rk.device.launcher.db.FingerPrintHelper;
 import rk.device.launcher.db.entity.Card;
 import rk.device.launcher.db.entity.CodePassword;
 import rk.device.launcher.db.entity.Face;
+import rk.device.launcher.db.entity.Finger;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.mvp.MVPBaseActivity;
@@ -40,7 +41,6 @@ import rk.device.launcher.utils.FileUtils;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.StringUtils;
 import rk.device.launcher.utils.TimeUtils;
-import rk.device.launcher.utils.TypeTranUtils;
 import rk.device.launcher.utils.cache.CacheUtils;
 import rk.device.launcher.utils.uuid.DeviceUuidFactory;
 import rk.device.launcher.utils.verify.FaceUtils;
@@ -231,17 +231,14 @@ public class Person_addActivity
             FileUtils.deleteFile(CacheUtils.getFaceFile() + "/" + user.getFaceID() + ".png");
         }
         //删除指纹
-        if (!TextUtils.isEmpty(user.getFingerID1())) {
-            FingerHelper.JNIFpDelUserByID(LauncherApplication.fingerModuleID, TypeTranUtils.str2Int(user.getFingerID1()));
+        List<Finger> fingerList = FingerPrintHelper.getList(user.getUniqueId());
+        if(!fingerList.isEmpty()){
+            for (int i = 0;i < fingerList.size();i++){
+                Finger finger = fingerList.get(i);
+                FingerPrintHelper.delete(finger);
+                FingerHelper.JNIFpDelUserByID(LauncherApplication.fingerModuleID, finger.getNumber());
+            }
         }
-        if (!TextUtils.isEmpty(user.getFingerID2())) {
-            FingerHelper.JNIFpDelUserByID(LauncherApplication.fingerModuleID, TypeTranUtils.str2Int(user.getFingerID2()));
-        }
-        if (!TextUtils.isEmpty(user.getFingerID3())) {
-            FingerHelper.JNIFpDelUserByID(LauncherApplication.fingerModuleID, TypeTranUtils.str2Int(user.getFingerID3()));
-        }
-        user.setStatus(Constant.TO_BE_DELETE);
-        DbHelper.update(user);
         dissmissMessageDialog();
         finish();
     }
@@ -421,39 +418,32 @@ public class Person_addActivity
             passText.setText(R.string.no_add);
             passLayout.setBackgroundColor(Color.parseColor("#30374b"));
         }
-        Card card = CardHelper.queryOne(user.getUniqueId());
-        String cardNumber = "";
-        if (card != null) {
-            cardNumber = card.getNumber();
-            cardMessage.setText(String.valueOf(getString(R.string.card_num) + cardNumber));
-        } else {
-            cardMessage.setText(R.string.card_null);
-        }
-        cardText.setText(getType(cardNumber, cardLayout));
-        fingerText01.setText(getType(user.getFingerID1(), fingerLayout01));
-        fingerText02.setText(getType(user.getFingerID2(), fingerLayout02));
-        fingerText03.setText(getType(user.getFingerID3(), fingerLayout03));
+        List<Card> cardList = CardHelper.getList(user.getUniqueId());
+        cardMessage.setText(cardList.isEmpty()?getString(R.string.card_null):String.valueOf(getString(R.string.card_num) + cardList.get(0).getNumber()));
+        cardText.setText(getType(cardList, cardLayout));
+        setFingerText(FingerPrintHelper.queryOne(user.getUniqueId(),1),fingerLayout01,fingerText01);
+        setFingerText(FingerPrintHelper.queryOne(user.getUniqueId(),2),fingerLayout02,fingerText02);
+        setFingerText(FingerPrintHelper.queryOne(user.getUniqueId(),3),fingerLayout03,fingerText03);
     }
 
+    /**
+     * 判断数据是否存在，返回显示
+     */
+    private void setFingerText(Finger finger,RelativeLayout fingerRl, TextView fingerTv) {
+        if (finger == null) {
+            fingerRl.setBackgroundColor(Color.parseColor("#30374b"));
+            fingerTv.setText(getString(R.string.no_add));
+        } else {
+            fingerRl.setBackgroundColor(Color.parseColor("#302d85"));
+            fingerTv.setText(getString(R.string.add_suress));
+        }
+    }
 
     /**
      * 判断数据是否存在，返回显示
      */
     private String getType(List message, View view) {
         if (message.isEmpty()) {
-            view.setBackgroundColor(Color.parseColor("#30374b"));
-            return getString(R.string.no_add);
-        } else {
-            view.setBackgroundColor(Color.parseColor("#302d85"));
-            return getString(R.string.add_suress);
-        }
-    }
-
-    /**
-     * 判断数据是否存在，返回显示
-     */
-    private String getType(String message, View view) {
-        if (StringUtils.isEmpty(message)) {
             view.setBackgroundColor(Color.parseColor("#30374b"));
             return getString(R.string.no_add);
         } else {

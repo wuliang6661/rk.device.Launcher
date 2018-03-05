@@ -32,18 +32,6 @@ public class User implements Serializable {
     @NotNull
     private int               role;                  // 权限类型
 
-    private String            fingerID1;
-
-    private String            fingerName1;
-
-    private String            fingerID2;
-
-    private String            fingerName2;
-
-    private String            fingerID3;
-
-    private String            fingerName3;
-
     private String            faceID;
 
     private int               passWord;
@@ -62,22 +50,15 @@ public class User implements Serializable {
 
     private long              updateTime;
 
-    @Generated(hash = 1771229480)
+    @Generated(hash = 1648016514)
     public User(Long id, @NotNull String uniqueId, @NotNull String name, int role,
-            String fingerID1, String fingerName1, String fingerID2,
-            String fingerName2, String fingerID3, String fingerName3, String faceID,
-            int passWord, String fingerCode, int uploadStatus, int status,
-            long startTime, long endTime, long createTime, long updateTime) {
+            String faceID, int passWord, String fingerCode, int uploadStatus,
+            int status, long startTime, long endTime, long createTime,
+            long updateTime) {
         this.id = id;
         this.uniqueId = uniqueId;
         this.name = name;
         this.role = role;
-        this.fingerID1 = fingerID1;
-        this.fingerName1 = fingerName1;
-        this.fingerID2 = fingerID2;
-        this.fingerName2 = fingerName2;
-        this.fingerID3 = fingerID3;
-        this.fingerName3 = fingerName3;
         this.faceID = faceID;
         this.passWord = passWord;
         this.fingerCode = fingerCode;
@@ -123,54 +104,6 @@ public class User implements Serializable {
 
     public void setRole(int role) {
         this.role = role;
-    }
-
-    public String getFingerID1() {
-        return this.fingerID1;
-    }
-
-    public void setFingerID1(String fingerID1) {
-        this.fingerID1 = fingerID1;
-    }
-
-    public String getFingerName1() {
-        return this.fingerName1;
-    }
-
-    public void setFingerName1(String fingerName1) {
-        this.fingerName1 = fingerName1;
-    }
-
-    public String getFingerID2() {
-        return this.fingerID2;
-    }
-
-    public void setFingerID2(String fingerID2) {
-        this.fingerID2 = fingerID2;
-    }
-
-    public String getFingerName2() {
-        return this.fingerName2;
-    }
-
-    public void setFingerName2(String fingerName2) {
-        this.fingerName2 = fingerName2;
-    }
-
-    public String getFingerID3() {
-        return this.fingerID3;
-    }
-
-    public void setFingerID3(String fingerID3) {
-        this.fingerID3 = fingerID3;
-    }
-
-    public String getFingerName3() {
-        return this.fingerName3;
-    }
-
-    public void setFingerName3(String fingerName3) {
-        this.fingerName3 = fingerName3;
     }
 
     public String getFaceID() {
@@ -244,6 +177,5 @@ public class User implements Serializable {
     public void setUpdateTime(long updateTime) {
         this.updateTime = updateTime;
     }
-
-
+    
 }
