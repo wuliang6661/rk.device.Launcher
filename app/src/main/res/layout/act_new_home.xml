@@ -106,18 +106,19 @@
                 android:scaleType="fitXY"
                 android:src="@drawable/guanggao01" />
 
-            <FrameLayout
+          <!--  <FrameLayout
                 android:id="@+id/frame_layout"
                 android:layout_width="426dp"
                 android:layout_height="match_parent"
-                android:layout_centerInParent="true">
+                android:layout_centerInParent="true">-->
 
                 <SurfaceView
                     android:id="@+id/camera_surfaceview"
-                    android:layout_width="match_parent"
+                    android:layout_width="426dp"
+                    android:layout_centerInParent="true"
                     android:layout_height="match_parent" />
 
-            </FrameLayout>
+            <!--</FrameLayout>-->
         </RelativeLayout>
 
 
@@ -288,18 +289,14 @@
 
         </LinearLayout>
 
-        <RelativeLayout
-            android:layout_width="126dp"
-            android:layout_height="126dp">
 
-            <ImageView
-                android:layout_width="116dp"
-                android:layout_height="116dp"
-                android:layout_centerInParent="true"
-                android:scaleType="fitXY"
-                android:src="@drawable/anniu" />
+        <ImageView
+            android:layout_width="116dp"
+            android:layout_height="116dp"
+            android:layout_centerInParent="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/anniu" />
 
-        </RelativeLayout>
 
     </rk.device.launcher.widget.ArcMenu>
 

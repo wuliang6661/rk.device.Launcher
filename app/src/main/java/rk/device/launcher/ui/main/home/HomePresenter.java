@@ -8,6 +8,8 @@ import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.os.Message;
 
+import com.guo.android_extend.java.AbsLoop;
+
 import java.lang.ref.WeakReference;
 import java.util.List;
 
@@ -19,6 +21,8 @@ import rk.device.launcher.base.JniHandler;
 import rk.device.launcher.bean.DeviceInfoBO;
 import rk.device.launcher.bean.TokenBo;
 import rk.device.launcher.db.DbHelper;
+import rk.device.launcher.db.FaceHelper;
+import rk.device.launcher.db.entity.Face;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.global.VerifyTypeConstant;
@@ -252,9 +256,9 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
             if (mView != null) {
                 mView.hasPerson(true);
             }
-            List<User> users = DbHelper.queryByFaceId(name);
-            if (!users.isEmpty()) {
-                openDoor(users.get(0));
+            List<Face> faces = FaceHelper.getListByfaceId(name);
+            if (!faces.isEmpty()) {
+                openDoor(DbHelper.queryUserById(faces.get(0).getPersonId()).get(0));
             }
         });
     }
@@ -302,17 +306,27 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
 
     private int isHasPerson = 0;   //连续5次检测到没人，关闭摄像头
     private boolean isStopThread = false;
+    MdThread mdThread;
 
     /**
      * 启动人体红外检测
      */
     @Override
     public void initCallBack(int cvcStatus, int LedStatus, int NfcStatus, int fingerStatus) {
-        MdThread mdThread = new MdThread(this);
+        mdThread = new MdThread(this);
         mdThread.start();
     }
 
-    private static class MdThread extends Thread {
+
+    /**
+     * 红外停止
+     */
+    void stopPer() {
+        mdThread.shutdown();
+    }
+
+
+    private static class MdThread extends AbsLoop {
 
         WeakReference<HomePresenter> weakReference;
         int[] mdStaus;
@@ -323,8 +337,12 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
         }
 
         @Override
-        public void run() {
-            super.run();
+        public void setup() {
+
+        }
+
+        @Override
+        public void loop() {
             HomePresenter presenter = weakReference.get();
             if (presenter == null) {
                 return;
@@ -343,6 +361,11 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
                     }
                 }
             }
+        }
+
+        @Override
+        public void over() {
+
         }
     }
 }

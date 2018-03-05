@@ -8,6 +8,8 @@ import java.util.List;
 
 import rk.device.launcher.db.entity.CodePassword;
 import rk.device.launcher.db.entity.CodePasswordDao;
+import rk.device.launcher.db.entity.Face;
+import rk.device.launcher.db.entity.FaceDao;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.utils.TimeUtils;
 
@@ -121,5 +123,7 @@ public class CodePasswordHelper {
                 .build();
         return query.list();
     }
+
+
 
 }

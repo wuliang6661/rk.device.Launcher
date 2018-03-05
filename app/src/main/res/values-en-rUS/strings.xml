@@ -418,5 +418,8 @@
     <string name="auto_time_update">Automatic update time</string>
     <string name="illeagel_user">用户已过期，重新录入用户</string>
     <string name="notice_nfc_add">将卡靠近刷卡感应器</string>
-
+    <string name="face">Face</string>
+    <string name="password">Password</string>
+    <string name="card">Card</string>
+    <string name="fingerprint">Fingerprint</string>
 </resources>

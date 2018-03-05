@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="rk.device.launcher">
+    package="rk.device.launcher"
+    android:sharedUserId="android.uid.system">
     <!-- android:sharedUserId="android.uid.system" -->
 
 
@@ -216,9 +217,9 @@
         <!--激活码激活页面-->
         <activity
             android:name=".ui.key.KeyActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
 
-            </activity>
+        </activity>
 
         <!--输入管理员密码页面-->
         <activity

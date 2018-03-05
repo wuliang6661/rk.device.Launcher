@@ -9,7 +9,9 @@ import rk.device.launcher.api.BaseApiImpl;
 import rk.device.launcher.db.DbHelper;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.global.Constant;
+import rk.device.launcher.utils.Utils;
 import rk.device.launcher.utils.cache.CacheUtils;
+import rk.device.launcher.utils.uuid.DeviceUuidFactory;
 import rx.Subscriber;
 
 /**
@@ -22,10 +24,7 @@ public class SyncPersonUtils {
 
     private static SyncPersonUtils syncPersonUtils;
 
-<<<<<<< HEAD
     private DeviceUuidFactory factory = new DeviceUuidFactory(Utils.getContext());
-=======
->>>>>>> eb6742682c48ee2418070276304577b9e2be0018
 
     public static SyncPersonUtils getInstance() {
         if (syncPersonUtils == null) {
@@ -45,19 +44,16 @@ public class SyncPersonUtils {
         new Thread(new Runnable() {
             @Override
             public void run() {
-<<<<<<< HEAD
 //                Log.i("edit", "editperson");
 //                List<User> users = DbHelper.queryUserByUpdate();
 //                Log.i("SyncPersonUtils", "SyncPersonUtils size:" + users.size());
 //                if (!users.isEmpty()) {
                 updatePerson(user, null);
 //                }
-=======
                 List<User> users = DbHelper.queryUserByUpdate();
                 if (!users.isEmpty()) {
                     updatePerson(users.get(0), null);
                 }
->>>>>>> eb6742682c48ee2418070276304577b9e2be0018
             }
         }).start();
     }

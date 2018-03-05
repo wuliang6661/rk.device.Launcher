@@ -16,11 +16,14 @@ import java.util.List;
 
 import butterknife.Bind;
 import rk.device.launcher.R;
+import rk.device.launcher.db.CodePasswordHelper;
 import rk.device.launcher.db.DbHelper;
+import rk.device.launcher.db.entity.CodePassword;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.global.VerifyTypeConstant;
 import rk.device.launcher.mvp.MVPBaseActivity;
 import rk.device.launcher.utils.ResUtil;
+import rk.device.launcher.utils.StringUtils;
 import rk.device.launcher.utils.verify.OpenUtils;
 import rk.device.launcher.widget.lgrecycleadapter.LGRecycleViewAdapter;
 import rk.device.launcher.widget.lgrecycleadapter.LGViewHolder;
@@ -152,14 +155,15 @@ public class NumpasswordActivity extends MVPBaseActivity<NumpasswordContract.Vie
                 break;
             case R.id.call_commit:    //确定密码
                 String[] passwords = commitText.toString().split("#");
-                List<User> users = DbHelper.queryByPassword(passwords[passwords.length - 1]);
-                if (users.isEmpty()) {
+                List<CodePassword> passwords1 = CodePasswordHelper.getPassword(passwords[passwords.length - 1]);
+                if (passwords1.isEmpty()) {
                     showMessageDialog(getString(R.string.pwd_error_hint));
                 } else {
-                    if (users.get(0).getPassWord() == 0) {
+                    if (StringUtils.isEmpty(passwords1.get(0).getPassword())) {
                         showMessageDialog(getString(R.string.pwd_error_hint));
                         return;
                     }
+                    List<User> users = DbHelper.queryUserById(passwords1.get(0).getPersonId());
                     long time = System.currentTimeMillis();
                     if (users.get(0).getStartTime() < time && users.get(0).getEndTime() > time) {    //在有效时间内，则开门
                         OpenUtils.getInstance().open(VerifyTypeConstant.TYPE_PASSWORD, users.get(0).getUniqueId(), users.get(0).getName());

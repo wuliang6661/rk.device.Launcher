@@ -29,7 +29,7 @@ public class FaceHelper {
 
     /**
      * 此处需要返回insert之后的反馈，不然无法知道是否insert成功
-     * 
+     *
      * @param personId
      * @param faceId
      * @param status
@@ -57,7 +57,7 @@ public class FaceHelper {
 
     /**
      * 更新
-     * 
+     *
      * @param
      */
     public static int update(long id, String faceId, int status, int beginTime, int endTime) {
@@ -98,13 +98,25 @@ public class FaceHelper {
 
     /**
      * 人脸列表
-     * 
+     *
      * @param personId
      * @return
      */
     public static List<Face> getList(String personId) {
         Query<Face> query = getFaceDao().queryBuilder()
                 .where(FaceDao.Properties.PersonId.eq(personId), FaceDao.Properties.Status
+                        .in(Constant.TO_BE_UPDATE, Constant.NORMAL, Constant.TO_BE_ADD))
+                .build();
+        return query.list();
+    }
+
+
+    /**
+     * 根据faceId查询人脸
+     */
+    public static List<Face> getListByfaceId(String faceId) {
+        Query<Face> query = getFaceDao().queryBuilder()
+                .where(FaceDao.Properties.FaceId.eq(faceId), FaceDao.Properties.Status
                         .in(Constant.TO_BE_UPDATE, Constant.NORMAL, Constant.TO_BE_ADD))
                 .build();
         return query.list();

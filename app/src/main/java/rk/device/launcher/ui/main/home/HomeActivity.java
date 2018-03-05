@@ -11,7 +11,6 @@ import android.text.TextUtils;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -83,8 +82,8 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
     ImageView guanggao01;
     @Bind(R.id.camera_surfaceview)
     SurfaceView surfaceview;
-    @Bind(R.id.frame_layout)
-    FrameLayout frameLayout;
+    //    @Bind(R.id.frame_layout)
+//    FrameLayout frameLayout;
     @Bind(R.id.guanggao02)
     ImageView guanggao02;
     @Bind(R.id.guanggao03)
@@ -297,6 +296,7 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
         SurfaceHolderCaremaFont.stopCarema();
         SurfaceHolderCaremaBack.stopCarema();
         mPresenter.deInitJni();
+        mPresenter.stopPer();
         mPresenter.unRegisterReceiver(this);
         FaceUtils.getInstance().stopFaceFR();
         FaceUtils.getInstance().destory();
@@ -457,16 +457,16 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
     public void hasPerson(boolean hasPerson) {
         runOnUiThread(() -> {
             if (hasPerson) {
-                if (frameLayout != null && frameLayout.getVisibility() == View.GONE) {
-                    frameLayout.setVisibility(View.VISIBLE);
+                if (surfaceview != null && surfaceview.getVisibility() == View.GONE) {
+                    surfaceview.setVisibility(View.VISIBLE);
                     JniHandler handler = JniHandler.getInstance();
                     Message message = Message.obtain();
                     message.what = EventUtil.MEDIA_OPEN;
                     handler.sendMessage(message);
                 }
             } else {
-                if (frameLayout != null && frameLayout.getVisibility() == View.VISIBLE) {
-                    frameLayout.setVisibility(View.GONE);
+                if (surfaceview != null && surfaceview.getVisibility() == View.VISIBLE) {
+                    surfaceview.setVisibility(View.GONE);
                     JniHandler handler = JniHandler.getInstance();
                     Message message = Message.obtain();
                     message.what = EventUtil.MEDIA_CLOSE;
