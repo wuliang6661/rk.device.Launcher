@@ -1,7 +1,6 @@
 package rk.device.launcher.utils.verify;
 
 import java.io.File;
-import java.util.List;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -50,10 +49,6 @@ public class SyncPersonUtils {
 //                if (!users.isEmpty()) {
                 updatePerson(user, null);
 //                }
-                List<User> users = DbHelper.queryUserByUpdate();
-                if (!users.isEmpty()) {
-                    updatePerson(users.get(0), null);
-                }
             }
         }).start();
     }

@@ -37,11 +37,12 @@ public class FingerPrintHelper {
      * @param endTime
      * @return
      */
-    public static boolean insert(String personId, int fingerId, int number, int status,
+    public static boolean insert(String personId, int fingerId, String fingerName,int number, int status,
                                  int beginTime, int endTime) {
         Finger card = new Finger();
         card.setPersonId(personId);
         card.setFingerId(fingerId);
+        card.setFingerName(fingerName);
         card.setNumber(number);
         card.setStatus(status);
         card.setBeginTime(beginTime);

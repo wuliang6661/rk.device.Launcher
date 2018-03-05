@@ -120,6 +120,7 @@ public class SocketService extends Service {
                                           JSONObject params = new JSONObject();
                                           try {
                                               params.put("uuid", deviceUuidFactory.getUuid());
+                                              params.put("access_token",SPUtils.getString(Constant.ACCENT_TOKEN));
                                               params.put("mac", FileUtils
                                                       .readFile2String("/proc/board_sn", "UTF-8"));
                                               params.put("hw_ver", Build.HARDWARE);
