@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -38,13 +37,13 @@ public class VerifyNoticeDialogFragment extends BaseDialogFragment {
      * 获取dialog对象
      */
     public static VerifyNoticeDialogFragment newInstance() {
-//        if (dialogFragment == null) {
-//            synchronized (VerifyNoticeDialogFragment.class) {
-//                if (dialogFragment == null) {
-        dialogFragment = new VerifyNoticeDialogFragment();
-//                }
-//            }
-//        }
+        if (dialogFragment == null) {
+            synchronized (VerifyNoticeDialogFragment.class) {
+                if (dialogFragment == null) {
+                    dialogFragment = new VerifyNoticeDialogFragment();
+                }
+            }
+        }
         return dialogFragment;
     }
 

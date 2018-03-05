@@ -22,7 +22,6 @@ import rk.device.launcher.db.entity.Face;
 import rk.device.launcher.db.entity.Record;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.global.VerifyTypeConstant;
-import rk.device.launcher.utils.AppManager;
 import rk.device.launcher.utils.MD5;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.SoundPlayUtils;
@@ -237,11 +236,7 @@ public class OpenUtils {
      * 使用本地jni方法开门
      */
     public synchronized void openDoorJni(int type, String personId, String personName) {
-//        RxBus.getDefault().post(new OpenDoorSuccessEvent(personName, type, 1));
-//        if (SPUtils.getBoolean(Constant.DEVICE_MP3, true)) {
-//            soundPlayUtils.play(3);
-//        }
-        AppManager.getAppManager().goBackMain();
+//        AppManager.getAppManager().goBackMain();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -273,11 +268,6 @@ public class OpenUtils {
                     if (relayOn == 0) {
                         openDoorSuress = true;
                         openDoor(SPUtils.getString(Constant.ACCENT_TOKEN),type,personId,personName);
-//                        justTime = System.currentTimeMillis();
-//                        String data = openStatus(type, personId);
-//                        syncRecords(SPUtils.getString(Constant.ACCENT_TOKEN), type, personId, personName, TimeUtils.getTimeStamp(),
-//                                            data);
-//                        insertToLocalDB(type, personId, personName, TimeUtils.getTimeStamp(), data);
                     } else {
                         openDoorSuress = false;
                     }

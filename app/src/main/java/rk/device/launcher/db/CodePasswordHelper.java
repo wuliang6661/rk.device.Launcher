@@ -8,8 +8,6 @@ import java.util.List;
 
 import rk.device.launcher.db.entity.CodePassword;
 import rk.device.launcher.db.entity.CodePasswordDao;
-import rk.device.launcher.db.entity.Face;
-import rk.device.launcher.db.entity.FaceDao;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.utils.TimeUtils;
 
@@ -118,7 +116,7 @@ public class CodePasswordHelper {
      */
     public static List<CodePassword> getPassword(String password){
         Query<CodePassword> query = getCodePasswordDao().queryBuilder()
-                .whereOr(CodePasswordDao.Properties.Password.eq(password), CodePasswordDao.Properties.Status
+                .where(CodePasswordDao.Properties.Password.eq(password), CodePasswordDao.Properties.Status
                         .in(Constant.TO_BE_UPDATE, Constant.NORMAL, Constant.TO_BE_ADD))
                 .build();
         return query.list();
