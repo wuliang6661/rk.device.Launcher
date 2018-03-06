@@ -67,6 +67,7 @@ public class LauncherApplication extends Application {
 
     /**
      * 当前指纹模块
+     * -3 指纹模块未启动，或者没有指纹模块
      */
     public static int fingerModuleID;
 

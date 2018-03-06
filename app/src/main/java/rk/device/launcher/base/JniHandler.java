@@ -146,11 +146,11 @@ public class JniHandler extends Handler {
         if (fingerStatus <= 0) {
             fingerStatus = FingerHelper.JNIFpInit();
             LauncherApplication.fingerModuleID = fingerStatus;
-            LauncherApplication.totalUserCount = FingerHelper.JNIFpGetTotalUser(fingerStatus);
-            LauncherApplication.remainUserCount = FingerHelper.JNIFpGetRemainSpace(fingerStatus);
-            Log.i("JniHandler", "fingerStatus " + fingerStatus);
+            Log.i("wuliang", "fingerStatus " + fingerStatus);
             if (fingerStatus > 0) {
                 LauncherApplication.sInitFingerSuccess = 0;
+                LauncherApplication.totalUserCount = FingerHelper.JNIFpGetTotalUser(fingerStatus);
+                LauncherApplication.remainUserCount = FingerHelper.JNIFpGetRemainSpace(fingerStatus);
             }
         }
         if (NfcStatus != 0) {
@@ -204,7 +204,9 @@ public class JniHandler extends Handler {
      */
     private void deInitJni() {
         CvcHelper.CVC_deinit();
-        int fingerStatus = FingerHelper.JNIFpDeInit(LauncherApplication.fingerModuleID);
+        if(LauncherApplication.fingerModuleID != -1){
+            FingerHelper.JNIFpDeInit(LauncherApplication.fingerModuleID);
+        }
         LogUtil.d("wuliang", "fingerStatus == " + fingerStatus);
         LedHelper.PER_ledDeinit();
         MdHelper.PER_mdDeinit();
