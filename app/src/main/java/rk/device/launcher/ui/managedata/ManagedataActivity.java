@@ -94,7 +94,8 @@ public class ManagedataActivity extends MVPBaseActivity<ManagedataContract.View,
 
     @Override
     public void hideProgress() {
-        if (mProgressDialog != null)
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
+        }
     }
 }

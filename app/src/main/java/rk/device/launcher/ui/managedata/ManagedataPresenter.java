@@ -24,6 +24,7 @@ import rk.device.launcher.ui.managedata.bean.OpenDoorTypeBean;
 import rk.device.launcher.ui.managedata.popup.SelectTypePopupWindow;
 import rk.device.launcher.ui.managedata.rv.ManageDataItemDecoration;
 import rk.device.launcher.ui.managedata.rv.ManageDataRvAdapter;
+import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.MD5;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
@@ -40,6 +41,7 @@ public class ManagedataPresenter extends BasePresenterImpl<ManagedataContract.Vi
     private ManageDataRvAdapter mRvAdapter;
     private List<Record> mDataList;
     private SelectTypePopupWindow mSelectTypePopupWindow;
+    private static final String TAG = "ManagedataPresenter";
 
     @Override
     public void goToSearchActivity() {
@@ -95,8 +97,10 @@ public class ManagedataPresenter extends BasePresenterImpl<ManagedataContract.Vi
                 .subscribe(new Action1<List<Record>>() {
                     @Override
                     public void call(List<Record> records) {
-                        if (mView != null)
+                        LogUtil.d(TAG, "records.size() = " + records.size());
+                        if (mView != null) {
                             mView.hideProgress();
+                        }
                         mDataList.clear();
                         Collections.reverse(records);
                         mDataList.addAll(records);

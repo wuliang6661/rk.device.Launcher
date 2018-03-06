@@ -1,7 +1,6 @@
 package rk.device.launcher.utils;
 
 import android.text.TextUtils;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -24,6 +23,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import rk.device.launcher.utils.cache.CacheUtils;
 
 /**
  * <pre>
@@ -1366,6 +1366,14 @@ public class FileUtils {
             LogUtil.e(TAG, "设置权限失败, filePath = " + filePath);
             e.printStackTrace();
         }
+    }
+
+    private static final String DB_NAME = CacheUtils.DB_PATH;
+    private static final String DB_PATH_JOUR = CacheUtils.DB_PATH_JOUR;
+
+    public static void setDbFilePermission() {
+        setPermission(DB_NAME);
+        setPermission(DB_PATH_JOUR);
     }
 
 
