@@ -292,6 +292,9 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
         if (orientationUtils != null) {
             orientationUtils.releaseListener();
         }
+        stopService(new Intent(this, SocketService.class));
+        stopService(new Intent(this, VerifyService.class));
+        stopService(new Intent(this, AppHttpServerService.class));
         mStaticHandler.removeCallbacksAndMessages(null);
         SurfaceHolderCaremaFont.stopCarema();
         SurfaceHolderCaremaBack.stopCarema();
@@ -300,9 +303,6 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
         mPresenter.unRegisterReceiver(this);
         FaceUtils.getInstance().stopFaceFR();
         FaceUtils.getInstance().destory();
-        stopService(new Intent(this, SocketService.class));
-        stopService(new Intent(this, VerifyService.class));
-        stopService(new Intent(this, AppHttpServerService.class));
         super.onDestroy();
     }
 
