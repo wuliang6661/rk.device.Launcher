@@ -73,8 +73,6 @@ public class ManagedataActivity extends MVPBaseActivity<ManagedataContract.View,
         });
         mTvPop.setOnClickListener(mPopupListener);
         mIvArrow.setOnClickListener(mPopupListener);
-
-
     }
 
     @Override
@@ -96,6 +94,7 @@ public class ManagedataActivity extends MVPBaseActivity<ManagedataContract.View,
 
     @Override
     public void hideProgress() {
-        mProgressDialog.dismiss();
+        if (mProgressDialog != null)
+            mProgressDialog.dismiss();
     }
 }

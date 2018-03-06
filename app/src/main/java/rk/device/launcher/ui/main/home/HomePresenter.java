@@ -306,7 +306,7 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
 
     private int isHasPerson = 0;   //连续5次检测到没人，关闭摄像头
     private boolean isStopThread = false;
-    MdThread mdThread;
+    static MdThread mdThread;
 
     /**
      * 启动人体红外检测
@@ -321,10 +321,11 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
     /**
      * 红外停止
      */
-    void stopPer() {
-        mdThread.shutdown();
+    public static void stopPer() {
+        if (mdThread != null) {
+            mdThread.shutdown();
+        }
     }
-
 
     private static class MdThread extends AbsLoop {
 

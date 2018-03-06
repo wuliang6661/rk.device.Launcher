@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.SystemClock;
 import android.util.Log;
 
 import java.io.File;
@@ -83,10 +84,9 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
             // 如果用户没有处理则让系统默认的异常处理器来处理
             mDefaultHandler.uncaughtException(thread, ex);
         } else {
-//            SystemClock.sleep(3000);
-//            // 退出程序
-//            android.os.Process.killProcess(android.os.Process.myPid());
-//            System.exit(1);
+            SystemClock.sleep(3000);
+            // 退出程序
+            new CrashUtils().reboot();
         }
     }
 
@@ -106,7 +106,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
             collectDeviceInfo(mContext);
             // 保存日志文件
             saveCrashInfoFile(ex);
-//            SystemClock.sleep(3000);
+            SystemClock.sleep(3000);
         } catch (Exception e) {
             e.printStackTrace();
         }

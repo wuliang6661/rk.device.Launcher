@@ -13,6 +13,7 @@ import rk.device.launcher.R;
 import rk.device.launcher.crash.CrashHandler;
 import rk.device.launcher.service.SocketService;
 import rk.device.launcher.service.VerifyService;
+import rk.device.launcher.ui.main.home.HomePresenter;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.PackageUtils;
 import rk.device.launcher.utils.SPUtils;
@@ -178,6 +179,7 @@ public class LauncherApplication extends Application {
             SurfaceHolderCaremaBack.stopCarema();
             FaceUtils.getInstance().stopFaceFR();
             deInitJni();
+            HomePresenter.stopPer();
             FaceUtils.getInstance().destory();
         }
 

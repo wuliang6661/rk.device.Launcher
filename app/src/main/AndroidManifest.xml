@@ -281,12 +281,12 @@
 
 
         <!-- 个推 -->
-        <service
-            android:name=".service.RKLauncherPushService"
-            android:exported="true"
-            android:label="PushService"
-            android:process=":pushservice" />
-        <service android:name=".service.RKLauncherPushIntentService" />
+        <!--  <service
+              android:name=".service.RKLauncherPushService"
+              android:exported="true"
+              android:label="PushService"
+              android:process=":pushservice" />
+          <service android:name=".service.RKLauncherPushIntentService" />-->
         <service
             android:name=".service.DownLoadIntentService"
             android:exported="false" />
