@@ -204,7 +204,7 @@ public class JniHandler extends Handler {
      */
     private void deInitJni() {
         CvcHelper.CVC_deinit();
-        if(LauncherApplication.fingerModuleID != -1){
+        if (LauncherApplication.fingerModuleID != -1) {
             FingerHelper.JNIFpDeInit(LauncherApplication.fingerModuleID);
         }
         LogUtil.d("wuliang", "fingerStatus == " + fingerStatus);

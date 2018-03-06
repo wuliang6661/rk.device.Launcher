@@ -45,24 +45,24 @@ import rx.Subscriber;
 
 public class SocketService extends Service {
 
-    private static final String  TAG               = "SocketService";
+    private static final String TAG = "SocketService";
     /**
      * socket变量
      */
-    private Socket               socket            = null;
+    private Socket socket = null;
     // 线程池
     // 为了方便展示,此处直接采用线程池进行线程管理,而没有一个个开线程
-    private ExecutorService      mThreadPool;
+    private ExecutorService mThreadPool;
     //输出流
-    private BufferedWriter       writer            = null;
+    private BufferedWriter writer = null;
     /**
      * 接收服务器消息 变量
      */
-    BufferedReader               reader            = null;
-    private DeviceUuidFactory    uuidFactory;
-    private String               uuid;
-    private static SocketService mService          = null;
-    private DeviceUuidFactory    deviceUuidFactory = null;
+    BufferedReader reader = null;
+    private DeviceUuidFactory uuidFactory;
+    private String uuid;
+    private static SocketService mService = null;
+    private DeviceUuidFactory deviceUuidFactory = null;
 
     public static SocketService getInstance() {
         if (mService == null) {
@@ -98,78 +98,78 @@ public class SocketService extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
-    Timer         timer   = new Timer();
+    Timer timer = new Timer();
 
-    TimerTask     task    = new TimerTask() {
+    TimerTask task = new TimerTask() {
 
-                              public void run() {
-                                  Message message = new Message();
-                                  message.what = 1;
-                                  handler.sendMessage(message);
-                              }
+        public void run() {
+            Message message = new Message();
+            message.what = 1;
+            handler.sendMessage(message);
+        }
 
-                          };
+    };
 
     final Handler handler = new Handler() {
 
-                              public void handleMessage(Message msg) {
+        public void handleMessage(Message msg) {
 
-                                  switch (msg.what) {
-                                      case 1:
-                                          LogUtil.i(TAG,TAG+" uploadDeviceStatus");
-                                          JSONObject params = new JSONObject();
-                                          try {
-                                              params.put("uuid", deviceUuidFactory.getUuid());
-                                              params.put("access_token",SPUtils.getString(Constant.ACCENT_TOKEN));
-                                              params.put("mac", FileUtils
-                                                      .readFile2String("/proc/board_sn", "UTF-8"));
-                                              params.put("hw_ver", Build.HARDWARE);
-                                              params.put("version_code",
-                                                      PackageUtils.getCurrentVersionCode());
-                                              params.put("version_name",
-                                                      PackageUtils.getCurrentVersion());
-                                              params.put("imsi", PackageUtils
-                                                      .getImsi(LauncherApplication.getContext()));
-                                              params.put("msisdn", PackageUtils
-                                                      .getMsisdn(LauncherApplication.getContext()));
-                                              params.put("battery", LauncherApplication.sLevel);
-                                              params.put("temperature",
-                                                      LauncherApplication.sTemperature);
-                                              params.put("signal", WifiHelper.obtainWifiInfo(
-                                                      LauncherApplication.getContext()));
-                                              params.put("card_capacity", 9999);
-                                              params.put("whitelist_count", 9999);
-                                              params.put("finger_capacity",
-                                                      LauncherApplication.totalUserCount);
-                                              params.put("finger_count",
-                                                      LauncherApplication.remainUserCount);
-                                              params.put("opened", 0);
-                                              params.put("work_mode", 9999);
-                                              params.put("power_mode", LauncherApplication.sIsCharge);
-                                          } catch (JSONException e) {
+            switch (msg.what) {
+                case 1:
+                    LogUtil.i(TAG, TAG + " uploadDeviceStatus");
+                    JSONObject params = new JSONObject();
+                    try {
+                        params.put("uuid", deviceUuidFactory.getUuid());
+                        params.put("access_token", SPUtils.getString(Constant.ACCENT_TOKEN));
+                        params.put("mac", FileUtils
+                                .readFile2String("/proc/board_sn", "UTF-8"));
+                        params.put("hw_ver", Build.HARDWARE);
+                        params.put("version_code",
+                                PackageUtils.getCurrentVersionCode());
+                        params.put("version_name",
+                                PackageUtils.getCurrentVersion());
+                        params.put("imsi", PackageUtils
+                                .getImsi(LauncherApplication.getContext()));
+                        params.put("msisdn", PackageUtils
+                                .getMsisdn(LauncherApplication.getContext()));
+                        params.put("battery", LauncherApplication.sLevel);
+                        params.put("temperature",
+                                LauncherApplication.sTemperature);
+                        params.put("signal", WifiHelper.obtainWifiInfo(
+                                LauncherApplication.getContext()));
+                        params.put("card_capacity", 9999);
+                        params.put("whitelist_count", 9999);
+                        params.put("finger_capacity",
+                                LauncherApplication.totalUserCount);
+                        params.put("finger_count",
+                                LauncherApplication.remainUserCount);
+                        params.put("opened", 0);
+                        params.put("work_mode", 9999);
+                        params.put("power_mode", LauncherApplication.sIsCharge);
+                    } catch (JSONException e) {
 
-                                          }
-                                          BaseApiImpl.uploadDeviceStatus(params).subscribe(new Subscriber<StatusBo>() {
-                                              @Override
-                                              public void onCompleted() {
+                    }
+                    BaseApiImpl.uploadDeviceStatus(params).subscribe(new Subscriber<StatusBo>() {
+                        @Override
+                        public void onCompleted() {
 
-                                              }
+                        }
 
-                                              @Override
-                                              public void onError(Throwable e) {
+                        @Override
+                        public void onError(Throwable e) {
 
-                                              }
+                        }
 
-                                              @Override
-                                              public void onNext(StatusBo statusBo) {
+                        @Override
+                        public void onNext(StatusBo statusBo) {
 
-                                              }
-                                          });
-                                          break;
-                                  }
-                                  super.handleMessage(msg);
-                              }
-                          };
+                        }
+                    });
+                    break;
+            }
+            super.handleMessage(msg);
+        }
+    };
 
     private void sendDeviceStatusToPlatform() {
         timer.schedule(task, 1000, 50000);
@@ -305,7 +305,6 @@ public class SocketService extends Service {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         LogUtil.d(TAG, "onDestroy: SocketService");
         if (timer != null) {
             timer.cancel();
@@ -317,6 +316,7 @@ public class SocketService extends Service {
         //        } catch (Exception e) {
         //            LogUtil.e(TAG, e.getMessage());
         //        }
+        super.onDestroy();
     }
 
     @Nullable

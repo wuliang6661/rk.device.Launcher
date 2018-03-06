@@ -291,7 +291,10 @@
             android:name=".service.DownLoadIntentService"
             android:exported="false" />
         <service android:name=".service.SocketService" />
-        <service android:name=".service.VerifyService" />
+        <service
+            android:name=".service.VerifyService"
+            android:enabled="true"
+            android:exported="true" />
         <service android:name="rk.device.server.service.AppHttpServerService" />
 
         <receiver android:name=".service.UpdateBroadcastReceiver">
