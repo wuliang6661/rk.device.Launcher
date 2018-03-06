@@ -219,7 +219,8 @@ public class CaptureActivity extends BaseActivity implements SurfaceHolder.Callb
             long startTime = qrCodeBO.startTime;
             String peopleId = qrCodeBO.peopleId;
             Date endDate = TimeUtils.formatTimeStamp(endTime);
-//            T.showShort("获取到结束时间");
+            Date startDate = TimeUtils.formatTimeStamp(startTime);
+            //            T.showShort("获取到结束时间");
             Date currentDate = DateUtil.getCurrentTime();
             String qrUuids = qrCodeBO.uuid;
             String[] qrUuidArr = qrUuids.split(",");
@@ -232,8 +233,9 @@ public class CaptureActivity extends BaseActivity implements SurfaceHolder.Callb
                     break;
                 }
             }
-            // 授权时间已过期
-            if (currentDate.after(endDate)) {
+            if (currentDate.before(startDate)) {
+                showWarning(getString(R.string.auth_before));
+            } else if (currentDate.after(endDate)) { // 授权时间已过期
                 showWarning(getString(R.string.auth_timeout));
             } else if (!isThisDevice){
                 showWarning(getString(R.string.auth_no));

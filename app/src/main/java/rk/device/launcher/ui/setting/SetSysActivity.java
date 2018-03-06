@@ -14,12 +14,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import java.io.IOException;
-import java.util.ArrayList;
-
 import butterknife.Bind;
 import butterknife.OnClick;
+import java.io.IOException;
+import java.util.ArrayList;
 import peripherals.LedHelper;
 import rk.device.launcher.R;
 import rk.device.launcher.api.BaseApiImpl;
