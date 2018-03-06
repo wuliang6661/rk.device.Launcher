@@ -236,7 +236,6 @@ public class OpenUtils {
      * 使用本地jni方法开门
      */
     public synchronized void openDoorJni(int type, String personId, String personName) {
-//        AppManager.getAppManager().goBackMain();
         new Thread(new Runnable() {
             @Override
             public void run() {

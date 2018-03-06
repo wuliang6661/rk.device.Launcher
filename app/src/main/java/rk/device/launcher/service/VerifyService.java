@@ -224,19 +224,27 @@ public class VerifyService extends Service {
     public void onDestroy() {
         super.onDestroy();
         isOpen = false;
-        LogUtil.i(TAG, TAG + ": onDestroy.");
-        int status = NfcHelper.PER_nfcDeinit();
-        if (status == 0) {
-            LogUtil.i(TAG, TAG + ": Nfc deinit success.");
-        } else {
-            LogUtil.i(TAG, TAG + ": Nfc deinit failed.");
-        }
-        status = FingerHelper.JNIFpDeInit(LauncherApplication.fingerModuleID);
-        if (status == 0) {
-            LogUtil.i(TAG, TAG + ": finger deinit success.");
-        } else {
-            LogUtil.i(TAG, TAG + ": finger deinit failed.");
-        }
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                LogUtil.i(TAG, TAG + ": onDestroy.");
+                int status = NfcHelper.PER_nfcDeinit();
+                if (status == 0) {
+                    LogUtil.i(TAG, TAG + ": Nfc deinit success.");
+                } else {
+                    NfcHelper.PER_nfcDeinit();
+                    LogUtil.i(TAG, TAG + ": Nfc deinit failed.");
+                }
+                status = FingerHelper.JNIFpDeInit(LauncherApplication.fingerModuleID);
+                if (status == 0) {
+                    LogUtil.i(TAG, TAG + ": finger deinit success.");
+                } else {
+                    FingerHelper.JNIFpDeInit(LauncherApplication.fingerModuleID);
+                    LogUtil.i(TAG, TAG + ": finger deinit failed.");
+                }
+            }
+        });
+        thread.start();
     }
 
     @Nullable
