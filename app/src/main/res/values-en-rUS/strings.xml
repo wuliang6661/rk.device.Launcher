@@ -231,6 +231,7 @@
     <string name="now_loading">正在获取...</string>
     <string name="know">OK</string>
     <string name="auth_timeout">Authorization has expired，please connect administator</string>
+    <string name="auth_before">Authorization has not start</string>
     <string name="auth_no">Unauthorized entrance guard setting</string>
     <string name="auth_lianxi">Unauthorized user,please connect administator</string>
     <string name="qrcode_error">Please scan correct QR code</string>

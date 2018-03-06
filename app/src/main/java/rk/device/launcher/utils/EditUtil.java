@@ -20,6 +20,7 @@ public class EditUtil {
 			private String mBeforeText;
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+				mBeforeText = s.toString();
 			}
 			
 			@Override
