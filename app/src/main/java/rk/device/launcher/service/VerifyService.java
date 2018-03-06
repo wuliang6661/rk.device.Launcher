@@ -61,6 +61,10 @@ public class VerifyService extends Service {
             @Override
             public void run() {
                 while (isOpen) {
+                    if(LauncherApplication.fingerModuleID == -1){
+                        LogUtil.i(TAG,"finger init error");
+                        return;
+                    }
                     fingerService();
                 }
             }
@@ -106,6 +110,7 @@ public class VerifyService extends Service {
                         user.getName(), resultCode);
             } else {
                 if (resultCode == -3) {//未初始化
+                    LogUtil.i("finger","finger init");
                     FingerHelper.JNIFpInit();
                 } else if (resultCode == -2) {//匹配失败
 
@@ -224,27 +229,25 @@ public class VerifyService extends Service {
     public void onDestroy() {
         super.onDestroy();
         isOpen = false;
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                LogUtil.i(TAG, TAG + ": onDestroy.");
-                int status = NfcHelper.PER_nfcDeinit();
-                if (status == 0) {
-                    LogUtil.i(TAG, TAG + ": Nfc deinit success.");
-                } else {
-                    NfcHelper.PER_nfcDeinit();
-                    LogUtil.i(TAG, TAG + ": Nfc deinit failed.");
-                }
-                status = FingerHelper.JNIFpDeInit(LauncherApplication.fingerModuleID);
-                if (status == 0) {
-                    LogUtil.i(TAG, TAG + ": finger deinit success.");
-                } else {
-                    FingerHelper.JNIFpDeInit(LauncherApplication.fingerModuleID);
-                    LogUtil.i(TAG, TAG + ": finger deinit failed.");
-                }
-            }
-        });
-        thread.start();
+        LogUtil.i(TAG, TAG + ": onDestroy.");
+        int status = NfcHelper.PER_nfcDeinit();
+        if (status == 0) {
+            LogUtil.i(TAG, TAG + ": Nfc deinit success.");
+        } else {
+            NfcHelper.PER_nfcDeinit();
+            LogUtil.i(TAG, TAG + ": Nfc deinit failed.");
+        }
+        if(LauncherApplication.fingerModuleID == -1){
+            return;
+        }
+        status = FingerHelper.JNIFpDeInit(LauncherApplication.fingerModuleID);
+        if (status == 0) {
+            LogUtil.i(TAG, TAG + ": finger deinit success.");
+        } else {
+            FingerHelper.JNIFpDeInit(LauncherApplication.fingerModuleID);
+            LogUtil.i(TAG, TAG + ": finger deinit failed.");
+        }
+
     }
 
     @Nullable
