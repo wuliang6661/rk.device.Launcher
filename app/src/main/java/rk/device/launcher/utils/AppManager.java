@@ -6,7 +6,6 @@ import java.util.Stack;
 
 import rk.device.launcher.ui.main.home.HomeActivity;
 
-
 /**
  * 作者 by wuliang 时间 16/10/31.
  * <p>
@@ -15,11 +14,10 @@ import rk.device.launcher.ui.main.home.HomeActivity;
 
 public class AppManager {
     private static Stack<Activity> activityStack;
-    private static AppManager mInstance;
+    private static AppManager      mInstance;
 
     private AppManager() {
     }
-
 
     public static AppManager getAppManager() {
         if (mInstance == null) {
@@ -45,12 +43,10 @@ public class AppManager {
         }
     }
 
-
     public Activity curremtActivity() {
         Activity activity = activityStack.lastElement();
         return activity;
     }
-
 
     public void finishActivity(Activity activity) {
         if (activity != null && activityStack.contains(activity) && !activity.isFinishing()) {
