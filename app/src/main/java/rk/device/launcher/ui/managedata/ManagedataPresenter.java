@@ -5,12 +5,15 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.PopupWindow;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+
 import org.greenrobot.greendao.query.Query;
 import org.greenrobot.greendao.rx.RxDao;
+
 import rk.device.launcher.R;
 import rk.device.launcher.db.DbRecordHelper;
 import rk.device.launcher.db.entity.Record;
@@ -92,7 +95,8 @@ public class ManagedataPresenter extends BasePresenterImpl<ManagedataContract.Vi
                 .subscribe(new Action1<List<Record>>() {
                     @Override
                     public void call(List<Record> records) {
-                        mView.hideProgress();
+                        if (mView != null)
+                            mView.hideProgress();
                         mDataList.clear();
                         Collections.reverse(records);
                         mDataList.addAll(records);
@@ -104,7 +108,8 @@ public class ManagedataPresenter extends BasePresenterImpl<ManagedataContract.Vi
 
     @Override
     public void onItemClicked(OpenDoorTypeBean bean) {
-        mView.refreshTypeText(bean.name);
+        if (mView != null)
+            mView.refreshTypeText(bean.name);
         // 筛选数据然后刷新adapter
         RecordDao recordDao = DbRecordHelper.getRecordDao();
         List<Record> recordList;
@@ -125,6 +130,7 @@ public class ManagedataPresenter extends BasePresenterImpl<ManagedataContract.Vi
 
     @Override
     public void onDismiss() {
-        mView.dismissPopupWindow();
+        if (mView != null)
+            mView.dismissPopupWindow();
     }
 }

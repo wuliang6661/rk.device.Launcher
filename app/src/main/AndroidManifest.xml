@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="rk.device.launcher"
-    android:sharedUserId="android.uid.system">
+    package="rk.device.launcher">
     <!-- android:sharedUserId="android.uid.system" -->
 
 
@@ -282,12 +281,12 @@
 
 
         <!-- 个推 -->
-        <service
-            android:name=".service.RKLauncherPushService"
-            android:exported="true"
-            android:label="PushService"
-            android:process=":pushservice" />
-        <service android:name=".service.RKLauncherPushIntentService" />
+        <!--  <service
+              android:name=".service.RKLauncherPushService"
+              android:exported="true"
+              android:label="PushService"
+              android:process=":pushservice" />
+          <service android:name=".service.RKLauncherPushIntentService" />-->
         <service
             android:name=".service.DownLoadIntentService"
             android:exported="false" />
