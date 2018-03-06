@@ -4,16 +4,20 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Message;
-
-import java.lang.ref.WeakReference;
-
 import cat.ereza.customactivityoncrash.CustomActivityOnCrash;
 import cvc.EventUtil;
+import java.io.File;
+import java.lang.ref.WeakReference;
+import java.util.List;
 import rk.device.launcher.R;
 import rk.device.launcher.crash.CrashHandler;
+import rk.device.launcher.db.DbManager;
+import rk.device.launcher.db.entity.Empty;
+import rk.device.launcher.db.entity.EmptyDao;
 import rk.device.launcher.service.SocketService;
 import rk.device.launcher.service.VerifyService;
 import rk.device.launcher.ui.main.home.HomePresenter;
+import rk.device.launcher.utils.FileUtils;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.PackageUtils;
 import rk.device.launcher.utils.SPUtils;
@@ -32,6 +36,7 @@ import rk.device.server.service.AppHttpServerService;
  */
 
 public class LauncherApplication extends Application {
+    private static final String TAG = "LauncherApplication";
 
     public static Context sContext;
 
@@ -107,10 +112,28 @@ public class LauncherApplication extends Application {
         SPUtils.inviSp();
         PackageUtils.getTemperature(this);
 //        setDb();
+        createDbFileAndSetPermission();
     }
 
+    private void createDbFileAndSetPermission() {
+        EmptyDao emptyDao = DbManager.getInstance().getEmptyDao();
+        List<Empty> emptyList = emptyDao.loadAll();
+        if (emptyList.isEmpty()) {
+            emptyDao.insert(new Empty());
+        } else {
+            emptyDao.deleteAll();
+            emptyDao.insert(new Empty());
+        }
+        File dbFile = new File("/data/rk_backup/app_cache/rk.db");
+        if (dbFile.exists()) {
+            LogUtil.d(TAG, "数据库文件已创建");
+        } else {
+            LogUtil.e(TAG, "数据库文件未创建");
+        }
+        FileUtils.setDbFilePermission();
+    }
 
-//    /**
+    //    /**
 //     * 检测数据库更新
 //     */
 //    private void setDb() {
