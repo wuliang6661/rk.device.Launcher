@@ -96,8 +96,8 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     protected void onResume() {
         super.onResume();
         BaseApiImpl.setActivity(this);
-        PushManager.getInstance().initialize(getApplicationContext(), RKLauncherPushService.class);
-        PushManager.getInstance().registerPushIntentService(getApplicationContext(), RKLauncherPushIntentService.class);
+//        PushManager.getInstance().initialize(getApplicationContext(), RKLauncherPushService.class);
+//        PushManager.getInstance().registerPushIntentService(getApplicationContext(), RKLauncherPushIntentService.class);
     }
 
     @Override
@@ -510,7 +510,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if(!PackageUtils.isForeground(BaseActivity.this)){
+                if (!PackageUtils.isForeground(BaseActivity.this)) {
                     return;
                 }
                 if (verifyNoticeDialogFragment == null) {
