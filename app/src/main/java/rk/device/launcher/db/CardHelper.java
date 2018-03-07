@@ -6,6 +6,7 @@ import org.greenrobot.greendao.query.Query;
 
 import java.util.List;
 
+import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.db.entity.Card;
 import rk.device.launcher.db.entity.CardDao;
 import rk.device.launcher.global.Constant;
@@ -21,10 +22,7 @@ public class CardHelper {
     private static CardDao sCardDao;
 
     public static CardDao getCardDao() {
-        if (sCardDao == null) {
-            sCardDao = DbManager.getInstance().getCardDao();
-        }
-        return sCardDao;
+        return LauncherApplication.getDaoSession().getCardDao();
     }
 
     /**

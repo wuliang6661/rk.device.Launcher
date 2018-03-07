@@ -6,6 +6,7 @@ import org.greenrobot.greendao.query.Query;
 
 import java.util.List;
 
+import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.db.entity.Face;
 import rk.device.launcher.db.entity.FaceDao;
 import rk.device.launcher.global.Constant;
@@ -21,10 +22,7 @@ public class FaceHelper {
     private static FaceDao sFaceDao;
 
     public static FaceDao getFaceDao() {
-        if (sFaceDao == null) {
-            sFaceDao = DbManager.getInstance().getFaceDao();
-        }
-        return sFaceDao;
+        return LauncherApplication.getDaoSession().getFaceDao();
     }
 
     /**
