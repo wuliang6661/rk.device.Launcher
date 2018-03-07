@@ -203,8 +203,8 @@ public class Person_addActivity
                     user.setEndTime(TimeUtils.string2Millis(tvTimeEnd.getText().toString().trim()));
                     DbHelper.insertUser(user);
                     SyncPersonUtils.getInstance().syncPerosn(user);
+                    finish();
                 }
-                finish();
                 break;
             case R.id.ll_set_time:    //开始时间
                 getTimeDialog(tvTimeStart, 0);

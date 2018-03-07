@@ -26,13 +26,13 @@ import rk.device.launcher.utils.verify.VerifyUtils;
  */
 
 public class VerifyService extends Service {
-    private static final int    DELAY            = 500;
-    private static final String TAG              = "VerifyService";
-    private static final String NFC_ADD_PAGE     = "rk.device.launcher.ui.nfcadd.NfcaddActivity";
-    private static final String NFC_DETECTION    = "rk.device.launcher.ui.detection.NfcDetection";
-    private static final String FINGER_ADD_PAGE  = "rk.device.launcher.ui.fingeradd.FingeraddActivity";
+    private static final int DELAY = 500;
+    private static final String TAG = "VerifyService";
+    private static final String NFC_ADD_PAGE = "rk.device.launcher.ui.nfcadd.NfcaddActivity";
+    private static final String NFC_DETECTION = "rk.device.launcher.ui.detection.NfcDetection";
+    private static final String FINGER_ADD_PAGE = "rk.device.launcher.ui.fingeradd.FingeraddActivity";
     private static final String FINGER_DETECTION = "rk.device.launcher.ui.detection.FinderDetection";
-    private boolean             isOpen           = true;
+    private boolean isOpen = true;
 
     @Override
     public void onCreate() {
@@ -48,10 +48,10 @@ public class VerifyService extends Service {
             public void run() {
                 while (isOpen) {
                     nfcService();
-                    LogUtil.d(TAG,
-                            TAG + android.os.Process.myPid() + " Thread: "
-                                    + android.os.Process.myTid() + " name "
-                                    + Thread.currentThread().getName());
+//                    LogUtil.d(TAG,
+//                            TAG + android.os.Process.myPid() + " Thread: "
+//                                    + android.os.Process.myTid() + " name "
+//                                    + Thread.currentThread().getName());
 
                 }
             }
@@ -61,8 +61,8 @@ public class VerifyService extends Service {
             @Override
             public void run() {
                 while (isOpen) {
-                    if(LauncherApplication.fingerModuleID == -1){
-                        LogUtil.i(TAG,"finger init error");
+                    if (LauncherApplication.fingerModuleID == -1) {
+                        LogUtil.i(TAG, "finger init error");
                         return;
                     }
                     fingerService();
@@ -102,7 +102,7 @@ public class VerifyService extends Service {
                     return;
                 }
                 if (TimeUtils.getTimeStamp() < user.getStartTime() / 1000l
-                        || TimeUtils.getTimeStamp() > user.getEndTime()/1000l) {
+                        || TimeUtils.getTimeStamp() > user.getEndTime() / 1000l) {
                     T.showShort(LauncherApplication.getContext().getString(R.string.illeagel_user));
                     return;
                 }
@@ -110,7 +110,7 @@ public class VerifyService extends Service {
                         user.getName(), resultCode);
             } else {
                 if (resultCode == -3) {//未初始化
-                    LogUtil.i("finger","finger init");
+                    LogUtil.i("finger", "finger init");
                     FingerHelper.JNIFpInit();
                 } else if (resultCode == -2) {//匹配失败
 
@@ -128,11 +128,11 @@ public class VerifyService extends Service {
         byte[] cardNumber = new byte[16];
         //read nfc
         int resultCode = NfcHelper.PER_nfcGetCard(cardType, cardNumber);
-        LogUtil.i(TAG, TAG + " resultCode:" + resultCode);
+//        LogUtil.i(TAG, TAG + " resultCode:" + resultCode);
         if (resultCode == 0) {
             int type = cardType[0];
             if (type == 0) {
-                LogUtil.i(TAG, TAG + ": no card.");
+//                LogUtil.i(TAG, TAG + ": no card.");
                 sleep();
                 return;
             }
@@ -154,7 +154,7 @@ public class VerifyService extends Service {
                     return;
                 }
                 if (TimeUtils.getTimeStamp() < user.getStartTime() / 1000l
-                        || TimeUtils.getTimeStamp() > user.getEndTime()/1000l) {
+                        || TimeUtils.getTimeStamp() > user.getEndTime() / 1000l) {
                     T.showShort(LauncherApplication.getContext().getString(R.string.illeagel_user));
                     return;
                 }
@@ -227,7 +227,6 @@ public class VerifyService extends Service {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         isOpen = false;
         LogUtil.i(TAG, TAG + ": onDestroy.");
         int status = NfcHelper.PER_nfcDeinit();
@@ -237,7 +236,7 @@ public class VerifyService extends Service {
             NfcHelper.PER_nfcDeinit();
             LogUtil.i(TAG, TAG + ": Nfc deinit failed.");
         }
-        if(LauncherApplication.fingerModuleID == -1){
+        if (LauncherApplication.fingerModuleID == -1) {
             return;
         }
         status = FingerHelper.JNIFpDeInit(LauncherApplication.fingerModuleID);
@@ -247,7 +246,7 @@ public class VerifyService extends Service {
             FingerHelper.JNIFpDeInit(LauncherApplication.fingerModuleID);
             LogUtil.i(TAG, TAG + ": finger deinit failed.");
         }
-
+        super.onDestroy();
     }
 
     @Nullable
