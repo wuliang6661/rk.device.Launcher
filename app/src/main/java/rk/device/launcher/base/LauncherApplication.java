@@ -4,11 +4,15 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Message;
+import android.support.multidex.MultiDex;
+
 import cat.ereza.customactivityoncrash.CustomActivityOnCrash;
 import cvc.EventUtil;
+
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.List;
+
 import rk.device.launcher.R;
 import rk.device.launcher.crash.CrashHandler;
 import rk.device.launcher.db.DbManager;
@@ -105,13 +109,12 @@ public class LauncherApplication extends Application {
         CustomActivityOnCrash.setShowErrorDetails(true);
         CustomActivityOnCrash.setDefaultErrorActivityDrawable(R.mipmap.ic_launcher);
         CustomActivityOnCrash.setEventListener(new CrashEventListener(this));
-//        CrashHandler.getInstance().init(this);
+        CrashHandler.getInstance().init(this);
         CacheUtils.init();
         Utils.init(this);
         STUtils.init(this);
         SPUtils.inviSp();
         PackageUtils.getTemperature(this);
-//        setDb();
         createDbFileAndSetPermission();
     }
 
@@ -225,5 +228,12 @@ public class LauncherApplication extends Application {
             msg.what = EventUtil.DEINIT_JNI;
             mHandler.sendMessage(msg);
         }
+    }
+
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 }

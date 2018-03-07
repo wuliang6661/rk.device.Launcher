@@ -88,7 +88,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         SleepTaskServer.getSleepHandler().sendEmptyMessage(0x11);
         AppManager.getAppManager().addActivity(this);
         setNetListener();
-        makeFilters();
+//        makeFilters();
         BaseApiImpl.setActivity(this);
     }
 
@@ -109,7 +109,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     protected void onDestroy() {
         AppManager.getAppManager().removeActivity(this);
         ButterKnife.unbind(this);
-        unregisterReceiver(mReceiver);
+//        unregisterReceiver(mReceiver);
         if (this.mCompositeSubscription != null) {
             this.mCompositeSubscription.unsubscribe();
         }
@@ -367,21 +367,21 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     }
 
 
-    private BlueToothsBroadcastReceiver mReceiver;
-
-    //蓝牙监听需要添加的Action
-    private IntentFilter makeFilters() {
-        mReceiver = new BlueToothsBroadcastReceiver();
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("android.bluetooth.a2dp.profile.action.CONNECTION_STATE_CHANGED");
-        intentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
-        intentFilter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
-        intentFilter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
-        intentFilter.addAction("android.bluetooth.BluetoothAdapter.STATE_OFF");
-        intentFilter.addAction("android.bluetooth.BluetoothAdapter.STATE_ON");
-        registerReceiver(mReceiver, intentFilter);
-        return intentFilter;
-    }
+//    private BlueToothsBroadcastReceiver mReceiver;
+//
+//    //蓝牙监听需要添加的Action
+//    private IntentFilter makeFilters() {
+//        mReceiver = new BlueToothsBroadcastReceiver();
+//        IntentFilter intentFilter = new IntentFilter();
+//        intentFilter.addAction("android.bluetooth.a2dp.profile.action.CONNECTION_STATE_CHANGED");
+//        intentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
+//        intentFilter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
+//        intentFilter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
+//        intentFilter.addAction("android.bluetooth.BluetoothAdapter.STATE_OFF");
+//        intentFilter.addAction("android.bluetooth.BluetoothAdapter.STATE_ON");
+//        registerReceiver(mReceiver, intentFilter);
+//        return intentFilter;
+//    }
 
 
     /**

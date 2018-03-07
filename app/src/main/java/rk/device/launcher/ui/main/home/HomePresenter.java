@@ -1,11 +1,15 @@
 package rk.device.launcher.ui.main.home;
 
 import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 
 import com.guo.android_extend.java.AbsLoop;
@@ -352,13 +356,20 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
                 int mdStatus = MdHelper.PER_mdGet(1, mdStaus);
                 if (mdStatus == 0 && mdStaus[0] == 1) {
                     presenter.isHasPerson = 0;
-                    if (presenter.mView != null)
+                    if (presenter.mView != null) {
                         presenter.mView.hasPerson(true);
+                        try {
+                            Thread.sleep(5000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 } else {
                     presenter.isHasPerson++;
                     if (presenter.isHasPerson == 5) {
-                        if (presenter.mView != null)
+                        if (presenter.mView != null) {
                             presenter.mView.hasPerson(false);
+                        }
                     }
                 }
             }

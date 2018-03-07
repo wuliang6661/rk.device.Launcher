@@ -196,6 +196,7 @@ public class JniHandler extends Handler {
         if (stop02 == 0) {
             MediacHelper.MEDIAC_close(carmer02[0]);
         }
+        System.gc();
     }
 
 

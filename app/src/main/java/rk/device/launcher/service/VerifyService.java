@@ -48,10 +48,10 @@ public class VerifyService extends Service {
             public void run() {
                 while (isOpen) {
                     nfcService();
-//                    LogUtil.d(TAG,
-//                            TAG + android.os.Process.myPid() + " Thread: "
-//                                    + android.os.Process.myTid() + " name "
-//                                    + Thread.currentThread().getName());
+                    LogUtil.d(TAG,
+                            TAG + android.os.Process.myPid() + " Thread: "
+                                    + android.os.Process.myTid() + " name "
+                                    + Thread.currentThread().getName());
 
                 }
             }
@@ -83,7 +83,7 @@ public class VerifyService extends Service {
      */
     private void fingerService() {
         if (LauncherApplication.sInitFingerSuccess == -1) {
-            //            LogUtil.i(TAG, TAG + " finger init failed.");
+            LogUtil.i(TAG, TAG + " finger init failed.");
             sleep();
             return;
         }

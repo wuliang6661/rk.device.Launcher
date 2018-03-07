@@ -279,6 +279,7 @@
             android:name=".ui.dialogactivity.DialogActivity"
             android:theme="@style/Theme.ActivityDialogStyle" />
 
+        <activity android:name=".ui.setting.TimeZoneListActivity" />
 
         <!-- 个推 -->
         <!--  <service
@@ -287,26 +288,40 @@
               android:label="PushService"
               android:process=":pushservice" />
           <service android:name=".service.RKLauncherPushIntentService" />-->
+
+
         <service
             android:name=".service.DownLoadIntentService"
-            android:exported="false" />
-        <service android:name=".service.SocketService" />
+            android:exported="false"
+            android:persistent="true" />
+
+        <service
+            android:name=".service.SocketService"
+            android:exported="false"
+            android:persistent="true" />
+
+
         <service
             android:name=".service.VerifyService"
             android:enabled="true"
-            android:exported="true" />
-        <service android:name="rk.device.server.service.AppHttpServerService" />
+            android:exported="false"
+            android:persistent="true" />
 
-        <receiver android:name=".service.UpdateBroadcastReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_REPLACED" />
 
-                <data android:scheme="package" />
-            </intent-filter>
-        </receiver>
+        <service
+            android:name="rk.device.server.service.AppHttpServerService"
+            android:exported="false"
+            android:persistent="true" />
 
-        <activity android:name=".ui.setting.TimeZoneListActivity"></activity>
-        <receiver android:name=".service.UsbBroadCastReceiver">
+        <!-- <receiver android:name=".service.UpdateBroadcastReceiver">
+             <intent-filter>
+                 <action android:name="android.intent.action.PACKAGE_REPLACED" />
+
+                 <data android:scheme="package" />
+             </intent-filter>
+         </receiver>-->
+
+        <!--<receiver android:name=".service.UsbBroadCastReceiver">
             <intent-filter android:priority="1000">
                 <action android:name="android.intent.action.MEDIA_MOUNTED" />
                 <action android:name="android.intent.action.MEDIA_CHECKING" />
@@ -316,7 +331,7 @@
 
                 <data android:scheme="file" />
             </intent-filter>
-        </receiver>
+        </receiver>-->
     </application>
 
 </manifest>
