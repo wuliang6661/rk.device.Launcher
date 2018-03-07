@@ -6,6 +6,7 @@ import org.greenrobot.greendao.query.Query;
 
 import java.util.List;
 
+import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.db.entity.Finger;
 import rk.device.launcher.db.entity.FingerDao;
 import rk.device.launcher.global.Constant;
@@ -21,10 +22,7 @@ public class FingerPrintHelper {
     private static FingerDao sFingerDao;
 
     public static FingerDao getFingerDao() {
-        if (sFingerDao == null) {
-            sFingerDao = DbManager.getInstance().getFingerDao();
-        }
-        return sFingerDao;
+        return LauncherApplication.getDaoSession().getFingerDao();
     }
 
     /**

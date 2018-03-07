@@ -6,6 +6,7 @@ import org.greenrobot.greendao.query.Query;
 
 import java.util.List;
 
+import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.db.entity.CodePassword;
 import rk.device.launcher.db.entity.CodePasswordDao;
 import rk.device.launcher.global.Constant;
@@ -21,10 +22,7 @@ public class CodePasswordHelper {
     private static CodePasswordDao sCodePasswordDao;
 
     public static CodePasswordDao getCodePasswordDao() {
-        if (sCodePasswordDao == null) {
-            sCodePasswordDao = DbManager.getInstance().getCodePasswordDao();
-        }
-        return sCodePasswordDao;
+        return LauncherApplication.getDaoSession().getCodePasswordDao();
     }
 
     /**

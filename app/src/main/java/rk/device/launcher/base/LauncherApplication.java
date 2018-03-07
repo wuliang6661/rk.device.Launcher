@@ -9,9 +9,12 @@ import cvc.EventUtil;
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.List;
+import org.greenrobot.greendao.database.Database;
 import rk.device.launcher.R;
 import rk.device.launcher.crash.CrashHandler;
-import rk.device.launcher.db.DbManager;
+import rk.device.launcher.db.MyOpenHelper;
+import rk.device.launcher.db.entity.DaoMaster;
+import rk.device.launcher.db.entity.DaoSession;
 import rk.device.launcher.db.entity.Empty;
 import rk.device.launcher.db.entity.EmptyDao;
 import rk.device.launcher.service.SocketService;
@@ -94,7 +97,12 @@ public class LauncherApplication extends Application {
     private final String DB_NAME = "rk.db";
     private final String TEMP_DB_NAME = "temp.db";
     private final String DB_JOUR = "rk.db-journal";
+    private static final String DATABASE_NAME = CacheUtils.DB_PATH;
+    private static DaoSession sDaoSession;
 
+    public static DaoSession getDaoSession() {
+        return sDaoSession;
+    }
 
     @Override
     public void onCreate() {
@@ -111,12 +119,22 @@ public class LauncherApplication extends Application {
         STUtils.init(this);
         SPUtils.inviSp();
         PackageUtils.getTemperature(this);
-//        setDb();
+        createDaoSession();
         createDbFileAndSetPermission();
     }
 
+
+
+    private void createDaoSession() {
+        MyOpenHelper helper = new MyOpenHelper(this, DATABASE_NAME);
+        Database db = helper.getWritableDb();
+        sDaoSession = new DaoMaster(db).newSession();
+    }
+
+
     private void createDbFileAndSetPermission() {
-        EmptyDao emptyDao = DbManager.getInstance().getEmptyDao();
+        DaoSession daoSession = getDaoSession();
+        EmptyDao emptyDao = daoSession.getEmptyDao();
         List<Empty> emptyList = emptyDao.loadAll();
         if (emptyList.isEmpty()) {
             emptyDao.insert(new Empty());

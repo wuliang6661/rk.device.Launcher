@@ -1,18 +1,13 @@
 package rk.device.launcher.db;
 
 import android.text.TextUtils;
-
-import org.greenrobot.greendao.query.Query;
-
-import java.io.File;
 import java.util.List;
 import java.util.UUID;
-
+import org.greenrobot.greendao.query.Query;
+import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.db.entity.UserDao;
 import rk.device.launcher.global.Constant;
-import rk.device.launcher.utils.FileUtils;
-import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.MD5;
 import rk.device.launcher.utils.cache.CacheUtils;
 
@@ -27,18 +22,17 @@ public class DbHelper {
     private static final String DB_NAME = CacheUtils.DB_PATH;
     private static final String DB_PATH_JOUR = CacheUtils.DB_PATH_JOUR;
 
-    private static UserDao sUserDao;
     private static final String TAG = "DbHelper";
 
     public static UserDao getUserDao() {
-        if (sUserDao == null) {
-            sUserDao = DbManager.getInstance().getUserDao();
-        }
-        File dbFile = new File(DB_NAME);
-        LogUtil.d(TAG, "dbFile.exists() = " + dbFile.exists());
-        FileUtils.setPermission(DB_NAME);
-        FileUtils.setPermission(DB_PATH_JOUR);
-        return sUserDao;
+        //if (sUserDao == null) {
+        //    sUserDao = DbManager.getInstance().getUserDao();
+        //}
+        //File dbFile = new File(DB_NAME);
+        //LogUtil.d(TAG, "dbFile.exists() = " + dbFile.exists());
+        //FileUtils.setPermission(DB_NAME);
+        //FileUtils.setPermission(DB_PATH_JOUR);
+        return LauncherApplication.getDaoSession().getUserDao();
     }
 
     public static void delete(User user) {

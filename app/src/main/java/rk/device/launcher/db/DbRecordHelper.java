@@ -1,7 +1,7 @@
 package rk.device.launcher.db;
 
 import java.util.List;
-
+import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.db.entity.Record;
 import rk.device.launcher.db.entity.RecordDao;
 
@@ -11,13 +11,9 @@ import rk.device.launcher.db.entity.RecordDao;
  */
 
 public class DbRecordHelper {
-    private static RecordDao sRecordDao;
 
     public static RecordDao getRecordDao() {
-        if (sRecordDao == null) {
-            sRecordDao = DbManager.getInstance().getRecordDao();
-        }
-        return sRecordDao;
+        return LauncherApplication.getDaoSession().getRecordDao();
     }
 
     public static long insert(Record record) {
