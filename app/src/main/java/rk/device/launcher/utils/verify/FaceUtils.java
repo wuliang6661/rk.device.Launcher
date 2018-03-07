@@ -518,6 +518,11 @@ public class FaceUtils {
                     if (featureFace != null) {
                         featureFace.faceSuress(name, max);
                     }
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     final String mNameShow = "未识别";
 

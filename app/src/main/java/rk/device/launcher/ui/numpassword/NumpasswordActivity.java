@@ -155,6 +155,10 @@ public class NumpasswordActivity extends MVPBaseActivity<NumpasswordContract.Vie
                 break;
             case R.id.call_commit:    //确定密码
                 String[] passwords = commitText.toString().split("#");
+                if(passwords.length == 0){
+                    showMessageDialog(getString(R.string.pwd_error_hint));
+                    return;
+                }
                 List<CodePassword> passwords1 = CodePasswordHelper.getPassword(passwords[passwords.length - 1]);
                 if (passwords1.isEmpty()) {
                     showMessageDialog(getString(R.string.pwd_error_hint));

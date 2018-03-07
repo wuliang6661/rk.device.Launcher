@@ -1,15 +1,11 @@
 package rk.device.launcher.ui.main.home;
 
 import android.app.Activity;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Message;
 
 import com.guo.android_extend.java.AbsLoop;
@@ -103,6 +99,7 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
         intentFilter.setPriority(1000); // 设置优先级，最高为1000
         mView.getContext().registerReceiver(netChangeBroadcastRecever, intentFilter);
         return netChangeBroadcastRecever;
+//        return null;
     }
 
 

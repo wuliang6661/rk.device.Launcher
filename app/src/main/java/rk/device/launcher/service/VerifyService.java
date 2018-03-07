@@ -128,7 +128,7 @@ public class VerifyService extends Service {
         byte[] cardNumber = new byte[16];
         //read nfc
         int resultCode = NfcHelper.PER_nfcGetCard(cardType, cardNumber);
-//        LogUtil.i(TAG, TAG + " resultCode:" + resultCode);
+        LogUtil.i(TAG, TAG + " resultCode:" + resultCode);
         if (resultCode == 0) {
             int type = cardType[0];
             if (type == 0) {
@@ -174,7 +174,7 @@ public class VerifyService extends Service {
         try {
             Thread.sleep(DELAY);
         } catch (InterruptedException e) {
-
+            e.printStackTrace();
         }
     }
 

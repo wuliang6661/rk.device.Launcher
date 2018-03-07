@@ -40,6 +40,11 @@ public class SurfaceHolderCaremaFont implements SurfaceHolder.Callback {
     }
 
 
+    public SurfaceHolderCaremaFont() {
+        super();
+    }
+
+
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         Log.d("wuliang", "surfaceview create");

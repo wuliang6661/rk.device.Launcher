@@ -12,7 +12,9 @@ import cvc.EventUtil;
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.List;
+
 import org.greenrobot.greendao.database.Database;
+
 import rk.device.launcher.R;
 import rk.device.launcher.crash.CrashHandler;
 import rk.device.launcher.db.MyOpenHelper;
@@ -97,7 +99,7 @@ public class LauncherApplication extends Application {
 
     public static boolean isTcp = false;//是否连接tcp
 
-//    private final String DB_NAME = "rk.db";
+    //    private final String DB_NAME = "rk.db";
 //    private final String TEMP_DB_NAME = "temp.db";
 //    private final String DB_JOUR = "rk.db-journal";
     private static final String DATABASE_NAME = CacheUtils.DB_PATH;
@@ -125,7 +127,6 @@ public class LauncherApplication extends Application {
         createDaoSession();
         createDbFileAndSetPermission();
     }
-
 
 
     private void createDaoSession() {

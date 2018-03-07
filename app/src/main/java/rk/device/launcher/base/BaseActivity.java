@@ -1,9 +1,6 @@
 package rk.device.launcher.base;
 
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -16,7 +13,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.igexin.sdk.PushManager;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import butterknife.ButterKnife;
@@ -24,9 +20,6 @@ import rk.device.launcher.R;
 import rk.device.launcher.api.BaseApiImpl;
 import rk.device.launcher.bean.NetDismissBO;
 import rk.device.launcher.bean.event.OpenDoorSuccessEvent;
-import rk.device.launcher.service.BlueToothsBroadcastReceiver;
-import rk.device.launcher.service.RKLauncherPushIntentService;
-import rk.device.launcher.service.RKLauncherPushService;
 import rk.device.launcher.service.SleepTaskServer;
 import rk.device.launcher.service.SocketService;
 import rk.device.launcher.ui.fragment.BaseComDialogFragment;

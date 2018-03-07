@@ -37,16 +37,17 @@ import rx.Subscriber;
 
 public class OpenUtils {
 
-    public static final String    TAG               = "OpenUtils";
+    public static final String TAG = "OpenUtils";
 
-    DeviceUuidFactory             deviceUuidFactory = new DeviceUuidFactory(
+    DeviceUuidFactory deviceUuidFactory = new DeviceUuidFactory(
             LauncherApplication.getContext());
 
-    private static OpenUtils      openUtils         = null;
-    private static SoundPlayUtils soundPlayUtils    = null;
-    private int                   fingerId          = -1;
+    private static OpenUtils openUtils = null;
+    private static SoundPlayUtils soundPlayUtils = null;
+    private int fingerId = -1;
 
-    private boolean               openDoorSuress    = false;                //默认门没开
+    private boolean openDoorSuress = false;                //默认门没开
+    private boolean isSuress = true;
 
     public static OpenUtils getInstance() {
         if (openUtils == null) {
@@ -68,7 +69,7 @@ public class OpenUtils {
     /**
      * 开门方式
      *
-     * @param type 1 : nfc,2 : 指纹,3 : 人脸,4 : 密码,5 : 二维码,6 : 远程开门
+     * @param type       1 : nfc,2 : 指纹,3 : 人脸,4 : 密码,5 : 二维码,6 : 远程开门
      * @param personId
      * @param personName
      * @step 1 验证通过之后，调取开门接口（接口1）
@@ -76,37 +77,29 @@ public class OpenUtils {
      * @result 1.2 验证通过
      * @step 2 数据库插入开门记录
      * @step 3 开门记录同步到服务端(接口3)
-     *       <p/>
+     * <p/>
      */
-    public synchronized void open(int type, String personId, String personName) {
-        if (!isOpen()) {
-            return;
-        }
-        openDoorJni(type, personId, personName);
+    public void open(int type, String personId, String personName) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (isSuress) {
+                    openDoorJni(type, personId, personName);
+                }
+            }
+        }).start();
     }
 
-    public synchronized void open(int type, String personId, String personName, int fingerId) {
-        if (!isOpen()) {
-            return;
-        }
-        openDoorJni(type, personId, personName);
+    public void open(int type, String personId, String personName, int fingerId) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (isSuress) {
+                    openDoorJni(type, personId, personName);
+                }
+            }
+        }).start();
         this.fingerId = fingerId;
-    }
-
-    private long justTime = 0;
-
-    /**
-     * 判断上一次开门时间，2秒内不能多次开门
-     */
-    private boolean isOpen() {
-        if (justTime == 0) {
-            return true;
-        }
-        if (!openDoorSuress) {
-            return true;
-        }
-        long time = System.currentTimeMillis();
-        return (time - justTime) > 2000;
     }
 
     /**
@@ -117,9 +110,7 @@ public class OpenUtils {
      */
     private void openDoor(String token, int type, String personId, String personName) {
         int time = TimeUtils.getTimeStamp();
-        justTime = System.currentTimeMillis();
         String data = openStatus(type, personId);
-        RxBus.getDefault().post(new OpenDoorSuccessEvent(personName, type, 1));
         syncRecords(token, type, personId, personName, TimeUtils.getTimeStamp(), data);
         insertToLocalDB(type, personId, personName, time, data);
         if (SPUtils.getBoolean(Constant.DEVICE_MP3, true)) {
@@ -236,43 +227,40 @@ public class OpenUtils {
      * 使用本地jni方法开门
      */
     public synchronized void openDoorJni(int type, String personId, String personName) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                int relayOff;
-                if (SPUtils.getBoolean(Constant.DEVICE_OFF, true)) {
-                    relayOff = RelayHelper.RelaySetOff();
+        isSuress = false;
+        int relayOff;
+        if (SPUtils.getBoolean(Constant.DEVICE_OFF, true)) {
+            relayOff = RelayHelper.RelaySetOff();
+        } else {
+            relayOff = RelayHelper.RelaySetOn();
+        }
+        if (relayOff == 0) {
+            RxBus.getDefault().post(new OpenDoorSuccessEvent(personName, type, 1));
+            try {
+                String time = SPUtils.getString(Constant.DEVICE_TIME);
+                long sleepTime;
+                if (StringUtils.isEmpty(time)) {
+                    sleepTime = (long) (0.5 * 1000);
                 } else {
-                    relayOff = RelayHelper.RelaySetOn();
+                    sleepTime = (long) (Double.parseDouble(time) * 1000);
                 }
-                if (relayOff == 0) {
-                    try {
-                        String time = SPUtils.getString(Constant.DEVICE_TIME);
-                        long sleepTime;
-                        if (StringUtils.isEmpty(time)) {
-                            sleepTime = (long) (0.5 * 1000);
-                        } else {
-                            sleepTime = (long) (Double.parseDouble(time) * 1000);
-                        }
-                        Thread.sleep(sleepTime);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    int relayOn;
-                    if (SPUtils.getBoolean(Constant.DEVICE_OFF, true)) {
-                        relayOn = RelayHelper.RelaySetOn();
-                    } else {
-                        relayOn = RelayHelper.RelaySetOff();
-                    }
-                    if (relayOn == 0) {
-                        openDoorSuress = true;
-                        openDoor(SPUtils.getString(Constant.ACCENT_TOKEN),type,personId,personName);
-                    } else {
-                        openDoorSuress = false;
-                    }
-                }
+                Thread.sleep(sleepTime);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-        }).start();
+            int relayOn;
+            if (SPUtils.getBoolean(Constant.DEVICE_OFF, true)) {
+                relayOn = RelayHelper.RelaySetOn();
+            } else {
+                relayOn = RelayHelper.RelaySetOff();
+            }
+            if (relayOn == 0) {
+                openDoorSuress = true;
+                openDoor(SPUtils.getString(Constant.ACCENT_TOKEN), type, personId, personName);
+            } else {
+                openDoorSuress = false;
+            }
+        }
+        isSuress = true;
     }
-
 }

@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.arcsoft.facerecognition.AFR_FSDKFace;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 import butterknife.Bind;
@@ -72,6 +73,7 @@ public class PersonFaceActivity extends MVPBaseActivity<PersonFaceContract.View,
 
     SurfaceHolder surfaceholder;
     SurfaceHolderCaremaFont callbackFont;
+    CallBack callBack;
 
 
     @Override
@@ -124,24 +126,43 @@ public class PersonFaceActivity extends MVPBaseActivity<PersonFaceContract.View,
     private void initCrema() {
         surfaceholder = surfaceview.getHolder();
         surfaceholder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-        callbackFont = new SurfaceHolderCaremaFont(this);
-        callbackFont.setCallBack(new SurfaceHolderCaremaFont.CallBack() {
-            @Override
-            public void callMessage(byte[] data, int width, int height) {
-                mData = data;
-            }
-
-            @Override
-            public void callHeightAndWidth(int width, int height) {
-
-            }
-        });
+        callbackFont = new SurfaceHolderCaremaFont();
+        callBack = new CallBack(this);
+        callbackFont.setCallBack(callBack);
         surfaceholder.addCallback(callbackFont);
+    }
+
+    private static class CallBack implements SurfaceHolderCaremaFont.CallBack {
+
+        WeakReference<PersonFaceActivity> weakReference;
+
+        CallBack(PersonFaceActivity activity) {
+            weakReference = new WeakReference<>(activity);
+        }
+
+        @Override
+        public void callMessage(byte[] data, int width, int height) {
+            if (weakReference != null && weakReference.get() != null) {
+                weakReference.get().mData = data;
+            }
+        }
+
+        @Override
+        public void callHeightAndWidth(int width, int height) {
+
+        }
+
+        void stop() {
+            weakReference.clear();
+            weakReference = null;
+        }
+
     }
 
 
     @Override
     protected void onDestroy() {
+        callBack.stop();
         callbackFont.setCallBack(null);
         super.onDestroy();
     }
