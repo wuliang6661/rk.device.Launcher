@@ -38,8 +38,6 @@ import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
-import static rk.device.launcher.base.LauncherApplication.isTcp;
-
 /**
  * Created by wuliang on 2017/11/23.
  * <p>
@@ -476,7 +474,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
             @Override
             public void onNext(OpenDoorSuccessEvent openDoorSuccessEvent) {
                 if (openDoorSuccessEvent.isSuccess == 1) {
-                    LogUtil.i("OpenDoorSuccessEvent","OpenDoorSuccessEvent "+AppManager.getAppManager().curremtActivity().getClass().getName());
+                    LogUtil.i("OpenDoorSuccessEvent", "OpenDoorSuccessEvent " + AppManager.getAppManager().curremtActivity().getClass().getName());
                     showSuccessDialog();
                     runOnUiThread(new Runnable() {
                         @Override
@@ -530,31 +528,5 @@ public abstract class BaseActivity extends RxAppCompatActivity {
             }
         });
     }
-
-    /**
-     * 开启socketService
-     */
-    public void startSocketService() {
-        isTcp = true;
-        if (!PackageUtils.isWorked(this,
-                PackageUtils.getPackageName(this) + ".service.SocketService")) {
-            LogUtil.i("SocketService", "SocketService isWorded");
-            Intent socketService = new Intent(this, SocketService.class);
-            startService(socketService);
-        } else {
-            LogUtil.i("SocketService", "SocketService openService");
-//            new Handler().postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    if (!SocketService.getInstance().checkConnected()) {
-//                        SocketService.getInstance().closeThreadPool();
-//                        SocketService.getInstance().openService();
-//                    }
-//                }
-//            }, 2000);
-        }
-
-    }
-
 
 }

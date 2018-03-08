@@ -292,26 +292,22 @@
 
         <service
             android:name=".service.DownLoadIntentService"
-            android:exported="false"
-            android:persistent="true" />
+            android:exported="false" />
 
         <service
             android:name=".service.SocketService"
-            android:exported="false"
-            android:persistent="true" />
+            android:exported="false" />
 
 
         <service
             android:name=".service.VerifyService"
             android:enabled="true"
-            android:exported="false"
-            android:persistent="true" />
+            android:exported="false" />
 
 
         <service
             android:name="rk.device.server.service.AppHttpServerService"
-            android:exported="false"
-            android:persistent="true" />
+            android:exported="false" />
 
         <!-- <receiver android:name=".service.UpdateBroadcastReceiver">
              <intent-filter>

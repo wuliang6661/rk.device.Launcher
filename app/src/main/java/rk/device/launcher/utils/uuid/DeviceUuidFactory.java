@@ -4,10 +4,7 @@ package rk.device.launcher.utils.uuid;
  */
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.Environment;
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,8 +15,10 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.UUID;
 
-import rk.device.launcher.utils.DeviceUtils;
+import rk.device.launcher.utils.CloseUtils;
 import rk.device.launcher.utils.FileUtils;
+import rk.device.launcher.utils.SPUtils;
+import rk.device.launcher.utils.StringUtils;
 import rk.device.launcher.utils.cache.CacheUtils;
 
 
@@ -34,9 +33,9 @@ public class DeviceUuidFactory {
         if (uuid == null) {
             synchronized (DeviceUuidFactory.class) {
                 if (uuid == null) {
-                    final SharedPreferences sp = context.getSharedPreferences(PREFS_FILE, Context.MODE_PRIVATE);
-                    final String id = sp.getString(PREFS_DEVICE_ID, null);
-                    if (id != null) {
+//                    final SharedPreferences sp = context.getSharedPreferences(PREFS_FILE, Context.MODE_PRIVATE);
+                    String id = SPUtils.getString(PREFS_DEVICE_ID);
+                    if (!StringUtils.isEmpty(id)) {
                         uuid = UUID.fromString(id);
                     } else {
                         if (recoverDeviceUuidFromSD() != null) {
@@ -49,7 +48,7 @@ public class DeviceUuidFactory {
                             }
                             try {
                                 if (!"9774d56d682e549c".equals(macAddress)) {
-                                    uuid = UUID.nameUUIDFromBytes(macAddress.getBytes("utf8"));
+                                    uuid = UUID.nameUUIDFromBytes(macAddress.getBytes("UTF-8"));
                                     try {
                                         saveDeviceUuidToSD(EncryptUtils.encryptDES(uuid.toString(), KEY));
                                     } catch (Exception e) {
@@ -58,7 +57,7 @@ public class DeviceUuidFactory {
                                 } else {
 //                                    final String deviceId = ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE)).getM();
                                     String deviceId = FileUtils.readFile2String("/proc/board_sn", "UTF-8");
-                                    uuid = deviceId != null ? UUID.nameUUIDFromBytes(deviceId.getBytes("utf8")) : UUID.randomUUID();
+                                    uuid = deviceId != null ? UUID.nameUUIDFromBytes(deviceId.getBytes("UTF-8")) : UUID.randomUUID();
                                     try {
                                         saveDeviceUuidToSD(EncryptUtils.encryptDES(uuid.toString(), KEY));
                                     } catch (Exception e) {
@@ -69,7 +68,7 @@ public class DeviceUuidFactory {
                                 throw new RuntimeException(e);
                             }
                         }
-                        sp.edit().putString(PREFS_DEVICE_ID, uuid.toString()).commit();
+                        SPUtils.putString(PREFS_DEVICE_ID, uuid.toString());
                     }
                 }
             }
@@ -103,29 +102,24 @@ public class DeviceUuidFactory {
     private static void saveDeviceUuidToSD(String uuid) {
         String dirPath = CacheUtils.getBaseCache();
         File targetFile = new File(dirPath, DEVICE_UUID_FILE_NAME);
-        if (targetFile != null) {
-            if (targetFile.exists()) {
-
-            } else {
-                OutputStreamWriter osw;
+        if (!targetFile.exists()) {
+            OutputStreamWriter osw = null;
+            try {
+                osw = new OutputStreamWriter(new FileOutputStream(targetFile), "utf-8");
                 try {
-                    osw = new OutputStreamWriter(new FileOutputStream(targetFile), "utf-8");
-                    try {
-                        osw.write(uuid);
-                        osw.flush();
-                        osw.close();
-                        FileUtils.setPermission(targetFile.getAbsolutePath());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                } catch (FileNotFoundException e) {
+                    osw.write(uuid);
+                    osw.flush();
+                    osw.close();
+                    FileUtils.setPermission(targetFile.getAbsolutePath());
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
+            } catch (UnsupportedEncodingException | FileNotFoundException e) {
+                e.printStackTrace();
+            } finally {
+                CloseUtils.closeIO(osw);
             }
         }
-
     }
 
     public UUID getUuid() {

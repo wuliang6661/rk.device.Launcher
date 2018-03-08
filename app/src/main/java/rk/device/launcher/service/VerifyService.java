@@ -4,6 +4,7 @@ import android.app.ActivityManager;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
@@ -32,7 +33,7 @@ public class VerifyService extends Service {
     private static final String NFC_DETECTION = "rk.device.launcher.ui.detection.NfcDetection";
     private static final String FINGER_ADD_PAGE = "rk.device.launcher.ui.fingeradd.FingeraddActivity";
     private static final String FINGER_DETECTION = "rk.device.launcher.ui.detection.FinderDetection";
-    private boolean isOpen = true;
+    private static boolean isOpen = true;
 
     @Override
     public void onCreate() {
@@ -227,6 +228,17 @@ public class VerifyService extends Service {
 
     @Override
     public void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    @Override
+    public boolean onUnbind(Intent intent) {
         isOpen = false;
         LogUtil.i(TAG, TAG + ": onDestroy.");
         int status = NfcHelper.PER_nfcDeinit();
@@ -237,7 +249,7 @@ public class VerifyService extends Service {
             LogUtil.i(TAG, TAG + ": Nfc deinit failed.");
         }
         if (LauncherApplication.fingerModuleID == -1) {
-            return;
+            return super.onUnbind(intent);
         }
         status = FingerHelper.JNIFpDeInit(LauncherApplication.fingerModuleID);
         if (status == 0) {
@@ -246,12 +258,11 @@ public class VerifyService extends Service {
             FingerHelper.JNIFpDeInit(LauncherApplication.fingerModuleID);
             LogUtil.i(TAG, TAG + ": finger deinit failed.");
         }
-        super.onDestroy();
+        return super.onUnbind(intent);
     }
 
-    @Nullable
     @Override
-    public IBinder onBind(Intent intent) {
-        return null;
+    public void unbindService(ServiceConnection conn) {
+        super.unbindService(conn);
     }
 }

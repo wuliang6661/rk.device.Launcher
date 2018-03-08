@@ -1,6 +1,7 @@
 package rk.device.launcher.ui.main.home;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -33,8 +34,6 @@ import rk.device.launcher.bean.event.IpHostEvent;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.mvp.MVPBaseActivity;
 import rk.device.launcher.service.NetChangeBroadcastReceiver;
-import rk.device.launcher.service.SocketService;
-import rk.device.launcher.service.VerifyService;
 import rk.device.launcher.ui.bbs.BbsActivity;
 import rk.device.launcher.ui.call.CallActivity;
 import rk.device.launcher.ui.fragment.InputWifiPasswordDialogFragment;
@@ -161,8 +160,8 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
         registerIPHost();
         mPresenter.getData();
         mPresenter.getToken();
-        startSocketService();
-        startService(new Intent(this, AppHttpServerService.class));
+        mPresenter.startSocketService();
+        bindService(new Intent(this, AppHttpServerService.class), mPresenter.connection, Context.BIND_AUTO_CREATE);
     }
 
     /**
@@ -292,9 +291,7 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
         if (orientationUtils != null) {
             orientationUtils.releaseListener();
         }
-        stopService(new Intent(this, SocketService.class));
-        stopService(new Intent(this, VerifyService.class));
-        stopService(new Intent(this, AppHttpServerService.class));
+        unbindService(mPresenter.connection);
         mStaticHandler.removeCallbacksAndMessages(null);
         SurfaceHolderCaremaFont.stopCarema();
         SurfaceHolderCaremaBack.stopCarema();
@@ -546,11 +543,11 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
             mPresenter.getData();
             mPresenter.getToken();
             LogUtil.i("SocketService", "SocketService isConnect.");
-            startSocketService();
+            mPresenter.startSocketService();
         }
         isNetWork = true;
         if (WifiorNetStatus != 0) {
-            startSocketService();
+            mPresenter.startSocketService();
         }
     }
 }

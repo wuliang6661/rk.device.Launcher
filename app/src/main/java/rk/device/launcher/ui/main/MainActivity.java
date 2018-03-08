@@ -190,7 +190,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
         registerIPHost();
         mPresenter.initLocation(this);
         mPresenter.getData();
-        startSocketService();
+//        startSocketService();
         startService(new Intent(this, AppHttpServerService.class));
     }
 
@@ -491,13 +491,13 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
             mPresenter.initLocation(this);
             mPresenter.getData();
             LogUtil.i("SocketService", "SocketService isConnect.");
-            startSocketService();
+//            startSocketService();
         }
         isNetWork = true;
         if (WifiorNetStatus == 0) {
             mIvSignal.setImageResource(R.drawable.net_line);
         } else {
-            startSocketService();
+//            startSocketService();
             if (Math.abs(scanLever) > 100) {
                 mIvSignal.setImageResource(R.drawable.wifi_signal_1);
             } else if (Math.abs(scanLever) > 80) {

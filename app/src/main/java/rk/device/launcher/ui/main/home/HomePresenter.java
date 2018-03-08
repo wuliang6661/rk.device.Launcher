@@ -1,11 +1,15 @@
 package rk.device.launcher.ui.main.home;
 
 import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 
 import com.guo.android_extend.java.AbsLoop;
@@ -30,9 +34,11 @@ import rk.device.launcher.mvp.BasePresenterImpl;
 import rk.device.launcher.service.ElectricBroadcastReceiver;
 import rk.device.launcher.service.NetBroadcastReceiver;
 import rk.device.launcher.service.NetChangeBroadcastReceiver;
+import rk.device.launcher.service.SocketService;
 import rk.device.launcher.service.VerifyService;
 import rk.device.launcher.utils.AppManager;
 import rk.device.launcher.utils.AppUtils;
+import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.StatSoFiles;
 import rk.device.launcher.utils.Utils;
@@ -299,11 +305,32 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
             FaceUtils.getInstance().loadFaces();
             registerFace();
             initJni();
-            mView.getContext().startService(new Intent(mView.getContext(), VerifyService.class));
+            mView.getContext().bindService(new Intent(mView.getContext(), VerifyService.class), connection, Context.BIND_AUTO_CREATE);
             mView.startVideo();
         }
     };
 
+
+    ServiceConnection connection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            LogUtil.e("connect service" + name.getClassName());
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            LogUtil.e("Disconnect service" + name.getClassName());
+        }
+    };
+
+
+    /**
+     * 开启socketService
+     */
+    void startSocketService() {
+        Intent socketService = new Intent(mContext, SocketService.class);
+        mContext.bindService(socketService, connection, Context.BIND_AUTO_CREATE);
+    }
 
     private int isHasPerson = 0;   //连续5次检测到没人，关闭摄像头
     private boolean isStopThread = false;
