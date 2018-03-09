@@ -51,7 +51,6 @@ public class SurfaceHolderCaremaFont implements SurfaceHolder.Callback {
         try {
             if (camera != null) {
                 camera.setPreviewDisplay(holder);
-                camera.startPreview();
                 setFaceSize();
                 camera.setPreviewCallback(new Camera.PreviewCallback() {
                     @Override
@@ -100,14 +99,14 @@ public class SurfaceHolderCaremaFont implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-//        Log.d(TAG, "surface被干掉了！！！！！");
-//        if (camera != null) {
-//            try {
-//                camera.setPreviewDisplay(null);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
+        Log.d(TAG, "surface被干掉了！！！！！");
+        if (camera != null) {
+            try {
+                camera.setPreviewDisplay(null);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 

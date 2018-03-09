@@ -296,7 +296,7 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
         SurfaceHolderCaremaFont.stopCarema();
         SurfaceHolderCaremaBack.stopCarema();
         mPresenter.deInitJni();
-        mPresenter.stopPer();
+        HomePresenter.stopPer();
         mPresenter.unRegisterReceiver(this);
         FaceUtils.getInstance().stopFaceFR();
         FaceUtils.getInstance().destory();
