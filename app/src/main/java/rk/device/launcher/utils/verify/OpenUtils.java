@@ -84,6 +84,7 @@ public class OpenUtils {
             @Override
             public void run() {
                 if (isSuress) {
+                    OpenTwoUtils.httpOpen();
                     openDoorJni(type, personId, personName);
                 }
             }
@@ -95,6 +96,7 @@ public class OpenUtils {
             @Override
             public void run() {
                 if (isSuress) {
+                    OpenTwoUtils.httpOpen();
                     openDoorJni(type, personId, personName);
                 }
             }
