@@ -216,4 +216,5 @@ public interface BaseApi {
     @POST("/api/v1/credential_fingerprint/delete")
     Observable<BaseResult<Object>> deleteFinger(@Body RequestBody requestBody);
 
+
 }
