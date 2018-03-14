@@ -282,6 +282,7 @@ public class PersonFaceActivity extends MVPBaseActivity<PersonFaceContract.View,
                 }
             } else {                                 //新增人脸
                 BitmapUtil.saveBitmap(name + ".png", faceBitmap);
+                faceBitmap.recycle();
                 if (FaceHelper.insert(person.getUniqueId(), name, 2, 0, 0)) {
                     mPresenter.addFace(FaceHelper.getList(person.getUniqueId()).get(0));
                     finish();

@@ -9,7 +9,6 @@ import android.os.Message;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
-import com.trello.rxlifecycle.ActivityEvent;
 
 import java.util.HashMap;
 import java.util.List;
@@ -188,7 +187,6 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .compose(activity.bindUntilEvent(ActivityEvent.DESTROY))
                 .subscribe(new Subscriber<List<WeatherBO>>() {
                     @Override
                     public void onCompleted() {

@@ -90,8 +90,6 @@
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
-    <!-- <uses-permission android:name="android.permission.WAKE_LOCK" />
-     <uses-permission android:name="android.permission.DEVICE_POWER" />-->
     <uses-permission
         android:name="android.permission.INSTALL_PACKAGES"
         tools:ignore="ProtectedPermissions" />
@@ -107,13 +105,12 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:persistent="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
         <activity
             android:name=".ui.main.home.HomeActivity"
-            android:launchMode="singleTask"
+            android:persistent="true"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

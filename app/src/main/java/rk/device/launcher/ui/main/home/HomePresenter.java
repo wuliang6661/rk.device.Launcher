@@ -305,8 +305,8 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
             FaceUtils.getInstance().loadFaces();
             registerFace();
             initJni();
-            mView.getContext().bindService(new Intent(mView.getContext(), VerifyService.class), connection, Context.BIND_AUTO_CREATE);
-            mView.startVideo();
+//            mView.getContext().bindService(new Intent(mView.getContext(), VerifyService.class), connection, Context.BIND_AUTO_CREATE);
+            mView.getContext().startService(new Intent(mContext.getApplicationContext(), VerifyService.class));
         }
     };
 
@@ -328,8 +328,9 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
      * 开启socketService
      */
     void startSocketService() {
-        Intent socketService = new Intent(mContext, SocketService.class);
-        mContext.bindService(socketService, connection, Context.BIND_AUTO_CREATE);
+        Intent socketService = new Intent(mContext.getApplicationContext(), SocketService.class);
+        mView.getContext().startService(socketService);
+//        mContext.bindService(socketService, connection, Context.BIND_AUTO_CREATE);
     }
 
     private int isHasPerson = 0;   //连续5次检测到没人，关闭摄像头
@@ -372,32 +373,35 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
 
         @Override
         public void loop() {
-            HomePresenter presenter = weakReference.get();
-            if (presenter == null) {
-                return;
-            }
-            while (!presenter.isStopThread) {
+            while (true) {
+                threadSleep(500);
+                HomePresenter presenter = weakReference.get();
+                if (presenter == null || presenter.isStopThread) {
+                    return;
+                }
                 int mdStatus = MdHelper.PER_mdGet(1, mdStaus);
-                if (mdStatus == 0 && mdStaus[0] == 1) {
+                if (mdStatus == 0 && mdStaus[0] == 1 && presenter.mView != null) {
                     presenter.isHasPerson = 0;
-                    if (presenter.mView != null) {
-                        presenter.mView.hasPerson(true);
-                        try {
-                            Thread.sleep(5000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
+                    presenter.mView.hasPerson(true);
+                    threadSleep(5000);
                 } else {
                     presenter.isHasPerson++;
-                    if (presenter.isHasPerson == 5) {
-                        if (presenter.mView != null) {
-                            presenter.mView.hasPerson(false);
-                        }
+                    if (presenter.isHasPerson == 5 && presenter.mView != null) {
+                        presenter.mView.hasPerson(false);
                     }
                 }
             }
         }
+
+
+        private void threadSleep(long time) {
+            try {
+                Thread.sleep(time);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
 
         @Override
         public void over() {

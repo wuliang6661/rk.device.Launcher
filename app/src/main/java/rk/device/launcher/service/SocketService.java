@@ -2,6 +2,7 @@ package rk.device.launcher.service;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
@@ -144,7 +145,9 @@ public class SocketService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         sendDeviceStatusToPlatform();
-        return null;
+        IBinder result = null;
+        if (null == result) result = new MyBinder();
+        return result;
     }
 
     @Override
@@ -156,4 +159,9 @@ public class SocketService extends Service {
         }
         return super.onUnbind(intent);
     }
+
+
+    private static class MyBinder extends Binder {
+    }
+
 }

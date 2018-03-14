@@ -19,8 +19,6 @@ public class HomeContract {
 
         void hasPerson(boolean hasPerson);
 
-        void startVideo();
-
     }
 
     interface Presenter extends BasePresenter<View> {

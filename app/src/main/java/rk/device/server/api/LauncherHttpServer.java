@@ -47,6 +47,11 @@ public class LauncherHttpServer {
         server.listen(PORT_LISTEN_DEFAULT);
     }
 
+    public void stopServer(){
+        server.stop();
+    }
+
+
     /**
      * Http request's callback
      */

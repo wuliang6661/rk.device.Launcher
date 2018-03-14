@@ -28,6 +28,7 @@ public class DbManager {
     private static final String DB_NAME = CacheUtils.DB_PATH;
     private static final String DB_PATH_JOUR = CacheUtils.DB_PATH_JOUR;
     //	private static final String DB_PASSWORD = "793478MUDd97fdUjl2";
+    private DaoSession daoSession;
 
     private static class SingletonHolder {
         private static final DbManager INSTANCE = new DbManager();
@@ -75,6 +76,5 @@ public class DbManager {
     public static DbManager getInstance() {
         return SingletonHolder.INSTANCE;
     }
-
 
 }

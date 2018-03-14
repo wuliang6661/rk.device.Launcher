@@ -143,16 +143,16 @@ public class JniHandler extends Handler {
         }
         Log.d("wuliang", "relayStatus == " + relayStatus);
         //init finger
-        if (fingerStatus <= 0) {
-            fingerStatus = FingerHelper.JNIFpInit();
-            LauncherApplication.fingerModuleID = fingerStatus;
-            Log.i("wuliang", "fingerStatus " + fingerStatus);
-            if (fingerStatus > 0) {
-                LauncherApplication.sInitFingerSuccess = 0;
-                LauncherApplication.totalUserCount = FingerHelper.JNIFpGetTotalUser(fingerStatus);
-                LauncherApplication.remainUserCount = FingerHelper.JNIFpGetRemainSpace(fingerStatus);
-            }
-        }
+//        if (fingerStatus <= 0) {
+//            fingerStatus = FingerHelper.JNIFpInit();
+//            LauncherApplication.fingerModuleID = fingerStatus;
+//            Log.i("wuliang", "fingerStatus " + fingerStatus);
+//            if (fingerStatus > 0) {
+//                LauncherApplication.sInitFingerSuccess = 0;
+//                LauncherApplication.totalUserCount = FingerHelper.JNIFpGetTotalUser(fingerStatus);
+//                LauncherApplication.remainUserCount = FingerHelper.JNIFpGetRemainSpace(fingerStatus);
+//            }
+//        }
         if (NfcStatus != 0) {
             NfcStatus = NfcHelper.PER_nfcInit();
             Log.i("JniHandler", "NfcStatus " + NfcStatus);

@@ -8,12 +8,11 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import butterknife.ButterKnife;
 import rk.device.launcher.R;
@@ -21,7 +20,6 @@ import rk.device.launcher.api.BaseApiImpl;
 import rk.device.launcher.bean.NetDismissBO;
 import rk.device.launcher.bean.event.OpenDoorSuccessEvent;
 import rk.device.launcher.service.SleepTaskServer;
-import rk.device.launcher.service.SocketService;
 import rk.device.launcher.ui.fragment.BaseComDialogFragment;
 import rk.device.launcher.ui.fragment.VerifyNoticeDialogFragment;
 import rk.device.launcher.ui.fragment.WaitDialog;
@@ -46,7 +44,7 @@ import rx.subscriptions.CompositeSubscription;
  * 同时存放所有界面需要的公共方法
  */
 
-public abstract class BaseActivity extends RxAppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity {
 
     private CompositeSubscription mCompositeSubscription;
 
@@ -80,13 +78,11 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         AppManager.getAppManager().addActivity(this);
         setNetListener();
 //        makeFilters();
-        BaseApiImpl.setActivity(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        BaseApiImpl.setActivity(this);
 //        PushManager.getInstance().initialize(getApplicationContext(), RKLauncherPushService.class);
 //        PushManager.getInstance().registerPushIntentService(getApplicationContext(), RKLauncherPushIntentService.class);
     }
@@ -115,7 +111,6 @@ public abstract class BaseActivity extends RxAppCompatActivity {
                 && verifyNoticeDialogFragment.getDialog().isShowing()) {
             verifyNoticeDialogFragment.dismissAllowingStateLoss();
         }
-        BaseApiImpl.setActivity(null);
         super.onDestroy();
     }
 

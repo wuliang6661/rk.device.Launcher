@@ -255,4 +255,6 @@ public class LauncherApplication extends Application {
         super.attachBaseContext(base);
         MultiDex.install(this);
     }
+
+
 }
