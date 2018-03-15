@@ -4,7 +4,9 @@ import android.app.ActivityManager;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.support.annotation.Nullable;
 
 import org.greenrobot.eventbus.EventBus;
@@ -45,6 +47,20 @@ public class VerifyService extends Service {
     private static final String FINGER_DETECTION = "rk.device.launcher.ui.detection.FinderDetection";
     private static boolean isOpen = true;
 
+    private static final int USER_ILLEAGEL = 1001;
+
+    private Handler handler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            switch (msg.what){
+                case USER_ILLEAGEL:
+                    T.showShort(LauncherApplication.getContext().getString(R.string.illeagel_user));
+                    break;
+            }
+            return false;
+        }
+    });
+
 
     NfcThread nfcThread;
 
@@ -60,19 +76,19 @@ public class VerifyService extends Service {
         isOpen = true;
         nfcThread = new NfcThread(this);
         nfcThread.start();
-//        Thread fingerThread = new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                while (isOpen) {
-//                    if (LauncherApplication.fingerModuleID == -1) {
-//                        LogUtil.i(TAG, "finger init error");
-//                        return;
-//                    }
-//                    fingerService();
-//                }
-//            }
-//        });
-//        fingerThread.start();
+        Thread fingerThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (isOpen) {
+                    if (LauncherApplication.fingerModuleID == -1) {
+                        LogUtil.i(TAG, "finger init error");
+                        return;
+                    }
+                    fingerService();
+                }
+            }
+        });
+        fingerThread.start();
     }
 
 
@@ -135,7 +151,9 @@ public class VerifyService extends Service {
                 }
                 if (TimeUtils.getTimeStamp() < user.getStartTime() / 1000l
                         || TimeUtils.getTimeStamp() > user.getEndTime() / 1000l) {
-                    T.showShort(LauncherApplication.getContext().getString(R.string.illeagel_user));
+                    Message msg = new Message();
+                    msg.what = USER_ILLEAGEL;
+                    handler.sendMessage(msg);
                     return;
                 }
                 OpenUtils.getInstance().open(VerifyTypeConstant.TYPE_FINGER, user.getUniqueId(),
@@ -191,7 +209,9 @@ public class VerifyService extends Service {
                 }
                 if (TimeUtils.getTimeStamp() < user.getStartTime() / 1000l
                         || TimeUtils.getTimeStamp() > user.getEndTime() / 1000l) {
-                    T.showShort(LauncherApplication.getContext().getString(R.string.illeagel_user));
+                    Message msg = new Message();
+                    msg.what = USER_ILLEAGEL;
+                    handler.sendMessage(msg);
                     return;
                 }
                 OpenUtils.getInstance().open(VerifyTypeConstant.TYPE_CARD, user.getUniqueId(),
