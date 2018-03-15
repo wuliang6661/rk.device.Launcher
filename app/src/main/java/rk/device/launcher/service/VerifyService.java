@@ -95,7 +95,7 @@ public class VerifyService extends Service {
 
         @Override
         public void loop() {
-            while (isOpen) {
+            if (isOpen) {
                 if (weakReference.get() != null) {
                     weakReference.get().nfcService();
                     LogUtil.d(TAG,
@@ -103,7 +103,7 @@ public class VerifyService extends Service {
                                     + android.os.Process.myTid() + " name "
                                     + Thread.currentThread().getName());
                 } else {
-                    return;
+                    shutdown();
                 }
             }
         }

@@ -6,6 +6,7 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
+import com.guo.android_extend.java.AbsLoop;
 import com.koushikdutta.async.http.Multimap;
 import com.koushikdutta.async.http.body.JSONArrayBody;
 import com.koushikdutta.async.http.body.MultipartFormDataBody;
@@ -48,71 +49,82 @@ public class AppHttpServerService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Thread launcherThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                launcherServer.startServer(new LauncherHttpServer.HttpServerReqCallBack() {
-                    @Override
-                    public void onError(String uri, Multimap params,
-                                        AsyncHttpServerResponse response) {
-
-                    }
-
-                    @Override
-                    public void onSuccess(String uri, JSONObject params,
-                                          AsyncHttpServerResponse response) {
-                        try {
-                            switch (uri) {
-                                case HttpRequestUri.MEMBER_ADD:
-                                    response.send(
-                                            MemberLogic.getInstance().addMember(params).toJSONString());
-                                    break;
-                                case HttpRequestUri.DELETE:
-                                    response.send(
-                                            MemberLogic.getInstance().delete(params).toJSONString());
-                                    break;
-                                case HttpRequestUri.OPEN:
-                                    response.send(
-                                            DeviceLogic.getInstance().open(params).toJSONString());
-                                    break;
-                                case HttpRequestUri.DEVICE_STATUS:
-                                    response.send(
-                                            DeviceLogic.getInstance().status(params).toJSONString());
-                                    break;
-                                case HttpRequestUri.UPDATE:
-                                    response.send(
-                                            PublicLogic.getInstance().update(params).toJSONString());
-                                    break;
-                                case HttpRequestUri.AD:
-                                    response.send(PublicLogic.getInstance().ad(params).toJSONString());
-                                    break;
-                                case HttpRequestUri.DELETE_FACE:
-                                    response.send(MemberLogic.getInstance().deleteFace(params)
-                                            .toJSONString());
-                                    break;
-                                case HttpRequestUri.UPDATE_TIME:
-                                    response.send(PublicLogic.getInstance().updateTime(params).toJSONString());
-                                    break;
-                                default:
-                                    response.send("Invalid request url.");
-                                    break;
-                            }
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                        }
-                    }
-
-                    @Override
-                    public void onFile(MultipartFormDataBody body,
-                                       AsyncHttpServerResponse response) {
-                        MemberLogic.getInstance().upload(body, response);
-                    }
-                });
-            }
-        });
-        launcherThread.start();
+        lanucherThread.start();
         return super.onStartCommand(intent, flags, startId);
     }
+
+
+    AbsLoop lanucherThread = new AbsLoop() {
+        @Override
+        public void setup() {
+            launcherServer.startServer(new LauncherHttpServer.HttpServerReqCallBack() {
+                @Override
+                public void onError(String uri, Multimap params,
+                                    AsyncHttpServerResponse response) {
+
+                }
+
+                @Override
+                public void onSuccess(String uri, JSONObject params,
+                                      AsyncHttpServerResponse response) {
+                    try {
+                        switch (uri) {
+                            case HttpRequestUri.MEMBER_ADD:
+                                response.send(
+                                        MemberLogic.getInstance().addMember(params).toJSONString());
+                                break;
+                            case HttpRequestUri.DELETE:
+                                response.send(
+                                        MemberLogic.getInstance().delete(params).toJSONString());
+                                break;
+                            case HttpRequestUri.OPEN:
+                                response.send(
+                                        DeviceLogic.getInstance().open(params).toJSONString());
+                                break;
+                            case HttpRequestUri.DEVICE_STATUS:
+                                response.send(
+                                        DeviceLogic.getInstance().status(params).toJSONString());
+                                break;
+                            case HttpRequestUri.UPDATE:
+                                response.send(
+                                        PublicLogic.getInstance().update(params).toJSONString());
+                                break;
+                            case HttpRequestUri.AD:
+                                response.send(PublicLogic.getInstance().ad(params).toJSONString());
+                                break;
+                            case HttpRequestUri.DELETE_FACE:
+                                response.send(MemberLogic.getInstance().deleteFace(params)
+                                        .toJSONString());
+                                break;
+                            case HttpRequestUri.UPDATE_TIME:
+                                response.send(PublicLogic.getInstance().updateTime(params).toJSONString());
+                                break;
+                            default:
+                                response.send("Invalid request url.");
+                                break;
+                        }
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFile(MultipartFormDataBody body,
+                                   AsyncHttpServerResponse response) {
+                    MemberLogic.getInstance().upload(body, response);
+                }
+            });
+        }
+
+        @Override
+        public void loop() {
+        }
+
+        @Override
+        public void over() {
+
+        }
+    };
 
     @Override
     public void onDestroy() {
@@ -125,9 +137,9 @@ public class AppHttpServerService extends Service {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(DestoryEvent messageEvent) {
         launcherServer.stopServer();
+        lanucherThread.shutdown();
         stopSelf();
     }
-
 
     @Nullable
     @Override
