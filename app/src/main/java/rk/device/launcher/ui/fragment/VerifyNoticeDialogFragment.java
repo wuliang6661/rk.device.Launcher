@@ -124,7 +124,7 @@ public class VerifyNoticeDialogFragment extends BaseDialogFragment {
                         }
                     }
                 }
-            }, 2000);
+            }, 800);
         }
     }
 

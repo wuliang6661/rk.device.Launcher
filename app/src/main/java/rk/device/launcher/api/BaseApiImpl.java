@@ -34,7 +34,6 @@ import rx.Observable;
 public class BaseApiImpl {
 
     private static volatile Retrofit mApiRetrofit;
-    private static BaseActivity      activity;
 
     /**
      * 动态分配IP地址
@@ -68,9 +67,6 @@ public class BaseApiImpl {
         }
     }
 
-    public static void setActivity(BaseActivity activity) {
-        BaseApiImpl.activity = activity;
-    }
 
     /**
      * 切換IP和端口之后需清空请求对象
@@ -94,8 +90,7 @@ public class BaseApiImpl {
      * 访问外网, 根据IP地址获取地址
      */
     public static Observable<String> address(String format) {
-        return createAddressAPI().getAddress(format)
-                .compose(activity.bindUntilEvent(ActivityEvent.PAUSE));
+        return createAddressAPI().getAddress(format);
     }
 
     /**
@@ -315,7 +310,7 @@ public class BaseApiImpl {
 
     /**
      * 添加指纹
-     * 
+     *
      * @param params
      * @return
      */
@@ -327,7 +322,7 @@ public class BaseApiImpl {
 
     /**
      * 更新指纹
-     * 
+     *
      * @param params
      * @return
      */
@@ -339,7 +334,7 @@ public class BaseApiImpl {
 
     /**
      * 删除指纹
-     * 
+     *
      * @param params
      * @return
      */

@@ -4,15 +4,21 @@ import android.app.ActivityManager;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.lang.ref.WeakReference;
 
 import peripherals.FingerHelper;
 import peripherals.NfcHelper;
 import rk.device.launcher.R;
 import rk.device.launcher.api.T;
 import rk.device.launcher.base.LauncherApplication;
+import rk.device.launcher.bean.event.DestoryEvent;
 import rk.device.launcher.bean.event.NFCAddEvent;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.global.VerifyTypeConstant;
@@ -24,9 +30,13 @@ import rk.device.launcher.utils.verify.VerifyUtils;
 
 /**
  * Created by hanbin on 2018/1/2.
+ * <p>
+ * 指纹于刷卡的服务
  */
 
 public class VerifyService extends Service {
+
+
     private static final int DELAY = 500;
     private static final String TAG = "VerifyService";
     private static final String NFC_ADD_PAGE = "rk.device.launcher.ui.nfcadd.NfcaddActivity";
@@ -35,40 +45,20 @@ public class VerifyService extends Service {
     private static final String FINGER_DETECTION = "rk.device.launcher.ui.detection.FinderDetection";
     private static boolean isOpen = true;
 
+
+    NfcThread nfcThread;
+
     @Override
     public void onCreate() {
         super.onCreate();
+        EventBus.getDefault().register(this);
         init();
     }
 
     private void init() {
         LogUtil.i(TAG, TAG + " init");
         isOpen = true;
-        Thread nfcThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (isOpen) {
-                    nfcService();
-                    LogUtil.d(TAG,
-                            TAG + android.os.Process.myPid() + " Thread: "
-                                    + android.os.Process.myTid() + " name "
-                                    + Thread.currentThread().getName());
-                    ActivityManager activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-                    //最大分配内存
-                    int memory = activityManager.getMemoryClass();
-                    System.out.println("memory: " + memory);
-                    //最大分配内存获取方法2
-                    float maxMemory = (float) (Runtime.getRuntime().maxMemory() * 1.0 / (1024 * 1024));
-                    //当前分配的总内存
-                    float totalMemory = (float) (Runtime.getRuntime().totalMemory() * 1.0 / (1024 * 1024));
-                    //剩余内存
-                    float freeMemory = (float) (Runtime.getRuntime().freeMemory() * 1.0 / (1024 * 1024));
-                    System.out.println("maxMemory: " + maxMemory);
-                    System.out.println("totalMemory: " + totalMemory);
-                    System.out.println("freeMemory: " + freeMemory);
-                }
-            }
-        });
+        nfcThread = new NfcThread(this);
         nfcThread.start();
 //        Thread fingerThread = new Thread(new Runnable() {
 //            @Override
@@ -84,6 +74,35 @@ public class VerifyService extends Service {
 //        });
 //        fingerThread.start();
     }
+
+
+    private static class NfcThread extends Thread {
+
+        WeakReference<VerifyService> weakReference;
+
+        NfcThread(VerifyService service) {
+            weakReference = new WeakReference<>(service);
+        }
+
+
+        @Override
+        public void run() {
+            super.run();
+            while (isOpen) {
+                if (weakReference.get() != null) {
+                    weakReference.get().nfcService();
+                    LogUtil.d(TAG,
+                            TAG + android.os.Process.myPid() + " Thread: "
+                                    + android.os.Process.myTid() + " name "
+                                    + Thread.currentThread().getName());
+                } else {
+                    return;
+                }
+            }
+        }
+
+    }
+
 
     private String isTopActivity() {
         ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
@@ -133,12 +152,17 @@ public class VerifyService extends Service {
         sleep();
     }
 
+
+    int[] cardType;
+    byte[] cardNumber;
+
+
     /**
      * nfc service
      */
     private void nfcService() {
-        int[] cardType = new int[1];
-        byte[] cardNumber = new byte[16];
+        cardType = new int[1];
+        cardNumber = new byte[16];
         //read nfc
         int resultCode = NfcHelper.PER_nfcGetCard(cardType, cardNumber);
         LogUtil.i(TAG, TAG + " resultCode:" + resultCode);
@@ -154,8 +178,7 @@ public class VerifyService extends Service {
                 LogUtil.i(TAG, TAG + ": cardNumber is null.");
                 return;
             }
-            LogUtil.i(TAG, TAG + "NfcCard:" + bytesToHexString(cardNumber, cardType[0]) + "NfcType:"
-                    + cardType[0]);
+            LogUtil.i(TAG, TAG + "NfcCard:" + NFCCard + "NfcType:" + cardType[0]);
             //nfc add model
             if (LauncherApplication.sIsNFCAdd == 1 && (isTopActivity().equals(NFC_ADD_PAGE)
                     || isTopActivity().equals(NFC_DETECTION))) {
@@ -238,8 +261,17 @@ public class VerifyService extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(DestoryEvent messageEvent) {
+        destory();
+        stopSelf();
+    }
+
     @Override
     public void onDestroy() {
+        LogUtil.e("VerifyService onDestory");
+        EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 
@@ -249,8 +281,8 @@ public class VerifyService extends Service {
         return null;
     }
 
-    @Override
-    public boolean onUnbind(Intent intent) {
+
+    private void destory() {
         isOpen = false;
         LogUtil.i(TAG, TAG + ": onDestroy.");
         int status = NfcHelper.PER_nfcDeinit();
@@ -261,7 +293,7 @@ public class VerifyService extends Service {
             LogUtil.i(TAG, TAG + ": Nfc deinit failed.");
         }
         if (LauncherApplication.fingerModuleID == -1) {
-            return super.onUnbind(intent);
+            return;
         }
         status = FingerHelper.JNIFpDeInit(LauncherApplication.fingerModuleID);
         if (status == 0) {
@@ -270,11 +302,6 @@ public class VerifyService extends Service {
             FingerHelper.JNIFpDeInit(LauncherApplication.fingerModuleID);
             LogUtil.i(TAG, TAG + ": finger deinit failed.");
         }
-        return super.onUnbind(intent);
     }
 
-    @Override
-    public void unbindService(ServiceConnection conn) {
-        super.unbindService(conn);
-    }
 }

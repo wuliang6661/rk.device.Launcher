@@ -16,13 +16,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
-import com.shuyu.gsyvideoplayer.utils.GSYVideoType;
-import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
-import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
-import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
+import com.donkingliang.banner.CustomBanner;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import cvc.EventUtil;
@@ -30,10 +30,13 @@ import rk.device.launcher.R;
 import rk.device.launcher.api.T;
 import rk.device.launcher.base.JniHandler;
 import rk.device.launcher.bean.SetPageContentBO;
+import rk.device.launcher.bean.event.DestoryEvent;
 import rk.device.launcher.bean.event.IpHostEvent;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.mvp.MVPBaseActivity;
 import rk.device.launcher.service.NetChangeBroadcastReceiver;
+import rk.device.launcher.service.SocketService;
+import rk.device.launcher.service.VerifyService;
 import rk.device.launcher.ui.bbs.BbsActivity;
 import rk.device.launcher.ui.call.CallActivity;
 import rk.device.launcher.ui.fragment.InputWifiPasswordDialogFragment;
@@ -56,7 +59,6 @@ import rk.device.launcher.utils.verify.FaceUtils;
 import rk.device.launcher.widget.ArcMenu;
 import rk.device.launcher.widget.carema.SurfaceHolderCaremaBack;
 import rk.device.launcher.widget.carema.SurfaceHolderCaremaFont;
-import rk.device.launcher.widget.video.SampleListener;
 import rk.device.launcher.zxing.decode.CaptureActivity;
 import rk.device.server.service.AppHttpServerService;
 
@@ -69,24 +71,14 @@ import rk.device.server.service.AppHttpServerService;
 public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresenter> implements HomeContract.View,
         View.OnClickListener, NetChangeBroadcastReceiver.CallBack {
 
-    @Bind(R.id.default_video)
-    StandardGSYVideoPlayer defaultVideo;
     @Bind(R.id.device_time)
     TextView deviceTime;
     @Bind(R.id.device_name)
     TextView deviceName;
     @Bind(R.id.gonggao_text)
     TextView gonggaoText;
-    @Bind(R.id.guanggao01)
-    ImageView guanggao01;
     @Bind(R.id.camera_surfaceview)
     SurfaceView surfaceview;
-    //    @Bind(R.id.frame_layout)
-//    FrameLayout frameLayout;
-    @Bind(R.id.guanggao02)
-    ImageView guanggao02;
-    @Bind(R.id.guanggao03)
-    ImageView guanggao03;
     @Bind(R.id.menu_message)
     LinearLayout menuMessage;
     @Bind(R.id.menu_manager)
@@ -101,6 +93,8 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
     LinearLayout menuQrcode;
     @Bind(R.id.menu)
     ArcMenu menu;
+    @Bind(R.id.custom)
+    CustomBanner custom;
 
     private InputWifiPasswordDialogFragment dialogFragment = null;
     SurfaceHolderCaremaFont callbackFont;
@@ -111,10 +105,6 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
     private static final int REFRESH_DELAY = 1000;
     private Handler mStaticHandler = new Handler();
     private boolean isNetWork = true;// 此状态保存上次网络是否连接，默认已连接
-
-    private OrientationUtils orientationUtils;
-    private boolean isPlay;
-    private boolean isAddVideo = false;
 
     RefreshTimeRunnable mRefreshTimeRunnable;
 
@@ -129,7 +119,6 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
 
         invition();
         register();
-        resolveNormalVideoUI();
     }
 
     /**
@@ -147,6 +136,36 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
         menuQrcode.setOnClickListener(this);
         menuSetting.setOnClickListener(this);
         showView();
+        List<String> beans = new ArrayList<>();
+        beans.add("1");
+        beans.add("1");
+        beans.add("1");
+        custom.setPages(new CustomBanner.ViewCreator<String>() {
+            @Override
+            public View createView(Context context, int position) {
+                //这里返回的是轮播图的项的布局 支持任何的布局
+                //position 轮播图的第几个项
+                LogUtil.e("new image");
+                return new ImageView(context);
+            }
+
+            @Override
+            public void updateUI(Context context, View view, int position, String data) {
+                ImageView imageView = (ImageView) view;
+                switch (position) {
+                    case 0:
+                        imageView.setImageResource(R.drawable.guanggao01);
+                        break;
+                    case 1:
+                        imageView.setImageResource(R.drawable.guanggao02);
+                        break;
+                    case 2:
+                        imageView.setImageResource(R.drawable.guanggao03);
+                        break;
+                }
+            }
+        }, beans);
+        custom.startTurning(5000);
     }
 
 
@@ -161,7 +180,6 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
         mPresenter.getData();
         mPresenter.getToken();
         mPresenter.startSocketService();
-        bindService(new Intent(this, AppHttpServerService.class), mPresenter.connection, Context.BIND_AUTO_CREATE);
     }
 
     /**
@@ -196,12 +214,12 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
      * 接收服务器IP地址更改，所有数据重新请求
      */
     private void registerIPHost() {
-        RxBus.getDefault().toObserverable(IpHostEvent.class).subscribe(ipHostEvent -> {
-            mPresenter.initLocation(this);
+        addSubscription(RxBus.getDefault().toObserverable(IpHostEvent.class).subscribe(ipHostEvent -> {
+            mPresenter.initLocation();
             mPresenter.getData();
             mPresenter.getToken();
         }, throwable -> {
-        });
+        }));
     }
 
     /**
@@ -209,32 +227,28 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
      */
     private void initSurfaceViewOne() {
         SurfaceHolder surfaceholder = surfaceview.getHolder();
-        surfaceholder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         callbackFont = new SurfaceHolderCaremaFont(this);
-        openCamera();
+        callbackFont.setCallBack(new SurfaceCallback());
         surfaceholder.addCallback(callbackFont);
     }
 
+    private static class SurfaceCallback implements SurfaceHolderCaremaFont.CallBack {
 
-    /**
-     * 第一次进入页面，开始打开camera
-     */
-    private void openCamera() {
-        callbackFont.setCallBack(new SurfaceHolderCaremaFont.CallBack() {
-            @Override
-            public void callMessage(byte[] data, int width, int height) {
-                if (width != 0 && height != 0) {
-                    if (FaceUtils.getInstance().isStartFace()) {
-                        FaceUtils.getInstance().caremeDataToFace(data, width, height);
-                    }
+        @Override
+        public void callMessage(byte[] data, int width, int height) {
+            if (width != 0 && height != 0) {
+                if (FaceUtils.getInstance().isStartFace()) {
+                    FaceUtils.getInstance().caremeDataToFace(data, width, height);
                 }
             }
+        }
 
-            @Override
-            public void callHeightAndWidth(int width, int height) {
-            }
-        });
+        @Override
+        public void callHeightAndWidth(int width, int height) {
+
+        }
     }
+
 
     @Override
     protected void onStart() {
@@ -244,9 +258,6 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
 
     @Override
     protected void onResume() {
-        if (isAddVideo) {
-            getCurPlay().onVideoResume();
-        }
         super.onResume();
         deviceName.setText(SPUtils.getString(Constant.DEVICE_NAME));
         new Handler().postDelayed(() -> {
@@ -256,65 +267,43 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
         }, 500);
     }
 
-    @Override
-    protected void onPause() {
-        if (isAddVideo) {
-            getCurPlay().onVideoPause();
-        }
-        super.onPause();
-    }
 
     @Override
     protected void onStop() {
+        LogUtil.e("onStop");
         mStaticHandler.removeCallbacksAndMessages(null);
         super.onStop();
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (orientationUtils != null) {
-            orientationUtils.backToProtVideo();
-        }
-        if (StandardGSYVideoPlayer.backFromWindowFull(this)) {
-            return;
-        }
-        super.onBackPressed();
     }
 
 
     @Override
     protected void onDestroy() {
-        LogUtil.d("wuliang", "home destory!!!");
-        if (isPlay) {
-            getCurPlay().release();
-        }
-        if (orientationUtils != null) {
-            orientationUtils.releaseListener();
-        }
-        unbindService(mPresenter.connection);
-        mStaticHandler.removeCallbacksAndMessages(null);
-        SurfaceHolderCaremaFont.stopCarema();
-        SurfaceHolderCaremaBack.stopCarema();
-        mPresenter.deInitJni();
-        HomePresenter.stopPer();
-        mPresenter.unRegisterReceiver(this);
-        FaceUtils.getInstance().stopFaceFR();
-        FaceUtils.getInstance().destory();
+        destory();
         super.onDestroy();
     }
 
-    private void resolveNormalVideoUI() {
-        //增加title
-        defaultVideo.getTitleTextView().setVisibility(View.GONE);
-        defaultVideo.getBackButton().setVisibility(View.GONE);
+
+    /**
+     * 释放所有资源
+     */
+    private void destory() {
+        LogUtil.d("wuliang", "home destory!!!");
+        mPresenter.stopPer();
+        mPresenter.unRegisterReceiver(this);
+        SurfaceHolderCaremaFont.stopCarema();
+        SurfaceHolderCaremaBack.stopCarema();
+        JniHandler.getInstance().deInitJni();
+        FaceUtils.getInstance().stopFaceFR();
+        FaceUtils.getInstance().destory();
+        callbackFont.setCallBack(null);
+        callbackFont = null;
+        stopService(new Intent(getApplicationContext(), AppHttpServerService.class));
+        stopService(new Intent(getApplicationContext(), SocketService.class));
+        stopService(new Intent(getApplicationContext(), VerifyService.class));
+        mStaticHandler.removeCallbacksAndMessages(null);
+        EventBus.getDefault().post(new DestoryEvent());
     }
 
-    private GSYVideoPlayer getCurPlay() {
-        if (defaultVideo.getFullWindowPlayer() != null) {
-            return defaultVideo.getFullWindowPlayer();
-        }
-        return defaultVideo;
-    }
 
     /**
      * 设置初始流程（改）
@@ -401,38 +390,6 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
     }
 
 
-    /**
-     * 初始化视频控制
-     */
-    private void invitionVideo() {
-        //外部辅助的旋转，帮助全屏
-        orientationUtils = new OrientationUtils(this, defaultVideo);
-        //初始化不打开外部的旋转
-        orientationUtils.setEnable(false);
-        GSYVideoType.setShowType(GSYVideoType.SCREEN_MATCH_FULL);
-        GSYVideoOptionBuilder gsyVideoOption = new GSYVideoOptionBuilder();
-        gsyVideoOption.setIsTouchWiget(false)
-                .setHideKey(true)
-                .setLooping(true)
-                .setRotateViewAuto(false)
-                .setShowFullAnimation(false)
-                .setNeedShowWifiTip(false)
-                .setShowPauseCover(false)
-                .setSeekRatio(1)
-                .setUrl("http://dxm.happydoit.com:80/upload/20171108/237QeWW.mp4")
-                .setCacheWithPlay(false)
-                .setVideoTitle("课程介绍")
-                .setStandardVideoAllCallBack(new SampleListener() {
-                    @Override
-                    public void onPrepared(String url, Object... objects) {
-                        super.onPrepared(url, objects);
-                        isPlay = true;
-                    }
-                })
-                .build(defaultVideo);
-    }
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -452,34 +409,23 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
 
     @Override
     public void hasPerson(boolean hasPerson) {
-        runOnUiThread(() -> {
-            if (hasPerson) {
-                if (surfaceview != null && surfaceview.getVisibility() == View.GONE) {
-                    surfaceview.setVisibility(View.VISIBLE);
-                    JniHandler handler = JniHandler.getInstance();
-                    Message message = Message.obtain();
-                    message.what = EventUtil.MEDIA_OPEN;
-                    handler.sendMessage(message);
-                }
-            } else {
-                if (surfaceview != null && surfaceview.getVisibility() == View.VISIBLE) {
-                    surfaceview.setVisibility(View.GONE);
-                    JniHandler handler = JniHandler.getInstance();
-                    Message message = Message.obtain();
-                    message.what = EventUtil.MEDIA_CLOSE;
-                    handler.sendMessage(message);
-                }
+        if (hasPerson) {
+            if (surfaceview != null && surfaceview.getVisibility() == View.GONE) {
+                JniHandler handler = JniHandler.getInstance();
+                Message message = Message.obtain();
+                message.what = EventUtil.MEDIA_OPEN;
+                handler.sendMessage(message);
+                runOnUiThread(() -> surfaceview.setVisibility(View.VISIBLE));
             }
-        });
-    }
-
-    @Override
-    public void startVideo() {
-        runOnUiThread(() -> {
-            isAddVideo = true;
-            invitionVideo();
-            defaultVideo.startPlayLogic();
-        });
+        } else {
+            if (surfaceview != null && surfaceview.getVisibility() == View.VISIBLE) {
+                JniHandler handler = JniHandler.getInstance();
+                Message message = Message.obtain();
+                message.what = EventUtil.MEDIA_CLOSE;
+                handler.sendMessage(message);
+                runOnUiThread(() -> surfaceview.setVisibility(View.GONE));
+            }
+        }
     }
 
 

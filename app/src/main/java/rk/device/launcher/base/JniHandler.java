@@ -17,6 +17,7 @@ import peripherals.MdHelper;
 import peripherals.NfcHelper;
 import peripherals.NumberpadHelper;
 import peripherals.RelayHelper;
+import rk.device.launcher.crash.CrashUtils;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.SPUtils;
@@ -129,6 +130,10 @@ public class JniHandler extends Handler {
         if (MdStatus != 0) {
             MdStatus = MdHelper.PER_mdInit();
         }
+        if (NfcStatus != 0) {
+            NfcStatus = NfcHelper.PER_nfcInit();
+            Log.i("JniHandler", "NfcStatus " + NfcStatus);
+        }
         int carema01 = MediacHelper.MEDIAC_init(0, carmer01);
         int carema02 = MediacHelper.MEDIAC_init(1, carmer02);
         Log.i("wuliang", "cvcStatus == " + cvcStatus + "LedStatus == " + LedStatus
@@ -143,20 +148,16 @@ public class JniHandler extends Handler {
         }
         Log.d("wuliang", "relayStatus == " + relayStatus);
         //init finger
-        if (fingerStatus <= 0) {
-            fingerStatus = FingerHelper.JNIFpInit();
-            LauncherApplication.fingerModuleID = fingerStatus;
-            Log.i("wuliang", "fingerStatus " + fingerStatus);
-            if (fingerStatus > 0) {
-                LauncherApplication.sInitFingerSuccess = 0;
-                LauncherApplication.totalUserCount = FingerHelper.JNIFpGetTotalUser(fingerStatus);
-                LauncherApplication.remainUserCount = FingerHelper.JNIFpGetRemainSpace(fingerStatus);
-            }
-        }
-        if (NfcStatus != 0) {
-            NfcStatus = NfcHelper.PER_nfcInit();
-            Log.i("JniHandler", "NfcStatus " + NfcStatus);
-        }
+//        if (fingerStatus <= 0) {
+//            fingerStatus = FingerHelper.JNIFpInit();
+//            LauncherApplication.fingerModuleID = fingerStatus;
+//            Log.i("wuliang", "fingerStatus " + fingerStatus);
+//            if (fingerStatus > 0) {
+//                LauncherApplication.sInitFingerSuccess = 0;
+//                LauncherApplication.totalUserCount = FingerHelper.JNIFpGetTotalUser(fingerStatus);
+//                LauncherApplication.remainUserCount = FingerHelper.JNIFpGetRemainSpace(fingerStatus);
+//            }
+//        }
         if (SPUtils.getBoolean(Constant.KEY_LIGNT, false)) {    //判断灯是否是开的，开灯的情况下将补光灯打开
             LedHelper.PER_ledToggle(1);
         }
@@ -174,11 +175,16 @@ public class JniHandler extends Handler {
         if (open == 0) {
             MediacHelper.MEDIAC_setFormat(carmer01[0], 640, 480);
             MediacHelper.MEDIAC_startStreaming(carmer01[0]);
+        } else if (open == 19) {    //carema设备节点不存在,设备重启
+            new CrashUtils().reboot();
+            return;
         }
         int open02 = MediacHelper.MEDIAC_open(carmer02[0]);
         if (open02 == 0) {
             MediacHelper.MEDIAC_setFormat(carmer02[0], 640, 480);
             MediacHelper.MEDIAC_startStreaming(carmer02[0]);
+        } else if (open02 == 19) {    //carema设备节点不存在,设备重启
+            new CrashUtils().reboot();
         }
     }
 
@@ -203,7 +209,7 @@ public class JniHandler extends Handler {
     /**
      * 注销所有硬件
      */
-    private void deInitJni() {
+    public void deInitJni() {
         CvcHelper.CVC_deinit();
         if (LauncherApplication.fingerModuleID != -1) {
             FingerHelper.JNIFpDeInit(LauncherApplication.fingerModuleID);

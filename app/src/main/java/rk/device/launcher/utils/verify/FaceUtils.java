@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.UUID;
 
 import rk.device.launcher.utils.FileUtils;
+import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.cache.CacheUtils;
 
 /**
@@ -444,13 +445,13 @@ public class FaceUtils {
             }
         }
         //copy rects
-        Rect[] rects = new Rect[mFTresult.size()];
-        for (int i = 0; i < mFTresult.size(); i++) {
-            rects[i] = new Rect(mFTresult.get(i).getRect());
-        }
+//        Rect[] rects = new Rect[mFTresult.size()];
+//        for (int i = 0; i < mFTresult.size(); i++) {
+//            rects[i] = new Rect(mFTresult.get(i).getRect());
+//        }
         //clear result.
         mFTresult.clear();
-        return rects;
+        return null;
     }
 
     /**
@@ -519,7 +520,7 @@ public class FaceUtils {
                         featureFace.faceSuress(name, max);
                     }
                     try {
-                        Thread.sleep(2000);
+                        Thread.sleep(800);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -558,6 +559,7 @@ public class FaceUtils {
      * 注销所有人脸识别引擎
      */
     public void destory() {
+        LogUtil.e("人脸识别注销！");
         mFDengine.AFD_FSDK_UninitialFaceEngine();
         mFREngine.AFR_FSDK_UninitialEngine();
         mFTengine.AFT_FSDK_UninitialFaceEngine();

@@ -9,6 +9,8 @@ import com.koushikdutta.async.http.server.AsyncHttpServerRequest;
 import com.koushikdutta.async.http.server.AsyncHttpServerResponse;
 import com.koushikdutta.async.http.server.HttpServerRequestCallback;
 
+import org.json.JSONObject;
+
 import rk.device.launcher.utils.LogUtil;
 
 /**
@@ -47,13 +49,18 @@ public class LauncherHttpServer {
         server.listen(PORT_LISTEN_DEFAULT);
     }
 
+    public void stopServer(){
+        server.stop();
+    }
+
+
     /**
      * Http request's callback
      */
     public abstract static class HttpServerReqCallBack implements HttpServerRequestCallback {
         public abstract void onError(String uri, Multimap params, AsyncHttpServerResponse response);
 
-        public abstract void onSuccess(String uri, Multimap params,
+        public abstract void onSuccess(String uri, JSONObject params,
                                        AsyncHttpServerResponse response);
 
         public abstract void onFile(MultipartFormDataBody body,
@@ -73,7 +80,7 @@ public class LauncherHttpServer {
                     MultipartFormDataBody body = (MultipartFormDataBody) request.getBody();
                     onFile(body,response);
                 } else {
-                    Multimap params = (Multimap) request.getBody().get();
+                    JSONObject params = (JSONObject) request.getBody().get();
                     onSuccess(uri, params, response);
                 }
             } else {

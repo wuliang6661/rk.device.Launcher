@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="#000b2e">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,16 +13,9 @@
         android:layout_alignParentTop="true"
         android:orientation="vertical">
 
-
-        <com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer
-            android:id="@+id/default_video"
-            android:layout_width="match_parent"
-            android:layout_height="450dp" />
-
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="90dp"
+            android:layout_height="113dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -38,7 +32,7 @@
                 android:layout_width="1.5dp"
                 android:layout_height="60dp"
                 android:layout_marginLeft="19dp"
-                android:background="#000000" />
+                android:background="#03e2fc" />
 
 
             <LinearLayout
@@ -54,7 +48,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="2017-01-17 15:36"
-                    android:textColor="#333333"
+                    android:textColor="#03e2fc"
                     android:textSize="26dp"
                     android:textStyle="bold" />
 
@@ -66,7 +60,7 @@
                     android:layout_marginTop="13dp"
                     android:maxLines="1"
                     android:text="@string/device_name_lizi"
-                    android:textColor="#333333"
+                    android:textColor="#03e2fc"
                     android:textSize="22dp"
                     android:textStyle="bold" />
 
@@ -78,10 +72,8 @@
         <TextView
             android:id="@+id/gonggao_text"
             android:layout_width="match_parent"
-            android:layout_height="96dp"
-            android:layout_marginLeft="6dp"
-            android:layout_marginRight="6dp"
-            android:background="@drawable/gonggao_bg"
+            android:layout_height="80dp"
+            android:background="@drawable/guanggao_bg"
             android:ellipsize="marquee"
             android:focusable="true"
             android:focusableInTouchMode="true"
@@ -90,71 +82,36 @@
             android:paddingLeft="14dp"
             android:singleLine="true"
             android:text="@string/declare"
-            android:textColor="#ff0000"
+            android:textColor="@color/white"
             android:textSize="32dp" />
 
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="320dp">
+            android:layout_height="match_parent">
 
 
-            <ImageView
-                android:id="@+id/guanggao01"
+            <com.donkingliang.banner.CustomBanner
+                android:id="@+id/custom"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="fitXY"
-                android:src="@drawable/guanggao01" />
+                app:indicatorStyle="NONE" />
 
-          <!--  <FrameLayout
-                android:id="@+id/frame_layout"
+            <SurfaceView
+                android:id="@+id/camera_surfaceview"
                 android:layout_width="426dp"
-                android:layout_height="match_parent"
-                android:layout_centerInParent="true">-->
+                android:layout_height="320dp"
+                android:layout_centerInParent="true" />
 
-                <SurfaceView
-                    android:id="@+id/camera_surfaceview"
-                    android:layout_width="426dp"
-                    android:layout_centerInParent="true"
-                    android:layout_height="match_parent" />
-
-            <!--</FrameLayout>-->
         </RelativeLayout>
 
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="4dp"
-            android:orientation="horizontal">
-
-
-            <ImageView
-                android:id="@+id/guanggao02"
-                android:layout_width="262dp"
-                android:layout_height="match_parent"
-                android:scaleType="fitXY"
-                android:src="@drawable/guanggao02" />
-
-
-            <ImageView
-                android:id="@+id/guanggao03"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="4dp"
-                android:scaleType="fitXY"
-                android:src="@drawable/guanggao03" />
-
-
-        </LinearLayout>
     </LinearLayout>
 
 
     <rk.device.launcher.widget.ArcMenu
         android:id="@+id/menu"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="450dp">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:id="@+id/menu_message"

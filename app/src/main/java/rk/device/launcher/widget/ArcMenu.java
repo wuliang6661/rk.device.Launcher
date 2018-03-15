@@ -178,7 +178,8 @@ public class ArcMenu extends ViewGroup {
         mCenterButton.setOnClickListener(mCenterButtonClickListener);
         int width = mCenterButton.getMeasuredWidth();
         int height = mCenterButton.getMeasuredHeight();
-        mCenterX = (int) (getMeasuredWidth() * 2.0f / 3);
+//        mCenterX = (int) (getMeasuredWidth() * 2.0f / 3);
+        mCenterX = (getMeasuredWidth() / 2);
         mCenterY = (int) (getMeasuredHeight() - height * 2.0f / 3);
         mCenterButton.layout(mCenterX - width / 2, mCenterY - height / 2, mCenterX + width / 2, mCenterY + height / 2);
         invalidate();

@@ -2,6 +2,7 @@ package rk.device.launcher.utils.verify;
 
 import android.util.Log;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -27,12 +28,13 @@ import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.SoundPlayUtils;
 import rk.device.launcher.utils.StringUtils;
 import rk.device.launcher.utils.TimeUtils;
-import rk.device.launcher.utils.rxjava.RxBus;
 import rk.device.launcher.utils.uuid.DeviceUuidFactory;
 import rx.Subscriber;
 
 /**
  * Created by hanbin on 2018/1/13.
+ * <p>
+ * 开门工具类
  */
 
 public class OpenUtils {
@@ -237,7 +239,7 @@ public class OpenUtils {
             relayOff = RelayHelper.RelaySetOn();
         }
         if (relayOff == 0) {
-            RxBus.getDefault().post(new OpenDoorSuccessEvent(personName, type, 1));
+            EventBus.getDefault().post(new OpenDoorSuccessEvent(personName, type, 1));
             try {
                 String time = SPUtils.getString(Constant.DEVICE_TIME);
                 long sleepTime;

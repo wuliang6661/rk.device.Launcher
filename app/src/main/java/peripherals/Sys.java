@@ -16,7 +16,7 @@ public class Sys {
 		}
 		catch (UnsatisfiedLinkError e) {
 			System.out.println("Failed to load library: " + e);		
-			System.exit(-1);
+//			System.exit(-1);
 		}
     }
 

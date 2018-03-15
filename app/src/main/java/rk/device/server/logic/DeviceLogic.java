@@ -49,7 +49,7 @@ public class DeviceLogic extends BaseLogic {
      * @param params
      * @return
      */
-    public JSONObject open(Multimap params) {
+    public JSONObject open(org.json.JSONObject params) throws Exception {
         String accessToken = params.getString("access_token");
         String uuid = params.getString("uuid");
         if (TextUtils.isEmpty(uuid)) {
@@ -71,7 +71,7 @@ public class DeviceLogic extends BaseLogic {
      * @param params
      * @return
      */
-    public JSONObject status(Multimap params) {
+    public JSONObject status(org.json.JSONObject params) throws Exception {
         String accessToken = params.getString("access_token");
         String uuid = params.getString("uuid");
         if (TextUtils.isEmpty(uuid)) {

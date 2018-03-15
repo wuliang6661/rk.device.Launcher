@@ -10,7 +10,6 @@ import com.koushikdutta.async.ByteBufferList;
 import com.koushikdutta.async.DataEmitter;
 import com.koushikdutta.async.callback.CompletedCallback;
 import com.koushikdutta.async.callback.DataCallback;
-import com.koushikdutta.async.http.Multimap;
 import com.koushikdutta.async.http.body.MultipartFormDataBody;
 import com.koushikdutta.async.http.body.Part;
 import com.koushikdutta.async.http.server.AsyncHttpServerResponse;
@@ -64,7 +63,7 @@ public class MemberLogic extends BaseLogic {
      * @param params
      * @return
      */
-    public JSONObject addMember(Multimap params) {
+    public JSONObject addMember(org.json.JSONObject params) throws Exception{
         String accessToken = params.getString("access_token");
         String uuid = params.getString("uuid");
         if (TextUtils.isEmpty(uuid)) {
@@ -79,9 +78,9 @@ public class MemberLogic extends BaseLogic {
         int role = TypeTranUtils.str2Int(params.getString("role"));
         String startTime = params.getString("startTime");
         String endTime = params.getString("endTime");
-        String cardNo = params.getString("cardNo");
-        String faceID = params.getString("faceId");
-        String password = params.getString("password");
+//        String cardNo = params.getString("cardNo");
+//        String faceID = params.getString("faceId");
+//        String password = params.getString("password");
         if (TextUtils.isEmpty(peopleId)) {//新增用户
             if (TextUtils.isEmpty(popeName)) {
                 return onError(HttpResponseCode.Error, "请填写用户名");
@@ -100,8 +99,8 @@ public class MemberLogic extends BaseLogic {
             user.setRole(role);
             user.setStartTime(TypeTranUtils.str2Int(startTime));
             user.setEndTime(TypeTranUtils.str2Int(endTime));
-            user.setFaceID(faceID);
-            user.setPassWord(TypeTranUtils.str2Int(password));
+//            user.setFaceID(faceID);
+//            user.setPassWord(TypeTranUtils.str2Int(password));
             long userId = DbHelper.insertUser(user);
             String uniqueId = DbHelper.queryUniqueIdByUserId(userId);
             JSONObject result = new JSONObject();
@@ -123,9 +122,9 @@ public class MemberLogic extends BaseLogic {
                     : TypeTranUtils.str2Int(startTime));
             user.setEndTime(TextUtils.isEmpty(endTime) ? oldUser.getEndTime()
                     : TypeTranUtils.str2Int(endTime));
-            user.setFaceID(TextUtils.isEmpty(faceID) ? oldUser.getFaceID() : faceID);
-            user.setPassWord(TextUtils.isEmpty(password) ? oldUser.getPassWord()
-                    : TypeTranUtils.str2Int(password));
+//            user.setFaceID(TextUtils.isEmpty(faceID) ? oldUser.getFaceID() : faceID);
+//            user.setPassWord(TextUtils.isEmpty(password) ? oldUser.getPassWord()
+//                    : TypeTranUtils.str2Int(password));
             DbHelper.insertUser(user);
             JSONObject result = new JSONObject();
             result.put("status", 1);
@@ -139,7 +138,7 @@ public class MemberLogic extends BaseLogic {
      * @param params
      * @return
      */
-    public JSONObject delete(Multimap params) {
+    public JSONObject delete(org.json.JSONObject params) throws Exception{
         String accessToken = params.getString("access_token");
         String uuid = params.getString("uuid");
         if (TextUtils.isEmpty(uuid)) {
@@ -310,7 +309,7 @@ public class MemberLogic extends BaseLogic {
      * @param params
      * @return
      */
-    public JSONObject deleteFace(Multimap params) {
+    public JSONObject deleteFace(org.json.JSONObject params) throws Exception {
         String faceId = params.getString("faceId");
         if (TextUtils.isEmpty(faceId)) {
             return onError(HttpResponseCode.Error, "faceId不能为空");

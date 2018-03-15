@@ -1,18 +1,12 @@
 package rk.device.launcher.ui.main.home;
 
-import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Message;
-
-import com.guo.android_extend.java.AbsLoop;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -31,14 +25,12 @@ import rk.device.launcher.db.entity.User;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.global.VerifyTypeConstant;
 import rk.device.launcher.mvp.BasePresenterImpl;
-import rk.device.launcher.service.ElectricBroadcastReceiver;
 import rk.device.launcher.service.NetBroadcastReceiver;
 import rk.device.launcher.service.NetChangeBroadcastReceiver;
 import rk.device.launcher.service.SocketService;
 import rk.device.launcher.service.VerifyService;
 import rk.device.launcher.utils.AppManager;
 import rk.device.launcher.utils.AppUtils;
-import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.StatSoFiles;
 import rk.device.launcher.utils.Utils;
@@ -47,6 +39,7 @@ import rk.device.launcher.utils.key.KeyUtils;
 import rk.device.launcher.utils.uuid.DeviceUuidFactory;
 import rk.device.launcher.utils.verify.FaceUtils;
 import rk.device.launcher.utils.verify.OpenUtils;
+import rk.device.server.service.AppHttpServerService;
 import rx.Subscriber;
 
 /**
@@ -58,7 +51,6 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
 
 
     private GpsUtils gpsUtils;
-    private ElectricBroadcastReceiver mBatteryReceiver;
     private NetChangeBroadcastReceiver netChangeBroadcastRecever;
     private NetBroadcastReceiver netOffReceiver;
 
@@ -74,17 +66,6 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
         mHandler.sendMessage(msg);
         mHandler.setOnInitListener(this);
         return mHandler;
-    }
-
-
-    /**
-     * 反注册所有JNI
-     */
-    void deInitJni() {
-        JniHandler mHandler = JniHandler.getInstance();
-        Message msg = Message.obtain();
-        msg.what = EventUtil.DEINIT_JNI;
-        mHandler.sendMessage(msg);
     }
 
 
@@ -149,10 +130,7 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
     /**
      * 注销各类服务
      */
-    void unRegisterReceiver(Activity activity) {
-        if (mBatteryReceiver != null) {
-            activity.unregisterReceiver(mBatteryReceiver);
-        }
+    void unRegisterReceiver(Context activity) {
         if (netChangeBroadcastRecever != null) {
             activity.unregisterReceiver(netChangeBroadcastRecever);
         }
@@ -165,7 +143,7 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
     /**
      * 获取地理位置
      */
-    void initLocation(BaseActivity activity) {
+    void initLocation() {
         if (gpsUtils == null) {
             gpsUtils = new GpsUtils(mView.getContext());
         }
@@ -305,21 +283,8 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
             FaceUtils.getInstance().loadFaces();
             registerFace();
             initJni();
-            mView.getContext().bindService(new Intent(mView.getContext(), VerifyService.class), connection, Context.BIND_AUTO_CREATE);
-            mView.startVideo();
-        }
-    };
-
-
-    ServiceConnection connection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            LogUtil.e("connect service" + name.getClassName());
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            LogUtil.e("Disconnect service" + name.getClassName());
+            mContext.startService(new Intent(mContext.getApplicationContext(), VerifyService.class));
+            mContext.startService(new Intent(mContext.getApplicationContext(), AppHttpServerService.class));
         }
     };
 
@@ -328,13 +293,13 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
      * 开启socketService
      */
     void startSocketService() {
-        Intent socketService = new Intent(mContext, SocketService.class);
-        mContext.bindService(socketService, connection, Context.BIND_AUTO_CREATE);
+        Intent socketService = new Intent(mContext.getApplicationContext(), SocketService.class);
+        mView.getContext().startService(socketService);
     }
 
     private int isHasPerson = 0;   //连续5次检测到没人，关闭摄像头
     private boolean isStopThread = false;
-    static MdThread mdThread;
+    private static MdThread mdThread;
 
     /**
      * 启动人体红外检测
@@ -349,13 +314,13 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
     /**
      * 红外停止
      */
-    public static void stopPer() {
+    void stopPer() {
         if (mdThread != null) {
-            mdThread.shutdown();
+            isStopThread = true;
         }
     }
 
-    private static class MdThread extends AbsLoop {
+    private static class MdThread extends Thread {
 
         WeakReference<HomePresenter> weakReference;
         int[] mdStaus;
@@ -366,42 +331,36 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
         }
 
         @Override
-        public void setup() {
-
-        }
-
-        @Override
-        public void loop() {
-            HomePresenter presenter = weakReference.get();
-            if (presenter == null) {
-                return;
-            }
-            while (!presenter.isStopThread) {
+        public void run() {
+            super.run();
+            while (true) {
+                threadSleep(500);
+                HomePresenter presenter = weakReference.get();
+                if (presenter == null || presenter.isStopThread) {
+                    return;
+                }
                 int mdStatus = MdHelper.PER_mdGet(1, mdStaus);
-                if (mdStatus == 0 && mdStaus[0] == 1) {
+                if (mdStatus == 0 && mdStaus[0] == 1 && presenter.mView != null) {
                     presenter.isHasPerson = 0;
-                    if (presenter.mView != null) {
-                        presenter.mView.hasPerson(true);
-                        try {
-                            Thread.sleep(5000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
+                    presenter.mView.hasPerson(true);
+                    threadSleep(5000);
                 } else {
                     presenter.isHasPerson++;
-                    if (presenter.isHasPerson == 5) {
-                        if (presenter.mView != null) {
-                            presenter.mView.hasPerson(false);
-                        }
+                    if (presenter.isHasPerson == 5 && presenter.mView != null) {
+                        presenter.mView.hasPerson(false);
                     }
                 }
             }
         }
 
-        @Override
-        public void over() {
 
+        private void threadSleep(long time) {
+            try {
+                Thread.sleep(time);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
+
     }
 }
