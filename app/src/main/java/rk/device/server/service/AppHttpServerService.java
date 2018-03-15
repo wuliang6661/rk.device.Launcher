@@ -38,6 +38,18 @@ public class AppHttpServerService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
         Thread launcherThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -97,17 +109,6 @@ public class AppHttpServerService extends Service {
             }
         });
         launcherThread.start();
-        return super.onStartCommand(intent, flags, startId);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
         return null;
     }
 }
