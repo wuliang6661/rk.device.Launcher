@@ -17,6 +17,8 @@ import peripherals.MdHelper;
 import peripherals.NfcHelper;
 import peripherals.NumberpadHelper;
 import peripherals.RelayHelper;
+import peripherals.Sys;
+import rk.device.launcher.crash.CrashUtils;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.SPUtils;
@@ -174,11 +176,16 @@ public class JniHandler extends Handler {
         if (open == 0) {
             MediacHelper.MEDIAC_setFormat(carmer01[0], 640, 480);
             MediacHelper.MEDIAC_startStreaming(carmer01[0]);
+        } else if (open == 19) {    //carema设备节点不存在,设备重启
+            new CrashUtils().reboot();
+            return;
         }
         int open02 = MediacHelper.MEDIAC_open(carmer02[0]);
         if (open02 == 0) {
             MediacHelper.MEDIAC_setFormat(carmer02[0], 640, 480);
             MediacHelper.MEDIAC_startStreaming(carmer02[0]);
+        } else if (open02 == 19) {    //carema设备节点不存在,设备重启
+            new CrashUtils().reboot();
         }
     }
 
@@ -203,7 +210,7 @@ public class JniHandler extends Handler {
     /**
      * 注销所有硬件
      */
-    private void deInitJni() {
+    public void deInitJni() {
         CvcHelper.CVC_deinit();
         if (LauncherApplication.fingerModuleID != -1) {
             FingerHelper.JNIFpDeInit(LauncherApplication.fingerModuleID);

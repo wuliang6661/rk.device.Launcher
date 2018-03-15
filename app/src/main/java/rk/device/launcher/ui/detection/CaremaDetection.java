@@ -1,6 +1,7 @@
 package rk.device.launcher.ui.detection;
 
 import android.os.Bundle;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -8,8 +9,10 @@ import android.view.View;
 import android.widget.Button;
 
 import butterknife.Bind;
+import cvc.EventUtil;
 import rk.device.launcher.R;
 import rk.device.launcher.base.BaseActivity;
+import rk.device.launcher.base.JniHandler;
 import rk.device.launcher.utils.ResUtil;
 import rk.device.launcher.widget.carema.SurfaceHolderCaremaBack;
 import rk.device.launcher.widget.carema.SurfaceHolderCaremaFont;
@@ -45,6 +48,10 @@ public class CaremaDetection extends BaseActivity implements View.OnClickListene
         goBack();
         setTitle(ResUtil.getString(R.string.carema_detecation));
 
+        JniHandler handler = JniHandler.getInstance();
+        Message message = Message.obtain();
+        message.what = EventUtil.MEDIA_OPEN;
+        handler.sendMessage(message);
         initSurfaceViewOne();
         btnFinishSetting.setOnClickListener(this);
     }

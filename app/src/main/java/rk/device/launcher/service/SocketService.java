@@ -2,13 +2,15 @@ package rk.device.launcher.service;
 
 import android.app.Service;
 import android.content.Intent;
-import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.support.annotation.Nullable;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -18,6 +20,7 @@ import java.util.TimerTask;
 import rk.device.launcher.api.BaseApiImpl;
 import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.bean.StatusBo;
+import rk.device.launcher.bean.event.DestoryEvent;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.utils.FileUtils;
 import rk.device.launcher.utils.LogUtil;
@@ -47,6 +50,7 @@ public class SocketService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        EventBus.getDefault().register(this);
         if (deviceUuidFactory == null) {
             deviceUuidFactory = new DeviceUuidFactory(this);
         }
@@ -137,31 +141,28 @@ public class SocketService extends Service {
 
     @Override
     public void onDestroy() {
-
+        LogUtil.e("SocketService onDestory");
+        EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(DestoryEvent messageEvent) {
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+        handler.removeCallbacksAndMessages(null);
+        stopSelf();
+    }
+
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         sendDeviceStatusToPlatform();
-        IBinder result = null;
-        if (null == result) result = new MyBinder();
-        return result;
-    }
-
-    @Override
-    public boolean onUnbind(Intent intent) {
-        LogUtil.d(TAG, "onDestroy: SocketService");
-        if (timer != null) {
-            timer.cancel();
-            timer = null;
-        }
-        return super.onUnbind(intent);
-    }
-
-
-    private static class MyBinder extends Binder {
+        return null;
     }
 
 }

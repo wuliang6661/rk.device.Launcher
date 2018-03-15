@@ -520,7 +520,7 @@ public class FaceUtils {
                         featureFace.faceSuress(name, max);
                     }
                     try {
-                        Thread.sleep(2000);
+                        Thread.sleep(800);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

@@ -7,9 +7,17 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 
 import com.koushikdutta.async.http.Multimap;
+import com.koushikdutta.async.http.body.JSONArrayBody;
 import com.koushikdutta.async.http.body.MultipartFormDataBody;
 import com.koushikdutta.async.http.server.AsyncHttpServerResponse;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONObject;
+
+import rk.device.launcher.bean.event.DestoryEvent;
+import rk.device.launcher.utils.LogUtil;
 import rk.device.server.api.HttpRequestUri;
 import rk.device.server.api.LauncherHttpServer;
 import rk.device.server.logic.DeviceLogic;
@@ -28,6 +36,7 @@ public class AppHttpServerService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        EventBus.getDefault().register(this);
         init();
     }
 
@@ -50,42 +59,46 @@ public class AppHttpServerService extends Service {
                     }
 
                     @Override
-                    public void onSuccess(String uri, Multimap params,
+                    public void onSuccess(String uri, JSONObject params,
                                           AsyncHttpServerResponse response) {
-                        switch (uri) {
-                            case HttpRequestUri.MEMBER_ADD:
-                                response.send(
-                                        MemberLogic.getInstance().addMember(params).toJSONString());
-                                break;
-                            case HttpRequestUri.DELETE:
-                                response.send(
-                                        MemberLogic.getInstance().delete(params).toJSONString());
-                                break;
-                            case HttpRequestUri.OPEN:
-                                response.send(
-                                        DeviceLogic.getInstance().open(params).toJSONString());
-                                break;
-                            case HttpRequestUri.DEVICE_STATUS:
-                                response.send(
-                                        DeviceLogic.getInstance().status(params).toJSONString());
-                                break;
-                            case HttpRequestUri.UPDATE:
-                                response.send(
-                                        PublicLogic.getInstance().update(params).toJSONString());
-                                break;
-                            case HttpRequestUri.AD:
-                                response.send(PublicLogic.getInstance().ad(params).toJSONString());
-                                break;
-                            case HttpRequestUri.DELETE_FACE:
-                                response.send(MemberLogic.getInstance().deleteFace(params)
-                                        .toJSONString());
-                                break;
-                            case HttpRequestUri.UPDATE_TIME:
-                                response.send(PublicLogic.getInstance().updateTime(params).toJSONString());
-                                break;
-                            default:
-                                response.send("Invalid request url.");
-                                break;
+                        try {
+                            switch (uri) {
+                                case HttpRequestUri.MEMBER_ADD:
+                                    response.send(
+                                            MemberLogic.getInstance().addMember(params).toJSONString());
+                                    break;
+                                case HttpRequestUri.DELETE:
+                                    response.send(
+                                            MemberLogic.getInstance().delete(params).toJSONString());
+                                    break;
+                                case HttpRequestUri.OPEN:
+                                    response.send(
+                                            DeviceLogic.getInstance().open(params).toJSONString());
+                                    break;
+                                case HttpRequestUri.DEVICE_STATUS:
+                                    response.send(
+                                            DeviceLogic.getInstance().status(params).toJSONString());
+                                    break;
+                                case HttpRequestUri.UPDATE:
+                                    response.send(
+                                            PublicLogic.getInstance().update(params).toJSONString());
+                                    break;
+                                case HttpRequestUri.AD:
+                                    response.send(PublicLogic.getInstance().ad(params).toJSONString());
+                                    break;
+                                case HttpRequestUri.DELETE_FACE:
+                                    response.send(MemberLogic.getInstance().deleteFace(params)
+                                            .toJSONString());
+                                    break;
+                                case HttpRequestUri.UPDATE_TIME:
+                                    response.send(PublicLogic.getInstance().updateTime(params).toJSONString());
+                                    break;
+                                default:
+                                    response.send("Invalid request url.");
+                                    break;
+                            }
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
                         }
                     }
 
@@ -103,18 +116,23 @@ public class AppHttpServerService extends Service {
 
     @Override
     public void onDestroy() {
+        LogUtil.e("AppHttpServerSerivice onDestory");
+        EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(DestoryEvent messageEvent) {
+        launcherServer.stopServer();
+        stopSelf();
+    }
+
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        IBinder result = null;
-        if (null == result) result = new MyBinder();
-        return result;
+        return null;
     }
 
-
-    private static class MyBinder extends Binder {
-    }
 }

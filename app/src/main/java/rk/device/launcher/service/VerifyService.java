@@ -11,6 +11,10 @@ import android.support.annotation.Nullable;
 
 import com.guo.android_extend.java.AbsLoop;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.lang.ref.WeakReference;
 
 import peripherals.FingerHelper;
@@ -18,6 +22,7 @@ import peripherals.NfcHelper;
 import rk.device.launcher.R;
 import rk.device.launcher.api.T;
 import rk.device.launcher.base.LauncherApplication;
+import rk.device.launcher.bean.event.DestoryEvent;
 import rk.device.launcher.bean.event.NFCAddEvent;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.global.VerifyTypeConstant;
@@ -50,6 +55,7 @@ public class VerifyService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        EventBus.getDefault().register(this);
         init();
     }
 
@@ -96,19 +102,6 @@ public class VerifyService extends Service {
                             TAG + android.os.Process.myPid() + " Thread: "
                                     + android.os.Process.myTid() + " name "
                                     + Thread.currentThread().getName());
-                    ActivityManager activityManager = (ActivityManager) weakReference.get().getSystemService(ACTIVITY_SERVICE);
-                    //最大分配内存
-                    int memory = activityManager.getMemoryClass();
-                    System.out.println("memory: " + memory);
-                    //最大分配内存获取方法2
-                    float maxMemory = (float) (Runtime.getRuntime().maxMemory() * 1.0 / (1024 * 1024));
-                    //当前分配的总内存
-                    float totalMemory = (float) (Runtime.getRuntime().totalMemory() * 1.0 / (1024 * 1024));
-                    //剩余内存
-                    float freeMemory = (float) (Runtime.getRuntime().freeMemory() * 1.0 / (1024 * 1024));
-                    System.out.println("maxMemory: " + maxMemory);
-                    System.out.println("totalMemory: " + totalMemory);
-                    System.out.println("freeMemory: " + freeMemory);
                 } else {
                     return;
                 }
@@ -279,34 +272,26 @@ public class VerifyService extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(DestoryEvent messageEvent) {
+        destory();
+        stopSelf();
+    }
+
     @Override
     public void onDestroy() {
-        destory();
+        LogUtil.e("VerifyService onDestory");
+        EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        IBinder result = null;
-        if (null == result) result = new MyBinder();
-        return result;
+        return null;
     }
 
-    @Override
-    public boolean onUnbind(Intent intent) {
-        LogUtil.e("VerifyService onUnbind");
-        destory();
-        return super.onUnbind(intent);
-    }
-
-
-    @Override
-    public void unbindService(ServiceConnection conn) {
-        LogUtil.e("VerifyService unbindService");
-        destory();
-        super.unbindService(conn);
-    }
 
     private void destory() {
         isOpen = false;
@@ -331,7 +316,4 @@ public class VerifyService extends Service {
         }
     }
 
-
-    private static class MyBinder extends Binder {
-    }
 }

@@ -47,6 +47,7 @@ import rk.device.launcher.utils.key.KeyUtils;
 import rk.device.launcher.utils.uuid.DeviceUuidFactory;
 import rk.device.launcher.utils.verify.FaceUtils;
 import rk.device.launcher.utils.verify.OpenUtils;
+import rk.device.server.service.AppHttpServerService;
 import rx.Subscriber;
 
 /**
@@ -74,17 +75,6 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
         mHandler.sendMessage(msg);
         mHandler.setOnInitListener(this);
         return mHandler;
-    }
-
-
-    /**
-     * 反注册所有JNI
-     */
-    void deInitJni() {
-        JniHandler mHandler = JniHandler.getInstance();
-        Message msg = Message.obtain();
-        msg.what = EventUtil.DEINIT_JNI;
-        mHandler.sendMessage(msg);
     }
 
 
@@ -149,7 +139,7 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
     /**
      * 注销各类服务
      */
-    void unRegisterReceiver(Activity activity) {
+    void unRegisterReceiver(Context activity) {
         if (mBatteryReceiver != null) {
             activity.unregisterReceiver(mBatteryReceiver);
         }
@@ -305,21 +295,8 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
             FaceUtils.getInstance().loadFaces();
             registerFace();
             initJni();
-//            mView.getContext().bindService(new Intent(mView.getContext(), VerifyService.class), connection, Context.BIND_AUTO_CREATE);
-            mView.getContext().startService(new Intent(mContext.getApplicationContext(), VerifyService.class));
-        }
-    };
-
-
-    ServiceConnection connection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            LogUtil.e("connect service" + name.getClassName());
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            LogUtil.e("Disconnect service" + name.getClassName());
+            mContext.startService(new Intent(mContext.getApplicationContext(), VerifyService.class));
+            mContext.startService(new Intent(mContext.getApplicationContext(), AppHttpServerService.class));
         }
     };
 
@@ -330,7 +307,6 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
     void startSocketService() {
         Intent socketService = new Intent(mContext.getApplicationContext(), SocketService.class);
         mView.getContext().startService(socketService);
-//        mContext.bindService(socketService, connection, Context.BIND_AUTO_CREATE);
     }
 
     private int isHasPerson = 0;   //连续5次检测到没人，关闭摄像头
@@ -350,8 +326,9 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
     /**
      * 红外停止
      */
-    public static void stopPer() {
+    void stopPer() {
         if (mdThread != null) {
+            isStopThread = true;
             mdThread.shutdown();
         }
     }

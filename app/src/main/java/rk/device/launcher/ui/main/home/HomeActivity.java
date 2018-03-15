@@ -18,6 +18,8 @@ import android.widget.TextView;
 
 import com.donkingliang.banner.CustomBanner;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +30,7 @@ import rk.device.launcher.R;
 import rk.device.launcher.api.T;
 import rk.device.launcher.base.JniHandler;
 import rk.device.launcher.bean.SetPageContentBO;
+import rk.device.launcher.bean.event.DestoryEvent;
 import rk.device.launcher.bean.event.IpHostEvent;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.mvp.MVPBaseActivity;
@@ -57,7 +60,6 @@ import rk.device.launcher.widget.ArcMenu;
 import rk.device.launcher.widget.carema.SurfaceHolderCaremaBack;
 import rk.device.launcher.widget.carema.SurfaceHolderCaremaFont;
 import rk.device.launcher.zxing.decode.CaptureActivity;
-import rk.device.server.api.LauncherHttpServer;
 import rk.device.server.service.AppHttpServerService;
 
 
@@ -178,7 +180,6 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
         mPresenter.getData();
         mPresenter.getToken();
         mPresenter.startSocketService();
-        startService(new Intent(getApplicationContext(), AppHttpServerService.class));
     }
 
     /**
@@ -213,12 +214,12 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
      * 接收服务器IP地址更改，所有数据重新请求
      */
     private void registerIPHost() {
-        RxBus.getDefault().toObserverable(IpHostEvent.class).subscribe(ipHostEvent -> {
+        addSubscription(RxBus.getDefault().toObserverable(IpHostEvent.class).subscribe(ipHostEvent -> {
             mPresenter.initLocation(this);
             mPresenter.getData();
             mPresenter.getToken();
         }, throwable -> {
-        });
+        }));
     }
 
     /**
@@ -226,7 +227,6 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
      */
     private void initSurfaceViewOne() {
         SurfaceHolder surfaceholder = surfaceview.getHolder();
-        surfaceholder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         callbackFont = new SurfaceHolderCaremaFont(this);
         callbackFont.setCallBack(new SurfaceCallback());
         surfaceholder.addCallback(callbackFont);
@@ -288,20 +288,20 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
      */
     private void destory() {
         LogUtil.d("wuliang", "home destory!!!");
-        LauncherHttpServer.getInstance().stopServer();
-        stopService(new Intent(getApplicationContext(), AppHttpServerService.class));
-        stopService(new Intent(getApplicationContext(), SocketService.class));
-        stopService(new Intent(getApplicationContext(), VerifyService.class));
-        mStaticHandler.removeCallbacksAndMessages(null);
+        mPresenter.stopPer();
+        mPresenter.unRegisterReceiver(this);
         SurfaceHolderCaremaFont.stopCarema();
         SurfaceHolderCaremaBack.stopCarema();
-        mPresenter.deInitJni();
-        HomePresenter.stopPer();
-        mPresenter.unRegisterReceiver(this);
+        JniHandler.getInstance().deInitJni();
         FaceUtils.getInstance().stopFaceFR();
         FaceUtils.getInstance().destory();
         callbackFont.setCallBack(null);
         callbackFont = null;
+        stopService(new Intent(getApplicationContext(), AppHttpServerService.class));
+        stopService(new Intent(getApplicationContext(), SocketService.class));
+        stopService(new Intent(getApplicationContext(), VerifyService.class));
+        mStaticHandler.removeCallbacksAndMessages(null);
+        EventBus.getDefault().post(new DestoryEvent());
     }
 
 

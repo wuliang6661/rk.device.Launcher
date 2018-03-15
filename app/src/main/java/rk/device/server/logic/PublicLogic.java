@@ -51,7 +51,7 @@ public class PublicLogic extends BaseLogic {
      * @param params
      * @return
      */
-    public JSONObject update(Multimap params) {
+    public JSONObject update(org.json.JSONObject params) throws Exception {
         String accessToken = params.getString("access_token");
         String uuid = params.getString("uuid");
         if (TextUtils.isEmpty(uuid)) {
@@ -80,7 +80,7 @@ public class PublicLogic extends BaseLogic {
      * @param params
      * @return
      */
-    public JSONObject ad(Multimap params) {
+    public JSONObject ad(org.json.JSONObject params) throws Exception {
         String accessToken = params.getString("access_token");
         String uuid = params.getString("uuid");
         if (TextUtils.isEmpty(uuid)) {
@@ -91,7 +91,7 @@ public class PublicLogic extends BaseLogic {
             return onError(300, "请填写正确的UUID: " + getUUID());
         }
         String videoUrl = params.getString("video_url");
-        List<String> imageList = params.get("image_list");
+//        List<String> imageList = params.get("image_list");
 
         JSONObject result = new JSONObject();
         result.put("status", 1);
@@ -104,7 +104,7 @@ public class PublicLogic extends BaseLogic {
      * @param params
      * @return
      */
-    public JSONObject updateTime(Multimap params) {
+    public JSONObject updateTime(org.json.JSONObject params) throws Exception {
         String accessToken = params.getString("access_token");
         String uuid = params.getString("uuid");
         if (TextUtils.isEmpty(uuid)) {
