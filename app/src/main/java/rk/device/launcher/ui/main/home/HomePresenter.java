@@ -1,18 +1,12 @@
 package rk.device.launcher.ui.main.home;
 
-import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Message;
-
-import com.guo.android_extend.java.AbsLoop;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -31,14 +25,12 @@ import rk.device.launcher.db.entity.User;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.global.VerifyTypeConstant;
 import rk.device.launcher.mvp.BasePresenterImpl;
-import rk.device.launcher.service.ElectricBroadcastReceiver;
 import rk.device.launcher.service.NetBroadcastReceiver;
 import rk.device.launcher.service.NetChangeBroadcastReceiver;
 import rk.device.launcher.service.SocketService;
 import rk.device.launcher.service.VerifyService;
 import rk.device.launcher.utils.AppManager;
 import rk.device.launcher.utils.AppUtils;
-import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.StatSoFiles;
 import rk.device.launcher.utils.Utils;
@@ -59,7 +51,6 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
 
 
     private GpsUtils gpsUtils;
-    private ElectricBroadcastReceiver mBatteryReceiver;
     private NetChangeBroadcastReceiver netChangeBroadcastRecever;
     private NetBroadcastReceiver netOffReceiver;
 
@@ -140,9 +131,6 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
      * 注销各类服务
      */
     void unRegisterReceiver(Context activity) {
-        if (mBatteryReceiver != null) {
-            activity.unregisterReceiver(mBatteryReceiver);
-        }
         if (netChangeBroadcastRecever != null) {
             activity.unregisterReceiver(netChangeBroadcastRecever);
         }
@@ -155,7 +143,7 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
     /**
      * 获取地理位置
      */
-    void initLocation(BaseActivity activity) {
+    void initLocation() {
         if (gpsUtils == null) {
             gpsUtils = new GpsUtils(mView.getContext());
         }
@@ -311,7 +299,7 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
 
     private int isHasPerson = 0;   //连续5次检测到没人，关闭摄像头
     private boolean isStopThread = false;
-    static MdThread mdThread;
+    private static MdThread mdThread;
 
     /**
      * 启动人体红外检测
@@ -329,11 +317,10 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
     void stopPer() {
         if (mdThread != null) {
             isStopThread = true;
-            mdThread.shutdown();
         }
     }
 
-    private static class MdThread extends AbsLoop {
+    private static class MdThread extends Thread {
 
         WeakReference<HomePresenter> weakReference;
         int[] mdStaus;
@@ -344,26 +331,24 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
         }
 
         @Override
-        public void setup() {
-
-        }
-
-        @Override
-        public void loop() {
-            threadSleep(500);
-            HomePresenter presenter = weakReference.get();
-            if (presenter == null || presenter.isStopThread) {
-                return;
-            }
-            int mdStatus = MdHelper.PER_mdGet(1, mdStaus);
-            if (mdStatus == 0 && mdStaus[0] == 1 && presenter.mView != null) {
-                presenter.isHasPerson = 0;
-                presenter.mView.hasPerson(true);
-                threadSleep(5000);
-            } else {
-                presenter.isHasPerson++;
-                if (presenter.isHasPerson == 5 && presenter.mView != null) {
-                    presenter.mView.hasPerson(false);
+        public void run() {
+            super.run();
+            while (true) {
+                threadSleep(500);
+                HomePresenter presenter = weakReference.get();
+                if (presenter == null || presenter.isStopThread) {
+                    return;
+                }
+                int mdStatus = MdHelper.PER_mdGet(1, mdStaus);
+                if (mdStatus == 0 && mdStaus[0] == 1 && presenter.mView != null) {
+                    presenter.isHasPerson = 0;
+                    presenter.mView.hasPerson(true);
+                    threadSleep(5000);
+                } else {
+                    presenter.isHasPerson++;
+                    if (presenter.isHasPerson == 5 && presenter.mView != null) {
+                        presenter.mView.hasPerson(false);
+                    }
                 }
             }
         }
@@ -377,10 +362,5 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
             }
         }
 
-
-        @Override
-        public void over() {
-
-        }
     }
 }

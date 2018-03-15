@@ -165,7 +165,7 @@ public class MainActivity extends MVPBaseActivity<MainContract.View, MainPresent
      * 初始化界面
      */
     private void invition() {
-        caremaBg.setMovieResource(R.raw.camera_bg);
+//        caremaBg.setMovieResource(R.raw.camera_bg);
 //        deviceNameBg.setMovieResource(R.raw.device_name_bg);
         initDialog = InitErrorDialogFragment.newInstance();
         SoundPlayUtils.init(this);

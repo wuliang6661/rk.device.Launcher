@@ -17,7 +17,6 @@ import peripherals.MdHelper;
 import peripherals.NfcHelper;
 import peripherals.NumberpadHelper;
 import peripherals.RelayHelper;
-import peripherals.Sys;
 import rk.device.launcher.crash.CrashUtils;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.utils.LogUtil;
@@ -131,6 +130,10 @@ public class JniHandler extends Handler {
         if (MdStatus != 0) {
             MdStatus = MdHelper.PER_mdInit();
         }
+        if (NfcStatus != 0) {
+            NfcStatus = NfcHelper.PER_nfcInit();
+            Log.i("JniHandler", "NfcStatus " + NfcStatus);
+        }
         int carema01 = MediacHelper.MEDIAC_init(0, carmer01);
         int carema02 = MediacHelper.MEDIAC_init(1, carmer02);
         Log.i("wuliang", "cvcStatus == " + cvcStatus + "LedStatus == " + LedStatus
@@ -155,10 +158,6 @@ public class JniHandler extends Handler {
 //                LauncherApplication.remainUserCount = FingerHelper.JNIFpGetRemainSpace(fingerStatus);
 //            }
 //        }
-        if (NfcStatus != 0) {
-            NfcStatus = NfcHelper.PER_nfcInit();
-            Log.i("JniHandler", "NfcStatus " + NfcStatus);
-        }
         if (SPUtils.getBoolean(Constant.KEY_LIGNT, false)) {    //判断灯是否是开的，开灯的情况下将补光灯打开
             LedHelper.PER_ledToggle(1);
         }

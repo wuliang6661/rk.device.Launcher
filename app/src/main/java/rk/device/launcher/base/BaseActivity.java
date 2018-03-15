@@ -14,9 +14,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import butterknife.ButterKnife;
 import rk.device.launcher.R;
-import rk.device.launcher.api.BaseApiImpl;
 import rk.device.launcher.bean.NetDismissBO;
 import rk.device.launcher.bean.event.OpenDoorSuccessEvent;
 import rk.device.launcher.service.SleepTaskServer;
@@ -29,11 +32,7 @@ import rk.device.launcher.utils.AppManager;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.PackageUtils;
 import rk.device.launcher.utils.ResUtil;
-import rk.device.launcher.utils.rxjava.RxBus;
-import rx.Subscriber;
 import rx.Subscription;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -57,8 +56,6 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     private VerifyNoticeDialogFragment verifyNoticeDialogFragment = null;
 
-    private Subscription subscription;
-
     WaitDialog dialog;
 
     /**
@@ -71,12 +68,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayout());
+        EventBus.getDefault().register(this);
         hideNavigationBar();
-        registerRxBus();
         ButterKnife.bind(this);
         SleepTaskServer.getSleepHandler().sendEmptyMessage(0x11);
         AppManager.getAppManager().addActivity(this);
-        setNetListener();
 //        makeFilters();
     }
 
@@ -94,14 +90,11 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
         AppManager.getAppManager().removeActivity(this);
         ButterKnife.unbind(this);
-//        unregisterReceiver(mReceiver);
         if (this.mCompositeSubscription != null) {
             this.mCompositeSubscription.unsubscribe();
-        }
-        if (!subscription.isUnsubscribed()) {
-            subscription.unsubscribe();
         }
         if (hintDialog != null && hintDialog.getDialog() != null
                 && hintDialog.getDialog().isShowing()) {
@@ -291,30 +284,19 @@ public abstract class BaseActivity extends AppCompatActivity {
     /**
      * 接收网络是否断开的监听
      */
-    private void setNetListener() {
-        subscription = RxBus.getDefault().toObserverable(NetDismissBO.class).subscribe(new Action1<NetDismissBO>() {
-            @Override
-            public void call(NetDismissBO netDismissBean) {
-                if (netDismissBean.isConnect()) {
-//                    if(!isTcp){
-//                        LogUtil.i("SocketService","SocketService isConnect.");
-//                        startSocketService();
-//                    }
-                    if (hintDialog != null && hintDialog.isVisible()) {
-                        hintDialog.dismiss();
-                    }
-                } else {
-//                    isTcp = false;
-                    if (hintDialog != null && hintDialog.isVisible()) {
-
-                    } else {
-                        BaseActivity.this.showNetConnect();
-                    }
-                }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(NetDismissBO netDismissBean) {
+        if (netDismissBean.isConnect()) {
+            if (hintDialog != null && hintDialog.isVisible()) {
+                hintDialog.dismiss();
             }
-        }, throwable -> {        //处理异常
-            throwable.printStackTrace();
-        });
+        } else {
+            if (hintDialog != null && hintDialog.isVisible()) {
+
+            } else {
+                BaseActivity.this.showNetConnect();
+            }
+        }
     }
 
 
@@ -351,23 +333,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         ft.add(fragmentA, "fragment_name");
         ft.commit();
     }
-
-
-//    private BlueToothsBroadcastReceiver mReceiver;
-//
-//    //蓝牙监听需要添加的Action
-//    private IntentFilter makeFilters() {
-//        mReceiver = new BlueToothsBroadcastReceiver();
-//        IntentFilter intentFilter = new IntentFilter();
-//        intentFilter.addAction("android.bluetooth.a2dp.profile.action.CONNECTION_STATE_CHANGED");
-//        intentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
-//        intentFilter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
-//        intentFilter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
-//        intentFilter.addAction("android.bluetooth.BluetoothAdapter.STATE_OFF");
-//        intentFilter.addAction("android.bluetooth.BluetoothAdapter.STATE_ON");
-//        registerReceiver(mReceiver, intentFilter);
-//        return intentFilter;
-//    }
 
 
     /**
@@ -412,8 +377,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     /**
      * 给id设置监听
-     *
-     * @param ids
      */
     protected final void setOnClick(int... ids) {
         if (ids == null) {
@@ -426,8 +389,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     /**
      * 给view设置监听
-     *
-     * @param params
      */
     protected final void setOnClick(View... params) {
         if (params == null) {
@@ -443,9 +404,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     /**
      * 通过控件的Id获取对应的控件
-     *
-     * @param viewId
-     * @return
      */
     @SuppressWarnings("unchecked")
     protected final <U extends View> U findView(int viewId) {
@@ -454,74 +412,47 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
 
-    private void registerRxBus() {
-        addSubscription(RxBus.getDefault().toObserverable(OpenDoorSuccessEvent.class).subscribeOn(Schedulers.io()).subscribe(new Subscriber<OpenDoorSuccessEvent>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onNext(OpenDoorSuccessEvent openDoorSuccessEvent) {
-                if (openDoorSuccessEvent.isSuccess == 1) {
-                    LogUtil.i("OpenDoorSuccessEvent", "OpenDoorSuccessEvent " + AppManager.getAppManager().curremtActivity().getClass().getName());
-                    showSuccessDialog();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    AppManager.getAppManager().goBackMain();
-                                }
-                            }, 2500);
-                        }
-                    });
-                } else {
-                    showFailDialog();
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(OpenDoorSuccessEvent openDoorSuccessEvent) {
+        if (openDoorSuccessEvent.isSuccess == 1) {
+            LogUtil.i("OpenDoorSuccessEvent", "OpenDoorSuccessEvent " + AppManager.getAppManager().curremtActivity().getClass().getName());
+            showSuccessDialog();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    AppManager.getAppManager().goBackMain();
                 }
-            }
-        }));
+            }, 2000);
+        } else {
+            showFailDialog();
+        }
     }
+
 
     /**
      * 验证通过dialog
      */
     private void showSuccessDialog() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (!PackageUtils.isForeground(BaseActivity.this)) {
-                    return;
-                }
-                if (verifyNoticeDialogFragment == null) {
-                    verifyNoticeDialogFragment = VerifyNoticeDialogFragment.newInstance();
-                }
-                verifyNoticeDialogFragment.setStatusMsg(ResUtil.getString(R.string.verify_success)).setStatusImg(R.mipmap.verify_success);
-                verifyNoticeDialogFragment.showDialog(((FragmentActivity) AppManager.getAppManager().curremtActivity()).getSupportFragmentManager());
-            }
-        });
+        if (!PackageUtils.isForeground(BaseActivity.this)) {
+            return;
+        }
+        if (verifyNoticeDialogFragment == null) {
+            verifyNoticeDialogFragment = VerifyNoticeDialogFragment.newInstance();
+        }
+        verifyNoticeDialogFragment.setStatusMsg(ResUtil.getString(R.string.verify_success)).setStatusImg(R.mipmap.verify_success);
+        verifyNoticeDialogFragment.showDialog(((FragmentActivity) AppManager.getAppManager().curremtActivity()).getSupportFragmentManager());
     }
+
 
     /**
      * 验证失败dialog
      */
     private void showFailDialog() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (verifyNoticeDialogFragment == null) {
-                    verifyNoticeDialogFragment = VerifyNoticeDialogFragment.newInstance();
-                }
-                verifyNoticeDialogFragment.setStatusMsg(ResUtil.getString(R.string.verify_error)).setStatusImg(R.drawable.icon_recovery_success);
-                verifyNoticeDialogFragment.showDialog(((FragmentActivity) AppManager.getAppManager().curremtActivity()).getSupportFragmentManager());
-            }
-        });
+        if (verifyNoticeDialogFragment == null) {
+            verifyNoticeDialogFragment = VerifyNoticeDialogFragment.newInstance();
+        }
+        verifyNoticeDialogFragment.setStatusMsg(ResUtil.getString(R.string.verify_error)).setStatusImg(R.drawable.icon_recovery_success);
+        verifyNoticeDialogFragment.showDialog(((FragmentActivity) AppManager.getAppManager().curremtActivity()).getSupportFragmentManager());
     }
 
 }

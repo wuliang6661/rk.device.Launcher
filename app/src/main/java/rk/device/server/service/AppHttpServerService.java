@@ -2,13 +2,10 @@ package rk.device.server.service;
 
 import android.app.Service;
 import android.content.Intent;
-import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
-import com.guo.android_extend.java.AbsLoop;
 import com.koushikdutta.async.http.Multimap;
-import com.koushikdutta.async.http.body.JSONArrayBody;
 import com.koushikdutta.async.http.body.MultipartFormDataBody;
 import com.koushikdutta.async.http.server.AsyncHttpServerResponse;
 
@@ -54,9 +51,10 @@ public class AppHttpServerService extends Service {
     }
 
 
-    AbsLoop lanucherThread = new AbsLoop() {
+    Thread lanucherThread = new Thread() {
         @Override
-        public void setup() {
+        public void run() {
+            super.run();
             launcherServer.startServer(new LauncherHttpServer.HttpServerReqCallBack() {
                 @Override
                 public void onError(String uri, Multimap params,
@@ -116,14 +114,6 @@ public class AppHttpServerService extends Service {
             });
         }
 
-        @Override
-        public void loop() {
-        }
-
-        @Override
-        public void over() {
-
-        }
     };
 
     @Override
@@ -137,7 +127,6 @@ public class AppHttpServerService extends Service {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(DestoryEvent messageEvent) {
         launcherServer.stopServer();
-        lanucherThread.shutdown();
         stopSelf();
     }
 

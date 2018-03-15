@@ -9,6 +9,7 @@ import org.greenrobot.greendao.database.Database;
 import java.io.File;
 import java.util.List;
 
+import rk.device.launcher.crash.CrashHandler;
 import rk.device.launcher.db.MyOpenHelper;
 import rk.device.launcher.db.entity.DaoMaster;
 import rk.device.launcher.db.entity.DaoSession;
@@ -99,7 +100,7 @@ public class LauncherApplication extends Application {
         super.onCreate();
 
         sContext = getApplicationContext();
-//        CrashHandler.getInstance().init(this);
+        CrashHandler.getInstance().init(this);
         CacheUtils.init();
         Utils.init(this);
         STUtils.init(this);

@@ -4,12 +4,8 @@ import android.app.ActivityManager;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-
-import com.guo.android_extend.java.AbsLoop;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -80,7 +76,7 @@ public class VerifyService extends Service {
     }
 
 
-    private static class NfcThread extends AbsLoop {
+    private static class NfcThread extends Thread {
 
         WeakReference<VerifyService> weakReference;
 
@@ -88,14 +84,11 @@ public class VerifyService extends Service {
             weakReference = new WeakReference<>(service);
         }
 
-        @Override
-        public void setup() {
-
-        }
 
         @Override
-        public void loop() {
-            if (isOpen) {
+        public void run() {
+            super.run();
+            while (isOpen) {
                 if (weakReference.get() != null) {
                     weakReference.get().nfcService();
                     LogUtil.d(TAG,
@@ -103,15 +96,11 @@ public class VerifyService extends Service {
                                     + android.os.Process.myTid() + " name "
                                     + Thread.currentThread().getName());
                 } else {
-                    shutdown();
+                    return;
                 }
             }
         }
 
-        @Override
-        public void over() {
-
-        }
     }
 
 
@@ -295,7 +284,6 @@ public class VerifyService extends Service {
 
     private void destory() {
         isOpen = false;
-        nfcThread.shutdown();
         LogUtil.i(TAG, TAG + ": onDestroy.");
         int status = NfcHelper.PER_nfcDeinit();
         if (status == 0) {

@@ -215,7 +215,7 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
      */
     private void registerIPHost() {
         addSubscription(RxBus.getDefault().toObserverable(IpHostEvent.class).subscribe(ipHostEvent -> {
-            mPresenter.initLocation(this);
+            mPresenter.initLocation();
             mPresenter.getData();
             mPresenter.getToken();
         }, throwable -> {
