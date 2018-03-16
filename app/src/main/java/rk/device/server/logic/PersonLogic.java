@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 import rk.device.launcher.db.DbHelper;
 import rk.device.launcher.db.entity.User;
@@ -37,24 +38,24 @@ import rk.device.server.api.HttpResponseCode;
  * <p/>
  * 用户逻辑
  */
-public class MemberLogic extends BaseLogic {
+public class PersonLogic extends BaseLogic {
 
-    private static final String TAG         = "MemberLogic";
-    private static MemberLogic  memberLogic = null;
+    private static final String TAG = "PersonLogic";
+    private static PersonLogic personLogic = null;
 
-    public MemberLogic() {
+    public PersonLogic() {
 
     }
 
-    public static MemberLogic getInstance() {
-        if (memberLogic == null) {
-            synchronized (MemberLogic.class) {
-                if (memberLogic == null) {
-                    memberLogic = new MemberLogic();
+    public static PersonLogic getInstance() {
+        if (personLogic == null) {
+            synchronized (PersonLogic.class) {
+                if (personLogic == null) {
+                    personLogic = new PersonLogic();
                 }
             }
         }
-        return memberLogic;
+        return personLogic;
     }
 
     /**
@@ -63,9 +64,9 @@ public class MemberLogic extends BaseLogic {
      * @param params
      * @return
      */
-    public JSONObject addMember(org.json.JSONObject params) throws Exception{
-        String accessToken = params.getString("access_token");
-        String uuid = params.getString("uuid");
+    public synchronized JSONObject addMember(org.json.JSONObject params) throws Exception {
+        String accessToken = params.optString("access_token");
+        String uuid = params.optString("uuid");
         if (TextUtils.isEmpty(uuid)) {
             return onError(HttpResponseCode.Error, "UUID不能为空");
         }
@@ -73,64 +74,105 @@ public class MemberLogic extends BaseLogic {
             LogUtil.i(TAG, getUUID());
             return onError(HttpResponseCode.Error, "请填写正确的UUID: " + getUUID());
         }
-        String peopleId = params.getString("peopleId");
-        String popeName = params.getString("popeName");
-        int role = TypeTranUtils.str2Int(params.getString("role"));
-        String startTime = params.getString("startTime");
-        String endTime = params.getString("endTime");
-//        String cardNo = params.getString("cardNo");
-//        String faceID = params.getString("faceId");
-//        String password = params.getString("password");
-        if (TextUtils.isEmpty(peopleId)) {//新增用户
-            if (TextUtils.isEmpty(popeName)) {
-                return onError(HttpResponseCode.Error, "请填写用户名");
-            }
-            if (role == 0) {
-                return onError(HttpResponseCode.Error, "请选择用户权限类型");
-            }
-            if (TextUtils.isEmpty(startTime)) {
-                return onError(HttpResponseCode.Error, "请填写开始时间");
-            }
-            if (TextUtils.isEmpty(endTime)) {
-                return onError(HttpResponseCode.Error, "请填写结束时间");
-            }
-            User user = new User();
-            user.setName(popeName);
-            user.setRole(role);
-            user.setStartTime(TypeTranUtils.str2Int(startTime));
-            user.setEndTime(TypeTranUtils.str2Int(endTime));
-//            user.setFaceID(faceID);
-//            user.setPassWord(TypeTranUtils.str2Int(password));
-            long userId = DbHelper.insertUser(user);
-            String uniqueId = DbHelper.queryUniqueIdByUserId(userId);
-            JSONObject result = new JSONObject();
-            result.put("status", 1);
-            result.put("peopleId", uniqueId);
-            return onSuccess(result, "请求成功");
-        } else {
-            //修改用户
-            User oldUser = VerifyUtils.getInstance().queryUserByUniqueId(peopleId);
-            if (oldUser == null) {
-                return onError(HttpResponseCode.Error, "该用户不存在");
-            }
-            User user = new User();
-            user.setId(oldUser.getId());
-            user.setUniqueId(peopleId);
-            user.setName(TextUtils.isEmpty(popeName) ? oldUser.getName() : popeName);
-            user.setRole(role == 0 ? oldUser.getRole() : role);
-            user.setStartTime(TextUtils.isEmpty(startTime) ? oldUser.getStartTime()
-                    : TypeTranUtils.str2Int(startTime));
-            user.setEndTime(TextUtils.isEmpty(endTime) ? oldUser.getEndTime()
-                    : TypeTranUtils.str2Int(endTime));
-//            user.setFaceID(TextUtils.isEmpty(faceID) ? oldUser.getFaceID() : faceID);
-//            user.setPassWord(TextUtils.isEmpty(password) ? oldUser.getPassWord()
-//                    : TypeTranUtils.str2Int(password));
-            DbHelper.insertUser(user);
-            JSONObject result = new JSONObject();
-            result.put("status", 1);
-            return onSuccess(result, "请求成功");
+        String peopleId = params.optString("peopleId");
+        String popeName = params.optString("popeName");
+        int role = TypeTranUtils.str2Int(params.optString("role"));
+        String startTime = params.optString("startTime");
+        String endTime = params.optString("endTime");
+        if (TextUtils.isEmpty(popeName)) {
+            return onError(HttpResponseCode.Error, "请填写用户名");
         }
+        if (role == 0) {
+            return onError(HttpResponseCode.Error, "请选择用户权限类型");
+        }
+        if (TextUtils.isEmpty(startTime)) {
+            return onError(HttpResponseCode.Error, "请填写开始时间");
+        }
+        if (TextUtils.isEmpty(endTime)) {
+            return onError(HttpResponseCode.Error, "请填写结束时间");
+        }
+        User oldUser = VerifyUtils.getInstance().queryUserByUniqueId(peopleId);
+        if (oldUser != null) {
+            return onError(HttpResponseCode.Error, "该用户已存在");
+        }
+        User user = new User();
+        user.setName(popeName);
+        user.setRole(role);
+        user.setStartTime(TypeTranUtils.str2Int(startTime));
+        user.setEndTime(TypeTranUtils.str2Int(endTime));
+        long userId = DbHelper.insertUser(user);
+        String uniqueId = DbHelper.queryUniqueIdByUserId(userId);
+        JSONObject result = new JSONObject();
+        result.put("status", 1);
+        result.put("peopleId", uniqueId);
+        return onSuccess(result, "请求成功");
     }
+
+
+    /**
+     * 修改用户
+     */
+    public synchronized JSONObject updatePerson(org.json.JSONObject params) throws Exception {
+        String accessToken = params.optString("access_token");
+        String uuid = params.optString("uuid");
+        if (TextUtils.isEmpty(uuid)) {
+            return onError(HttpResponseCode.Error, "UUID不能为空");
+        }
+        if (!getUUID().equals(uuid)) {
+            LogUtil.i(TAG, getUUID());
+            return onError(HttpResponseCode.Error, "请填写正确的UUID: " + getUUID());
+        }
+        String peopleId = params.optString("peopleId");
+        String popeName = params.optString("popeName");
+        int role = TypeTranUtils.str2Int(params.optString("role"));
+        String startTime = params.optString("startTime");
+        String endTime = params.optString("endTime");
+        //修改用户
+        User oldUser = VerifyUtils.getInstance().queryUserByUniqueId(peopleId);
+        if (oldUser == null) {
+            return onError(HttpResponseCode.Error, "该用户不存在");
+        }
+        User user = new User();
+        user.setId(oldUser.getId());
+        user.setUniqueId(peopleId);
+        user.setName(TextUtils.isEmpty(popeName) ? oldUser.getName() : popeName);
+        user.setRole(role == 0 ? oldUser.getRole() : role);
+        user.setStartTime(TextUtils.isEmpty(startTime) ? oldUser.getStartTime()
+                : TypeTranUtils.str2Int(startTime));
+        user.setEndTime(TextUtils.isEmpty(endTime) ? oldUser.getEndTime()
+                : TypeTranUtils.str2Int(endTime));
+        DbHelper.insertUser(user);
+        JSONObject result = new JSONObject();
+        result.put("status", 1);
+        return onSuccess(result, "请求成功");
+    }
+
+
+    /**
+     * 删除用户
+     */
+    public synchronized JSONObject deletePerson(org.json.JSONObject params) throws Exception {
+        String accessToken = params.optString("access_token");
+        String uuid = params.optString("uuid");
+        if (TextUtils.isEmpty(uuid)) {
+            return onError(HttpResponseCode.Error, "UUID不能为空");
+        }
+        if (!getUUID().equals(uuid)) {
+            LogUtil.i(TAG, getUUID());
+            return onError(HttpResponseCode.Error, "请填写正确的UUID: " + getUUID());
+        }
+        String peopleId = params.optString("peopleId");
+        //修改用户
+        User oldUser = VerifyUtils.getInstance().queryUserByUniqueId(peopleId);
+        if (oldUser == null) {
+            return onError(HttpResponseCode.Error, "该用户不存在");
+        }
+        DbHelper.delete(oldUser);
+        JSONObject result = new JSONObject();
+        result.put("status", 1);
+        return onSuccess(result, "请求成功");
+    }
+
 
     /**
      * 删除（用户，卡，密码）
@@ -138,7 +180,7 @@ public class MemberLogic extends BaseLogic {
      * @param params
      * @return
      */
-    public JSONObject delete(org.json.JSONObject params) throws Exception{
+    public JSONObject delete(org.json.JSONObject params) throws Exception {
         String accessToken = params.getString("access_token");
         String uuid = params.getString("uuid");
         if (TextUtils.isEmpty(uuid)) {
@@ -193,9 +235,9 @@ public class MemberLogic extends BaseLogic {
      * 文件读写流
      */
     private BufferedOutputStream fileOutPutStream = null;
-    private BufferedInputStream  fileInputStream  = null;
-    private File                 file             = null;
-    private String               filePath         = "";
+    private BufferedInputStream fileInputStream = null;
+    private File file = null;
+    private String filePath = "";
 
     /**
      * 上传人脸图片
@@ -280,7 +322,7 @@ public class MemberLogic extends BaseLogic {
 
     /**
      * 写入文件
-     * 
+     *
      * @param bb
      */
     private void writeData(ByteBufferList bb) {
@@ -305,7 +347,7 @@ public class MemberLogic extends BaseLogic {
 
     /**
      * 删除人脸
-     * 
+     *
      * @param params
      * @return
      */

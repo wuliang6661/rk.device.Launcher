@@ -25,9 +25,9 @@ import rk.device.launcher.utils.verify.OpenUtils;
  */
 public class DeviceLogic extends BaseLogic {
 
-    private static final String TAG = "MemberLogic";
-    private static DeviceLogic deviceLogic = null;
-    private DeviceUuidFactory deviceUuidFactory = null;
+    private static final String TAG               = "PersonLogic";
+    private static DeviceLogic  deviceLogic       = null;
+    private DeviceUuidFactory   deviceUuidFactory = null;
 
     public DeviceLogic() {
         if (deviceUuidFactory == null) {
