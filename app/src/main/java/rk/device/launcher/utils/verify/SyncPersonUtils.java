@@ -1,15 +1,17 @@
 package rk.device.launcher.utils.verify;
 
-import java.io.File;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
+import java.util.List;
+
 import rk.device.launcher.api.BaseApiImpl;
+import rk.device.launcher.api.T;
 import rk.device.launcher.db.DbHelper;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.global.Constant;
+import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.Utils;
-import rk.device.launcher.utils.cache.CacheUtils;
 import rk.device.launcher.utils.uuid.DeviceUuidFactory;
 import rx.Subscriber;
 
@@ -21,71 +23,41 @@ import rx.Subscriber;
 
 public class SyncPersonUtils {
 
-    private static SyncPersonUtils syncPersonUtils;
+    private DeviceUuidFactory factory;
 
-    private DeviceUuidFactory factory = new DeviceUuidFactory(Utils.getContext());
 
     public static SyncPersonUtils getInstance() {
-        if (syncPersonUtils == null) {
-            synchronized (SyncPersonUtils.class) {
-                if (syncPersonUtils == null) {
-                    syncPersonUtils = new SyncPersonUtils();
-                }
-            }
-        }
-        return syncPersonUtils;
+        return new SyncPersonUtils();
     }
+
+    private SyncPersonUtils() {
+        factory = new DeviceUuidFactory(Utils.getContext());
+    }
+
 
     /**
      * 同步人员到服务器
      */
-    public synchronized void syncPerosn(User user) {
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                Log.i("edit", "editperson");
-//                List<User> users = DbHelper.queryUserByUpdate();
-//                Log.i("SyncPersonUtils", "SyncPersonUtils size:" + users.size());
-//                if (!users.isEmpty()) {
-        updatePerson(user, null);
-//                }
-//            }
-//        }).start();
-    }
-
-    /**
-     * 上传人脸图片
-     */
-    private void uploadImage(User user) {
-        File file = new File(CacheUtils.getFaceFile() + "/", user.getFaceID() + ".png");
-        if (!file.exists()) {
-            return;
+    public void syncPerosn(User user) {
+        List<User> updateUser = DbHelper.queryUserByUpdate();
+        if (!updateUser.isEmpty()) {
+            for (User mUser : updateUser) {
+                if (user.getStatus() == Constant.TO_BE_DELETE) {
+                    doDeleteUser(mUser);
+                } else if (user.getStatus() == Constant.TO_BE_ADD) {
+                    addPerson(mUser);
+                } else if (user.getStatus() == Constant.TO_BE_UPDATE) {
+                    updatePerson(mUser);
+                }
+            }
         }
-        // 创建 RequestBody，用于封装构建RequestBody
-        RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), file);
-        BaseApiImpl.updataImage(requestBody).subscribe(new Subscriber<String>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onNext(String s) {
-                updatePerson(user, s);
-            }
-        });
     }
 
     /**
-     * 上传到服务器
+     * 添加用户
      */
-    private void updatePerson(User user, String faceImgUrl) {
-        BaseApiImpl.addUser(user, faceImgUrl).subscribe(new Subscriber<Object>() {
+    private synchronized void addPerson(User user) {
+        BaseApiImpl.addUser(user).subscribe(new Subscriber<Object>() {
             @Override
             public void onCompleted() {
 
@@ -93,13 +65,77 @@ public class SyncPersonUtils {
 
             @Override
             public void onError(Throwable e) {
-
+                if ("7".equals(e.getMessage())) {    //用户已存在，下次更新
+                    user.setStatus(Constant.TO_BE_UPDATE);
+                    DbHelper.insertUser(user);
+                }
             }
 
             @Override
             public void onNext(Object s) {
                 user.setStatus(Constant.NORMAL);
                 DbHelper.insertUser(user);
+            }
+        });
+    }
+
+    /**
+     * 修改用户
+     */
+    private synchronized void updatePerson(User user) {
+        BaseApiImpl.updateUser(user).subscribe(new Subscriber<Object>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if ("6".equals(e.getMessage())) {             //用户不存在，下次添加
+                    user.setStatus(Constant.TO_BE_ADD);
+                    DbHelper.insertUser(user);
+                }
+            }
+
+            @Override
+            public void onNext(Object s) {
+                user.setStatus(Constant.NORMAL);
+                DbHelper.insertUser(user);
+            }
+        });
+    }
+
+
+    /**
+     * 删除用户
+     */
+    private synchronized void doDeleteUser(User user) {
+        JSONObject params = new JSONObject();
+        try {
+            params.put("access_token", SPUtils.getString(Constant.ACCENT_TOKEN));
+            params.put("uuid", factory.getUuid());
+            params.put("peopleId", user.getUniqueId());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        BaseApiImpl.deleteUser(params).subscribe(new Subscriber<Object>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if ("6".equals(e.getMessage())) {             //用户不存在，直接删除
+                    DbHelper.delete(user);
+                    T.showShort("删除成功");
+                }
+            }
+
+            @Override
+            public void onNext(Object Object) {
+                DbHelper.delete(user);
+                T.showShort("删除成功");
             }
         });
     }

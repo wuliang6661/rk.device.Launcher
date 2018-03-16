@@ -19,6 +19,7 @@ import rk.device.launcher.utils.TypeTranUtils;
 import rk.device.launcher.utils.Utils;
 import rk.device.launcher.utils.WifiHelper;
 import rk.device.launcher.utils.verify.OpenUtils;
+import rk.device.server.api.HttpResponseCode;
 
 /**
  * Created by hanbin on 2018/2/5.
@@ -51,14 +52,13 @@ public class DeviceLogic extends BaseLogic {
      * @return
      */
     public JSONObject open(org.json.JSONObject params) throws Exception {
-        String accessToken = params.getString("access_token");
         String uuid = params.getString("uuid");
         if (TextUtils.isEmpty(uuid)) {
-            return onError(300, "UUID不能为空");
+            return onError(HttpResponseCode.NO_JSON, "UUID不能为空");
         }
         if (!getUUID().equals(uuid)) {
             LogUtil.i(TAG, getUUID());
-            return onError(300, "请填写正确的UUID: " + getUUID());
+            return onError(HttpResponseCode.NO_JSON, "请填写正确的UUID: " + getUUID());
         }
         OpenUtils.getInstance().openDoorJni(VerifyTypeConstant.TYPE_API, "000000", "远程开门");
         JSONObject result = new JSONObject();
@@ -73,14 +73,13 @@ public class DeviceLogic extends BaseLogic {
      * @return
      */
     public JSONObject status(org.json.JSONObject params) throws Exception {
-        String accessToken = params.getString("access_token");
         String uuid = params.getString("uuid");
         if (TextUtils.isEmpty(uuid)) {
-            return onError(300, "UUID不能为空");
+            return onError(HttpResponseCode.NO_JSON, "UUID不能为空");
         }
         if (!getUUID().equals(uuid)) {
             LogUtil.i(TAG, getUUID());
-            return onError(300, "请填写正确的UUID: " + getUUID());
+            return onError(HttpResponseCode.NO_JSON, "请填写正确的UUID: " + getUUID());
         }
 
         JSONObject result = new JSONObject();
@@ -111,14 +110,13 @@ public class DeviceLogic extends BaseLogic {
      * @return
      */
     public JSONObject update(org.json.JSONObject params) throws Exception {
-        String accessToken = params.getString("access_token");
         String uuid = params.getString("uuid");
         if (TextUtils.isEmpty(uuid)) {
-            return onError(300, "UUID不能为空");
+            return onError(HttpResponseCode.NO_JSON, "UUID不能为空");
         }
         if (!getUUID().equals(uuid)) {
             LogUtil.i(TAG, getUUID());
-            return onError(300, "请填写正确的UUID: " + getUUID());
+            return onError(HttpResponseCode.NO_JSON, "请填写正确的UUID: " + getUUID());
         }
         int code = TypeTranUtils.str2Int(params.getString("code"));
         String file = params.getString("file");
@@ -140,14 +138,13 @@ public class DeviceLogic extends BaseLogic {
      * @return
      */
     public JSONObject ad(org.json.JSONObject params) throws Exception {
-        String accessToken = params.getString("access_token");
         String uuid = params.getString("uuid");
         if (TextUtils.isEmpty(uuid)) {
-            return onError(300, "UUID不能为空");
+            return onError(HttpResponseCode.NO_JSON, "UUID不能为空");
         }
         if (!getUUID().equals(uuid)) {
             LogUtil.i(TAG, getUUID());
-            return onError(300, "请填写正确的UUID: " + getUUID());
+            return onError(HttpResponseCode.NO_JSON, "请填写正确的UUID: " + getUUID());
         }
         String videoUrl = params.getString("video_url");
 //        List<String> imageList = params.get("image_list");
@@ -164,14 +161,13 @@ public class DeviceLogic extends BaseLogic {
      * @return
      */
     public JSONObject updateTime(org.json.JSONObject params) throws Exception {
-        String accessToken = params.getString("access_token");
         String uuid = params.getString("uuid");
         if (TextUtils.isEmpty(uuid)) {
-            return onError(300, "UUID不能为空");
+            return onError(HttpResponseCode.NO_JSON, "UUID不能为空");
         }
         if (!getUUID().equals(uuid)) {
             LogUtil.i(TAG, getUUID());
-            return onError(300, "请填写正确UUID: " + getUUID());
+            return onError(HttpResponseCode.NO_JSON, "请填写正确UUID: " + getUUID());
         }
         int time = TypeTranUtils.str2Int(params.getString("update_time"));
         int updateTime = TypeTranUtils.str2Int(params.getString("shouldAutoUpdate"));

@@ -2,10 +2,10 @@ package rk.device.launcher.db;
 
 import android.text.TextUtils;
 
+import org.greenrobot.greendao.query.Query;
+
 import java.util.List;
 import java.util.UUID;
-
-import org.greenrobot.greendao.query.Query;
 
 import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.db.entity.User;
@@ -107,19 +107,12 @@ public class DbHelper {
      */
     public static List<User> queryByUniqueId(String uniqueId) {
         Query<User> query = getUserDao().queryBuilder()
-                .where(UserDao.Properties.UniqueId.eq(uniqueId)).build();
-        return query.list();
-    }
-
-    /**
-     * 通过faceId获取是否可开门
-     */
-    public static List<User> queryByFaceId(String faceId) {
-        Query<User> query = getUserDao().queryBuilder()
-                .where(UserDao.Properties.FaceID.eq(faceId), UserDao.Properties.Role.eq(1))
+                .whereOr(UserDao.Properties.UniqueId.eq(uniqueId),
+                        UserDao.Properties.Status.notEq(Constant.TO_BE_DELETE))
                 .build();
         return query.list();
     }
+
 
     /**
      * 插入或更新一条数据
@@ -143,22 +136,13 @@ public class DbHelper {
             getUserDao().insert(user);
             return 0;
         } else {
-            user.setStatus(Constant.TO_BE_UPDATE);
+            if (user.getStatus() == Constant.NORMAL) {
+                user.setStatus(Constant.TO_BE_UPDATE);
+            }
             user.setUpdateTime(System.currentTimeMillis());
             getUserDao().update(user);
             return Constant.UPDATE_SUCCESS;
         }
-    }
-
-    /**
-     * 查询数字密码是否可开门
-     */
-    public static List<User> queryByPassword(String password) {
-        UserDao userDao = DbHelper.getUserDao();
-        // where里面是可变参数
-        Query<User> query = userDao.queryBuilder().where(UserDao.Properties.PassWord.eq(password),
-                UserDao.Properties.Role.eq(1)).build();
-        return query.list();
     }
 
     /**
@@ -167,7 +151,8 @@ public class DbHelper {
     public static List<User> queryUserById(String id) {
         UserDao userDao = DbHelper.getUserDao();
         // where里面是可变参数
-        Query<User> query = userDao.queryBuilder().where(UserDao.Properties.UniqueId.eq(id))
+        Query<User> query = userDao.queryBuilder().whereOr(UserDao.Properties.UniqueId.eq(id),
+                UserDao.Properties.Status.notEq(Constant.TO_BE_DELETE))
                 .build();
         return query.list();
     }
@@ -178,25 +163,11 @@ public class DbHelper {
     public static List<User> queryUserByUpdate() {
         UserDao userDao = DbHelper.getUserDao();
         // where里面是可变参数
-        Query<User> query = userDao.queryBuilder().whereOr(UserDao.Properties.Status.eq(Constant.TO_BE_ADD), UserDao.Properties.Status.eq(Constant.TO_BE_UPDATE))
+        Query<User> query = userDao.queryBuilder().whereOr(
+                UserDao.Properties.Status.eq(Constant.TO_BE_ADD),
+                UserDao.Properties.Status.eq(Constant.TO_BE_UPDATE),
+                UserDao.Properties.Status.eq(Constant.TO_BE_DELETE))
                 .build();
         return query.list();
     }
-
-    /**
-     * 通过UserId 获取UniqueId
-     *
-     * @param userId
-     * @return
-     */
-    public static String queryUniqueIdByUserId(String userId) {
-        Query<User> query = getUserDao().queryBuilder().where(UserDao.Properties.UniqueId.eq(userId))
-                .build();
-        if (query.list().size() == 0) {
-            return null;
-        } else {
-            return query.list().get(0).getUniqueId();
-        }
-    }
-
 }

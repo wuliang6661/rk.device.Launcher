@@ -76,13 +76,8 @@ public class LauncherHttpServer {
                 if (headers != null) {
                     LogUtil.d(TAG, headers.toString());
                 }
-                if (uri.equals(HttpRequestUri.UPLOAD)) {
-                    MultipartFormDataBody body = (MultipartFormDataBody) request.getBody();
-                    onFile(body, response);
-                } else {
-                    JSONObject params = (JSONObject) request.getBody().get();
-                    onSuccess(uri, params, response);
-                }
+                JSONObject params = (JSONObject) request.getBody().get();
+                onSuccess(uri, params, response);
             } else {
                 response.send("Invalid request url.");
             }

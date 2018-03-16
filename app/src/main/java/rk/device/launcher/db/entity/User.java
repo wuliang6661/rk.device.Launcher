@@ -32,12 +32,6 @@ public class User implements Serializable {
     @NotNull
     private int               role;                  // 权限类型
 
-    private String            faceID;
-
-    private int               passWord;
-
-    private String            fingerCode;
-
     private int               uploadStatus;
 
     private int               status;                //1：正常，2：待添加，3：待更新，4：待删除
@@ -50,18 +44,14 @@ public class User implements Serializable {
 
     private long              updateTime;
 
-    @Generated(hash = 1648016514)
+    @Generated(hash = 1844488305)
     public User(Long id, @NotNull String uniqueId, @NotNull String name, int role,
-            String faceID, int passWord, String fingerCode, int uploadStatus,
-            int status, long startTime, long endTime, long createTime,
-            long updateTime) {
+            int uploadStatus, int status, long startTime, long endTime,
+            long createTime, long updateTime) {
         this.id = id;
         this.uniqueId = uniqueId;
         this.name = name;
         this.role = role;
-        this.faceID = faceID;
-        this.passWord = passWord;
-        this.fingerCode = fingerCode;
         this.uploadStatus = uploadStatus;
         this.status = status;
         this.startTime = startTime;
@@ -104,30 +94,6 @@ public class User implements Serializable {
 
     public void setRole(int role) {
         this.role = role;
-    }
-
-    public String getFaceID() {
-        return this.faceID;
-    }
-
-    public void setFaceID(String faceID) {
-        this.faceID = faceID;
-    }
-
-    public int getPassWord() {
-        return this.passWord;
-    }
-
-    public void setPassWord(int passWord) {
-        this.passWord = passWord;
-    }
-
-    public String getFingerCode() {
-        return this.fingerCode;
-    }
-
-    public void setFingerCode(String fingerCode) {
-        this.fingerCode = fingerCode;
     }
 
     public int getUploadStatus() {
@@ -177,5 +143,7 @@ public class User implements Serializable {
     public void setUpdateTime(long updateTime) {
         this.updateTime = updateTime;
     }
+
+  
     
 }

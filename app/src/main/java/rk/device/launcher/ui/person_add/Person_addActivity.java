@@ -10,16 +10,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.List;
 
 import butterknife.Bind;
 import peripherals.FingerHelper;
 import rk.device.launcher.R;
-import rk.device.launcher.api.BaseApiImpl;
-import rk.device.launcher.api.T;
 import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.db.CardHelper;
 import rk.device.launcher.db.CodePasswordHelper;
@@ -38,14 +33,11 @@ import rk.device.launcher.ui.fragment.InputWifiPasswordDialogFragment;
 import rk.device.launcher.ui.nfcadd.NfcaddActivity;
 import rk.device.launcher.ui.personface.PersonFaceActivity;
 import rk.device.launcher.utils.FileUtils;
-import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.StringUtils;
 import rk.device.launcher.utils.TimeUtils;
 import rk.device.launcher.utils.cache.CacheUtils;
-import rk.device.launcher.utils.uuid.DeviceUuidFactory;
 import rk.device.launcher.utils.verify.FaceUtils;
 import rk.device.launcher.utils.verify.SyncPersonUtils;
-import rx.Subscriber;
 
 /**
  * MVPPlugin
@@ -106,7 +98,6 @@ public class Person_addActivity
 
     User user;
     InputWifiPasswordDialogFragment dialogFragment;
-    DeviceUuidFactory deviceUuidFactory = new DeviceUuidFactory(this);
 
 
     @Override
@@ -202,7 +193,6 @@ public class Person_addActivity
                     user.setStartTime(TimeUtils.string2Millis(tvTimeStart.getText().toString().trim()));
                     user.setEndTime(TimeUtils.string2Millis(tvTimeEnd.getText().toString().trim()));
                     DbHelper.insertUser(user);
-                    SyncPersonUtils.getInstance().syncPerosn(user);
                     finish();
                 }
                 break;
@@ -215,7 +205,7 @@ public class Person_addActivity
             case R.id.title_right:     //删除用户
                 showMessageDialog(getString(R.string.delete_person_message), getString(R.string.confirm), v -> {
                     doDeleteLocalUser();
-                    doDeleteUser();
+                    SyncPersonUtils.getInstance().syncPerosn(user);
                 });
                 break;
         }
@@ -225,53 +215,45 @@ public class Person_addActivity
      * 删除本地用户
      */
     private void doDeleteLocalUser() {
-        if (!StringUtils.isEmpty(user.getFaceID())) {    //删除本地人脸
+        //删除本地人脸
+        List<Face> faces = FaceHelper.getList(user.getUniqueId());
+        if (!faces.isEmpty()) {
             FaceUtils faceUtils = FaceUtils.getInstance();
-            faceUtils.delete(user.getFaceID());
-            FileUtils.deleteFile(CacheUtils.getFaceFile() + "/" + user.getFaceID() + ".png");
+            for (Face face : faces) {
+                faceUtils.delete(face.getFaceId());
+                FileUtils.deleteFile(CacheUtils.getFaceFile() + "/" + face.getFaceId() + ".png");
+                FaceHelper.delete(face);
+            }
         }
         //删除指纹
         List<Finger> fingerList = FingerPrintHelper.getList(user.getUniqueId());
-        if(!fingerList.isEmpty()){
-            for (int i = 0;i < fingerList.size();i++){
+        if (!fingerList.isEmpty()) {
+            for (int i = 0; i < fingerList.size(); i++) {
                 Finger finger = fingerList.get(i);
                 FingerPrintHelper.delete(finger);
                 FingerHelper.JNIFpDelUserByID(LauncherApplication.fingerModuleID, finger.getNumber());
             }
         }
+        //删除密码
+        List<CodePassword> codePasswords = CodePasswordHelper.getList(user.getUniqueId());
+        if (!codePasswords.isEmpty()) {
+            for (CodePassword codePassword : codePasswords) {
+                CodePasswordHelper.delete(codePassword);
+            }
+        }
+        //删除卡
+        List<Card> cards = CardHelper.getList(user.getUniqueId());
+        if (!cards.isEmpty()) {
+            for (Card codePassword : cards) {
+                CardHelper.delete(codePassword);
+            }
+        }
+        user.setStatus(4);
+        DbHelper.update(user);
         dissmissMessageDialog();
         finish();
     }
 
-    /**
-     * 删除用户
-     */
-    private void doDeleteUser() {
-        JSONObject params = new JSONObject();
-        try {
-            params.put("access_token", SPUtils.getString(Constant.ACCENT_TOKEN));
-            params.put("uuid", deviceUuidFactory.getUuid());
-            params.put("peopleId", user.getUniqueId());
-        } catch (JSONException e) {
-        }
-        BaseApiImpl.deleteUser(params).subscribe(new Subscriber<Object>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onNext(Object Object) {
-                DbHelper.delete(user);
-                T.showShort("删除成功");
-            }
-        });
-    }
 
     /**
      * 判断人名是否存在
@@ -283,6 +265,7 @@ public class Person_addActivity
             return false;
         }
         if (user != null) {
+            SyncPersonUtils.getInstance().syncPerosn(user);
             return true;
         }
         user = new User();
@@ -359,16 +342,6 @@ public class Person_addActivity
                 } else {
                     dialogFragment.showError(getString(R.string.pwd_ishave));
                 }
-//                List<User> users = DbHelper.queryByPassword(content);
-//                if (users.isEmpty() || content.equals("0")) {
-//                    user.setPassWord(Integer.parseInt(content));
-//                    user.setUploadStatus(0);
-//                    DbHelper.insertUser(user);
-//                    dialogFragment.dismiss();
-//                    loadUser();
-//                } else {
-//                    dialogFragment.showError(getString(R.string.pwd_ishave));
-//                }
             }, false);
             dialogFragment.show(getSupportFragmentManager(), "");
         }
@@ -420,17 +393,17 @@ public class Person_addActivity
             passLayout.setBackgroundColor(Color.parseColor("#30374b"));
         }
         List<Card> cardList = CardHelper.getList(user.getUniqueId());
-        cardMessage.setText(cardList.isEmpty()?getString(R.string.card_null):String.valueOf(getString(R.string.card_num) + cardList.get(0).getNumber()));
+        cardMessage.setText(cardList.isEmpty() ? getString(R.string.card_null) : String.valueOf(getString(R.string.card_num) + cardList.get(0).getNumber()));
         cardText.setText(getType(cardList, cardLayout));
-        setFingerText(FingerPrintHelper.queryOne(user.getUniqueId(),1),fingerLayout01,fingerText01);
-        setFingerText(FingerPrintHelper.queryOne(user.getUniqueId(),2),fingerLayout02,fingerText02);
-        setFingerText(FingerPrintHelper.queryOne(user.getUniqueId(),3),fingerLayout03,fingerText03);
+        setFingerText(FingerPrintHelper.queryOne(user.getUniqueId(), 1), fingerLayout01, fingerText01);
+        setFingerText(FingerPrintHelper.queryOne(user.getUniqueId(), 2), fingerLayout02, fingerText02);
+        setFingerText(FingerPrintHelper.queryOne(user.getUniqueId(), 3), fingerLayout03, fingerText03);
     }
 
     /**
      * 判断数据是否存在，返回显示
      */
-    private void setFingerText(Finger finger,RelativeLayout fingerRl, TextView fingerTv) {
+    private void setFingerText(Finger finger, RelativeLayout fingerRl, TextView fingerTv) {
         if (finger == null) {
             fingerRl.setBackgroundColor(Color.parseColor("#30374b"));
             fingerTv.setText(getString(R.string.no_add));

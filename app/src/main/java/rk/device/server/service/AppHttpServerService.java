@@ -74,15 +74,16 @@ public class AppHttpServerService extends Service {
                         String localToken = SPUtils.getString(Constant.GRANT_TOKEN);
                         try {
                             token = params.getString("access_token");
-                            if(!token.equals(localToken)){
+                            if (!token.equals(localToken)) {
                                 response.send(PublicLogic.getInstance().returnError("token失效").toJSONString());
                             }
                             long tokenTime = SPUtils.getLong(Constant.GRANT_TIME);
                             //token有效期24小时
-                            if(System.currentTimeMillis() - tokenTime > 86400000){
+                            if (System.currentTimeMillis() - tokenTime > 86400000) {
                                 response.send(PublicLogic.getInstance().returnError("token过期").toJSONString());
                             }
                         } catch (JSONException e) {
+                            e.printStackTrace();
                         }
                     }
                     try {
@@ -91,8 +92,7 @@ public class AppHttpServerService extends Service {
                                 response.send(PublicLogic.getInstance().getToken().toJSONString());
                                 break;
                             case HttpRequestUri.MEMBER_ADD:
-                                response.send(
-                                        PersonLogic.getInstance().addMember(params).toJSONString());
+                                response.send(PersonLogic.getInstance().addMember(params).toJSONString());
                                 break;
                             case HttpRequestUri.MEMBER_UPDATE:
                                 response.send(PersonLogic.getInstance().updatePerson(params).toJSONString());
@@ -127,28 +127,17 @@ public class AppHttpServerService extends Service {
                             case HttpRequestUri.PASSWORD_DELETE:
                                 response.send(VoucherLogic.getInstance().deletePassWord(params).toJSONString());
                                 break;
-                            case HttpRequestUri.DELETE:
-                                response.send(
-                                        PersonLogic.getInstance().delete(params).toJSONString());
-                                break;
                             case HttpRequestUri.OPEN:
-                                response.send(
-                                        DeviceLogic.getInstance().open(params).toJSONString());
+                                response.send(DeviceLogic.getInstance().open(params).toJSONString());
                                 break;
                             case HttpRequestUri.DEVICE_STATUS:
-                                response.send(
-                                        DeviceLogic.getInstance().status(params).toJSONString());
+                                response.send(DeviceLogic.getInstance().status(params).toJSONString());
                                 break;
                             case HttpRequestUri.UPDATE:
-                                response.send(
-                                        DeviceLogic.getInstance().update(params).toJSONString());
+                                response.send(DeviceLogic.getInstance().update(params).toJSONString());
                                 break;
                             case HttpRequestUri.AD:
                                 response.send(DeviceLogic.getInstance().ad(params).toJSONString());
-                                break;
-                            case HttpRequestUri.DELETE_FACE:
-                                response.send(PersonLogic.getInstance().deleteFace(params)
-                                        .toJSONString());
                                 break;
                             case HttpRequestUri.UPDATE_TIME:
                                 response.send(DeviceLogic.getInstance().updateTime(params).toJSONString());
@@ -162,6 +151,7 @@ public class AppHttpServerService extends Service {
                         }
                     } catch (Exception ex) {
                         ex.printStackTrace();
+                        response.send("json message error.");
                     }
                 }
 

@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 
 import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.utils.uuid.DeviceUuidFactory;
+import rk.device.server.api.HttpResponseCode;
 
 /**
  * Created by hanbin on 2018/2/5.
@@ -15,12 +16,12 @@ public class BaseLogic {
 
     private DeviceUuidFactory uuidFactory = new DeviceUuidFactory(LauncherApplication.getContext());
 
-    public BaseLogic(){
+    public BaseLogic() {
 
     }
 
     public JSONObject onSuccess(JSONObject data, String message) {
-        return onResult(0, 10, message, data);
+        return onResult(HttpResponseCode.Success, 10, message, data);
     }
 
     public JSONObject onError(int code, String message) {

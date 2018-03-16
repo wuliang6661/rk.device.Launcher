@@ -278,6 +278,55 @@ public class FaceUtils {
         return name;
     }
 
+
+    /**
+     * 修改人脸
+     */
+    public String updateFace(AFR_FSDKFace face, String name) {
+        delete(name);
+        try {
+            //check if already registered.
+            boolean add = true;
+            for (FaceRegist frface : mRegister) {
+                if (frface.mName.equals(name)) {
+                    frface.mFaceList.add(face);
+                    add = false;
+                    break;
+                }
+            }
+            if (add) { // not registered.
+                FaceRegist frface = new FaceRegist(name);
+                frface.mFaceList.add(face);
+                mRegister.add(frface);
+            }
+            if (FileUtils.createOrExistsDir(new File(facePath))) {
+                FileUtils.setPermission(facePath);
+                if (saveInfo()) {
+                    //update all names
+                    FileOutputStream fs = new FileOutputStream(facePath + "/face.txt", true);
+                    ExtOutputStream bos = new ExtOutputStream(fs);
+                    for (FaceRegist frface : mRegister) {
+                        bos.writeString(frface.mName);
+                    }
+                    bos.close();
+                    fs.close();
+                    //save new feature
+                    fs = new FileOutputStream(facePath + "/" + name + ".data", true);
+                    bos = new ExtOutputStream(fs);
+                    bos.writeBytes(face.getFeatureData());
+                    FileUtils.setPermission(facePath + "/" + name + ".data");
+                    bos.close();
+                    fs.close();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
+        }
+        return name;
+    }
+
+
     /**
      * 删除某个用户的脸
      */

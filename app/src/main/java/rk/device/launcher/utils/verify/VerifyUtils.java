@@ -19,17 +19,9 @@ import static rk.device.launcher.db.DbHelper.queryByUniqueId;
  */
 public class VerifyUtils {
 
-    private static VerifyUtils verifyUtils = null;
 
     public static VerifyUtils getInstance() {
-        if (verifyUtils == null) {
-            synchronized (VerifyUtils.class) {
-                if (verifyUtils == null) {
-                    verifyUtils = new VerifyUtils();
-                }
-            }
-        }
-        return verifyUtils;
+        return new VerifyUtils();
     }
 
     public VerifyUtils() {
@@ -38,7 +30,7 @@ public class VerifyUtils {
 
     /**
      * NFC检验
-     * 
+     *
      * @param nfcCard
      * @return
      */
@@ -53,7 +45,7 @@ public class VerifyUtils {
 
     /**
      * 指纹检验
-     * 
+     *
      * @param fingerId
      * @return
      */
@@ -73,13 +65,13 @@ public class VerifyUtils {
 
     /**
      * Get User by uniqueId
-     * 
+     *
      * @param uniqueId
      * @return
      */
     public User queryUserByUniqueId(String uniqueId) {
-        List<User> userList = queryByUniqueId(uniqueId);
-        if (userList.size() > 0) {
+        List<User> userList = DbHelper.queryByUniqueId(uniqueId);
+        if (!userList.isEmpty()) {
             LogUtil.i("VerifyUtils", "uniqueId:" + userList.get(0).getUniqueId());
             return userList.get(0);
         }

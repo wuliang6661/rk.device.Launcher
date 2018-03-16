@@ -263,10 +263,10 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
     void registerFace() {
         FaceUtils faceUtils = FaceUtils.getInstance();
         faceUtils.setFaceFeature((name, max_score) -> {
-            List<User> users = DbHelper.queryByFaceId(name);
-            if (!users.isEmpty()) {
-                openDoor(users.get(0));
-            }
+//            List<User> users = DbHelper.queryByFaceId(name);
+//            if (!users.isEmpty()) {
+//                openDoor(users.get(0));
+//            }
         });
     }
 

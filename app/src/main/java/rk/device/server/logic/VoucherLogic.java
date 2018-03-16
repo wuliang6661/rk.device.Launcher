@@ -14,6 +14,7 @@ import rk.device.launcher.R;
 import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.db.CardHelper;
 import rk.device.launcher.db.CodePasswordHelper;
+import rk.device.launcher.db.DbHelper;
 import rk.device.launcher.db.FaceHelper;
 import rk.device.launcher.db.FingerPrintHelper;
 import rk.device.launcher.db.entity.Card;
@@ -40,7 +41,7 @@ import static rk.device.launcher.utils.ResUtil.getResources;
 public class VoucherLogic extends BaseLogic {
 
 
-    public VoucherLogic() {
+    private VoucherLogic() {
     }
 
     public static VoucherLogic getInstance() {
@@ -52,35 +53,38 @@ public class VoucherLogic extends BaseLogic {
      * 新增人脸
      */
     public synchronized JSONObject addPersonFace(org.json.JSONObject params) {
-        String accessToken = params.optString("access_token");
         String uuid = params.optString("uuid");
         if (TextUtils.isEmpty(uuid)) {
-            return onError(HttpResponseCode.Error, "UUID不能为空");
+            return onError(HttpResponseCode.NO_JSON, "UUID不能为空");
         }
         if (!getUUID().equals(uuid)) {
-            return onError(HttpResponseCode.Error, "请填写正确的UUID: " + getUUID());
+            return onError(HttpResponseCode.NO_JSON, "请填写正确的UUID: " + getUUID());
         }
         String peopleId = params.optString("peopleId");
         String faceImage = params.optString("faceImage");
         String startTime = params.optString("startTime");
         String endTime = params.optString("endTime");
         if (TextUtils.isEmpty(faceImage)) {
-            return onError(HttpResponseCode.Error, "人脸图片呢？没有你瞎请求个毛！");
+            return onError(HttpResponseCode.NO_JSON, "人脸图片呢？没有你瞎请求个毛！");
         }
         if (TextUtils.isEmpty(startTime)) {
-            return onError(HttpResponseCode.Error, "请填写开始时间？没有你瞎请求个毛！");
+            return onError(HttpResponseCode.NO_JSON, "请填写开始时间？没有你瞎请求个毛！");
         }
         if (TextUtils.isEmpty(endTime)) {
-            return onError(HttpResponseCode.Error, "请填写结束时间？没有你瞎请求个毛！");
+            return onError(HttpResponseCode.NO_JSON, "请填写结束时间？没有你瞎请求个毛！");
+        }
+        List<User> users = DbHelper.queryByUniqueId(peopleId);
+        if (users.isEmpty()) {
+            return onError(HttpResponseCode.OBJECT_NO_FOUND, "该用户不存在");
         }
         List<Face> oldFace = FaceHelper.getList(peopleId);
         if (!oldFace.isEmpty()) {
-            return onError(HttpResponseCode.Error, "该用户已存在人脸");
+            return onError(HttpResponseCode.OBJECT_EXITE, "该用户已存在人脸");
         }
         Bitmap bitmap = BitmapUtil.stringtoBitmap(faceImage);
         AFR_FSDKFace fsdkFace = FaceUtils.getInstance().bitmapToFace(bitmap);
         if (fsdkFace == null) {
-            return onError(HttpResponseCode.Error, "没有检测到人脸");
+            return onError(HttpResponseCode.NO_JSON, "没有检测到人脸");
         }
         String faceId = FaceUtils.getInstance().saveFace(fsdkFace);
         if (TextUtils.isEmpty(faceId)) {
@@ -98,37 +102,41 @@ public class VoucherLogic extends BaseLogic {
      * 修改人脸
      */
     public synchronized JSONObject updatePersonFace(org.json.JSONObject params) {
-        String accessToken = params.optString("access_token");
         String uuid = params.optString("uuid");
         if (TextUtils.isEmpty(uuid)) {
-            return onError(HttpResponseCode.Error, "UUID不能为空");
+            return onError(HttpResponseCode.NO_JSON, "UUID不能为空");
         }
         if (!getUUID().equals(uuid)) {
-            return onError(HttpResponseCode.Error, "请填写正确的UUID: " + getUUID());
+            return onError(HttpResponseCode.NO_JSON, "请填写正确的UUID: " + getUUID());
         }
         String peopleId = params.optString("peopleId");
         String faceImage = params.optString("faceImage");
         String startTime = params.optString("startTime");
         String endTime = params.optString("endTime");
+        String faceIDNum = params.optString("faceID");
         if (TextUtils.isEmpty(faceImage)) {
-            return onError(HttpResponseCode.Error, "人脸图片呢？没有你瞎请求个毛！");
+            return onError(HttpResponseCode.NO_JSON, "人脸图片呢？没有你瞎请求个毛！");
         }
         if (TextUtils.isEmpty(startTime)) {
-            return onError(HttpResponseCode.Error, "请填写开始时间？没有你瞎请求个毛！");
+            return onError(HttpResponseCode.NO_JSON, "请填写开始时间？没有你瞎请求个毛！");
         }
         if (TextUtils.isEmpty(endTime)) {
-            return onError(HttpResponseCode.Error, "请填写结束时间？没有你瞎请求个毛！");
+            return onError(HttpResponseCode.NO_JSON, "请填写结束时间？没有你瞎请求个毛！");
+        }
+        List<User> users = DbHelper.queryByUniqueId(peopleId);
+        if (users.isEmpty()) {
+            return onError(HttpResponseCode.OBJECT_NO_FOUND, "该用户不存在");
         }
         List<Face> oldFace = FaceHelper.getList(peopleId);
         if (oldFace.isEmpty()) {
-            return onError(HttpResponseCode.Error, "该用户的人脸已存在！");
+            return onError(HttpResponseCode.OBJECT_EXITE, "该用户的人脸已存在！");
         }
         Bitmap bitmap = BitmapUtil.stringtoBitmap(faceImage);
         AFR_FSDKFace fsdkFace = FaceUtils.getInstance().bitmapToFace(bitmap);
         if (fsdkFace == null) {
-            return onError(HttpResponseCode.Error, "没有检测到人脸");
+            return onError(HttpResponseCode.NO_JSON, "没有检测到人脸");
         }
-        String faceId = FaceUtils.getInstance().saveFace(fsdkFace);
+        String faceId = FaceUtils.getInstance().updateFace(fsdkFace, faceIDNum);
         if (TextUtils.isEmpty(faceId)) {
             return onError(HttpResponseCode.Error, "同步人脸失败");
         }
@@ -136,7 +144,7 @@ public class VoucherLogic extends BaseLogic {
         FaceHelper.update(oldFace.get(0).getId(), faceId, 1, Integer.parseInt(startTime), Integer.parseInt(endTime));
         JSONObject result = new JSONObject();
         result.put("faceID", faceId);
-        return onSuccess(result, "人脸同步成功");
+        return onSuccess(result, "人脸修改成功");
     }
 
 
@@ -144,22 +152,25 @@ public class VoucherLogic extends BaseLogic {
      * 删除人脸
      */
     public synchronized JSONObject deleteFaceImg(org.json.JSONObject params) {
-        String accessToken = params.optString("access_token");
         String uuid = params.optString("uuid");
         if (TextUtils.isEmpty(uuid)) {
-            return onError(HttpResponseCode.Error, "UUID不能为空");
+            return onError(HttpResponseCode.NO_JSON, "UUID不能为空");
         }
         if (!getUUID().equals(uuid)) {
-            return onError(HttpResponseCode.Error, "请填写正确的UUID: " + getUUID());
+            return onError(HttpResponseCode.NO_JSON, "请填写正确的UUID: " + getUUID());
         }
         String peopleId = params.optString("peopleId");
         String faceID = params.optString("faceID");
         if (StringUtils.isEmpty(peopleId) || StringUtils.isEmpty(faceID)) {
-            return onError(HttpResponseCode.Error, "信息不完整！");
+            return onError(HttpResponseCode.NO_JSON, "信息不完整！");
+        }
+        List<User> users = DbHelper.queryByUniqueId(peopleId);
+        if (users.isEmpty()) {
+            return onError(HttpResponseCode.OBJECT_NO_FOUND, "该用户不存在");
         }
         List<Face> oldFace = FaceHelper.getList(peopleId);
         if (oldFace.isEmpty()) {
-            return onError(HttpResponseCode.Error, "该用户没有该人脸");
+            return onError(HttpResponseCode.OBJECT_NO_FOUND, "该用户没有该人脸");
         }
         Face face = oldFace.get(0);
         if (!face.getFaceId().equals(faceID)) {
@@ -176,13 +187,12 @@ public class VoucherLogic extends BaseLogic {
      * 新增密码
      */
     public synchronized JSONObject addPassWord(org.json.JSONObject params) {
-        String accessToken = params.optString("access_token");
         String uuid = params.optString("uuid");
         if (TextUtils.isEmpty(uuid)) {
-            return onError(HttpResponseCode.Error, "UUID不能为空");
+            return onError(HttpResponseCode.NO_JSON, "UUID不能为空");
         }
         if (!getUUID().equals(uuid)) {
-            return onError(HttpResponseCode.Error, "请填写正确的UUID: " + getUUID());
+            return onError(HttpResponseCode.NO_JSON, "请填写正确的UUID: " + getUUID());
         }
         String peopleId = params.optString("peopleId");
         String password = params.optString("password");
@@ -190,11 +200,15 @@ public class VoucherLogic extends BaseLogic {
         String endTime = params.optString("endTime");
         if (StringUtils.isEmpty(peopleId) || StringUtils.isEmpty(password) ||
                 StringUtils.isEmpty(startTime) || StringUtils.isEmpty(endTime)) {
-            return onError(HttpResponseCode.Error, "信息不完整！");
+            return onError(HttpResponseCode.NO_JSON, "信息不完整！");
+        }
+        List<User> users = DbHelper.queryByUniqueId(peopleId);
+        if (users.isEmpty()) {
+            return onError(HttpResponseCode.OBJECT_NO_FOUND, "该用户不存在");
         }
         List<CodePassword> codePasswords = CodePasswordHelper.getList(peopleId);
         if (!codePasswords.isEmpty()) {
-            return onError(HttpResponseCode.Error, "该用户已存在密码");
+            return onError(HttpResponseCode.OBJECT_EXITE, "该用户已存在密码");
         }
         CodePasswordHelper.insert(peopleId, password, 1, Integer.parseInt(startTime), Integer.parseInt(endTime));
         JSONObject result = new JSONObject();
@@ -206,13 +220,12 @@ public class VoucherLogic extends BaseLogic {
      * 修改密码
      */
     public synchronized JSONObject updatePassWord(org.json.JSONObject params) {
-        String accessToken = params.optString("access_token");
         String uuid = params.optString("uuid");
         if (TextUtils.isEmpty(uuid)) {
-            return onError(HttpResponseCode.Error, "UUID不能为空");
+            return onError(HttpResponseCode.NO_JSON, "UUID不能为空");
         }
         if (!getUUID().equals(uuid)) {
-            return onError(HttpResponseCode.Error, "请填写正确的UUID: " + getUUID());
+            return onError(HttpResponseCode.NO_JSON, "请填写正确的UUID: " + getUUID());
         }
         String peopleId = params.optString("peopleId");
         String password = params.optString("password");
@@ -220,16 +233,20 @@ public class VoucherLogic extends BaseLogic {
         String endTime = params.optString("endTime");
         if (StringUtils.isEmpty(peopleId) || StringUtils.isEmpty(password) ||
                 StringUtils.isEmpty(startTime) || StringUtils.isEmpty(endTime)) {
-            return onError(HttpResponseCode.Error, "信息不完整！");
+            return onError(HttpResponseCode.NO_JSON, "信息不完整！");
+        }
+        List<User> users = DbHelper.queryByUniqueId(peopleId);
+        if (users.isEmpty()) {
+            return onError(HttpResponseCode.OBJECT_NO_FOUND, "该用户不存在");
         }
         List<CodePassword> codePasswords = CodePasswordHelper.getList(peopleId);
         if (codePasswords.isEmpty()) {
-            return onError(HttpResponseCode.Error, "该用户没有设置过密码！");
+            return onError(HttpResponseCode.OBJECT_NO_FOUND, "该用户没有设置过密码！");
         }
         CodePasswordHelper.update(codePasswords.get(0).getId(), password, 1, Integer.parseInt(startTime), Integer.parseInt(endTime));
         JSONObject result = new JSONObject();
         result.put("status", 1);
-        return onSuccess(result, "密码增加成功");
+        return onSuccess(result, "密码修改成功");
     }
 
 
@@ -237,25 +254,28 @@ public class VoucherLogic extends BaseLogic {
      * 删除密码
      */
     public synchronized JSONObject deletePassWord(org.json.JSONObject params) {
-        String accessToken = params.optString("access_token");
         String uuid = params.optString("uuid");
         if (TextUtils.isEmpty(uuid)) {
-            return onError(HttpResponseCode.Error, "UUID不能为空");
+            return onError(HttpResponseCode.NO_JSON, "UUID不能为空");
         }
         if (!getUUID().equals(uuid)) {
-            return onError(HttpResponseCode.Error, "请填写正确的UUID: " + getUUID());
+            return onError(HttpResponseCode.NO_JSON, "请填写正确的UUID: " + getUUID());
         }
         String peopleId = params.optString("peopleId");
         String password = params.optString("password");
         if (StringUtils.isEmpty(peopleId) || StringUtils.isEmpty(password)) {
-            return onError(HttpResponseCode.Error, "信息不完整！");
+            return onError(HttpResponseCode.NO_JSON, "信息不完整！");
+        }
+        List<User> users = DbHelper.queryByUniqueId(peopleId);
+        if (users.isEmpty()) {
+            return onError(HttpResponseCode.OBJECT_NO_FOUND, "该用户不存在");
         }
         List<CodePassword> codePasswords = CodePasswordHelper.getList(peopleId);
         if (codePasswords.isEmpty()) {
-            return onError(HttpResponseCode.Error, "该用户没有设置过密码！");
+            return onError(HttpResponseCode.OBJECT_NO_FOUND, "该用户没有设置过密码！");
         }
         if (!codePasswords.get(0).getPassword().equals(password)) {
-            return onError(HttpResponseCode.Error, "password与本地不一致！");
+            return onError(HttpResponseCode.NO_JSON, "password与本地不一致！");
         }
         CodePasswordHelper.delete(codePasswords.get(0));
         JSONObject result = new JSONObject();
@@ -268,13 +288,12 @@ public class VoucherLogic extends BaseLogic {
      * 新增卡
      */
     public synchronized JSONObject addCard(org.json.JSONObject params) {
-        String accessToken = params.optString("access_token");
         String uuid = params.optString("uuid");
         if (TextUtils.isEmpty(uuid)) {
-            return onError(HttpResponseCode.Error, "UUID不能为空");
+            return onError(HttpResponseCode.NO_JSON, "UUID不能为空");
         }
         if (!getUUID().equals(uuid)) {
-            return onError(HttpResponseCode.Error, "请填写正确的UUID: " + getUUID());
+            return onError(HttpResponseCode.NO_JSON, "请填写正确的UUID: " + getUUID());
         }
         String peopleId = params.optString("peopleId");
         String cardNo = params.optString("cardNo");
@@ -282,11 +301,15 @@ public class VoucherLogic extends BaseLogic {
         String endTime = params.optString("endTime");
         if (StringUtils.isEmpty(peopleId) || StringUtils.isEmpty(cardNo) ||
                 StringUtils.isEmpty(startTime) || StringUtils.isEmpty(endTime)) {
-            return onError(HttpResponseCode.Error, "信息不完整！");
+            return onError(HttpResponseCode.NO_JSON, "信息不完整！");
+        }
+        List<User> users = DbHelper.queryByUniqueId(peopleId);
+        if (users.isEmpty()) {
+            return onError(HttpResponseCode.OBJECT_NO_FOUND, "该用户不存在");
         }
         List<Card> cards = CardHelper.getList(peopleId);
         if (!cards.isEmpty()) {
-            return onError(HttpResponseCode.Error, "该用户已录入卡");
+            return onError(HttpResponseCode.OBJECT_EXITE, "该用户已录入卡");
         }
         CardHelper.insert(peopleId, cardNo, 1, Integer.parseInt(startTime), Integer.parseInt(endTime));
         JSONObject result = new JSONObject();
@@ -299,13 +322,12 @@ public class VoucherLogic extends BaseLogic {
      * 修改卡
      */
     public synchronized JSONObject updateCards(org.json.JSONObject params) {
-        String accessToken = params.optString("access_token");
         String uuid = params.optString("uuid");
         if (TextUtils.isEmpty(uuid)) {
-            return onError(HttpResponseCode.Error, "UUID不能为空");
+            return onError(HttpResponseCode.NO_JSON, "UUID不能为空");
         }
         if (!getUUID().equals(uuid)) {
-            return onError(HttpResponseCode.Error, "请填写正确的UUID: " + getUUID());
+            return onError(HttpResponseCode.NO_JSON, "请填写正确的UUID: " + getUUID());
         }
         String peopleId = params.optString("peopleId");
         String cardNo = params.optString("cardNo");
@@ -313,16 +335,20 @@ public class VoucherLogic extends BaseLogic {
         String endTime = params.optString("endTime");
         if (StringUtils.isEmpty(peopleId) || StringUtils.isEmpty(cardNo) ||
                 StringUtils.isEmpty(startTime) || StringUtils.isEmpty(endTime)) {
-            return onError(HttpResponseCode.Error, "信息不完整！");
+            return onError(HttpResponseCode.NO_JSON, "信息不完整！");
+        }
+        List<User> users = DbHelper.queryByUniqueId(peopleId);
+        if (users.isEmpty()) {
+            return onError(HttpResponseCode.OBJECT_NO_FOUND, "该用户不存在");
         }
         List<Card> cards = CardHelper.getList(peopleId);
         if (cards.isEmpty()) {
-            return onError(HttpResponseCode.Error, "该用户没有录入过卡！");
+            return onError(HttpResponseCode.OBJECT_NO_FOUND, "该用户没有录入过卡！");
         }
         CardHelper.update(cards.get(0).getId(), cardNo, 1, Integer.parseInt(startTime), Integer.parseInt(endTime));
         JSONObject result = new JSONObject();
         result.put("status", 1);
-        return onSuccess(result, "密码增加成功");
+        return onSuccess(result, "卡修改成功");
     }
 
 
@@ -330,25 +356,28 @@ public class VoucherLogic extends BaseLogic {
      * 删除卡
      */
     public synchronized JSONObject deleteCards(org.json.JSONObject params) {
-        String accessToken = params.optString("access_token");
         String uuid = params.optString("uuid");
         if (TextUtils.isEmpty(uuid)) {
-            return onError(HttpResponseCode.Error, "UUID不能为空");
+            return onError(HttpResponseCode.NO_JSON, "UUID不能为空");
         }
         if (!getUUID().equals(uuid)) {
-            return onError(HttpResponseCode.Error, "请填写正确的UUID: " + getUUID());
+            return onError(HttpResponseCode.NO_JSON, "请填写正确的UUID: " + getUUID());
         }
         String peopleId = params.optString("peopleId");
         String cardNo = params.optString("cardNo");
         if (StringUtils.isEmpty(peopleId) || StringUtils.isEmpty(cardNo)) {
-            return onError(HttpResponseCode.Error, "信息不完整！");
+            return onError(HttpResponseCode.NO_JSON, "信息不完整！");
+        }
+        List<User> users = DbHelper.queryByUniqueId(peopleId);
+        if (users.isEmpty()) {
+            return onError(HttpResponseCode.OBJECT_NO_FOUND, "该用户不存在");
         }
         List<Card> cards = CardHelper.getList(peopleId);
         if (cards.isEmpty()) {
-            return onError(HttpResponseCode.Error, "该用户没有设置过密码！");
+            return onError(HttpResponseCode.OBJECT_NO_FOUND, "该用户没有设置过密码！");
         }
         if (!cards.get(0).getNumber().equals(cardNo)) {
-            return onError(HttpResponseCode.Error, "password与本地不一致！");
+            return onError(HttpResponseCode.NO_JSON, "password与本地不一致！");
         }
         CardHelper.delete(cards.get(0));
         JSONObject result = new JSONObject();
@@ -360,24 +389,26 @@ public class VoucherLogic extends BaseLogic {
      * 删除指纹
      */
     public JSONObject deleteFinger(org.json.JSONObject params) {
-        String accessToken = params.optString("access_token");
         String uuid = params.optString("uuid");
         if (TextUtils.isEmpty(uuid)) {
-            return onError(HttpResponseCode.Error, "UUID不能为空");
+            return onError(HttpResponseCode.NO_JSON, "UUID不能为空");
         }
         if (!getUUID().equals(uuid)) {
-            return onError(HttpResponseCode.Error, "请填写正确的UUID: " + getUUID());
+            return onError(HttpResponseCode.NO_JSON, "请填写正确的UUID: " + getUUID());
         }
         String uniqueId = params.optString("peopleId");
-
-        if (TextUtils.isEmpty(uniqueId) || uniqueId == null) {
-            return onError(HttpResponseCode.Error, "用户唯一标志不能为空");
+        if (TextUtils.isEmpty(uniqueId)) {
+            return onError(HttpResponseCode.NO_JSON, "用户唯一标志不能为空");
+        }
+        List<User> users = DbHelper.queryByUniqueId(uniqueId);
+        if (users.isEmpty()) {
+            return onError(HttpResponseCode.OBJECT_NO_FOUND, "该用户不存在");
         }
         User eUser = VerifyUtils.getInstance().queryUserByUniqueId(uniqueId);
         int uId = 0;
         int number = params.optInt("number");
         if (number <= 0 || number > 3) {
-            return onError(HttpResponseCode.Error, "请指定要删除的指纹");
+            return onError(HttpResponseCode.NO_JSON, "请指定要删除的指纹");
         }
         if (eUser != null) {
             if (doDeleteJniFinger(uId)) {
@@ -387,18 +418,15 @@ public class VoucherLogic extends BaseLogic {
                 result.put("status", 1);
                 return onSuccess(result, getResources().getString(R.string.delete_success));
             } else {
-                return onError(HttpResponseCode.Error,getResources().getString(R.string.delete_fail));
+                return onError(HttpResponseCode.Error, getResources().getString(R.string.delete_fail));
             }
         } else {
-            return onError(HttpResponseCode.Error,getResources().getString(R.string.illeagel_user_not_exist));
+            return onError(HttpResponseCode.Error, getResources().getString(R.string.illeagel_user_not_exist));
         }
     }
 
     /**
      * 删除指纹头中的指纹
-     *
-     * @param uId
-     * @return
      */
     private boolean doDeleteJniFinger(int uId) {
         int resultCode = FingerHelper.JNIFpDelUserByID(LauncherApplication.fingerModuleID, uId);
@@ -410,6 +438,4 @@ public class VoucherLogic extends BaseLogic {
             return false;
         }
     }
-
-
 }

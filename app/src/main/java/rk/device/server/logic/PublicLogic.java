@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.utils.MD5;
 import rk.device.launcher.utils.SPUtils;
+import rk.device.server.api.HttpResponseCode;
 
 /**
  * Created by hanbin on 2018/2/5.
@@ -40,13 +41,14 @@ public class PublicLogic extends BaseLogic {
         SPUtils.putString(Constant.GRANT_TOKEN, token);
         SPUtils.putLong(Constant.GRANT_TIME, grantTime);
         JSONObject result = new JSONObject();
-        result.put("token", token);
+        result.put("access_token", token);
+        result.put("expires_in", 86400);
         return onSuccess(result, "请求成功");
     }
 
 
-    public JSONObject returnError(String msg){
-        return onError(208,msg);
+    public JSONObject returnError(String msg) {
+        return onError(HttpResponseCode.WUXIAO_LINGPAI, msg);
     }
 
 }

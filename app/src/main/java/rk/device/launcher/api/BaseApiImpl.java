@@ -1,7 +1,5 @@
 package rk.device.launcher.api;
 
-import com.trello.rxlifecycle.ActivityEvent;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -11,7 +9,6 @@ import java.util.Map;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Retrofit;
-import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.bean.DeviceInfoBO;
 import rk.device.launcher.bean.StatusBo;
 import rk.device.launcher.bean.TokenBo;
@@ -160,7 +157,7 @@ public class BaseApiImpl {
     /**
      * 新增用户接口
      */
-    public static Observable<Object> addUser(User user, String url) {
+    public static Observable<Object> addUser(User user) {
         JSONObject object = new JSONObject();
         try {
             object.put("access_token", SPUtils.getString(Constant.ACCENT_TOKEN));
@@ -168,24 +165,37 @@ public class BaseApiImpl {
             object.put("peopleId", user.getUniqueId());
             object.put("peopleName", user.getName());
             object.put("role", user.getRole());
-            //            object.put("startTime", user.getStartTime() / 1000);
-            //            object.put("endTime", user.getEndTime() / 1000);
-            if (!StringUtils.isEmpty(url)) {
-                object.put("faceID", url);
-            }
+            object.put("startTime", user.getStartTime() / 1000);
+            object.put("endTime", user.getEndTime() / 1000);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),
                 object.toString());
-        if (user.getStatus() == Constant.TO_BE_UPDATE) {
-            return apiFactory().editUser(requestBody).compose(RxResultHelper.httpResult());
-        } else if (user.getStatus() == Constant.TO_BE_ADD) {
-            return apiFactory().addUser(requestBody).compose(RxResultHelper.httpResult());
-        } else {
-            return null;
-        }
+        return apiFactory().addUser(requestBody).compose(RxResultHelper.httpResult());
     }
+
+    /**
+     * 修改用户
+     */
+    public static Observable<Object> updateUser(User user) {
+        JSONObject object = new JSONObject();
+        try {
+            object.put("access_token", SPUtils.getString(Constant.ACCENT_TOKEN));
+            object.put("uuid", new DeviceUuidFactory(Utils.getContext()).getUuid() + "");
+            object.put("peopleId", user.getUniqueId());
+            object.put("peopleName", user.getName());
+            object.put("role", user.getRole());
+            object.put("startTime", user.getStartTime() / 1000);
+            object.put("endTime", user.getEndTime() / 1000);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),
+                object.toString());
+        return apiFactory().editUser(requestBody).compose(RxResultHelper.httpResult());
+    }
+
 
     /**
      * 上传用户人脸
