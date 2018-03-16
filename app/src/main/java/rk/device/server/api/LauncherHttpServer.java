@@ -20,13 +20,13 @@ import rk.device.launcher.utils.LogUtil;
  */
 
 public class LauncherHttpServer {
-    private static final String       TAG                 = "LauncherHttpServer";
+    private static final String TAG = "LauncherHttpServer";
 
     private static LauncherHttpServer mInstance;
 
-    public static int                 PORT_LISTEN_DEFAULT = 5000;
+    public static int PORT_LISTEN_DEFAULT = 5000;
 
-    AsyncHttpServer                   server              = new AsyncHttpServer();
+    AsyncHttpServer server = new AsyncHttpServer();
 
     public static LauncherHttpServer getInstance() {
         if (mInstance == null) {
@@ -49,7 +49,7 @@ public class LauncherHttpServer {
         server.listen(PORT_LISTEN_DEFAULT);
     }
 
-    public void stopServer(){
+    public void stopServer() {
         server.stop();
     }
 
@@ -78,7 +78,7 @@ public class LauncherHttpServer {
                 }
                 if (uri.equals(HttpRequestUri.UPLOAD)) {
                     MultipartFormDataBody body = (MultipartFormDataBody) request.getBody();
-                    onFile(body,response);
+                    onFile(body, response);
                 } else {
                     JSONObject params = (JSONObject) request.getBody().get();
                     onSuccess(uri, params, response);

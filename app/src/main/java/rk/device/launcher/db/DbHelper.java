@@ -1,9 +1,12 @@
 package rk.device.launcher.db;
 
 import android.text.TextUtils;
+
 import java.util.List;
 import java.util.UUID;
+
 import org.greenrobot.greendao.query.Query;
+
 import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.db.entity.User;
 import rk.device.launcher.db.entity.UserDao;
@@ -186,8 +189,8 @@ public class DbHelper {
      * @param userId
      * @return
      */
-    public static String queryUniqueIdByUserId(long userId) {
-        Query<User> query = getUserDao().queryBuilder().where(UserDao.Properties.Id.eq(userId))
+    public static String queryUniqueIdByUserId(String userId) {
+        Query<User> query = getUserDao().queryBuilder().where(UserDao.Properties.UniqueId.eq(userId))
                 .build();
         if (query.list().size() == 0) {
             return null;

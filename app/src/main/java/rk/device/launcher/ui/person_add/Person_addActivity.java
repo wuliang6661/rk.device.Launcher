@@ -290,6 +290,7 @@ public class Person_addActivity
         user.setStartTime(TimeUtils.string2Millis(tvTimeStart.getText().toString().trim()));
         user.setEndTime(TimeUtils.string2Millis(tvTimeEnd.getText().toString().trim()));
         user.setRole(Constant.USER_TYPE_OPEN_ONLY);
+        user.setStatus(2);
         DbHelper.insertUser(user);
         //新增
         SyncPersonUtils.getInstance().syncPerosn(user);

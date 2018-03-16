@@ -21,7 +21,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.List;
 
 import rk.device.launcher.db.DbHelper;
 import rk.device.launcher.db.entity.User;
@@ -75,7 +74,7 @@ public class PersonLogic extends BaseLogic {
             return onError(HttpResponseCode.Error, "请填写正确的UUID: " + getUUID());
         }
         String peopleId = params.optString("peopleId");
-        String popeName = params.optString("popeName");
+        String popeName = params.optString("peopleName");
         int role = TypeTranUtils.str2Int(params.optString("role"));
         String startTime = params.optString("startTime");
         String endTime = params.optString("endTime");
@@ -98,14 +97,17 @@ public class PersonLogic extends BaseLogic {
         User user = new User();
         user.setName(popeName);
         user.setRole(role);
+        user.setUniqueId(peopleId);
         user.setStartTime(TypeTranUtils.str2Int(startTime));
         user.setEndTime(TypeTranUtils.str2Int(endTime));
-        long userId = DbHelper.insertUser(user);
-        String uniqueId = DbHelper.queryUniqueIdByUserId(userId);
-        JSONObject result = new JSONObject();
-        result.put("status", 1);
-        result.put("peopleId", uniqueId);
-        return onSuccess(result, "请求成功");
+        user.setCreateTime(System.currentTimeMillis());
+        if (DbHelper.insert(user)) {
+            JSONObject result = new JSONObject();
+            result.put("status", 1);
+            result.put("peopleId", user.getUniqueId());
+            return onSuccess(result, "请求成功");
+        }
+        return onError(HttpResponseCode.Error, "数据库操作失败");
     }
 
 
@@ -141,7 +143,7 @@ public class PersonLogic extends BaseLogic {
                 : TypeTranUtils.str2Int(startTime));
         user.setEndTime(TextUtils.isEmpty(endTime) ? oldUser.getEndTime()
                 : TypeTranUtils.str2Int(endTime));
-        DbHelper.insertUser(user);
+        DbHelper.update(user);
         JSONObject result = new JSONObject();
         result.put("status", 1);
         return onSuccess(result, "请求成功");
@@ -151,7 +153,7 @@ public class PersonLogic extends BaseLogic {
     /**
      * 删除用户
      */
-    public synchronized JSONObject deletePerson(org.json.JSONObject params) throws Exception {
+    public synchronized JSONObject deletePerson(org.json.JSONObject params) {
         String accessToken = params.optString("access_token");
         String uuid = params.optString("uuid");
         if (TextUtils.isEmpty(uuid)) {

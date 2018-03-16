@@ -39,18 +39,18 @@ public class SyncPersonUtils {
     /**
      * 同步人员到服务器
      */
-    public void syncPerosn(User user) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
+    public synchronized void syncPerosn(User user) {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
 //                Log.i("edit", "editperson");
 //                List<User> users = DbHelper.queryUserByUpdate();
 //                Log.i("SyncPersonUtils", "SyncPersonUtils size:" + users.size());
 //                if (!users.isEmpty()) {
-                updatePerson(user, null);
+        updatePerson(user, null);
 //                }
-            }
-        }).start();
+//            }
+//        }).start();
     }
 
     /**

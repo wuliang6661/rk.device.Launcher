@@ -6,6 +6,6 @@ package rk.device.server.api;
 
 public interface HttpResponseCode {
 
-    int Error   = 300;
-    int Success = 200;
+    int Error = 1;
+    int Success = 0;
 }
