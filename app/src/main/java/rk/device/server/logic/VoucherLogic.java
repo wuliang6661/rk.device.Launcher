@@ -8,16 +8,28 @@ import com.arcsoft.facerecognition.AFR_FSDKFace;
 
 import java.util.List;
 
+import peripherals.FingerConstant;
+import peripherals.FingerHelper;
+import rk.device.launcher.R;
+import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.db.CardHelper;
 import rk.device.launcher.db.CodePasswordHelper;
 import rk.device.launcher.db.FaceHelper;
+import rk.device.launcher.db.FingerPrintHelper;
 import rk.device.launcher.db.entity.Card;
 import rk.device.launcher.db.entity.CodePassword;
 import rk.device.launcher.db.entity.Face;
+import rk.device.launcher.db.entity.Finger;
+import rk.device.launcher.db.entity.User;
 import rk.device.launcher.utils.BitmapUtil;
+import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.StringUtils;
 import rk.device.launcher.utils.verify.FaceUtils;
+import rk.device.launcher.utils.verify.VerifyUtils;
 import rk.device.server.api.HttpResponseCode;
+
+import static com.android.internal.app.IntentForwarderActivity.TAG;
+import static rk.device.launcher.utils.ResUtil.getResources;
 
 /**
  * Created by wuliang on 2018/3/15.
@@ -27,6 +39,9 @@ import rk.device.server.api.HttpResponseCode;
 
 public class VoucherLogic extends BaseLogic {
 
+
+    public VoucherLogic() {
+    }
 
     public static VoucherLogic getInstance() {
         return new VoucherLogic();
@@ -341,10 +356,60 @@ public class VoucherLogic extends BaseLogic {
         return onSuccess(result, "卡删除成功");
     }
 
-
     /**
      * 删除指纹
      */
+    public JSONObject deleteFinger(org.json.JSONObject params) {
+        String accessToken = params.optString("access_token");
+        String uuid = params.optString("uuid");
+        if (TextUtils.isEmpty(uuid)) {
+            return onError(HttpResponseCode.Error, "UUID不能为空");
+        }
+        if (!getUUID().equals(uuid)) {
+            return onError(HttpResponseCode.Error, "请填写正确的UUID: " + getUUID());
+        }
+        String uniqueId = params.optString("peopleId");
+
+        if (TextUtils.isEmpty(uniqueId) || uniqueId == null) {
+            return onError(HttpResponseCode.Error, "用户唯一标志不能为空");
+        }
+        User eUser = VerifyUtils.getInstance().queryUserByUniqueId(uniqueId);
+        int uId = 0;
+        int number = params.optInt("number");
+        if (number <= 0 || number > 3) {
+            return onError(HttpResponseCode.Error, "请指定要删除的指纹");
+        }
+        if (eUser != null) {
+            if (doDeleteJniFinger(uId)) {
+                Finger finger = FingerPrintHelper.queryOne(eUser.getUniqueId(), number);
+                FingerPrintHelper.delete(finger);
+                JSONObject result = new JSONObject();
+                result.put("status", 1);
+                return onSuccess(result, getResources().getString(R.string.delete_success));
+            } else {
+                return onError(HttpResponseCode.Error,getResources().getString(R.string.delete_fail));
+            }
+        } else {
+            return onError(HttpResponseCode.Error,getResources().getString(R.string.illeagel_user_not_exist));
+        }
+    }
+
+    /**
+     * 删除指纹头中的指纹
+     *
+     * @param uId
+     * @return
+     */
+    private boolean doDeleteJniFinger(int uId) {
+        int resultCode = FingerHelper.JNIFpDelUserByID(LauncherApplication.fingerModuleID, uId);
+        if (resultCode == FingerConstant.SUCCESS) {
+            LogUtil.i(TAG, TAG + "doDeleteJniFinger success");
+            return true;
+        } else {
+            LogUtil.i(TAG, TAG + "doDeleteJniFinger failed");
+            return false;
+        }
+    }
 
 
 }

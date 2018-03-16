@@ -15,6 +15,10 @@ public class BaseLogic {
 
     private DeviceUuidFactory uuidFactory = new DeviceUuidFactory(LauncherApplication.getContext());
 
+    public BaseLogic(){
+
+    }
+
     public JSONObject onSuccess(JSONObject data, String message) {
         return onResult(200, 10, message, data);
     }

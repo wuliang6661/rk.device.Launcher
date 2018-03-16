@@ -21,7 +21,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.List;
 
 import rk.device.launcher.db.DbHelper;
 import rk.device.launcher.db.entity.User;
@@ -44,7 +43,6 @@ public class PersonLogic extends BaseLogic {
     private static PersonLogic personLogic = null;
 
     public PersonLogic() {
-
     }
 
     public static PersonLogic getInstance() {

@@ -12,10 +12,13 @@ import com.koushikdutta.async.http.server.AsyncHttpServerResponse;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import rk.device.launcher.bean.event.DestoryEvent;
+import rk.device.launcher.global.Constant;
 import rk.device.launcher.utils.LogUtil;
+import rk.device.launcher.utils.SPUtils;
 import rk.device.server.api.HttpRequestUri;
 import rk.device.server.api.LauncherHttpServer;
 import rk.device.server.logic.DeviceLogic;
@@ -66,10 +69,26 @@ public class AppHttpServerService extends Service {
                 @Override
                 public void onSuccess(String uri, JSONObject params,
                                       AsyncHttpServerResponse response) {
+                    if (!uri.equals(HttpRequestUri.GET_TOKEN)) {
+                        String token = null;
+                        String localToken = SPUtils.getString(Constant.GRANT_TOKEN);
+                        try {
+                            token = params.getString("access_token");
+                            if(!token.equals(localToken)){
+                                response.send(PublicLogic.getInstance().returnError("token失效").toJSONString());
+                            }
+                            long tokenTime = SPUtils.getLong(Constant.GRANT_TIME);
+                            //token有效期24小时
+                            if(System.currentTimeMillis() - tokenTime > 86400000){
+                                response.send(PublicLogic.getInstance().returnError("token过期").toJSONString());
+                            }
+                        } catch (JSONException e) {
+                        }
+                    }
                     try {
                         switch (uri) {
                             case HttpRequestUri.GET_TOKEN:
-                                response.send(DeviceLogic.getInstance().getToken().toJSONString());
+                                response.send(PublicLogic.getInstance().getToken().toJSONString());
                                 break;
                             case HttpRequestUri.MEMBER_ADD:
                                 response.send(
@@ -122,17 +141,20 @@ public class AppHttpServerService extends Service {
                                 break;
                             case HttpRequestUri.UPDATE:
                                 response.send(
-                                        PublicLogic.getInstance().update(params).toJSONString());
+                                        DeviceLogic.getInstance().update(params).toJSONString());
                                 break;
                             case HttpRequestUri.AD:
-                                response.send(PublicLogic.getInstance().ad(params).toJSONString());
+                                response.send(DeviceLogic.getInstance().ad(params).toJSONString());
                                 break;
                             case HttpRequestUri.DELETE_FACE:
                                 response.send(PersonLogic.getInstance().deleteFace(params)
                                         .toJSONString());
                                 break;
                             case HttpRequestUri.UPDATE_TIME:
-                                response.send(PublicLogic.getInstance().updateTime(params).toJSONString());
+                                response.send(DeviceLogic.getInstance().updateTime(params).toJSONString());
+                                break;
+                            case HttpRequestUri.FINGER_DELETE:
+                                response.send(VoucherLogic.getInstance().deleteFinger(params).toJSONString());
                                 break;
                             default:
                                 response.send("Invalid request url.");
