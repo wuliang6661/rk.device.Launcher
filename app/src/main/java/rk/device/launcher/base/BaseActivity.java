@@ -73,15 +73,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         SleepTaskServer.getSleepHandler().sendEmptyMessage(0x11);
         AppManager.getAppManager().addActivity(this);
-//        makeFilters();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-//        PushManager.getInstance().initialize(getApplicationContext(), RKLauncherPushService.class);
-//        PushManager.getInstance().registerPushIntentService(getApplicationContext(), RKLauncherPushIntentService.class);
-    }
 
     @Override
     protected void onPause() {

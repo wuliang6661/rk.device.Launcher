@@ -25,6 +25,7 @@ import rk.device.launcher.db.entity.User;
 import rk.device.launcher.utils.BitmapUtil;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.StringUtils;
+import rk.device.launcher.utils.TypeTranUtils;
 import rk.device.launcher.utils.verify.FaceUtils;
 import rk.device.launcher.utils.verify.VerifyUtils;
 import rk.device.server.api.HttpResponseCode;
@@ -91,7 +92,7 @@ public class VoucherLogic extends BaseLogic {
             return onError(HttpResponseCode.Error, "同步人脸失败");
         }
         BitmapUtil.saveBitmap(faceId + ".png", bitmap);
-        FaceHelper.insert(peopleId, faceId, 1, Integer.parseInt(startTime), Integer.parseInt(endTime));
+        FaceHelper.insert(peopleId, faceId, 1, TypeTranUtils.str2Int(startTime), TypeTranUtils.str2Int(endTime));
         JSONObject result = new JSONObject();
         result.put("faceID", faceId);
         return onSuccess(result, "人脸同步成功");
@@ -141,7 +142,7 @@ public class VoucherLogic extends BaseLogic {
             return onError(HttpResponseCode.Error, "同步人脸失败");
         }
         BitmapUtil.saveBitmap(faceId + ".png", bitmap);
-        FaceHelper.update(oldFace.get(0).getId(), faceId, 1, Integer.parseInt(startTime), Integer.parseInt(endTime));
+        FaceHelper.update(oldFace.get(0).getId(), faceId, 1, TypeTranUtils.str2Int(startTime), TypeTranUtils.str2Int(endTime));
         JSONObject result = new JSONObject();
         result.put("faceID", faceId);
         return onSuccess(result, "人脸修改成功");
@@ -210,7 +211,7 @@ public class VoucherLogic extends BaseLogic {
         if (!codePasswords.isEmpty()) {
             return onError(HttpResponseCode.OBJECT_EXITE, "该用户已存在密码");
         }
-        CodePasswordHelper.insert(peopleId, password, 1, Integer.parseInt(startTime), Integer.parseInt(endTime));
+        CodePasswordHelper.insert(peopleId, password, 1, TypeTranUtils.str2Int(startTime), TypeTranUtils.str2Int(endTime));
         JSONObject result = new JSONObject();
         result.put("status", 1);
         return onSuccess(result, "密码增加成功");
@@ -243,7 +244,7 @@ public class VoucherLogic extends BaseLogic {
         if (codePasswords.isEmpty()) {
             return onError(HttpResponseCode.OBJECT_NO_FOUND, "该用户没有设置过密码！");
         }
-        CodePasswordHelper.update(codePasswords.get(0).getId(), password, 1, Integer.parseInt(startTime), Integer.parseInt(endTime));
+        CodePasswordHelper.update(codePasswords.get(0).getId(), password, 1, TypeTranUtils.str2Int(startTime), TypeTranUtils.str2Int(endTime));
         JSONObject result = new JSONObject();
         result.put("status", 1);
         return onSuccess(result, "密码修改成功");
@@ -311,7 +312,7 @@ public class VoucherLogic extends BaseLogic {
         if (!cards.isEmpty()) {
             return onError(HttpResponseCode.OBJECT_EXITE, "该用户已录入卡");
         }
-        CardHelper.insert(peopleId, cardNo, 1, Integer.parseInt(startTime), Integer.parseInt(endTime));
+        CardHelper.insert(peopleId, cardNo, 1, TypeTranUtils.str2Int(startTime), TypeTranUtils.str2Int(endTime));
         JSONObject result = new JSONObject();
         result.put("status", 1);
         return onSuccess(result, "卡增加成功");
@@ -345,7 +346,7 @@ public class VoucherLogic extends BaseLogic {
         if (cards.isEmpty()) {
             return onError(HttpResponseCode.OBJECT_NO_FOUND, "该用户没有录入过卡！");
         }
-        CardHelper.update(cards.get(0).getId(), cardNo, 1, Integer.parseInt(startTime), Integer.parseInt(endTime));
+        CardHelper.update(cards.get(0).getId(), cardNo, 1, TypeTranUtils.str2Int(startTime), TypeTranUtils.str2Int(endTime));
         JSONObject result = new JSONObject();
         result.put("status", 1);
         return onSuccess(result, "卡修改成功");

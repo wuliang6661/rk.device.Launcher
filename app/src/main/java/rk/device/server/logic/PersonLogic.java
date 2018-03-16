@@ -1,26 +1,9 @@
 package rk.device.server.logic;
 
-import android.graphics.Bitmap;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.alibaba.fastjson.JSONObject;
-import com.arcsoft.facerecognition.AFR_FSDKFace;
-import com.koushikdutta.async.ByteBufferList;
-import com.koushikdutta.async.DataEmitter;
-import com.koushikdutta.async.callback.CompletedCallback;
-import com.koushikdutta.async.callback.DataCallback;
-import com.koushikdutta.async.http.body.MultipartFormDataBody;
-import com.koushikdutta.async.http.body.Part;
-import com.koushikdutta.async.http.server.AsyncHttpServerResponse;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.List;
 
 import peripherals.FingerHelper;
@@ -35,7 +18,6 @@ import rk.device.launcher.db.entity.CodePassword;
 import rk.device.launcher.db.entity.Face;
 import rk.device.launcher.db.entity.Finger;
 import rk.device.launcher.db.entity.User;
-import rk.device.launcher.utils.BitmapUtil;
 import rk.device.launcher.utils.FileUtils;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.TypeTranUtils;
@@ -219,139 +201,5 @@ public class PersonLogic extends BaseLogic {
         JSONObject result = new JSONObject();
         result.put("status", 1);
         return onSuccess(result, "请求成功");
-    }
-
-
-    /**
-     * 文件读写流
-     */
-    private BufferedOutputStream fileOutPutStream = null;
-    private BufferedInputStream fileInputStream = null;
-    private File file = null;
-    private String filePath = "";
-
-    /**
-     * 上传人脸图片
-     *
-     * @param body
-     * @return
-     */
-    public void upload(MultipartFormDataBody body, AsyncHttpServerResponse response) {
-        filePath = "/data/data/rk.device.launcher/files/temp";
-        /**
-         * 参数接收回调
-         */
-        body.setMultipartCallback(new MultipartFormDataBody.MultipartCallback() {
-            @Override
-            public void onPart(Part part) {
-                LogUtil.i(TAG, "file type:" + part.getContentType());
-                if (part.isFile()) {
-                    if (file == null || !file.exists()) {
-                        String suffix = "";
-                        switch (part.getContentType()) {
-                            case "image/jpeg":
-                                suffix = ".jpg";
-                                break;
-                            case "image/png":
-                                suffix = ".png";
-                                break;
-                            default:
-                                response.send(
-                                        onError(HttpResponseCode.Error, "文件格式有误").toJSONString());
-                                break;
-                        }
-                        filePath = filePath + System.currentTimeMillis() + suffix;
-                        file = new File(filePath);
-                    }
-                    try {
-                        fileOutPutStream = new BufferedOutputStream(new FileOutputStream(file));
-                    } catch (FileNotFoundException e) {
-                    }
-                    body.setDataCallback(new DataCallback() {
-                        @Override
-                        public void onDataAvailable(DataEmitter emitter, ByteBufferList bb) {
-                            writeData(bb);
-                        }
-                    });
-                } else {
-                    response.send(onError(HttpResponseCode.Error, "文件格式有误").toJSONString());
-                }
-            }
-        });
-        /**
-         * 参数接收结束回调
-         */
-        body.setEndCallback(new CompletedCallback() {
-            @Override
-            public void onCompleted(Exception ex) {
-                try {
-                    fileInputStream.close();
-                    fileOutPutStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                Bitmap bitmap = BitmapUtil.decodeBitmapFromFile(filePath, 640, 480);
-                AFR_FSDKFace fsdkFace = FaceUtils.getInstance().bitmapToFace(bitmap);
-                if (fsdkFace == null) {
-                    FileUtils.deleteFile(new File(filePath));
-                    response.send(onError(HttpResponseCode.Error, "没有检测到人脸").toJSONString());
-                }
-                String faceId = FaceUtils.getInstance().saveFace(fsdkFace);
-                if (TextUtils.isEmpty(faceId)) {
-                    FileUtils.deleteFile(new File(filePath));
-                    response.send(onError(HttpResponseCode.Error, "同步人脸失败").toJSONString());
-                }
-                BitmapUtil.saveBitmap(faceId + ".png", bitmap);
-                Log.i(TAG, TAG + "filePath:" + filePath);
-                FileUtils.deleteFile(new File(filePath));
-                JSONObject result = new JSONObject();
-                result.put("faceId", faceId);
-                response.send(onSuccess(result, "人脸同步成功").toJSONString());
-            }
-        });
-    }
-
-    /**
-     * 写入文件
-     *
-     * @param bb
-     */
-    private void writeData(ByteBufferList bb) {
-        byte[] buff = new byte[1024];
-        try {
-            fileInputStream = new BufferedInputStream(
-                    new ByteArrayInputStream(bb.getAllByteArray()));
-
-            int bytesRead = 0;
-            while (-1 != (bytesRead = fileInputStream.read(buff, 0, buff.length))) {
-                fileOutPutStream.write(buff, 0, bytesRead);
-            }
-            fileOutPutStream.flush();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-
-        }
-    }
-
-    /**
-     * 删除人脸
-     *
-     * @param params
-     * @return
-     */
-    public JSONObject deleteFace(org.json.JSONObject params) throws Exception {
-        String faceId = params.getString("faceId");
-        if (TextUtils.isEmpty(faceId)) {
-            return onError(HttpResponseCode.Error, "faceId不能为空");
-        }
-        if (!FaceUtils.getInstance().delete(faceId)) {
-            return onError(HttpResponseCode.Error, "删除失败");
-        }
-        JSONObject result = new JSONObject();
-        result.put("status", 1);
-        return onSuccess(result, "删除成功");
     }
 }

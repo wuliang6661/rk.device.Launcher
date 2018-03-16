@@ -160,10 +160,12 @@ public class PersonFaceActivity extends MVPBaseActivity<PersonFaceContract.View,
     }
 
 
+
     @Override
     protected void onDestroy() {
         callBack.stop();
         callbackFont.setCallBack(null);
+        surfaceholder.addCallback(null);
         super.onDestroy();
     }
 

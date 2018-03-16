@@ -52,24 +52,24 @@ public class NfcaddActivity extends MVPBaseActivity<NfcaddContract.View, NfcaddP
         implements NfcaddContract.View, View.OnClickListener {
 
     private static final String EXTRA_UNIQUEID = "uniqueId";
-    private String              uniqueId       = null;
+    private String uniqueId = null;
 
-    private TextView            cardNumTv;                                   //卡号
+    private TextView cardNumTv;                                   //卡号
     @Bind(R.id.ll_card_notice)
-    LinearLayout                cardNoticeLL;                                //用于展示提示信息的Layout
+    LinearLayout cardNoticeLL;                                //用于展示提示信息的Layout
     @Bind(R.id.stub_layout)
-    ViewStub                    cardNumberStub;                              //用于展示卡片信息的Layout
-    TextView                    noticeTv;                                    //用于提示当前卡牌状态
+    ViewStub cardNumberStub;                              //用于展示卡片信息的Layout
+    TextView noticeTv;                                    //用于提示当前卡牌状态
     @Bind(R.id.tv_notice)
-    TextView                    noticeTv2;
+    TextView noticeTv2;
     @Bind(R.id.iv_search)
-    ImageView                   deleteImg;                                   //删除按钮
-    private View                cardNumberView;
-    private Button              saveBtn;
-    private boolean             isDetail       = false;
-    private boolean             isChange       = false;
-    private boolean             isReload       = false;
-    private DeviceUuidFactory   factory        = new DeviceUuidFactory(this);
+    ImageView deleteImg;                                   //删除按钮
+    private View cardNumberView;
+    private Button saveBtn;
+    private boolean isDetail = false;
+    private boolean isChange = false;
+    private boolean isReload = false;
+    private DeviceUuidFactory factory = new DeviceUuidFactory(this);
 
     @Override
     protected int getLayout() {
@@ -269,7 +269,7 @@ public class NfcaddActivity extends MVPBaseActivity<NfcaddContract.View, NfcaddP
 
     /**
      * 更新服务端数据
-     * 
+     *
      * @param eUser
      * @param cardList
      * @param cardNumber
@@ -340,9 +340,9 @@ public class NfcaddActivity extends MVPBaseActivity<NfcaddContract.View, NfcaddP
         User eUser = VerifyUtils.getInstance().queryUserByUniqueId(uniqueId);
         if (eUser != null) {
             Card card = CardHelper.queryOne(uniqueId);
-            Log.i("VerifyService","VerifyService gson:" + new Gson().toJson(card).toString());
+            Log.i("VerifyService", "VerifyService gson:" + new Gson().toJson(card).toString());
             int resultCode = CardHelper.update(card.getId(), card.getNumber(), Constant.TO_BE_DELETE, 0, 0);
-            if(resultCode != Constant.UPDATE_SUCCESS){
+            if (resultCode != Constant.UPDATE_SUCCESS) {
                 T.showShort("更新失败");
                 return;
             }
@@ -364,7 +364,7 @@ public class NfcaddActivity extends MVPBaseActivity<NfcaddContract.View, NfcaddP
 
                 @Override
                 public void onError(Throwable e) {
-                    if(e.getMessage().equals("6")){
+                    if (e.getMessage().equals("6")) {
                         Card card = CardHelper.queryOne(uniqueId);
                         if (card != null) {
                             CardHelper.delete(card);

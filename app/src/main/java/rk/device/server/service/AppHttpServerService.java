@@ -156,14 +156,15 @@ public class AppHttpServerService extends Service {
                 }
 
                 @Override
-                public void onFile(MultipartFormDataBody body,
-                                   AsyncHttpServerResponse response) {
-                    PersonLogic.getInstance().upload(body, response);
+                public void onFile(MultipartFormDataBody body, AsyncHttpServerResponse response) {
                 }
             });
         }
 
     };
+
+
+
 
     @Override
     public void onDestroy() {
