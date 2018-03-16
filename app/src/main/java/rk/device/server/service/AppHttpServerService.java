@@ -19,8 +19,9 @@ import rk.device.launcher.utils.LogUtil;
 import rk.device.server.api.HttpRequestUri;
 import rk.device.server.api.LauncherHttpServer;
 import rk.device.server.logic.DeviceLogic;
-import rk.device.server.logic.MemberLogic;
+import rk.device.server.logic.PersonLogic;
 import rk.device.server.logic.PublicLogic;
+import rk.device.server.logic.VoucherLogic;
 
 /**
  * Created by hanbin on 2018/2/5.
@@ -69,11 +70,44 @@ public class AppHttpServerService extends Service {
                         switch (uri) {
                             case HttpRequestUri.MEMBER_ADD:
                                 response.send(
-                                        MemberLogic.getInstance().addMember(params).toJSONString());
+                                        PersonLogic.getInstance().addMember(params).toJSONString());
+                                break;
+                            case HttpRequestUri.MEMBER_UPDATE:
+                                response.send(PersonLogic.getInstance().updatePerson(params).toJSONString());
+                                break;
+                            case HttpRequestUri.MEMBER_DELETE:
+                                response.send(PersonLogic.getInstance().deletePerson(params).toJSONString());
+                                break;
+                            case HttpRequestUri.FACE_ADD:
+                                response.send(VoucherLogic.getInstance().addPersonFace(params).toJSONString());
+                                break;
+                            case HttpRequestUri.FACE_UPDATE:
+                                response.send(VoucherLogic.getInstance().updatePersonFace(params).toJSONString());
+                                break;
+                            case HttpRequestUri.FACE_DELETE:
+                                response.send(VoucherLogic.getInstance().deleteFaceImg(params).toJSONString());
+                                break;
+                            case HttpRequestUri.CARD_ADD:
+                                response.send(VoucherLogic.getInstance().addCard(params).toJSONString());
+                                break;
+                            case HttpRequestUri.CARD_UPDATE:
+                                response.send(VoucherLogic.getInstance().updateCards(params).toJSONString());
+                                break;
+                            case HttpRequestUri.CARD_DELETE:
+                                response.send(VoucherLogic.getInstance().deleteCards(params).toJSONString());
+                                break;
+                            case HttpRequestUri.PASSWORD_ADD:
+                                response.send(VoucherLogic.getInstance().addPassWord(params).toJSONString());
+                                break;
+                            case HttpRequestUri.PASSWORD_UPDATE:
+                                response.send(VoucherLogic.getInstance().updatePassWord(params).toJSONString());
+                                break;
+                            case HttpRequestUri.PASSWORD_DELETE:
+                                response.send(VoucherLogic.getInstance().deletePassWord(params).toJSONString());
                                 break;
                             case HttpRequestUri.DELETE:
                                 response.send(
-                                        MemberLogic.getInstance().delete(params).toJSONString());
+                                        PersonLogic.getInstance().delete(params).toJSONString());
                                 break;
                             case HttpRequestUri.OPEN:
                                 response.send(
@@ -91,7 +125,7 @@ public class AppHttpServerService extends Service {
                                 response.send(PublicLogic.getInstance().ad(params).toJSONString());
                                 break;
                             case HttpRequestUri.DELETE_FACE:
-                                response.send(MemberLogic.getInstance().deleteFace(params)
+                                response.send(PersonLogic.getInstance().deleteFace(params)
                                         .toJSONString());
                                 break;
                             case HttpRequestUri.UPDATE_TIME:
@@ -109,7 +143,7 @@ public class AppHttpServerService extends Service {
                 @Override
                 public void onFile(MultipartFormDataBody body,
                                    AsyncHttpServerResponse response) {
-                    MemberLogic.getInstance().upload(body, response);
+                    PersonLogic.getInstance().upload(body, response);
                 }
             });
         }
