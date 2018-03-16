@@ -9,6 +9,8 @@ public interface HttpRequestUri {
 
     String VERSION = "/app/api/v1";
 
+    String GET_TOKEN     = VERSION + "/public/get_token";
+
     /**
      * 用户添加
      */
@@ -72,6 +74,12 @@ public interface HttpRequestUri {
      * 删除卡
      */
     String CARD_DELETE = VERSION + "/credential_card/delete";
+
+
+    /**
+     * 删除指纹
+     */
+    String FINGER_DELETE = VERSION + "/finger/delete";
 
 
 

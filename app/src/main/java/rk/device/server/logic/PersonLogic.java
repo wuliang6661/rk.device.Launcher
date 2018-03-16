@@ -43,7 +43,6 @@ public class PersonLogic extends BaseLogic {
     private static PersonLogic personLogic = null;
 
     public PersonLogic() {
-
     }
 
     public static PersonLogic getInstance() {

@@ -136,6 +136,12 @@ public interface Constant {
      */
     String ACCENT_TOKEN = "access_token";
 
+    /**
+     * 一体机验资平台访问的Token
+     */
+    String GRANT_TOKEN = "grant_token";
+    String GRANT_TIME = "grant_time";
+
 
 
     /*************** status //1：正常，2：待添加，3：待更新，4：待删除 *******************/
