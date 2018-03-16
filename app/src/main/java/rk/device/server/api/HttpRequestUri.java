@@ -9,6 +9,8 @@ public interface HttpRequestUri {
 
     String VERSION       = "/app/api/v1";
 
+    String GET_TOKEN     = VERSION + "/device/get_token";
+
     /**
      * 用户添加
      */

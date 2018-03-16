@@ -3,14 +3,17 @@ package rk.device.server.logic;
 import android.os.Build;
 import android.text.TextUtils;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.koushikdutta.async.http.Multimap;
 
 import rk.device.launcher.base.LauncherApplication;
+import rk.device.launcher.global.Constant;
 import rk.device.launcher.global.VerifyTypeConstant;
 import rk.device.launcher.utils.FileUtils;
 import rk.device.launcher.utils.LogUtil;
+import rk.device.launcher.utils.MD5;
 import rk.device.launcher.utils.PackageUtils;
+import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.WifiHelper;
 import rk.device.launcher.utils.uuid.DeviceUuidFactory;
 import rk.device.launcher.utils.verify.OpenUtils;
@@ -22,9 +25,9 @@ import rk.device.launcher.utils.verify.OpenUtils;
  */
 public class DeviceLogic extends BaseLogic {
 
-    private static final String TAG               = "MemberLogic";
-    private static DeviceLogic  deviceLogic       = null;
-    private DeviceUuidFactory   deviceUuidFactory = null;
+    private static final String TAG = "MemberLogic";
+    private static DeviceLogic deviceLogic = null;
+    private DeviceUuidFactory deviceUuidFactory = null;
 
     public DeviceLogic() {
         if (deviceUuidFactory == null) {
@@ -100,6 +103,21 @@ public class DeviceLogic extends BaseLogic {
         result.put("opened", 0);
         result.put("work_mode", 9999);
         result.put("power_mode", LauncherApplication.sIsCharge);
+        return onSuccess(result, "请求成功");
+    }
+
+    /**
+     * 获取token
+     *
+     * @return
+     */
+    public JSON getToken() {
+        long grantTime = System.currentTimeMillis();
+        String token = MD5.strToMd5Low32(String.valueOf(grantTime) + (int) ((Math.random() * 9 + 1) * 100000));
+        SPUtils.putString(Constant.GRANT_TOKEN, token);
+        SPUtils.putLong(Constant.GRANT_TIME, grantTime);
+        JSONObject result = new JSONObject();
+        result.put("token", token);
         return onSuccess(result, "请求成功");
     }
 }

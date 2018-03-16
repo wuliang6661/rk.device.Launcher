@@ -67,6 +67,9 @@ public class AppHttpServerService extends Service {
                                       AsyncHttpServerResponse response) {
                     try {
                         switch (uri) {
+                            case HttpRequestUri.GET_TOKEN:
+                                response.send(DeviceLogic.getInstance().getToken().toJSONString());
+                                break;
                             case HttpRequestUri.MEMBER_ADD:
                                 response.send(
                                         MemberLogic.getInstance().addMember(params).toJSONString());
