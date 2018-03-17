@@ -98,6 +98,20 @@ public interface Constant {
      */
     String UPDATE_TIME = "UPDATE_TIME";
 
+    /**
+     * 心跳间隔
+     */
+    String HEART = "heartbeatInterval";
+
+    /**
+     * 物管IP
+     */
+    String MANAGER_IP = "managerIpAddr";
+
+    /**
+     * 物管端口
+     */
+    String MANAGER_PORT = "managerPort";
 
     /**
      * 蓝牙
@@ -141,7 +155,6 @@ public interface Constant {
      */
     String GRANT_TOKEN = "grant_token";
     String GRANT_TIME = "grant_time";
-
 
 
     /*************** status //1：正常，2：待添加，3：待更新，4：待删除 *******************/

@@ -107,7 +107,7 @@ public class DbHelper {
      */
     public static List<User> queryByUniqueId(String uniqueId) {
         Query<User> query = getUserDao().queryBuilder()
-                .whereOr(UserDao.Properties.UniqueId.eq(uniqueId),
+                .where(UserDao.Properties.UniqueId.eq(uniqueId),
                         UserDao.Properties.Status.notEq(Constant.TO_BE_DELETE))
                 .build();
         return query.list();
@@ -151,7 +151,7 @@ public class DbHelper {
     public static List<User> queryUserById(String id) {
         UserDao userDao = DbHelper.getUserDao();
         // where里面是可变参数
-        Query<User> query = userDao.queryBuilder().whereOr(UserDao.Properties.UniqueId.eq(id),
+        Query<User> query = userDao.queryBuilder().where(UserDao.Properties.UniqueId.eq(id),
                 UserDao.Properties.Status.notEq(Constant.TO_BE_DELETE))
                 .build();
         return query.list();

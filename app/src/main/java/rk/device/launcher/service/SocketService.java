@@ -21,6 +21,7 @@ import rk.device.launcher.api.BaseApiImpl;
 import rk.device.launcher.base.LauncherApplication;
 import rk.device.launcher.bean.StatusBo;
 import rk.device.launcher.bean.event.DestoryEvent;
+import rk.device.launcher.bean.event.UpdateConfig;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.utils.FileUtils;
 import rk.device.launcher.utils.LogUtil;
@@ -32,6 +33,8 @@ import rx.Subscriber;
 
 /**
  * Created by hanbin on 2017/9/23.
+ * <p>
+ * 心跳service
  */
 
 public class SocketService extends Service {
@@ -39,6 +42,7 @@ public class SocketService extends Service {
     private static final String TAG = "SocketService";
     private static SocketService mService = null;
     private DeviceUuidFactory deviceUuidFactory = null;
+    private int heartTime = 50000;
 
     public static SocketService getInstance() {
         if (mService == null) {
@@ -136,7 +140,7 @@ public class SocketService extends Service {
     };
 
     private void sendDeviceStatusToPlatform() {
-        timer.schedule(task, 1000, 50000);
+        timer.schedule(task, 1000, heartTime);
     }
 
     @Override
@@ -155,6 +159,17 @@ public class SocketService extends Service {
         }
         handler.removeCallbacksAndMessages(null);
         stopSelf();
+    }
+
+
+    /**
+     * 系统配置更新,心跳时间变更
+     *
+     * @param updateConfig
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(UpdateConfig updateConfig) {
+        heartTime = SPUtils.getInt(Constant.HEART);
     }
 
 

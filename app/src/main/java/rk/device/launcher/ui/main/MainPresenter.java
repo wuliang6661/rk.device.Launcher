@@ -235,7 +235,7 @@ public class MainPresenter extends BasePresenterImpl<MainContract.View> implemen
      * 获取配置接口
      */
     void getData() {
-        BaseApiImpl.deviceConfiguration(AppUtils.getAppVersionCode(mView.getContext()) + "", null).subscribe(new Subscriber<DeviceInfoBO>() {
+        BaseApiImpl.deviceConfiguration().subscribe(new Subscriber<DeviceInfoBO>() {
             @Override
             public void onCompleted() {
 

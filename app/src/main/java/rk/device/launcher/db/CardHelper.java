@@ -19,15 +19,13 @@ import rk.device.launcher.utils.TimeUtils;
  */
 public class CardHelper {
 
-    private static CardDao sCardDao;
-
     public static CardDao getCardDao() {
         return LauncherApplication.getDaoSession().getCardDao();
     }
 
     /**
      * 此处需要返回insert之后的反馈，不然无法知道是否insert成功
-     * 
+     *
      * @param personId
      * @param number
      * @param status
@@ -55,7 +53,7 @@ public class CardHelper {
 
     /**
      * 更新
-     * 
+     *
      * @param
      */
     public static int update(long id, String number, int status, int beginTime, int endTime) {
@@ -96,7 +94,7 @@ public class CardHelper {
 
     /**
      * 卡列表
-     * 
+     *
      * @param personId
      * @return
      */
@@ -110,7 +108,7 @@ public class CardHelper {
 
     /**
      * 通过卡号获取卡的记录
-     * 
+     *
      * @param nfcCard
      * @return
      */
@@ -124,7 +122,7 @@ public class CardHelper {
 
     /**
      * 获取一条记录
-     * 
+     *
      * @param personId
      * @return
      */

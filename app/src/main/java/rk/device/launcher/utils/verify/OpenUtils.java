@@ -204,8 +204,10 @@ public class OpenUtils {
             params.put("uuid", deviceUuidFactory.getUuid());
             params.put("peopleId", personId);
             params.put("peopleName", personName);
-            params.put("openType", type);
-            params.put("data", data);
+            params.put("credentialType", type);
+            params.put("credentialID", data);
+            params.put("accessResult", 1);
+            params.put("accessTime", time);
             params.put("cdate", time);
         } catch (JSONException e) {
         }

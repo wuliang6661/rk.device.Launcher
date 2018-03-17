@@ -15,7 +15,6 @@ public class HomeContract {
 
 //        void showWeather(List<WeatherBO> weatherModel);
 
-        void setAnimationIp(String AnimationIp);
 
         void hasPerson(boolean hasPerson);
 

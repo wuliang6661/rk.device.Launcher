@@ -102,8 +102,7 @@ public class FaceHelper {
      */
     public static List<Face> getList(String personId) {
         Query<Face> query = getFaceDao().queryBuilder()
-                .where(FaceDao.Properties.PersonId.eq(personId), FaceDao.Properties.Status
-                        .in(Constant.TO_BE_UPDATE, Constant.NORMAL, Constant.TO_BE_ADD))
+                .where(FaceDao.Properties.PersonId.eq(personId), FaceDao.Properties.Status.in(Constant.TO_BE_UPDATE, Constant.NORMAL, Constant.TO_BE_ADD))
                 .build();
         return query.list();
     }

@@ -35,7 +35,7 @@ public interface BaseApi {
     /**
      * 获取配置接口
      */
-    @POST("/api/v1/public/getconfig")
+    @POST("/api/v1/device/get_config")
     Observable<BaseResult<DeviceInfoBO>> deviceConfiguration(@Body RequestBody requestBody); //客户号Id
 
     /**
@@ -65,7 +65,7 @@ public interface BaseApi {
      * @param requestBody
      * @return
      */
-    @POST("/api/v1/device/upload_access_record")
+    @POST("/api/v1/device/uploadaccessrecord")
     Observable<BaseResult<Object>> syncRecords(@Body RequestBody requestBody);
 
     /**

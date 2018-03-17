@@ -122,6 +122,7 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
                     @Override
                     public void onNext(TokenBo tokenBo) {
                         SPUtils.put(Constant.ACCENT_TOKEN, tokenBo.getAccess_token());
+                        getData();
                     }
                 });
     }
@@ -213,7 +214,7 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
      * 获取配置接口
      */
     void getData() {
-        BaseApiImpl.deviceConfiguration(AppUtils.getAppVersionCode(mView.getContext()) + "", null).subscribe(new Subscriber<DeviceInfoBO>() {
+        BaseApiImpl.deviceConfiguration().subscribe(new Subscriber<DeviceInfoBO>() {
             @Override
             public void onCompleted() {
 
@@ -225,8 +226,10 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
 
             @Override
             public void onNext(DeviceInfoBO s) {
-                if (mView != null)
-                    mView.setAnimationIp(s.getMobile());
+                if (mView != null){
+
+
+                }
             }
         });
     }

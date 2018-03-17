@@ -93,11 +93,11 @@ public class BaseApiImpl {
     /**
      * 获取配置接口
      */
-    public static Observable<DeviceInfoBO> deviceConfiguration(String verCode, String cid) {
+    public static Observable<DeviceInfoBO> deviceConfiguration() {
         JSONObject params = new JSONObject();
         try {
-            params.put("ver", verCode);
-            params.put("cid", cid);
+            params.put("uuid", new DeviceUuidFactory(Utils.getContext()).getUuid().toString());
+            params.put("access_token", SPUtils.getString(Constant.ACCENT_TOKEN));
         } catch (JSONException e) {
 
         }

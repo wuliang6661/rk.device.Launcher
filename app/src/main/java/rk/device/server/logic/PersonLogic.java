@@ -23,7 +23,6 @@ import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.TypeTranUtils;
 import rk.device.launcher.utils.cache.CacheUtils;
 import rk.device.launcher.utils.verify.FaceUtils;
-import rk.device.launcher.utils.verify.VerifyUtils;
 import rk.device.server.api.HttpResponseCode;
 
 /**
@@ -79,11 +78,8 @@ public class PersonLogic extends BaseLogic {
         if (TextUtils.isEmpty(endTime)) {
             return onError(HttpResponseCode.NO_JSON, "请填写结束时间");
         }
-        if (peopleId.length() > 16) {
-            return onError(HttpResponseCode.NO_JSON, "personID参数错误");
-        }
-        User oldUser = VerifyUtils.getInstance().queryUserByUniqueId(peopleId);
-        if (oldUser != null) {
+        List<User> users = DbHelper.queryByUniqueId(peopleId);
+        if (!users.isEmpty()) {
             return onError(HttpResponseCode.OBJECT_EXITE, "该用户已存在");
         }
         User user = new User();
@@ -121,14 +117,12 @@ public class PersonLogic extends BaseLogic {
         int role = TypeTranUtils.str2Int(params.optString("role"));
         String startTime = params.optString("startTime");
         String endTime = params.optString("endTime");
-        if (peopleId.length() > 16) {
-            return onError(HttpResponseCode.NO_JSON, "personID参数错误");
-        }
         //修改用户
-        User oldUser = VerifyUtils.getInstance().queryUserByUniqueId(peopleId);
-        if (oldUser == null) {
-            return onError(HttpResponseCode.OBJECT_NO_FOUND, "该用户不存在");
+        List<User> users = DbHelper.queryByUniqueId(peopleId);
+        if (users.isEmpty()) {
+            return onError(HttpResponseCode.OBJECT_EXITE, "该用户不存在");
         }
+        User oldUser = users.get(0);
         User user = new User();
         user.setId(oldUser.getId());
         user.setUniqueId(peopleId);
@@ -160,10 +154,11 @@ public class PersonLogic extends BaseLogic {
         }
         String peopleId = params.optString("peopleId");
         //修改用户
-        User oldUser = VerifyUtils.getInstance().queryUserByUniqueId(peopleId);
-        if (oldUser == null) {
+        List<User> users = DbHelper.queryByUniqueId(peopleId);
+        if (users.isEmpty()) {
             return onError(HttpResponseCode.OBJECT_NO_FOUND, "该用户不存在");
         }
+        User oldUser = users.get(0);
         //删除本地人脸
         List<Face> faces = FaceHelper.getList(peopleId);
         if (!faces.isEmpty()) {

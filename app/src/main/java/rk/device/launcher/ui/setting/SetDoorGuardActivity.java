@@ -173,7 +173,7 @@ public class SetDoorGuardActivity extends BaseActivity implements View.OnClickLi
      * 获取关联设备的配置
      */
     public void getData() {
-        addSubscription(BaseApiImpl.deviceConfiguration(AppUtils.getAppVersionCode(this) + "", null).subscribe(new Subscriber<DeviceInfoBO>() {
+        addSubscription(BaseApiImpl.deviceConfiguration().subscribe(new Subscriber<DeviceInfoBO>() {
                     @Override
                     public void onCompleted() {
 

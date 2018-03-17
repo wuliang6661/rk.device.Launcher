@@ -7,7 +7,15 @@ import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSONObject;
 
+import org.greenrobot.eventbus.EventBus;
+
+import java.util.List;
+
 import rk.device.launcher.base.LauncherApplication;
+import rk.device.launcher.bean.event.ADupdateEvent;
+import rk.device.launcher.bean.event.UpdateConfig;
+import rk.device.launcher.db.AdHelper;
+import rk.device.launcher.db.entity.AD;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.global.VerifyTypeConstant;
 import rk.device.launcher.service.DownLoadIntentService;
@@ -15,6 +23,8 @@ import rk.device.launcher.utils.FileUtils;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.PackageUtils;
 import rk.device.launcher.utils.SPUtils;
+import rk.device.launcher.utils.StringUtils;
+import rk.device.launcher.utils.TimeUtils;
 import rk.device.launcher.utils.TypeTranUtils;
 import rk.device.launcher.utils.Utils;
 import rk.device.launcher.utils.WifiHelper;
@@ -28,8 +38,8 @@ import rk.device.server.api.HttpResponseCode;
  */
 public class DeviceLogic extends BaseLogic {
 
-    private static final String TAG               = "PersonLogic";
-    private static DeviceLogic  deviceLogic       = null;
+    private static final String TAG = "PersonLogic";
+    private static DeviceLogic deviceLogic = null;
 
     public DeviceLogic() {
     }
@@ -118,12 +128,18 @@ public class DeviceLogic extends BaseLogic {
             LogUtil.i(TAG, getUUID());
             return onError(HttpResponseCode.NO_JSON, "请填写正确的UUID: " + getUUID());
         }
-        int code = TypeTranUtils.str2Int(params.getString("code"));
-        String file = params.getString("file");
+        String target = params.optString("target");
+        String version = params.optString("version");
+        int code = TypeTranUtils.str2Int(params.optString("version_code"));
+        String file = params.optString("url");
+        if (StringUtils.isEmpty(file)) {
+            return onError(HttpResponseCode.NO_JSON, "缺少升级地址");
+        }
         int currentVersion = PackageUtils.getCurrentVersionCode();
         if (code > currentVersion) {
-            DownLoadIntentService.startDownLoad(LauncherApplication.getContext(), file,
-                    Constant.KEY_ROM);
+            DownLoadIntentService.startDownLoad(LauncherApplication.getContext(), file, Constant.KEY_ROM);
+        } else {
+            return onError(HttpResponseCode.NO_CAOZUO, "当前已是最新版本");
         }
         JSONObject result = new JSONObject();
         result.put("code", PackageUtils.getCurrentVersionCode());
@@ -132,13 +148,10 @@ public class DeviceLogic extends BaseLogic {
     }
 
     /**
-     * 广告
-     *
-     * @param params
-     * @return
+     * 新增广告
      */
-    public JSONObject ad(org.json.JSONObject params) throws Exception {
-        String uuid = params.getString("uuid");
+    public JSONObject add_guangao(org.json.JSONObject params) {
+        String uuid = params.optString("uuid");
         if (TextUtils.isEmpty(uuid)) {
             return onError(HttpResponseCode.NO_JSON, "UUID不能为空");
         }
@@ -146,16 +159,100 @@ public class DeviceLogic extends BaseLogic {
             LogUtil.i(TAG, getUUID());
             return onError(HttpResponseCode.NO_JSON, "请填写正确的UUID: " + getUUID());
         }
-        String videoUrl = params.getString("video_url");
-//        List<String> imageList = params.get("image_list");
-
+        String image = params.optString("image");
+        String adID = params.optString("adID");
+        if (StringUtils.isEmpty(image)) {
+            return onError(HttpResponseCode.NO_JSON, "广告地址为空！");
+        }
+        if (StringUtils.isEmpty(adID)) {
+            return onError(HttpResponseCode.NO_JSON, "广告ID为空！");
+        }
+        List<AD> ads = AdHelper.queryByAdId(adID);
+        if (!ads.isEmpty()) {
+            return onError(HttpResponseCode.NO_JSON, "广告已存在！");
+        }
+        AD ad = new AD();
+        ad.setAdID(adID);
+        ad.setImage(image);
+        ad.setCreateTime(TimeUtils.getTimeStamp());
+        AdHelper.insert(ad);
+        EventBus.getDefault().post(new ADupdateEvent());
         JSONObject result = new JSONObject();
         result.put("status", 1);
         return onSuccess(result, "请求成功");
     }
 
     /**
-     * 更新一体机时间
+     * 修改广告
+     */
+    public JSONObject update_guangao(org.json.JSONObject params) {
+        String uuid = params.optString("uuid");
+        if (TextUtils.isEmpty(uuid)) {
+            return onError(HttpResponseCode.NO_JSON, "UUID不能为空");
+        }
+        if (!getUUID().equals(uuid)) {
+            LogUtil.i(TAG, getUUID());
+            return onError(HttpResponseCode.NO_JSON, "请填写正确的UUID: " + getUUID());
+        }
+        String image = params.optString("image");
+        String adID = params.optString("adID");
+        if (StringUtils.isEmpty(image)) {
+            return onError(HttpResponseCode.NO_JSON, "广告地址为空！");
+        }
+        if (StringUtils.isEmpty(adID)) {
+            return onError(HttpResponseCode.NO_JSON, "广告ID为空！");
+        }
+        List<AD> ads = AdHelper.queryByAdId(adID);
+        if (ads.isEmpty()) {
+            return onError(HttpResponseCode.NO_JSON, "广告不存在！");
+        }
+        AD ad = ads.get(0);
+        ad.setAdID(adID);
+        ad.setImage(image);
+        ad.setCreateTime(TimeUtils.getTimeStamp());
+        AdHelper.update(ad);
+        EventBus.getDefault().post(new ADupdateEvent());
+        JSONObject result = new JSONObject();
+        result.put("status", 1);
+        return onSuccess(result, "请求成功");
+    }
+
+
+    /**
+     * 删除广告
+     */
+    public JSONObject delete_guangao(org.json.JSONObject params) {
+        String uuid = params.optString("uuid");
+        if (TextUtils.isEmpty(uuid)) {
+            return onError(HttpResponseCode.NO_JSON, "UUID不能为空");
+        }
+        if (!getUUID().equals(uuid)) {
+            LogUtil.i(TAG, getUUID());
+            return onError(HttpResponseCode.NO_JSON, "请填写正确的UUID: " + getUUID());
+        }
+        String image = params.optString("image");
+        String adID = params.optString("adID");
+        if (StringUtils.isEmpty(image)) {
+            return onError(HttpResponseCode.NO_JSON, "广告地址为空！");
+        }
+        if (StringUtils.isEmpty(adID)) {
+            return onError(HttpResponseCode.NO_JSON, "广告ID为空！");
+        }
+        List<AD> ads = AdHelper.queryByAdId(adID);
+        if (ads.isEmpty()) {
+            return onError(HttpResponseCode.NO_JSON, "广告不存在！");
+        }
+        AD ad = ads.get(0);
+        AdHelper.delete(ad);
+        EventBus.getDefault().post(new ADupdateEvent());
+        JSONObject result = new JSONObject();
+        result.put("status", 1);
+        return onSuccess(result, "请求成功");
+    }
+
+
+    /**
+     * 配置设备配置
      *
      * @param params
      * @return
@@ -169,12 +266,29 @@ public class DeviceLogic extends BaseLogic {
             LogUtil.i(TAG, getUUID());
             return onError(HttpResponseCode.NO_JSON, "请填写正确UUID: " + getUUID());
         }
-        int time = TypeTranUtils.str2Int(params.getString("update_time"));
-        int updateTime = TypeTranUtils.str2Int(params.getString("shouldAutoUpdate"));
+        int time = TypeTranUtils.str2Int(params.optString("currentTime"));
+        int updateTime = TypeTranUtils.str2Int(params.getString("timeUpdate"));
+        int heartbeatInterval = TypeTranUtils.str2Int(params.getString("heartbeatInterval"));   //心跳间隔
+        String managerIpAddr = params.optString("managerIpAddr");   //物管IP
+        String managerPort = params.optString("managerPort");       //物管端口
         // 设置系统时间
-        SystemClock.setCurrentTimeMillis(time);
-        Settings.Global.putInt(Utils.getContext().getContentResolver(), Settings.Global.AUTO_TIME, updateTime);
+        if (updateTime == 0) {
+            SystemClock.setCurrentTimeMillis(time);
+            Settings.Global.putInt(Utils.getContext().getContentResolver(), Settings.Global.AUTO_TIME, 0);
+        } else {
+            Settings.Global.putInt(Utils.getContext().getContentResolver(), Settings.Global.AUTO_TIME, 1);
+        }
         SPUtils.putBoolean(Constant.UPDATE_TIME, updateTime == 1 ? true : false);
+        if (heartbeatInterval != 0) {
+            SPUtils.putInt(Constant.HEART, heartbeatInterval);
+            EventBus.getDefault().post(new UpdateConfig());
+        }
+        if (!StringUtils.isEmpty(managerIpAddr)) {
+            SPUtils.putString(Constant.MANAGER_IP, managerIpAddr);
+        }
+        if (!StringUtils.isEmpty(managerPort)) {
+            SPUtils.putString(Constant.MANAGER_PORT, managerPort);
+        }
         JSONObject result = new JSONObject();
         result.put("status", 1);
         return onSuccess(result, "设置成功");

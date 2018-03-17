@@ -9,8 +9,13 @@ import com.koushikdutta.async.http.server.AsyncHttpServerRequest;
 import com.koushikdutta.async.http.server.AsyncHttpServerResponse;
 import com.koushikdutta.async.http.server.HttpServerRequestCallback;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+
+import rk.device.launcher.utils.FileUtils;
 import rk.device.launcher.utils.LogUtil;
 
 /**
@@ -76,8 +81,12 @@ public class LauncherHttpServer {
                 if (headers != null) {
                     LogUtil.d(TAG, headers.toString());
                 }
-                JSONObject params = (JSONObject) request.getBody().get();
-                onSuccess(uri, params, response);
+                String params = (String) request.getBody().get();
+                try {
+                    onSuccess(uri, new JSONObject(URLDecoder.decode(params, "UTF-8")), response);
+                } catch (UnsupportedEncodingException | JSONException e) {
+                    e.printStackTrace();
+                }
             } else {
                 response.send("Invalid request url.");
             }

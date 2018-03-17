@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.UUID;
 
 import butterknife.Bind;
 import peripherals.FingerHelper;
@@ -248,7 +249,8 @@ public class Person_addActivity
                 CardHelper.delete(codePassword);
             }
         }
-        user.setStatus(4);
+        user.setStatus(Constant.TO_BE_DELETE);
+        user.setUniqueId(UUID.randomUUID().toString());
         DbHelper.update(user);
         dissmissMessageDialog();
         finish();

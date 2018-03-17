@@ -95,15 +95,28 @@ public interface HttpRequestUri {
     /**
      * 升级接口
      */
-    String UPDATE = VERSION + "/public/update";
+    String UPDATE = VERSION + "/device/upgrade";
 
     /**
-     * 广告
+     * 增加广告
      */
-    String AD = VERSION + "/public/ad";
+    String ADD_GUANGGAO = VERSION + "/ad/add";
 
     /**
-     * 更新一体机时间
+     * 修改广告
      */
-    String UPDATE_TIME = VERSION + "/public/updatetime";
+    String UPDATATE_GUANGGAO = VERSION + "/ad/edit";
+
+    /**
+     * 删除广告
+     */
+    String DELETE_GUANGGAO = VERSION + "/ad/delete";
+
+
+    /**
+     * 配置设备状态
+     */
+    String UPDATE_TIME = VERSION + "/device/config";
+
+
 }

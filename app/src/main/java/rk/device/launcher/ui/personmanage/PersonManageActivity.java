@@ -81,7 +81,7 @@ public class PersonManageActivity extends MVPBaseActivity<PersonManageContract.V
 
             @Override
             public void convert(LGViewHolder holder, User user, int position) {
-                holder.setText(R.id.person_id, "ID：" + user.getUniqueId());
+                holder.setText(R.id.person_id, "ID：" + user.getUniqueId().substring(0, 16));
                 holder.setText(R.id.person_name, user.getName());
                 List<Face> faces = FaceHelper.getList(user.getUniqueId());
                 if (faces.isEmpty()) {
