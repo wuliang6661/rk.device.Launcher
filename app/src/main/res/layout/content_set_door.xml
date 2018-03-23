@@ -13,7 +13,8 @@
         android:layout_height="@dimen/item_height"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <TextView
             style="@style/tv_set_label"
@@ -40,6 +41,42 @@
             android:src="@drawable/arrow_right" />
 
     </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/select_langunge"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/tv_set_label"
+            android:layout_gravity="center_vertical"
+            android:text="@string/select_langunge" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/langunge"
+            style="@style/tv_set_label"
+            android:layout_gravity="center_vertical"
+            tools:text="@string/chinese" />
+
+        <ImageView
+            android:layout_width="12dp"
+            android:layout_height="22dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="15dp"
+            android:src="@drawable/arrow_right" />
+
+    </LinearLayout>
+
 
     <View
         android:layout_width="match_parent"
@@ -96,9 +133,9 @@
             android:layout_marginRight="@dimen/dp_15"
             android:layout_weight="1"
             android:background="@null"
-            android:inputType="number"
             android:gravity="right|center_vertical"
             android:hint="请输入开关时长（默认0.5秒）"
+            android:inputType="number"
             android:maxLength="10"
             android:singleLine="true"
             android:textColor="@color/white"

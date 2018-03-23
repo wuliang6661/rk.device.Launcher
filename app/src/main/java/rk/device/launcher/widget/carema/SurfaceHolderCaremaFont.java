@@ -97,9 +97,8 @@ public class SurfaceHolderCaremaFont implements SurfaceHolder.Callback {
         Log.d(TAG, "surface被干掉了！！！！！");
         if (camera != null) {
             try {
-                camera.setPreviewDisplay(null);
                 camera.setPreviewCallback(null);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

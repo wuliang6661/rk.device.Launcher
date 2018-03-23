@@ -17,6 +17,7 @@ import java.net.URLDecoder;
 
 import rk.device.launcher.utils.FileUtils;
 import rk.device.launcher.utils.LogUtil;
+import rk.device.server.logic.PublicLogic;
 
 /**
  * Created by hanbin on 2018/2/5.
@@ -88,7 +89,7 @@ public class LauncherHttpServer {
                     e.printStackTrace();
                 }
             } else {
-                response.send("Invalid request url.");
+                response.send(PublicLogic.getInstance().returnError("Invalid request url.").toJSONString());
             }
         }
     }

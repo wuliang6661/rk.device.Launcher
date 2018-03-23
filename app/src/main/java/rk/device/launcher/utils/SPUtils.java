@@ -34,9 +34,7 @@ public class SPUtils {
     }
 
     public static void inviSp() {
-        if (!new File(XML_PATH + FILE_NAME + ".xml").exists()) {
-            put("version", PackageUtils.getCurrentVersion());
-        }
+        put("version", PackageUtils.getCurrentVersion());
         FileUtils.setPermission(XML_PATH + FILE_NAME + ".xml");
     }
 

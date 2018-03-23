@@ -60,7 +60,7 @@ public class CaremaDetection extends BaseActivity implements View.OnClickListene
     private void initSurfaceViewOne() {
         surfaceholder = surfaceview.getHolder();
         surfaceholder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-        surfaceholder.addCallback(new SurfaceHolderCaremaFont(this));
+        surfaceholder.addCallback(new SurfaceHolderCaremaFont());
     }
 
 

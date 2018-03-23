@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="rk.device.launcher">
+    package="rk.device.launcher"
+    android:sharedUserId="android.uid.system">
     <!-- android:sharedUserId="android.uid.system" -->
 
 
@@ -278,15 +279,6 @@
 
         <activity android:name=".ui.setting.TimeZoneListActivity" />
 
-        <!-- 个推 -->
-        <!--  <service
-              android:name=".service.RKLauncherPushService"
-              android:exported="true"
-              android:label="PushService"
-              android:process=":pushservice" />
-          <service android:name=".service.RKLauncherPushIntentService" />-->
-
-
         <service
             android:name=".service.DownLoadIntentService"
             android:exported="false" />
@@ -306,13 +298,18 @@
             android:name="rk.device.server.service.AppHttpServerService"
             android:exported="false" />
 
-        <!-- <receiver android:name=".service.UpdateBroadcastReceiver">
-             <intent-filter>
-                 <action android:name="android.intent.action.PACKAGE_REPLACED" />
 
-                 <data android:scheme="package" />
-             </intent-filter>
-         </receiver>-->
+        <service
+            android:name=".service.KeepAliveService"
+            android:enabled="true"
+            android:exported="false"
+            android:process=":keepAlive">
+
+            <intent-filter android:priority="1000">
+                <action android:name="rk.device.launcher.keepAlive" />
+            </intent-filter>
+
+        </service>
 
         <!--<receiver android:name=".service.UsbBroadCastReceiver">
             <intent-filter android:priority="1000">

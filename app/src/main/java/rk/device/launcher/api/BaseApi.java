@@ -12,6 +12,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.QueryMap;
 import rk.device.launcher.bean.BaseResult;
+import rk.device.launcher.bean.ConfigBO;
 import rk.device.launcher.bean.DeviceInfoBO;
 import rk.device.launcher.bean.StatusBo;
 import rk.device.launcher.bean.TokenBo;
@@ -36,7 +37,7 @@ public interface BaseApi {
      * 获取配置接口
      */
     @POST("/api/v1/device/get_config")
-    Observable<BaseResult<DeviceInfoBO>> deviceConfiguration(@Body RequestBody requestBody); //客户号Id
+    Observable<BaseResult<ConfigBO>> deviceConfiguration(@Body RequestBody requestBody); //客户号Id
 
     /**
      * 开门
@@ -65,7 +66,7 @@ public interface BaseApi {
      * @param requestBody
      * @return
      */
-    @POST("/api/v1/device/uploadaccessrecord")
+    @POST("/api/v1/device/upload_access_record")
     Observable<BaseResult<Object>> syncRecords(@Body RequestBody requestBody);
 
     /**

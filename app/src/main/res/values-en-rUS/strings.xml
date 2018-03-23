@@ -423,4 +423,7 @@
     <string name="password">Password</string>
     <string name="card">Card</string>
     <string name="fingerprint">Fingerprint</string>
+    <string name="select_langunge">Language</string>
+    <string name="chinese">中文</string>
+    <string name="english">English</string>
 </resources>

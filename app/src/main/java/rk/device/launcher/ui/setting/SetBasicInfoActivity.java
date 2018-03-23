@@ -83,58 +83,53 @@ public class SetBasicInfoActivity extends BaseActivity implements View.OnClickLi
      * 注册数据回调监听
      */
     private void registerRxBus() {
-        addSubscription(RxBus.getDefault().toObserverable(TimeEvent.class)
-                .subscribe(new Subscriber<TimeEvent>() {
-                    @Override
-                    public void onCompleted() {
+        addSubscription(RxBus.getDefault().toObserverable(TimeEvent.class).subscribe(new Subscriber<TimeEvent>() {
+            @Override
+            public void onCompleted() {
 
-                    }
+            }
 
-                    @Override
-                    public void onError(Throwable e) {
+            @Override
+            public void onError(Throwable e) {
 
-                    }
+            }
 
-                    @Override
-                    public void onNext(TimeEvent timeEvent) {
-                        try {
-                            int realMonth = timeEvent.month + 1;
-                            Calendar c = Calendar.getInstance();
-                            c.set(Calendar.YEAR, timeEvent.year);
-                            c.set(Calendar.MONTH, timeEvent.month);
-                            c.set(Calendar.DAY_OF_MONTH, timeEvent.day);
-                            c.set(Calendar.HOUR_OF_DAY, timeEvent.hour);
-                            c.set(Calendar.MINUTE, timeEvent.minute);
-                            c.set(Calendar.SECOND, 0);
-                            c.set(Calendar.MILLISECOND, 0);
-                            when_time = c.getTimeInMillis();
-                            isCheckTime = timeEvent.isUpdateTime;
-                            timeTv.setText(
-                                    timeEvent.year + "-" + realMonth + "-" + timeEvent.day
-                                            + " " + timeEvent.hour + ":" + timeEvent.minute);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }));
-        addSubscription(RxBus.getDefault().toObserverable(BlueToothEvent.class)
-                .subscribe(new Subscriber<BlueToothEvent>() {
-                    @Override
-                    public void onCompleted() {
+            @Override
+            public void onNext(TimeEvent timeEvent) {
+                try {
+                    Calendar c = Calendar.getInstance();
+                    c.set(Calendar.YEAR, timeEvent.year);
+                    c.set(Calendar.MONTH, timeEvent.month);
+                    c.set(Calendar.DAY_OF_MONTH, timeEvent.day);
+                    c.set(Calendar.HOUR_OF_DAY, timeEvent.hour);
+                    c.set(Calendar.MINUTE, timeEvent.minute);
+                    c.set(Calendar.SECOND, 0);
+                    c.set(Calendar.MILLISECOND, 0);
+                    when_time = c.getTimeInMillis();
+                    isCheckTime = timeEvent.isUpdateTime;
+                    timeTv.setText(TimeUtils.getFormatTimeFromTimestamp(when_time, null));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }));
+        addSubscription(RxBus.getDefault().toObserverable(BlueToothEvent.class).subscribe(new Subscriber<BlueToothEvent>() {
+            @Override
+            public void onCompleted() {
 
-                    }
+            }
 
-                    @Override
-                    public void onError(Throwable e) {
+            @Override
+            public void onError(Throwable e) {
 
-                    }
+            }
 
-                    @Override
-                    public void onNext(BlueToothEvent blueToothEvent) {
-                        blueEvent = blueToothEvent;
-                        blueToothNameTv.setText(blueToothEvent.name);
-                    }
-                }));
+            @Override
+            public void onNext(BlueToothEvent blueToothEvent) {
+                blueEvent = blueToothEvent;
+                blueToothNameTv.setText(blueToothEvent.name);
+            }
+        }));
     }
 
     protected void initData() {
@@ -232,11 +227,15 @@ public class SetBasicInfoActivity extends BaseActivity implements View.OnClickLi
         //语音设置
         SPUtils.put(Constant.DEVICE_MP3, isVoice);
         SPUtils.putBoolean(Constant.UPDATE_TIME, isCheckTime);
-        // 设置系统时间
-        if (when_time / 1000 < Integer.MAX_VALUE) {
-            SystemClock.setCurrentTimeMillis(when_time);
+        try {
+            // 设置系统时间
+            if (when_time / 1000 < Integer.MAX_VALUE) {
+                SystemClock.setCurrentTimeMillis(when_time);
+            }
+            Settings.Global.putInt(getContentResolver(), Settings.Global.AUTO_TIME, isCheckTime ? 1 : 0);   //关闭自动更新时间
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
-        Settings.Global.putInt(getContentResolver(), Settings.Global.AUTO_TIME, isCheckTime ? 1 : 0);   //关闭自动更新时间
         boolean isFirstSetting = SPUtils.getBoolean(Constant.IS_FIRST_SETTING, true);    //是否第一次进入设置
         if (isFirstSetting) {
             SPUtils.putInt(Constant.SETTING_NUM, -1000);

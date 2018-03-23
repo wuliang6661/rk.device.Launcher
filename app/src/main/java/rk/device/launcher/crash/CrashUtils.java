@@ -1,7 +1,10 @@
 package rk.device.launcher.crash;
 
 import android.content.Intent;
+import android.widget.Toast;
 
+import peripherals.LedHelper;
+import peripherals.MdHelper;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.Utils;
 
@@ -32,6 +35,41 @@ public class CrashUtils {
             return true;
         }
         SPUtils.putInt(CAREMA_TIME, nowCrash);
+        reboot();
+        return false;
+    }
+
+
+    /**
+     * 处理人体红外异常处理
+     */
+    public boolean MdCrash(int status) {
+        if (status == 0) {
+            return true;
+        }
+        MdHelper.PER_mdDeinit();          //去初始化，重新初始化
+        if (MdHelper.PER_mdInit() == 0) {
+            return true;
+        }
+        Toast.makeText(Utils.getContext(), "人体红外异常！正在重启设备...", Toast.LENGTH_LONG).show();
+        reboot();
+        return false;
+    }
+
+
+    /**
+     * 补光灯异常处理
+     */
+    public boolean LedCrash(int status, int type) {
+        if (status == 0) {
+            return true;
+        }
+        LedHelper.PER_ledDeinit();          //去初始化，重新初始化
+        if (LedHelper.PER_ledInit() == 0) {
+            LedHelper.PER_ledToggle(type);
+            return true;
+        }
+        Toast.makeText(Utils.getContext(), "补光灯异常！正在重启设备...", Toast.LENGTH_LONG).show();
         reboot();
         return false;
     }

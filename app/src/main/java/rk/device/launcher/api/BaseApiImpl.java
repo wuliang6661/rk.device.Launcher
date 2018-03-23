@@ -9,7 +9,7 @@ import java.util.Map;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Retrofit;
-import rk.device.launcher.bean.DeviceInfoBO;
+import rk.device.launcher.bean.ConfigBO;
 import rk.device.launcher.bean.StatusBo;
 import rk.device.launcher.bean.TokenBo;
 import rk.device.launcher.bean.WeatherBO;
@@ -93,7 +93,7 @@ public class BaseApiImpl {
     /**
      * 获取配置接口
      */
-    public static Observable<DeviceInfoBO> deviceConfiguration() {
+    public static Observable<ConfigBO> deviceConfiguration() {
         JSONObject params = new JSONObject();
         try {
             params.put("uuid", new DeviceUuidFactory(Utils.getContext()).getUuid().toString());
@@ -114,7 +114,7 @@ public class BaseApiImpl {
         try {
             object.put("uuid", uuid);
             //            object.put("mac", mac);
-            object.put("mac", "123456");
+            object.put("mac", mac);
             object.put("license", license);
             RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"),
                     object.toString());

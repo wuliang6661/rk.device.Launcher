@@ -11,7 +11,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.List;
-import java.util.UUID;
 
 import butterknife.Bind;
 import peripherals.FingerHelper;
@@ -46,8 +45,7 @@ import rk.device.launcher.utils.verify.SyncPersonUtils;
  * 增加用户界面
  */
 
-public class Person_addActivity
-        extends MVPBaseActivity<Person_addContract.View, Person_addPresenter>
+public class Person_addActivity extends MVPBaseActivity<Person_addContract.View, Person_addPresenter>
         implements Person_addContract.View, View.OnClickListener {
 
     private static final String EXTRA_UNIQUEID = "uniqueId";
@@ -250,7 +248,6 @@ public class Person_addActivity
             }
         }
         user.setStatus(Constant.TO_BE_DELETE);
-        user.setUniqueId(UUID.randomUUID().toString());
         DbHelper.update(user);
         dissmissMessageDialog();
         finish();
@@ -327,8 +324,8 @@ public class Person_addActivity
                     List<CodePassword> codePasswords = CodePasswordHelper.getList(user.getUniqueId());
                     if (StringUtils.isEmpty(content)) {
                         if (!codePasswords.isEmpty()) {     //删除密码
-                            CodePasswordHelper.update(codePasswords.get(0).getId(), "", 4, 0, 0);
                             mPresenter.deletePassWord(CodePasswordHelper.getList(user.getUniqueId()).get(0));
+                            CodePasswordHelper.update(codePasswords.get(0).getId(), "", 4, 0, 0);
                         }
                     } else {
                         if (!codePasswords.isEmpty()) {     //更新密码

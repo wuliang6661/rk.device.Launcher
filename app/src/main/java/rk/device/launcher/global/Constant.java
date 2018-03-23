@@ -164,5 +164,12 @@ public interface Constant {
     int TO_BE_UPDATE = 3;
     int TO_BE_DELETE = 4;
 
+    /**
+     * 程序的语言环境
+     */
+    int LANGUAGE_EN = 0;
+
+    int LANGUAGE_CHINESE = 1;
+
 
 }

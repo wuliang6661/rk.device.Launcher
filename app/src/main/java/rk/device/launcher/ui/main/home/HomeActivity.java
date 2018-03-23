@@ -215,7 +215,6 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
         mPresenter.registerNetOffReceiver();
         registerRxBus();
         registerIPHost();
-        mPresenter.getData();
         mPresenter.getToken();
         mPresenter.startSocketService();
     }
@@ -254,7 +253,6 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
     private void registerIPHost() {
         addSubscription(RxBus.getDefault().toObserverable(IpHostEvent.class).subscribe(ipHostEvent -> {
             mPresenter.initLocation();
-            mPresenter.getData();
             mPresenter.getToken();
         }, throwable -> {
         }));
@@ -519,7 +517,6 @@ public class HomeActivity extends MVPBaseActivity<HomeContract.View, HomePresent
             return;
         }
         if (!isNetWork) {    //之前网络未连接，现在连接了
-            mPresenter.getData();
             mPresenter.getToken();
             LogUtil.i("SocketService", "SocketService isConnect.");
             mPresenter.startSocketService();

@@ -39,30 +39,19 @@ import rk.device.server.api.HttpResponseCode;
 public class DeviceLogic extends BaseLogic {
 
     private static final String TAG = "PersonLogic";
-    private static DeviceLogic deviceLogic = null;
 
-    public DeviceLogic() {
+    private DeviceLogic() {
     }
 
     public static DeviceLogic getInstance() {
-        if (deviceLogic == null) {
-            synchronized (DeviceLogic.class) {
-                if (deviceLogic == null) {
-                    deviceLogic = new DeviceLogic();
-                }
-            }
-        }
-        return deviceLogic;
+        return new DeviceLogic();
     }
 
     /**
      * 一键开门
-     *
-     * @param params
-     * @return
      */
-    public JSONObject open(org.json.JSONObject params) throws Exception {
-        String uuid = params.getString("uuid");
+    public synchronized JSONObject open(org.json.JSONObject params) throws Exception {
+        String uuid = params.optString("uuid");
         if (TextUtils.isEmpty(uuid)) {
             return onError(HttpResponseCode.NO_JSON, "UUID不能为空");
         }
@@ -78,11 +67,8 @@ public class DeviceLogic extends BaseLogic {
 
     /**
      * 获取设备状态
-     *
-     * @param params
-     * @return
      */
-    public JSONObject status(org.json.JSONObject params) throws Exception {
+    public synchronized JSONObject status(org.json.JSONObject params) throws Exception {
         String uuid = params.getString("uuid");
         if (TextUtils.isEmpty(uuid)) {
             return onError(HttpResponseCode.NO_JSON, "UUID不能为空");
@@ -115,11 +101,8 @@ public class DeviceLogic extends BaseLogic {
 
     /**
      * 升级接口
-     *
-     * @param params
-     * @return
      */
-    public JSONObject update(org.json.JSONObject params) throws Exception {
+    public synchronized JSONObject update(org.json.JSONObject params) throws Exception {
         String uuid = params.getString("uuid");
         if (TextUtils.isEmpty(uuid)) {
             return onError(HttpResponseCode.NO_JSON, "UUID不能为空");
@@ -150,7 +133,7 @@ public class DeviceLogic extends BaseLogic {
     /**
      * 新增广告
      */
-    public JSONObject add_guangao(org.json.JSONObject params) {
+    public synchronized JSONObject add_guangao(org.json.JSONObject params) {
         String uuid = params.optString("uuid");
         if (TextUtils.isEmpty(uuid)) {
             return onError(HttpResponseCode.NO_JSON, "UUID不能为空");
@@ -185,7 +168,7 @@ public class DeviceLogic extends BaseLogic {
     /**
      * 修改广告
      */
-    public JSONObject update_guangao(org.json.JSONObject params) {
+    public synchronized JSONObject update_guangao(org.json.JSONObject params) {
         String uuid = params.optString("uuid");
         if (TextUtils.isEmpty(uuid)) {
             return onError(HttpResponseCode.NO_JSON, "UUID不能为空");
@@ -221,7 +204,7 @@ public class DeviceLogic extends BaseLogic {
     /**
      * 删除广告
      */
-    public JSONObject delete_guangao(org.json.JSONObject params) {
+    public synchronized JSONObject delete_guangao(org.json.JSONObject params) {
         String uuid = params.optString("uuid");
         if (TextUtils.isEmpty(uuid)) {
             return onError(HttpResponseCode.NO_JSON, "UUID不能为空");
@@ -257,7 +240,7 @@ public class DeviceLogic extends BaseLogic {
      * @param params
      * @return
      */
-    public JSONObject updateTime(org.json.JSONObject params) throws Exception {
+    public synchronized JSONObject updateTime(org.json.JSONObject params) throws Exception {
         String uuid = params.getString("uuid");
         if (TextUtils.isEmpty(uuid)) {
             return onError(HttpResponseCode.NO_JSON, "UUID不能为空");
@@ -271,17 +254,18 @@ public class DeviceLogic extends BaseLogic {
         int heartbeatInterval = TypeTranUtils.str2Int(params.getString("heartbeatInterval"));   //心跳间隔
         String managerIpAddr = params.optString("managerIpAddr");   //物管IP
         String managerPort = params.optString("managerPort");       //物管端口
-        // 设置系统时间
-        if (updateTime == 0) {
-            SystemClock.setCurrentTimeMillis(time);
-            Settings.Global.putInt(Utils.getContext().getContentResolver(), Settings.Global.AUTO_TIME, 0);
-        } else {
-            Settings.Global.putInt(Utils.getContext().getContentResolver(), Settings.Global.AUTO_TIME, 1);
-        }
-        SPUtils.putBoolean(Constant.UPDATE_TIME, updateTime == 1 ? true : false);
         if (heartbeatInterval != 0) {
             SPUtils.putInt(Constant.HEART, heartbeatInterval);
             EventBus.getDefault().post(new UpdateConfig());
+        }
+        try {// 设置系统时间
+            if (updateTime == 0) {
+                SystemClock.setCurrentTimeMillis(time * 1000L);
+            }
+            Settings.Global.putInt(Utils.getContext().getContentResolver(), Settings.Global.AUTO_TIME, updateTime);
+            SPUtils.putBoolean(Constant.UPDATE_TIME, updateTime == 1);
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
         if (!StringUtils.isEmpty(managerIpAddr)) {
             SPUtils.putString(Constant.MANAGER_IP, managerIpAddr);

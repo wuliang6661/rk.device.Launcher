@@ -86,8 +86,8 @@ public class PersonLogic extends BaseLogic {
         user.setName(popeName);
         user.setRole(role);
         user.setUniqueId(peopleId);
-        user.setStartTime(TypeTranUtils.str2Int(startTime));
-        user.setEndTime(TypeTranUtils.str2Int(endTime));
+        user.setStartTime(TypeTranUtils.str2Int(startTime) * 1000L);
+        user.setEndTime(TypeTranUtils.str2Int(endTime) * 1000L);
         user.setCreateTime(System.currentTimeMillis());
         user.setStatus(1);
         if (DbHelper.insert(user)) {
@@ -128,10 +128,8 @@ public class PersonLogic extends BaseLogic {
         user.setUniqueId(peopleId);
         user.setName(TextUtils.isEmpty(popeName) ? oldUser.getName() : popeName);
         user.setRole(role == 0 ? oldUser.getRole() : role);
-        user.setStartTime(TextUtils.isEmpty(startTime) ? oldUser.getStartTime()
-                : TypeTranUtils.str2Int(startTime));
-        user.setEndTime(TextUtils.isEmpty(endTime) ? oldUser.getEndTime()
-                : TypeTranUtils.str2Int(endTime));
+        user.setStartTime(TextUtils.isEmpty(startTime) ? oldUser.getStartTime() : TypeTranUtils.str2Int(startTime) * 1000L);
+        user.setEndTime(TextUtils.isEmpty(endTime) ? oldUser.getEndTime() : TypeTranUtils.str2Int(endTime) * 1000L);
         user.setStatus(1);
         DbHelper.update(user);
         JSONObject result = new JSONObject();

@@ -5,6 +5,7 @@ import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Index;
 import org.greenrobot.greendao.annotation.NotNull;
+import org.greenrobot.greendao.annotation.Unique;
 
 import java.io.Serializable;
 
@@ -17,37 +18,37 @@ public class User implements Serializable {
     private static final long serialVersionUID = 42L;
 
     @Id(autoincrement = true)
-    private Long              id;
+    private Long id;
 
     @NotNull
-    @Index(unique = true)
-    private String            uniqueId;              // 这就是那个唯一标识id
+    @Unique
+    private String uniqueId;              // 这就是那个唯一标识id
 
     @NotNull
-    private String            name;                  // 用户名称
+    private String name;                  // 用户名称
 
     /**
      * 1: 开门权限，只能开门 2: 巡更权限，向服务器发送一条上报消息，代表已巡更 3: 管理员权限，可以开门、巡更、或进入设置页面更改设置
      */
     @NotNull
-    private int               role;                  // 权限类型
+    private int role;                  // 权限类型
 
-    private int               uploadStatus;
+    private int uploadStatus;
 
-    private int               status;                //1：正常，2：待添加，3：待更新，4：待删除
+    private int status;                //1：正常，2：待添加，3：待更新，4：待删除
 
-    private long              startTime;
+    private long startTime;
 
-    private long              endTime;
+    private long endTime;
 
-    private long              createTime;
+    private long createTime;
 
-    private long              updateTime;
+    private long updateTime;
 
     @Generated(hash = 1844488305)
     public User(Long id, @NotNull String uniqueId, @NotNull String name, int role,
-            int uploadStatus, int status, long startTime, long endTime,
-            long createTime, long updateTime) {
+                int uploadStatus, int status, long startTime, long endTime,
+                long createTime, long updateTime) {
         this.id = id;
         this.uniqueId = uniqueId;
         this.name = name;
@@ -144,6 +145,5 @@ public class User implements Serializable {
         this.updateTime = updateTime;
     }
 
-  
-    
+
 }

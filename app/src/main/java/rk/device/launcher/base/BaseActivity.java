@@ -22,6 +22,7 @@ import butterknife.ButterKnife;
 import rk.device.launcher.R;
 import rk.device.launcher.bean.NetDismissBO;
 import rk.device.launcher.bean.event.OpenDoorSuccessEvent;
+import rk.device.launcher.global.Constant;
 import rk.device.launcher.service.SleepTaskServer;
 import rk.device.launcher.ui.fragment.BaseComDialogFragment;
 import rk.device.launcher.ui.fragment.VerifyNoticeDialogFragment;
@@ -32,6 +33,7 @@ import rk.device.launcher.utils.AppManager;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.PackageUtils;
 import rk.device.launcher.utils.ResUtil;
+import rk.device.launcher.utils.SPUtils;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
@@ -71,7 +73,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         EventBus.getDefault().register(this);
         hideNavigationBar();
         ButterKnife.bind(this);
-        SleepTaskServer.getSleepHandler().sendEmptyMessage(0x11);
+        if (SPUtils.getInt(Constant.SETTING_NUM, Constant.SETTING_TYPE1) == -1000) {
+            SleepTaskServer.getSleepHandler().sendEmptyMessage(0x11);
+        }
         AppManager.getAppManager().addActivity(this);
     }
 
@@ -109,7 +113,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (this instanceof SleepActivity) {
             return super.dispatchTouchEvent(ev);
         }
-        SleepTaskServer.getSleepHandler().sendEmptyMessage(0x11);
+        if (SPUtils.getInt(Constant.SETTING_NUM, Constant.SETTING_TYPE1) == -1000) {
+            SleepTaskServer.getSleepHandler().sendEmptyMessage(0x11);
+        }
         return super.dispatchTouchEvent(ev);
     }
 

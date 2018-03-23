@@ -44,6 +44,8 @@ public class SocketService extends Service {
     private DeviceUuidFactory deviceUuidFactory = null;
     private int heartTime = 50000;
 
+    MyTimerTask task;
+
     public static SocketService getInstance() {
         if (mService == null) {
             mService = new SocketService();
@@ -63,20 +65,11 @@ public class SocketService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         LogUtil.i(TAG, TAG + " onStartCommand");
+        sendDeviceStatusToPlatform();
         return super.onStartCommand(intent, flags, startId);
     }
 
     Timer timer = new Timer();
-
-    TimerTask task = new TimerTask() {
-
-        public void run() {
-            Message message = new Message();
-            message.what = 1;
-            handler.sendMessage(message);
-        }
-
-    };
 
     final Handler handler = new Handler() {
 
@@ -89,28 +82,19 @@ public class SocketService extends Service {
                     try {
                         params.put("uuid", deviceUuidFactory.getUuid());
                         params.put("access_token", SPUtils.getString(Constant.ACCENT_TOKEN));
-                        params.put("mac", FileUtils
-                                .readFile2String("/proc/board_sn", "UTF-8"));
+                        params.put("mac", FileUtils.readFile2String("/proc/board_sn", "UTF-8"));
                         params.put("hw_ver", Build.HARDWARE);
-                        params.put("version_code",
-                                PackageUtils.getCurrentVersionCode());
-                        params.put("version_name",
-                                PackageUtils.getCurrentVersion());
-                        params.put("imsi", PackageUtils
-                                .getImsi(LauncherApplication.getContext()));
-                        params.put("msisdn", PackageUtils
-                                .getMsisdn(LauncherApplication.getContext()));
+                        params.put("version_code", PackageUtils.getCurrentVersionCode());
+                        params.put("version_name", PackageUtils.getCurrentVersion());
+                        params.put("imsi", PackageUtils.getImsi(LauncherApplication.getContext()));
+                        params.put("msisdn", PackageUtils.getMsisdn(LauncherApplication.getContext()));
                         params.put("battery", LauncherApplication.sLevel);
-                        params.put("temperature",
-                                LauncherApplication.sTemperature);
-                        params.put("signal", WifiHelper.obtainWifiInfo(
-                                LauncherApplication.getContext()));
+                        params.put("temperature", LauncherApplication.sTemperature);
+                        params.put("signal", WifiHelper.obtainWifiInfo(LauncherApplication.getContext()));
                         params.put("card_capacity", 9999);
                         params.put("whitelist_count", 9999);
-                        params.put("finger_capacity",
-                                LauncherApplication.totalUserCount);
-                        params.put("finger_count",
-                                LauncherApplication.remainUserCount);
+                        params.put("finger_capacity", LauncherApplication.totalUserCount);
+                        params.put("finger_count", LauncherApplication.remainUserCount);
                         params.put("opened", 0);
                         params.put("work_mode", 9999);
                         params.put("power_mode", LauncherApplication.sIsCharge);
@@ -140,14 +124,34 @@ public class SocketService extends Service {
     };
 
     private void sendDeviceStatusToPlatform() {
+        if (task != null) {
+            task.cancel();
+        }
+        task = new MyTimerTask();
         timer.schedule(task, 1000, heartTime);
     }
+
+    private class MyTimerTask extends TimerTask {
+
+        public void run() {
+            Message message = new Message();
+            message.what = 1;
+            handler.sendMessage(message);
+        }
+    }
+
 
     @Override
     public void onDestroy() {
         LogUtil.e("SocketService onDestory");
         EventBus.getDefault().unregister(this);
         super.onDestroy();
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
     }
 
 
@@ -172,12 +176,5 @@ public class SocketService extends Service {
         heartTime = SPUtils.getInt(Constant.HEART);
     }
 
-
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        sendDeviceStatusToPlatform();
-        return null;
-    }
 
 }

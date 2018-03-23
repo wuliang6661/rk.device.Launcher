@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -25,10 +23,6 @@ import rk.device.launcher.widget.lgrecycleadapter.LGViewHolder;
 
 public class SelectItemListActivity extends BaseActivity {
 
-    @Bind(R.id.iv_back)
-    ImageView mIvBack;
-    @Bind(R.id.tv_title)
-    TextView mTvTitle;
     @Bind(R.id.rv)
     RecyclerView mRv;
     public static final String KEY_CHECKED_INDEX = "key_checked_index";

@@ -147,12 +147,12 @@ public class AppHttpServerService extends Service {
                                 response.send(DeviceLogic.getInstance().updateTime(params).toJSONString());
                                 break;
                             default:
-                                response.send("Invalid request url.");
+                                response.send(PublicLogic.getInstance().returnError("Invalid request url.").toJSONString());
                                 break;
                         }
                     } catch (Exception ex) {
                         ex.printStackTrace();
-                        response.send("json message error.");
+                        response.send(PublicLogic.getInstance().returnError("json message error.").toJSONString());
                     }
                 }
 

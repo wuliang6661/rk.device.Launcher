@@ -22,6 +22,7 @@ import rk.device.launcher.db.entity.CodePassword;
 import rk.device.launcher.db.entity.Face;
 import rk.device.launcher.db.entity.Finger;
 import rk.device.launcher.db.entity.User;
+import rk.device.launcher.global.Constant;
 import rk.device.launcher.utils.BitmapUtil;
 import rk.device.launcher.utils.LogUtil;
 import rk.device.launcher.utils.StringUtils;
@@ -346,10 +347,13 @@ public class VoucherLogic extends BaseLogic {
         if (cards.isEmpty()) {
             return onError(HttpResponseCode.OBJECT_NO_FOUND, "该用户没有录入过卡！");
         }
-        CardHelper.update(cards.get(0).getId(), cardNo, 1, TypeTranUtils.str2Int(startTime), TypeTranUtils.str2Int(endTime));
-        JSONObject result = new JSONObject();
-        result.put("status", 1);
-        return onSuccess(result, "卡修改成功");
+        if (Constant.UPDATE_SUCCESS == CardHelper.update(cards.get(0).getId(), cardNo, 1,
+                TypeTranUtils.str2Int(startTime), TypeTranUtils.str2Int(endTime))) {
+            JSONObject result = new JSONObject();
+            result.put("status", 1);
+            return onSuccess(result, "卡修改成功");
+        }
+        return onError(HttpResponseCode.NO_CAOZUO, "数据库操作失败！");
     }
 
 
@@ -375,10 +379,10 @@ public class VoucherLogic extends BaseLogic {
         }
         List<Card> cards = CardHelper.getList(peopleId);
         if (cards.isEmpty()) {
-            return onError(HttpResponseCode.OBJECT_NO_FOUND, "该用户没有设置过密码！");
+            return onError(HttpResponseCode.OBJECT_NO_FOUND, "该用户没有设置过卡！");
         }
         if (!cards.get(0).getNumber().equals(cardNo)) {
-            return onError(HttpResponseCode.NO_JSON, "password与本地不一致！");
+            return onError(HttpResponseCode.NO_JSON, "卡号与本地不一致！");
         }
         CardHelper.delete(cards.get(0));
         JSONObject result = new JSONObject();

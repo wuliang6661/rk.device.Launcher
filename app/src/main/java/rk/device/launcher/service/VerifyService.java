@@ -3,10 +3,13 @@ package rk.device.launcher.service;
 import android.app.ActivityManager;
 import android.app.Service;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.os.RemoteException;
 import android.support.annotation.Nullable;
 
 import org.greenrobot.eventbus.EventBus;
@@ -15,6 +18,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.ref.WeakReference;
 
+import cn.aidl.IMyAidlInterface;
 import peripherals.FingerHelper;
 import peripherals.NfcHelper;
 import rk.device.launcher.R;
@@ -52,7 +56,7 @@ public class VerifyService extends Service {
     private Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
-            switch (msg.what){
+            switch (msg.what) {
                 case USER_ILLEAGEL:
                     T.showShort(LauncherApplication.getContext().getString(R.string.illeagel_user));
                     break;
@@ -69,6 +73,8 @@ public class VerifyService extends Service {
         super.onCreate();
         EventBus.getDefault().register(this);
         init();
+        Intent intent = new Intent(this, KeepAliveService.class);
+        bindService(intent, connection, Context.BIND_AUTO_CREATE);
     }
 
     private void init() {
@@ -107,16 +113,19 @@ public class VerifyService extends Service {
             while (isOpen) {
                 if (weakReference.get() != null) {
                     weakReference.get().nfcService();
-                    LogUtil.d(TAG,
-                            TAG + android.os.Process.myPid() + " Thread: "
-                                    + android.os.Process.myTid() + " name "
-                                    + Thread.currentThread().getName());
+                    LogUtil.d(TAG, TAG + android.os.Process.myPid() + " Thread: " + android.os.Process.myTid() + " name " + Thread.currentThread().getName());
+                    if (weakReference.get().myAidlInterface != null) {
+                        try {
+                            weakReference.get().myAidlInterface.sendService(0);
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 } else {
                     return;
                 }
             }
         }
-
     }
 
 
@@ -305,6 +314,7 @@ public class VerifyService extends Service {
     private void destory() {
         isOpen = false;
         LogUtil.i(TAG, TAG + ": onDestroy.");
+        unbindService(connection);
         int status = NfcHelper.PER_nfcDeinit();
         if (status == 0) {
             LogUtil.i(TAG, TAG + ": Nfc deinit success.");
@@ -324,4 +334,18 @@ public class VerifyService extends Service {
         }
     }
 
+
+    private IMyAidlInterface myAidlInterface;
+
+    ServiceConnection connection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            myAidlInterface = IMyAidlInterface.Stub.asInterface(service);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
 }

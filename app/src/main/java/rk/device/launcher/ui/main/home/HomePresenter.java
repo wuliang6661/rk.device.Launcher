@@ -7,6 +7,10 @@ import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
+import android.provider.Settings;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -16,8 +20,10 @@ import peripherals.MdHelper;
 import rk.device.launcher.api.BaseApiImpl;
 import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.base.JniHandler;
-import rk.device.launcher.bean.DeviceInfoBO;
+import rk.device.launcher.bean.ConfigBO;
 import rk.device.launcher.bean.TokenBo;
+import rk.device.launcher.bean.event.UpdateConfig;
+import rk.device.launcher.crash.CrashUtils;
 import rk.device.launcher.db.DbHelper;
 import rk.device.launcher.db.FaceHelper;
 import rk.device.launcher.db.entity.Face;
@@ -30,9 +36,9 @@ import rk.device.launcher.service.NetChangeBroadcastReceiver;
 import rk.device.launcher.service.SocketService;
 import rk.device.launcher.service.VerifyService;
 import rk.device.launcher.utils.AppManager;
-import rk.device.launcher.utils.AppUtils;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.StatSoFiles;
+import rk.device.launcher.utils.StringUtils;
 import rk.device.launcher.utils.Utils;
 import rk.device.launcher.utils.gps.GpsUtils;
 import rk.device.launcher.utils.key.KeyUtils;
@@ -214,7 +220,7 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
      * 获取配置接口
      */
     void getData() {
-        BaseApiImpl.deviceConfiguration().subscribe(new Subscriber<DeviceInfoBO>() {
+        BaseApiImpl.deviceConfiguration().subscribe(new Subscriber<ConfigBO>() {
             @Override
             public void onCompleted() {
 
@@ -225,10 +231,28 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
             }
 
             @Override
-            public void onNext(DeviceInfoBO s) {
-                if (mView != null){
-
-
+            public void onNext(ConfigBO s) {
+                if (mView != null) {
+                    if (s.getHeartbeatInterval() != 0) {
+                        SPUtils.putInt(Constant.HEART, s.getHeartbeatInterval());
+                        EventBus.getDefault().post(new UpdateConfig());
+                    }
+                    try {
+                        // 设置系统时间
+                        if (s.getTimeUpdate() == 0) {
+                            SystemClock.setCurrentTimeMillis(s.getCurrentTime() * 1000L);
+                        }
+                        Settings.Global.putInt(Utils.getContext().getContentResolver(), Settings.Global.AUTO_TIME, s.getTimeUpdate());
+                        SPUtils.putBoolean(Constant.UPDATE_TIME, s.getTimeUpdate() == 1);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                    if (!StringUtils.isEmpty(s.getManagerIpAddr())) {
+                        SPUtils.putString(Constant.MANAGER_IP, s.getManagerIpAddr());
+                    }
+                    if (!StringUtils.isEmpty(s.getManagerPort() + "")) {
+                        SPUtils.putString(Constant.MANAGER_PORT, s.getManagerPort() + "");
+                    }
                 }
             }
         });
@@ -327,10 +351,12 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
 
         WeakReference<HomePresenter> weakReference;
         int[] mdStaus;
+        CrashUtils crashUtils;
 
         MdThread(HomePresenter presenter) {
             weakReference = new WeakReference<>(presenter);
             mdStaus = new int[1];
+            crashUtils = new CrashUtils();
         }
 
         @Override
@@ -343,14 +369,16 @@ public class HomePresenter extends BasePresenterImpl<HomeContract.View> implemen
                     return;
                 }
                 int mdStatus = MdHelper.PER_mdGet(1, mdStaus);
-                if (mdStatus == 0 && mdStaus[0] == 1 && presenter.mView != null) {
-                    presenter.isHasPerson = 0;
-                    presenter.mView.hasPerson(true);
-                    threadSleep(5000);
-                } else {
-                    presenter.isHasPerson++;
-                    if (presenter.isHasPerson == 5 && presenter.mView != null) {
-                        presenter.mView.hasPerson(false);
+                if (crashUtils.MdCrash(mdStatus)) {
+                    if (mdStaus[0] == 1 && presenter.mView != null) {
+                        presenter.isHasPerson = 0;
+                        presenter.mView.hasPerson(true);
+                        threadSleep(5000);
+                    } else {
+                        presenter.isHasPerson++;
+                        if (presenter.isHasPerson == 5 && presenter.mView != null) {
+                            presenter.mView.hasPerson(false);
+                        }
                     }
                 }
             }

@@ -19,14 +19,7 @@ public class PublicLogic extends BaseLogic {
     }
 
     public static PublicLogic getInstance() {
-        if (publicLogic == null) {
-            synchronized (PublicLogic.class) {
-                if (publicLogic == null) {
-                    publicLogic = new PublicLogic();
-                }
-            }
-        }
-        return publicLogic;
+        return new PublicLogic();
     }
 
 
@@ -35,7 +28,7 @@ public class PublicLogic extends BaseLogic {
      *
      * @return
      */
-    public JSONObject getToken() {
+    public synchronized JSONObject getToken() {
         long grantTime = System.currentTimeMillis();
         String token = MD5.strToMd5Low32(String.valueOf(grantTime) + (int) ((Math.random() * 9 + 1) * 100000));
         SPUtils.putString(Constant.GRANT_TOKEN, token);
@@ -47,7 +40,7 @@ public class PublicLogic extends BaseLogic {
     }
 
 
-    public JSONObject returnError(String msg) {
+    public synchronized JSONObject returnError(String msg) {
         return onError(HttpResponseCode.WUXIAO_LINGPAI, msg);
     }
 

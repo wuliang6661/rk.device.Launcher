@@ -14,16 +14,20 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import butterknife.Bind;
 import butterknife.OnClick;
+
 import java.io.IOException;
 import java.util.ArrayList;
+
 import peripherals.LedHelper;
 import rk.device.launcher.R;
 import rk.device.launcher.api.BaseApiImpl;
 import rk.device.launcher.base.BaseActivity;
 import rk.device.launcher.bean.SetDoorRvBO;
 import rk.device.launcher.bean.event.IpHostEvent;
+import rk.device.launcher.crash.CrashUtils;
 import rk.device.launcher.global.Constant;
 import rk.device.launcher.utils.DrawableUtil;
 import rk.device.launcher.utils.EditUtil;
@@ -188,9 +192,11 @@ public class SetSysActivity extends BaseActivity {
         // 保存补光灯的开关状态
         SPUtils.putBoolean(Constant.KEY_LIGNT, mCbLight.isChecked());
         if (mCbLight.isChecked()) {
-            LedHelper.PER_ledToggle(1);
+            int status = LedHelper.PER_ledToggle(1);
+            new CrashUtils().LedCrash(status, 1);
         } else {
-            LedHelper.PER_ledToggle(0);
+            int status = LedHelper.PER_ledToggle(0);
+            new CrashUtils().LedCrash(status, 0);
         }
         //判断是否是第一次
         boolean isFirst = (boolean) SPUtils.get(Constant.IS_FIRST_SETTING, true);

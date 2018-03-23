@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.text.BidiFormatter;
 import android.text.TextDirectionHeuristics;
@@ -11,6 +12,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -33,7 +35,7 @@ import rk.device.launcher.utils.DrawableUtil;
 import rk.device.launcher.utils.SPUtils;
 import rk.device.launcher.utils.rxjava.RxBus;
 
-public class SetTimeActivity extends BaseActivity {
+public class SetTimeActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener {
 
     @Bind(R.id.iv_back)
     ImageView mIvBack;
@@ -55,6 +57,8 @@ public class SetTimeActivity extends BaseActivity {
     TextView mTvTimeZone;
     @Bind(R.id.checkbox_time)
     CheckBox checkboxTime;
+
+
     private int mSelectedYear;
     private int mSelectedMonth;
     private int mSelectedDay;
@@ -78,8 +82,9 @@ public class SetTimeActivity extends BaseActivity {
     protected void initView() {
         setTitle(getString(R.string.time_setting));
         goBack();
-        checkboxTime.setChecked(SPUtils.getBoolean(Constant.UPDATE_TIME, true));
         mDummyDate = Calendar.getInstance();
+        checkboxTime.setChecked(SPUtils.getBoolean(Constant.UPDATE_TIME, true));
+        setTimeEnable(checkboxTime.isChecked());
         updateTimeAndDateDisplay(this);
     }
 
@@ -141,11 +146,17 @@ public class SetTimeActivity extends BaseActivity {
             public void onClick(View v) {
                 TimeEvent timeEvent = new TimeEvent(mSelectedYear, mSelectedMonth - 1, mSelectedDay, mSelectedHour, mSelectedMin, checkboxTime.isChecked());
                 RxBus.getDefault().post(timeEvent);
+                SPUtils.putBoolean(Constant.UPDATE_TIME, checkboxTime.isChecked());
+                try {
+                    Settings.Global.putInt(getContentResolver(), Settings.Global.AUTO_TIME, checkboxTime.isChecked() ? 1 : 0);   //关闭自动更新时间
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
                 finish();
             }
         });
         DrawableUtil.addPressedDrawable(this, R.drawable.shape_btn_finish_setting, mBtnFinishSetting);
-
+        checkboxTime.setOnCheckedChangeListener(this);
     }
 
     @Override
@@ -183,35 +194,49 @@ public class SetTimeActivity extends BaseActivity {
         mTvTimeZone.setText(getTimeZoneText(now.getTimeZone(), true));
     }
 
+
     public static String getTimeZoneText(TimeZone tz, boolean includeName) {
         Date now = new Date();
-
         // Use SimpleDateFormat to format the GMT+00:00 string.
         SimpleDateFormat gmtFormatter = new SimpleDateFormat("ZZZZ");
         gmtFormatter.setTimeZone(tz);
         // gmtString = GMT+10:00
         String gmtString = gmtFormatter.format(now);
-
         // Ensure that the "GMT+" stays with the "00:00" even if the digits are RTL.
         BidiFormatter bidiFormatter = BidiFormatter.getInstance();
         Locale l = Locale.getDefault();
         boolean isRtl = TextUtils.getLayoutDirectionFromLocale(l) == View.LAYOUT_DIRECTION_RTL;
-        gmtString = bidiFormatter.unicodeWrap(gmtString,
-                isRtl ? TextDirectionHeuristics.RTL : TextDirectionHeuristics.LTR);
-
+        gmtString = bidiFormatter.unicodeWrap(gmtString, isRtl ? TextDirectionHeuristics.RTL : TextDirectionHeuristics.LTR);
         // attention
         if (!includeName) {
             return gmtString;
         }
-
         // Optionally append the time zone name.
         SimpleDateFormat zoneNameFormatter = new SimpleDateFormat("zzzz");
         zoneNameFormatter.setTimeZone(tz);
         // zoneNameString = 日本标准时间
         String zoneNameString = zoneNameFormatter.format(now);
-
         // We don't use punctuation here to avoid having to worry about localizing that too!
         return gmtString + " " + zoneNameString;
     }
 
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        setTimeEnable(isChecked);
+    }
+
+    /**
+     * 设置时间是否可用
+     */
+    private void setTimeEnable(boolean isChecked) {
+        if (isChecked) {
+            mLlSetDate.setEnabled(false);
+            mLlSetTime.setEnabled(false);
+            mLlSetTimeZone.setEnabled(false);
+        } else {
+            mLlSetDate.setEnabled(true);
+            mLlSetTime.setEnabled(true);
+            mLlSetTimeZone.setEnabled(true);
+        }
+    }
 }
